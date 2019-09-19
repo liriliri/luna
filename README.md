@@ -1,2 +1,3 @@
 # luna
-UI library
+
+Yet another UI library.

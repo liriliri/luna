@@ -4,7 +4,9 @@
   "description": "UI library",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:message": "",
+    "build:message": "",
+    "format:message": "prettier src/message/*.{ts,js} --write"
   },
   "repository": {
     "type": "git",
@@ -18,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/liriliri/luna/issues"
   },
-  "homepage": "https://github.com/liriliri/luna#readme"
+  "homepage": "https://github.com/liriliri/luna#readme",
+  "devDependencies": {
+    "prettier": "^1.19.1"
+  }
 }

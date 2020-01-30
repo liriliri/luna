@@ -4,9 +4,9 @@
   "description": "UI library",
   "main": "index.js",
   "scripts": {
-    "dev:message": "",
-    "build:message": "",
-    "format:message": "prettier src/message/*.{ts,js} --write"
+    "dev:music-player": "",
+    "build:music-player": "",
+    "format:music-player": "prettier src/music-player/*.{ts,js} --write"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/liriliri/luna#readme",
   "devDependencies": {
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "webpack": "^4.41.5"
   }
 }

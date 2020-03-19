@@ -4,9 +4,13 @@
   "description": "UI library",
   "main": "index.js",
   "scripts": {
+    "format": "prettier src/share/*.{ts,js} *.{json,js} --write",
     "dev:music-player": "",
     "build:music-player": "",
-    "format:music-player": "prettier src/music-player/*.{ts,js} --write"
+    "format:music-player": "prettier src/music-player/*.{ts,js} --write",
+    "build:object-viewer": "webpack --config ./src/object-viewer/webpack.config.js",
+    "dev:object-viewer": "webpack-dev-server --config ./src/object-viewer/webpack.config.js",
+    "format:object-viewer": "prettier src/object-viewer/*.{ts,js,html} --write"
   },
   "repository": {
     "type": "git",
@@ -22,7 +26,14 @@
   },
   "homepage": "https://github.com/liriliri/luna#readme",
   "devDependencies": {
+    "licia": "^1.19.0",
+    "node-sass": "^4.13.1",
     "prettier": "^1.19.1",
-    "webpack": "^4.41.5"
+    "sass-loader": "^8.0.2",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.8.3",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
   }
 }

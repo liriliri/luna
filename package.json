@@ -5,10 +5,7 @@
   "main": "index.js",
   "scripts": {
     "format": "prettier src/share/*.{ts,js} *.{json,js} --write",
-    "dev:music-player": "",
-    "build:music-player": "",
-    "format:music-player": "prettier src/music-player/*.{ts,js} --write",
-    "build:object-viewer": "webpack --config ./src/object-viewer/webpack.config.js",
+    "build:object-viewer": "webpack --config ./src/object-viewer/webpack.config.js --mode=production",
     "dev:object-viewer": "webpack-dev-server --config ./src/object-viewer/webpack.config.js",
     "format:object-viewer": "prettier src/object-viewer/*.{ts,js,html} --write"
   },
@@ -28,18 +25,16 @@
   "devDependencies": {
     "css-loader": "^3.4.2",
     "licia": "^1.19.0",
+    "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.13.1",
     "postcss-loader": "^3.0.0",
+    "postcss-prefixer": "^2.1.2",
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
-    "style-loader": "^1.1.3",
     "ts-loader": "^6.2.1",
     "typescript": "^3.8.3",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
-  },
-  "dependencies": {
-    "postcss-prefixer": "^2.1.2"
   }
 }

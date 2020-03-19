@@ -1,4 +1,3 @@
-import extend from 'licia/extend'
 import Emitter from 'licia/Emitter'
 import getProto from 'licia/getProto'
 import isNum from 'licia/isNum'
@@ -17,35 +16,43 @@ import difference from 'licia/difference'
 import allKeys from 'licia/allKeys'
 import filter from 'licia/filter'
 import chunk from 'licia/chunk'
+import toStr from 'licia/toStr'
+import Visitor from './Visitor'
 import { encode, getFnAbstract, sortObjName } from './util'
+import Static from './Static'
 import './style.scss'
 
-module.exports = class LunaObjViewer extends Emitter {
-  _data: any
-  _$el: any
-  _visitor: any
-  _map: any
-  _showUnenumerable: any
-  _showGetterVal: any
+const classPrefix = 'luna-object-viewer-'
+
+module.exports = class ObjectViewer extends Emitter {
+  private data: any[]
+  private $container: $.$
+  private visitor: Visitor
+  private map: any
+  private unenumerable: boolean
+  private accessGetter: any
   constructor(
-    data,
-    el,
-    { showUnenumerable = false, showGetterVal = false } = {}
+    container: Element,
+    { unenumerable = false, accessGetter = false } = {}
   ) {
     super()
 
-    this._data = [data]
-    this._$el = $(el)
-    this._visitor = new Visitor()
-    this._map = {}
-    this._showUnenumerable = showUnenumerable
-    this._showGetterVal = showGetterVal
+    this.$container = $(container)
+    this.$container.addClass('luna-object-viewer')
+    this.unenumerable = unenumerable
+    this.accessGetter = accessGetter
 
-    this._appendTpl()
-    this._bindEvent()
+    this.bindEvent()
   }
-  _objToHtml(data, firstLevel?: boolean) {
-    const visitor = this._visitor
+  set(data: any) {
+    this.data = [data]
+    this.visitor = new Visitor()
+    this.map = {}
+
+    this.appendTpl()
+  }
+  private objToHtml(data: any, firstLevel?: boolean) {
+    const { visitor } = this
     let self = data
     let isBigArr = false
     const visitedObj = visitor.get(data)
@@ -57,12 +64,12 @@ module.exports = class LunaObjViewer extends Emitter {
 
     const types = ['enumerable']
     let enumerableKeys = keys(data)
-    let unenumerableKeys = []
-    let symbolKeys = []
-    let virtualKeys = []
-    const virtualData = {}
+    let unenumerableKeys: string[] = []
+    let symbolKeys: (string | Symbol)[] = []
+    let virtualKeys: string[] = []
+    const virtualData: any = {}
 
-    if (this._showUnenumerable && !firstLevel) {
+    if (this.unenumerable && !firstLevel) {
       types.push('unenumerable')
       types.push('symbol')
       unenumerableKeys = difference(
@@ -87,7 +94,7 @@ module.exports = class LunaObjViewer extends Emitter {
       types.unshift('virtual')
       isBigArr = true
       let idx = 0
-      const map = {}
+      const map: any = {}
       each(chunk(data, 100), val => {
         const obj = Object.create(null)
         const startIdx = idx
@@ -120,12 +127,12 @@ module.exports = class LunaObjViewer extends Emitter {
         typeKeys.sort(sortObjName)
       }
       for (let i = 0, len = typeKeys.length; i < len; i++) {
-        const key = typeKeys[i]
+        const key = toStr(typeKeys[i])
         let val = ''
         const descriptor = Object.getOwnPropertyDescriptor(data, key)
         const hasGetter = descriptor && descriptor.get
         const hasSetter = descriptor && descriptor.set
-        if (hasGetter && !this._showGetterVal) {
+        if (hasGetter && !this.accessGetter) {
           val = '(...)'
         } else {
           try {
@@ -141,21 +148,21 @@ module.exports = class LunaObjViewer extends Emitter {
             val = e.message
           }
         }
-        ret += this._createEl(key, data, val, type, firstLevel)
+        ret += this.createEl(key, data, val, type, firstLevel)
         if (hasGetter) {
-          ret += this._createEl(
+          ret += this.createEl(
             `get ${key}`,
             data,
-            descriptor.get,
+            (descriptor as PropertyDescriptor).get,
             type,
             firstLevel
           )
         }
         if (hasSetter) {
-          ret += this._createEl(
+          ret += this.createEl(
             `set ${key}`,
             data,
-            descriptor.set,
+            (descriptor as PropertyDescriptor).set,
             type,
             firstLevel
           )
@@ -169,25 +176,33 @@ module.exports = class LunaObjViewer extends Emitter {
         const id = visitor.set(proto, {
           self: data
         })
-        this._map[id] = proto
-        ret = this._objToHtml(proto)
+        this.map[id] = proto
+        ret = this.objToHtml(proto)
       } else {
-        ret += this._createEl('__proto__', self || data, proto, 'proto')
+        ret += this.createEl('__proto__', self || data, proto, 'proto')
       }
     }
 
     return ret
   }
-  _createEl(key, self, val, keyType, firstLevel = false) {
-    const visitor = this._visitor
+  private createEl(
+    key: string,
+    self: any,
+    val: any,
+    keyType: string,
+    firstLevel = false
+  ) {
+    const { visitor } = this
     let t: any = typeof val
     let valType = type(val, false)
     if (keyType === 'virtual') valType = key
 
     if (val === null) {
-      return `<li>${wrapKey(key)}<span class="eruda-null">null</span></li>`
+      return `<li>${wrapKey(
+        key
+      )}<span class="${classPrefix}null">null</span></li>`
     } else if (isNum(val) || isBool(val)) {
-      return `<li>${wrapKey(key)}<span class="eruda-${t}">${encode(
+      return `<li>${wrapKey(key)}<span class="${classPrefix + t}">${encode(
         val
       )}</span></li>`
     }
@@ -196,15 +211,17 @@ module.exports = class LunaObjViewer extends Emitter {
     if (valType === 'Number') t = 'number'
 
     if (valType === 'Number' || valType === 'RegExp') {
-      return `<li>${wrapKey(key)}<span class="eruda-${t}">${encode(
+      return `<li>${wrapKey(key)}<span class="${classPrefix + t}">${encode(
         val.value
       )}</span></li>`
     } else if (valType === 'Undefined' || valType === 'Symbol') {
-      return `<li>${wrapKey(key)}<span class="eruda-special">${lowerCase(
-        valType
-      )}</span></li>`
+      return `<li>${wrapKey(
+        key
+      )}<span class="${classPrefix}special">${lowerCase(valType)}</span></li>`
     } else if (val === '(...)') {
-      return `<li>${wrapKey(key)}<span class="eruda-special">${val}</span></li>`
+      return `<li>${wrapKey(
+        key
+      )}<span class="${classPrefix}special">${val}</span></li>`
     } else if (isObj(val)) {
       const visitedObj = visitor.get(val)
       let id
@@ -216,54 +233,52 @@ module.exports = class LunaObjViewer extends Emitter {
           extra.self = self
         }
         id = visitor.set(val, extra)
-        this._map[id] = val
+        this.map[id] = val
       }
       const objAbstract = getObjAbstract(val, valType) || upperFirst(t)
 
       let obj = `<li ${
         firstLevel ? 'data-first-level="true"' : ''
       } ${'data-object-id="' + id + '"'}><span class="${
-        firstLevel ? '' : 'eruda-expanded eruda-collapsed'
-      }"></span>${wrapKey(key)}<span class="eruda-open">${
+        firstLevel ? '' : `${classPrefix}expanded ${classPrefix}collapsed`
+      }"></span>${wrapKey(key)}<span class="${classPrefix}open">${
         firstLevel ? '' : objAbstract
-      }</span><ul class="eruda-${t}" ${
+      }</span><ul class="${classPrefix + t}" ${
         firstLevel ? '' : 'style="display:none"'
       }>`
 
-      if (firstLevel) obj += this._objToHtml(val)
+      if (firstLevel) obj += this.objToHtml(val)
 
-      return obj + '</ul><span class="eruda-close"></span></li>'
+      return obj + `</ul><span class="${classPrefix}close"></span></li>`
     }
 
-    function wrapKey(key) {
+    function wrapKey(key: string) {
       if (firstLevel) return ''
       if (isObj(val) && keyType === 'virtual') return ''
 
-      let keyClass = 'eruda-key'
+      let keyClass = `${classPrefix}key`
       if (
         keyType === 'unenumerable' ||
         keyType === 'proto' ||
         keyType === 'symbol'
       ) {
-        keyClass = 'eruda-key-lighter'
+        keyClass = `${classPrefix}key-lighter`
       }
 
       return `<span class="${keyClass}">${encode(key)}</span>: `
     }
 
-    return `<li>${wrapKey(key)}<span class="eruda-${typeof val}">"${encode(
-      val
-    )}"</span></li>`
+    return `<li>${wrapKey(key)}<span class="${classPrefix +
+      typeof val}">"${encode(val)}"</span></li>`
   }
-  _appendTpl() {
-    this._$el.html(this._objToHtml(this._data, true))
+  private appendTpl() {
+    this.$container.html(this.objToHtml(this.data, true))
   }
-  _bindEvent() {
-    const map = this._map
-
+  private bindEvent() {
     const self = this
 
-    this._$el.on('click', 'li', function(e) {
+    this.$container.on('click', 'li', function(this: Element, e: any) {
+      const { map } = self
       const $this = $(this)
       const circularId = $this.data('object-id')
       const $firstSpan: any = $(this)
@@ -272,29 +287,30 @@ module.exports = class LunaObjViewer extends Emitter {
 
       if ($this.data('first-level')) return
       if (circularId) {
-        $this.find('ul').html(self._objToHtml(map[circularId], false))
+        $this.find('ul').html(self.objToHtml(map[circularId], false))
         $this.rmAttr('data-object-id')
       }
 
       e.stopImmediatePropagation()
 
-      if (!$firstSpan.hasClass('eruda-expanded')) return
+      if (!$firstSpan.hasClass(`${classPrefix}expanded`)) return
 
       const $ul: any = $this.find('ul').eq(0)
-      if ($firstSpan.hasClass('eruda-collapsed')) {
-        $firstSpan.rmClass('eruda-collapsed')
+      if ($firstSpan.hasClass(`${classPrefix}collapsed`)) {
+        $firstSpan.rmClass(`${classPrefix}collapsed`)
         $ul.show()
       } else {
-        $firstSpan.addClass('eruda-collapsed')
+        $firstSpan.addClass(`${classPrefix}collapsed`)
         $ul.hide()
       }
 
       self.emit('change')
     })
   }
+  static Static = Static
 }
 
-function getObjAbstract(data, type) {
+function getObjAbstract(data: any, type: string) {
   if (!type) return
 
   if (type === 'Function') {
@@ -305,36 +321,4 @@ function getObjAbstract(data, type) {
   }
 
   return type
-}
-
-class Visitor {
-  id: number
-  visited: any[]
-  constructor() {
-    this.id = 0
-    this.visited = []
-  }
-  set(val, extra) {
-    const { visited, id } = this
-    const obj = {
-      id,
-      val
-    }
-    extend(obj, extra)
-    visited.push(obj)
-
-    this.id++
-
-    return id
-  }
-  get(val) {
-    const { visited } = this
-
-    for (let i = 0, len = visited.length; i < len; i++) {
-      const obj = visited[i]
-      if (val === obj.val) return obj
-    }
-
-    return false
-  }
 }

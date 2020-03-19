@@ -2,14 +2,15 @@ import toStr from 'licia/toStr'
 import trim from 'licia/trim'
 import toNum from 'licia/toNum'
 import startWith from 'licia/startWith'
+import escape from 'licia/escape'
 
-export const encode = str => {
+export const encode = (str: string) => {
   return escape(toStr(str))
     .replace(/\n/g, '↵')
     .replace(/\f|\r|\t/g, '')
 }
 
-export function getFnAbstract(str) {
+export function getFnAbstract(str: string) {
   if (str.length > 500) str = str.slice(0, 500) + '...'
 
   return 'ƒ ' + trim(extractFnHead(str).replace('function', ''))
@@ -17,7 +18,7 @@ export function getFnAbstract(str) {
 
 const regFnHead = /function(.*?)\((.*?)\)/
 
-function extractFnHead(str) {
+function extractFnHead(str: string) {
   const fnHead = str.match(regFnHead)
 
   if (fnHead) return fnHead[0]
@@ -26,7 +27,7 @@ function extractFnHead(str) {
 }
 
 // $, upperCase, lowerCase, _
-export function sortObjName(a, b) {
+export function sortObjName(a: string | Symbol, b: string | Symbol) {
   a = toStr(a)
   b = toStr(b)
   const numA = toNum(a)
@@ -58,7 +59,7 @@ export function sortObjName(a, b) {
   return 0
 }
 
-function cmpCode(a, b) {
+function cmpCode(a: number, b: number) {
   a = transCode(a)
   b = transCode(b)
 
@@ -67,7 +68,7 @@ function cmpCode(a, b) {
   return 0
 }
 
-function transCode(code) {
+function transCode(code: number) {
   // _ should be placed after lowercase chars.
   if (code === 95) return 123
   return code

@@ -1,0 +1,85 @@
+$font-size-s: 12px;
+$padding: 10px;
+
+.json {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  cursor: default;
+  font-size: $font-size-s;
+  line-height: 1.2;
+  min-height: 100%;
+  color: var(--primary);
+  &,
+  ul {
+    list-style: none !important;
+  }
+  ul {
+    padding: 0 !important;
+    padding-left: 15px !important;
+    margin: 0 !important;
+  }
+  li {
+    position: relative;
+    white-space: nowrap;
+    line-height: 16px;
+    min-height: 16px;
+  }
+  & > li > .key {
+    display: none;
+  }
+  & > li {
+    padding: $padding 0;
+  }
+  .array .object .key {
+    display: inline;
+  }
+  .null {
+    color: var(--operator-color);
+  }
+  .string,
+  .regexp {
+    color: var(--string-color);
+  }
+  .number {
+    color: var(--number-color);
+  }
+  .boolean {
+    color: var(--keyword-color);
+  }
+  .special {
+    color: var(--operator-color);
+  }
+  .key,
+  .key-lighter {
+    color: var(--var-color);
+  }
+  .key-lighter {
+    opacity: 0.6;
+  }
+  .expanded:before {
+    content: '';
+    width: 0;
+    height: 0;
+    border: 4px solid transparent;
+    position: absolute;
+    border-top-color: var(--foreground);
+    left: -12px;
+    top: 6px;
+  }
+  .collapsed:before {
+    content: '';
+    border-left-color: var(--foreground);
+    border-top-color: transparent;
+    left: -10px;
+    top: 4px;
+  }
+  li .collapsed ~ .close:before {
+    color: #999;
+  }
+  .hidden ~ ul {
+    display: none;
+  }
+  span {
+    position: static !important;
+  }
+}

@@ -7,7 +7,7 @@
     "format": "prettier src/share/*.{ts,js} *.{json,js} --write",
     "build:object-viewer": "webpack --config ./src/object-viewer/webpack.config.js --mode=production",
     "dev:object-viewer": "webpack-dev-server --config ./src/object-viewer/webpack.config.js",
-    "format:object-viewer": "prettier src/object-viewer/*.{ts,js,html} --write"
+    "format:object-viewer": "prettier src/object-viewer/*.{ts,js,html,json} --write"
   },
   "repository": {
     "type": "git",

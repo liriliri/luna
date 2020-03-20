@@ -1,5 +1,7 @@
 const path = require('path')
 const prefixer = require('postcss-prefixer')
+const autoprefixer = require('autoprefixer')
+const clean = require('postcss-clean')
 const camelCase = require('licia/camelCase')
 const upperFirst = require('licia/upperFirst')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -45,7 +47,9 @@ module.exports = function(name) {
                   prefixer({
                     prefix: `luna-${name}-`,
                     ignore: [`luna-${name}`]
-                  })
+                  }),
+                  autoprefixer,
+                  clean()
                 ]
               }
             },

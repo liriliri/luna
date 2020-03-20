@@ -17,6 +17,7 @@ import allKeys from 'licia/allKeys'
 import filter from 'licia/filter'
 import chunk from 'licia/chunk'
 import toStr from 'licia/toStr'
+import noop from 'licia/noop'
 import Visitor from './Visitor'
 import { encode, getFnAbstract, sortObjName } from './util'
 import Static from './Static'
@@ -142,7 +143,7 @@ module.exports = class ObjectViewer extends Emitter {
               val = self[key]
             }
             if (isPromise(val)) {
-              ;(val as any).catch(() => {})
+              ;(val as any).catch(noop)
             }
           } catch (e) {
             val = e.message

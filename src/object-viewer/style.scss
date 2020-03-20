@@ -13,20 +13,26 @@
   & > li {
     padding: 10px 0;
   }
-}
-ul {
-  list-style: none !important;
-}
-ul {
-  padding: 0 !important;
-  padding-left: 15px !important;
-  margin: 0 !important;
-}
-li {
-  position: relative;
-  white-space: nowrap;
-  line-height: 16px;
-  min-height: 16px;
+  ul {
+    list-style: none !important;
+  }
+  ul {
+    padding: 0 !important;
+    padding-left: 15px !important;
+    margin: 0 !important;
+  }
+  li {
+    position: relative;
+    white-space: nowrap;
+    line-height: 16px;
+    min-height: 16px;
+  }
+  span {
+    position: static !important;
+  }
+  li .collapsed ~ .close:before {
+    color: #999;
+  }
 }
 .array .object .key {
   display: inline;
@@ -71,12 +77,6 @@ li {
   left: -10px;
   top: 4px;
 }
-li .collapsed ~ .close:before {
-  color: #999;
-}
 .hidden ~ ul {
   display: none;
-}
-span {
-  position: static !important;
 }

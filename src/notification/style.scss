@@ -1,0 +1,27 @@
+.luna-notification {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.item {
+  display: flex;
+  box-shadow: 0 3px 7px 0 rgba(0,0,0,.25);
+  padding: 10px 16px;
+}
+
+.lower {
+  margin-top: 16px;
+}
+
+.upper {
+  margin-bottom: 16px;
+}

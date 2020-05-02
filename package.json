@@ -26,7 +26,7 @@
     "autoprefixer": "^9.7.4",
     "css-loader": "^3.4.2",
     "execa": "^4.0.0",
-    "licia": "^1.19.0",
+    "licia": "^1.21.2",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.13.1",
     "postcss-clean": "^1.1.0",

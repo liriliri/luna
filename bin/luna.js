@@ -31,9 +31,10 @@ async function dev(argv) {
   const component = getComponent(argv)
   if (!component) return
 
-  await runScript('webpack-dev-server', [
+  await runScript('webpack', [
     '--config',
-    `./src/${component}/webpack.config.js`
+    `./src/${component}/webpack.config.js`,
+    '--watch'
   ])
 }
 

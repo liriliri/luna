@@ -7,7 +7,8 @@
     "luna": "./bin/luna.js"
   },
   "scripts": {
-    "format": "prettier src/share/*.{ts,js} *.{json,js} bin/*.js --write"
+    "format": "prettier src/share/*.{ts,js} *.{json,js} bin/*.js .storybook/*.js --write",
+    "storybook": "start-storybook"
   },
   "repository": {
     "type": "git",
@@ -23,9 +24,13 @@
   },
   "homepage": "https://github.com/liriliri/luna#readme",
   "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@storybook/html": "^5.3.19",
     "autoprefixer": "^9.7.4",
+    "babel-loader": "^8.1.0",
     "css-loader": "^3.4.2",
     "execa": "^4.0.0",
+    "glob": "^7.1.6",
     "licia": "^1.21.2",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.13.1",
@@ -41,7 +46,6 @@
     "typescript": "^3.8.3",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3",
     "yargs": "^15.3.1"
   }
 }

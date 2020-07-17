@@ -10,10 +10,6 @@ module.exports = function(name) {
   return {
     entry: `./src/${name}/index.ts`,
     devtool: 'source-map',
-    devServer: {
-      contentBase: `./src/${name}`,
-      port: 3000
-    },
     output: {
       filename: `luna-${name}.js`,
       path: path.resolve(__dirname, `../../dist/${name}`),

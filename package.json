@@ -8,7 +8,8 @@
   },
   "scripts": {
     "format": "prettier src/share/*.{ts,js} *.{json,js} bin/*.js .storybook/*.js --write",
-    "storybook": "start-storybook"
+    "storybook": "start-storybook",
+    "build-storybook": "build-storybook -o .storybook/out"
   },
   "repository": {
     "type": "git",

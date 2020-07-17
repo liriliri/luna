@@ -4,7 +4,7 @@ import ObjectViewer from 'object-viewer.js'
 
 export default { title: 'Object Viewer' }
 
-export const Object = () => {
+export const Basic = () => {
   const container = document.createElement('div')
   const objectViewer = new ObjectViewer(container, {
     unenumerable: true,

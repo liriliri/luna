@@ -1,3 +1,4 @@
 node_modules/
 dist/
+.storybook/out/
 package-lock.json

@@ -1,5 +1,3 @@
 module.exports = class SideBar {
-    constructor() {
-        
-    }
+  constructor() {}
 }

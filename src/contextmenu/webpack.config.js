@@ -1,1 +1,1 @@
-module.exports = require('../share/webpack.config')('context-menu')
+module.exports = require('../share/webpack.config')('contextmenu')

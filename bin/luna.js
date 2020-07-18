@@ -34,6 +34,7 @@ async function dev(argv) {
   await runScript('webpack', [
     '--config',
     `./src/${component}/webpack.config.js`,
+    '--mode=development',
     '--watch'
   ])
 }

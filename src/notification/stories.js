@@ -1,3 +1,4 @@
+import h from 'licia/h'
 import 'notification.css'
 import Notification from 'notification.js'
 
@@ -6,7 +7,8 @@ export default {
 }
 
 export const Basic = () => {
-  const notification = new Notification(document.body, {
+  const container = h('div')
+  const notification = new Notification(container, {
     position: {
       x: 'center',
       y: 'top'
@@ -23,5 +25,5 @@ export const Basic = () => {
   })
   setTimeout(() => notification.dismissAll(), 10000)
 
-  return ''
+  return container
 }

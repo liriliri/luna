@@ -20,9 +20,18 @@ module.exports = {
           include: [path.resolve(__dirname, '../src')]
         }
       }
-    }
+    },
+    '@storybook/addon-backgrounds/register'
   ],
   webpackFinal: config => {
+    const rules = config.module.rules
+
+    each(rules, rule => {
+      if (rule.test.toString() === '/\\.(mjs|jsx?)$/') {
+        rule.use[0].options.sourceType = 'unambiguous'
+      }
+    })
+
     each(components, component => {
       each(['css', 'js'], extension => {
         config.resolve.alias[`${component}.${extension}`] = path.resolve(

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "format": "prettier src/share/*.{ts,js} *.{json,js} bin/*.js .storybook/*.js --write",
-    "storybook": "start-storybook",
+    "storybook": "start-storybook -p 3000",
     "build-storybook": "build-storybook -o .storybook/out"
   },
   "repository": {
@@ -26,8 +26,12 @@
   "homepage": "https://github.com/liriliri/luna#readme",
   "devDependencies": {
     "@babel/core": "^7.10.5",
+    "@storybook/addon-backgrounds": "^5.3.19",
+    "@storybook/addon-knobs": "^5.3.19",
     "@storybook/addon-storysource": "^5.3.19",
+    "@storybook/addons": "^5.3.19",
     "@storybook/html": "^5.3.19",
+    "@storybook/theming": "^5.3.19",
     "autoprefixer": "^9.7.4",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.4.2",

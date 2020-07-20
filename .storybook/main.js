@@ -12,6 +12,7 @@ const stories = map(components, component => `../src/${component}/stories.js`)
 module.exports = {
   stories,
   addons: [
+    '@storybook/addon-knobs/register',
     {
       name: '@storybook/addon-storysource',
       options: {
@@ -22,7 +23,6 @@ module.exports = {
       }
     },
     '@storybook/addon-backgrounds/register',
-    '@storybook/addon-knobs/register',
     'storybook-readme/register'
   ],
   webpackFinal: config => {

@@ -21,7 +21,8 @@ module.exports = {
         }
       }
     },
-    '@storybook/addon-backgrounds/register'
+    '@storybook/addon-backgrounds/register',
+    '@storybook/addon-knobs/register'
   ],
   webpackFinal: config => {
     const rules = config.module.rules

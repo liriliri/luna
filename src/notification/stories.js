@@ -1,11 +1,18 @@
 import h from 'licia/h'
 import 'notification.css'
 import Notification from 'notification.js'
+import readme from './README.md'
+import { addReadme } from 'storybook-readme/html'
 import { withKnobs, select, text, number, button } from '@storybook/addon-knobs'
 
 export default {
   title: 'Notification',
-  decorators: [withKnobs]
+  decorators: [withKnobs, addReadme],
+  parameters: {
+    readme: {
+      sidebar: readme
+    }
+  }
 }
 
 export const Basic = () => {
@@ -46,7 +53,6 @@ export const Basic = () => {
     notification.dismissAll()
     return false
   })
-  // setTimeout(() => notification.dismissAll(), 10000)
 
   return container
 }

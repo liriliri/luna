@@ -2,9 +2,19 @@ import stringifyAll from 'licia/stringifyAll'
 import h from 'licia/h'
 import 'object-viewer.css'
 import ObjectViewer from 'object-viewer.js'
+import readme from './README.md'
+import { addReadme } from 'storybook-readme/html'
 import { withKnobs, text, boolean } from '@storybook/addon-knobs'
 
-export default { title: 'Object Viewer', decorators: [withKnobs] }
+export default {
+  title: 'Object Viewer',
+  decorators: [withKnobs, addReadme],
+  parameters: {
+    readme: {
+      sidebar: readme
+    }
+  }
+}
 
 export const Basic = () => {
   const container = h('div')

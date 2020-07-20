@@ -46,6 +46,7 @@
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
     "shelljs": "^0.8.3",
+    "storybook-readme": "^5.0.8",
     "ts-loader": "^6.2.1",
     "tslint": "^6.1.0",
     "tslint-config-prettier": "^1.18.0",

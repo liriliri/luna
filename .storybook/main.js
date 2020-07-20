@@ -11,6 +11,17 @@ const stories = map(components, component => `../src/${component}/stories.js`)
 
 module.exports = {
   stories,
+  addons: [
+    {
+      name: '@storybook/addon-storysource',
+      options: {
+        rule: {
+          test: [/stories\.js/],
+          include: [path.resolve(__dirname, '../src')]
+        }
+      }
+    }
+  ],
   webpackFinal: config => {
     each(components, component => {
       each(['css', 'js'], extension => {

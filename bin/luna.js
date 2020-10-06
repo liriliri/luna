@@ -23,7 +23,7 @@ async function format(argv) {
 
   await runScript('prettier', [
     `src/${component}/*.{ts,js,html,json}`,
-    '--write'
+    '--write',
   ])
 }
 
@@ -35,7 +35,7 @@ async function dev(argv) {
     '--config',
     `./src/${component}/webpack.config.js`,
     '--mode=development',
-    '--watch'
+    '--watch',
   ])
 }
 
@@ -53,7 +53,7 @@ async function build(argv) {
   await runScript('webpack', [
     '--config',
     `src/${component}/webpack.config.js`,
-    '--mode=production'
+    '--mode=production',
   ])
 
   const pkg = require('../package.json')
@@ -96,6 +96,6 @@ function runScript(name, args) {
   return execa(name, args, {
     preferLocal: true,
     cwd: resolve('../'),
-    stdio: 'inherit'
+    stdio: 'inherit',
   })
 }

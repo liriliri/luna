@@ -4,10 +4,10 @@ const map = require('licia/map')
 const each = require('licia/each')
 
 const components = glob.sync('*', {
-  cwd: path.resolve(__dirname, '../dist')
+  cwd: path.resolve(__dirname, '../dist'),
 })
 
-const stories = map(components, component => `../src/${component}/stories.js`)
+const stories = map(components, (component) => `../src/${component}/stories.js`)
 
 module.exports = {
   stories,
@@ -18,24 +18,24 @@ module.exports = {
       options: {
         rule: {
           test: [/stories\.js/],
-          include: [path.resolve(__dirname, '../src')]
-        }
-      }
+          include: [path.resolve(__dirname, '../src')],
+        },
+      },
     },
     '@storybook/addon-backgrounds/register',
-    'storybook-readme/register'
+    'storybook-readme/register',
   ],
-  webpackFinal: config => {
+  webpackFinal: (config) => {
     const rules = config.module.rules
 
-    each(rules, rule => {
+    each(rules, (rule) => {
       if (rule.test.toString() === '/\\.(mjs|jsx?)$/') {
         rule.use[0].options.sourceType = 'unambiguous'
       }
     })
 
-    each(components, component => {
-      each(['css', 'js'], extension => {
+    each(components, (component) => {
+      each(['css', 'js'], (extension) => {
         config.resolve.alias[`${component}.${extension}`] = path.resolve(
           __dirname,
           `../dist/${component}/luna-${component}.${extension}`
@@ -43,5 +43,5 @@ module.exports = {
       })
     })
     return config
-  }
+  },
 }

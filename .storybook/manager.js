@@ -3,5 +3,5 @@ import theme from './theme'
 
 addons.setConfig({
   theme,
-  panelPosition: 'right'
+  panelPosition: 'right',
 })

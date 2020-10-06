@@ -9,5 +9,5 @@ export default create({
   appBorderColor: '#2D253C',
   barTextColor: '#FFFFFF',
   barBg: '#614D82',
-  appContentBg: '#FCF0F4'
+  appContentBg: '#FCF0F4',
 })

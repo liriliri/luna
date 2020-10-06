@@ -6,7 +6,7 @@ const camelCase = require('licia/camelCase')
 const upperFirst = require('licia/upperFirst')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-module.exports = function(name) {
+module.exports = function (name) {
   return {
     entry: `./src/${name}/index.ts`,
     devtool: 'source-map',
@@ -15,21 +15,21 @@ module.exports = function(name) {
       path: path.resolve(__dirname, `../../dist/${name}`),
       publicPath: '/assets/',
       library: `Luna${upperFirst(camelCase(name))}`,
-      libraryTarget: 'umd'
+      libraryTarget: 'umd',
     },
     resolve: {
-      extensions: ['.ts', '.js']
+      extensions: ['.ts', '.js'],
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: `luna-${name}.css`
-      })
+        filename: `luna-${name}.css`,
+      }),
     ],
     module: {
       rules: [
         {
           test: /\.ts$/,
-          loader: 'ts-loader'
+          loader: 'ts-loader',
         },
         {
           test: /\.scss/,
@@ -42,17 +42,17 @@ module.exports = function(name) {
                 plugins: [
                   prefixer({
                     prefix: `luna-${name}-`,
-                    ignore: [`luna-${name}`]
+                    ignore: [`luna-${name}`],
                   }),
                   autoprefixer,
-                  clean()
-                ]
-              }
+                  clean(),
+                ],
+              },
             },
-            'sass-loader'
-          ]
-        }
-      ]
-    }
+            'sass-loader',
+          ],
+        },
+      ],
+    },
   }
 }

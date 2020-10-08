@@ -1,11 +1,8 @@
 import './style.scss'
-import $ from 'licia/$'
 
 module.exports = class Contextmenu {
-  private $container: $.$
   private menuItems: MenuItem[] = []
   constructor(container: Element) {
-    this.$container = $(container)
   }
   append(options: IMenuItemOptions) {
     this.menuItems.push(new MenuItem(options))

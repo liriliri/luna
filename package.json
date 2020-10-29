@@ -7,7 +7,7 @@
     "luna": "./bin/luna.js"
   },
   "scripts": {
-    "format": "prettier src/share/*.{ts,js} *.{json,js} bin/*.js .storybook/*.js --write",
+    "format": "prettier 'src/share/*.{ts,js}' '*.{json,js}' 'bin/*.js' '.storybook/*.js' --write",
     "storybook": "start-storybook -p 3000",
     "build-storybook": "build-storybook -o .storybook/out"
   },

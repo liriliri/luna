@@ -1,6 +1,6 @@
 # Luna Object Viewer
 
-JavaScript Object Viewer.
+JavaScript object viewer.
 
 ## Install
 

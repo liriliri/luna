@@ -21,6 +21,7 @@ import noop from 'licia/noop'
 import Visitor from './Visitor'
 import { encode, getFnAbstract, sortObjName } from './util'
 import Static from './Static'
+import './icon.css'
 import './style.scss'
 
 const classPrefix = 'luna-object-viewer-'
@@ -76,16 +77,16 @@ module.exports = class ObjectViewer extends Emitter {
       unenumerableKeys = difference(
         allKeys(data, {
           prototype: false,
-          unenumerable: true
+          unenumerable: true,
         }),
         enumerableKeys
       )
       symbolKeys = filter(
         allKeys(data, {
           prototype: false,
-          symbol: true
+          symbol: true,
         }),
-        key => {
+        (key) => {
           return typeof key === 'symbol'
         }
       )
@@ -96,11 +97,11 @@ module.exports = class ObjectViewer extends Emitter {
       isBigArr = true
       let idx = 0
       const map: any = {}
-      each(chunk(data, 100), val => {
+      each(chunk(data, 100), (val) => {
         const obj = Object.create(null)
         const startIdx = idx
         let key = '[' + startIdx
-        each(val, val => {
+        each(val, (val) => {
           obj[idx] = val
           map[idx] = true
           idx++
@@ -110,10 +111,10 @@ module.exports = class ObjectViewer extends Emitter {
         virtualData[key] = obj
       })
       virtualKeys = keys(virtualData)
-      enumerableKeys = filter(enumerableKeys, val => !map[val])
+      enumerableKeys = filter(enumerableKeys, (val) => !map[val])
     }
 
-    each(types, type => {
+    each(types, (type) => {
       let typeKeys = []
       if (type === 'symbol') {
         typeKeys = symbolKeys
@@ -175,7 +176,7 @@ module.exports = class ObjectViewer extends Emitter {
     if (!firstLevel && proto) {
       if (ret === '') {
         const id = visitor.set(proto, {
-          self: data
+          self: data,
         })
         this.map[id] = proto
         ret = this.objToHtml(proto)
@@ -238,11 +239,13 @@ module.exports = class ObjectViewer extends Emitter {
       }
       const objAbstract = getObjAbstract(val, valType) || upperFirst(t)
 
-      let obj = `<li ${
-        firstLevel ? 'data-first-level="true"' : ''
-      } ${'data-object-id="' + id + '"'}><span class="${
-        firstLevel ? '' : `${classPrefix}expanded ${classPrefix}collapsed`
-      }"></span>${wrapKey(key)}<span class="${classPrefix}open">${
+      const icon = firstLevel
+        ? ''
+        : `<span class="${classPrefix}expanded ${classPrefix}collapsed"><span class="${classPrefix}icon ${classPrefix}icon-arrow-right"></span><span class="${classPrefix}icon ${classPrefix}icon-arrow-down"></span></span>`
+
+      let obj = `<li ${firstLevel ? 'data-first-level="true"' : ''} ${
+        'data-object-id="' + id + '"'
+      }>${icon}${wrapKey(key)}<span class="${classPrefix}open">${
         firstLevel ? '' : objAbstract
       }</span><ul class="${classPrefix + t}" ${
         firstLevel ? '' : 'style="display:none"'
@@ -269,8 +272,9 @@ module.exports = class ObjectViewer extends Emitter {
       return `<span class="${keyClass}">${encode(key)}</span>: `
     }
 
-    return `<li>${wrapKey(key)}<span class="${classPrefix +
-      typeof val}">"${encode(val)}"</span></li>`
+    return `<li>${wrapKey(key)}<span class="${
+      classPrefix + typeof val
+    }">"${encode(val)}"</span></li>`
   }
   private appendTpl() {
     this.$container.html(this.objToHtml(this.data, true))
@@ -278,13 +282,11 @@ module.exports = class ObjectViewer extends Emitter {
   private bindEvent() {
     const self = this
 
-    this.$container.on('click', 'li', function(this: Element, e: any) {
+    this.$container.on('click', 'li', function (this: Element, e: any) {
       const { map } = self
       const $this = $(this)
       const circularId = $this.data('object-id')
-      const $firstSpan: any = $(this)
-        .find('span')
-        .eq(0)
+      const $firstSpan: any = $(this).find('span').eq(0)
 
       if ($this.data('first-level')) return
       if (circularId) {

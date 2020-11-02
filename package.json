@@ -7,7 +7,7 @@
     "luna": "./bin/luna.js"
   },
   "scripts": {
-    "format": "prettier 'src/share/*.{ts,js}' '*.{json,js}' 'bin/*.js' '.storybook/*.js' --write",
+    "format": "prettier \"src/share/*.{ts,js}\" \"*.{json,js}\" \"bin/*.js\" \".storybook/*.js\" --write",
     "storybook": "start-storybook -p 3000",
     "build-storybook": "build-storybook -o .storybook/out"
   },
@@ -43,7 +43,7 @@
     "postcss-clean": "^1.1.0",
     "postcss-loader": "^3.0.0",
     "postcss-prefixer": "^2.1.2",
-    "prettier": "^1.19.1",
+    "prettier": "^2.1.2",
     "sass-loader": "^8.0.2",
     "shelljs": "^0.8.3",
     "storybook-readme": "^5.0.8",

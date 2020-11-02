@@ -7,6 +7,20 @@ const upperFirst = require('licia/upperFirst')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = function (name) {
+  const postcssLoader = {
+    loader: 'postcss-loader',
+    options: {
+      plugins: [
+        prefixer({
+          prefix: `luna-${name}-`,
+          ignore: [`luna-${name}`],
+        }),
+        autoprefixer,
+        clean(),
+      ],
+    },
+  }
+
   return {
     entry: `./src/${name}/index.ts`,
     devtool: 'source-map',
@@ -36,21 +50,13 @@ module.exports = function (name) {
           loaders: [
             MiniCssExtractPlugin.loader,
             'css-loader',
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: [
-                  prefixer({
-                    prefix: `luna-${name}-`,
-                    ignore: [`luna-${name}`],
-                  }),
-                  autoprefixer,
-                  clean(),
-                ],
-              },
-            },
+            postcssLoader,
             'sass-loader',
           ],
+        },
+        {
+          test: /\.css/,
+          loaders: [MiniCssExtractPlugin.loader, 'css-loader', postcssLoader],
         },
       ],
     },

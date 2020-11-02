@@ -8,6 +8,7 @@ const noop = require('licia/noop')
 const clone = require('licia/clone')
 const extend = require('licia/extend')
 const fs = require('licia/fs')
+const { command } = require('yargs')
 
 yargs
   .usage('Usage: <command> <component>')
@@ -15,6 +16,7 @@ yargs
   .command('dev', 'start webpack-dev-server', noop, dev)
   .command('build', 'build package', noop, build)
   .command('lint', 'lint code', noop, lint)
+  .command('genIcon', 'generate icon file', noop, genIcon)
   .help('h').argv
 
 async function format(argv) {
@@ -44,6 +46,22 @@ async function lint(argv) {
   if (!component) return
 
   await runScript('tslint', [`src/${component}/*.ts`])
+}
+
+async function genIcon(argv) {
+  const component = getComponent(argv)
+  if (!component) return
+
+  await runScript('lsla', [
+    'genIcon',
+    '--input',
+    `src/${component}/icon`,
+    '--output',
+    `src/${component}/icon.css`,
+    '--name',
+    `${component}-icon`,
+  ])
+  await runScript('prettier', [`src/${component}/icon.css`, '--write'])
 }
 
 async function build(argv) {

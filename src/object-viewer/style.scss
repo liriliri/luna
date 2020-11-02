@@ -60,22 +60,24 @@
 .key-lighter {
   opacity: 0.6;
 }
-.expanded:before {
-  content: "";
-  width: 0;
-  height: 0;
-  border: 4px solid transparent;
-  position: absolute;
-  border-top-color: #333;
-  left: -12px;
-  top: 6px;
+.expanded .icon, .collapsed .icon {
+  position: absolute!important;
+  left: -16px;
+  top: 1px;
+  color: #727272;
+  font-size: 14px;
 }
-.collapsed:before {
-  content: "";
-  border-left-color: #333;
-  border-top-color: transparent;
-  left: -10px;
-  top: 4px;
+.expanded > .icon-arrow-down {
+  display: inline;
+}
+.expanded > .icon-arrow-right {
+  display: none;
+}
+.collapsed > .icon-arrow-down {
+  display: none;
+}
+.collapsed > .icon-arrow-right {
+  display: inline;
 }
 .hidden ~ ul {
   display: none;

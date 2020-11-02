@@ -35,8 +35,8 @@ export default class JsonViewer extends Emitter {
     this.data = {
       id: uniqId('json'),
       enumerable: {
-        0: data
-      }
+        0: data,
+      },
     }
     this.map = {}
 
@@ -47,7 +47,7 @@ export default class JsonViewer extends Emitter {
   private objToHtml(data: any, firstLevel?: boolean) {
     let ret = ''
 
-    each(['enumerable', 'unenumerable', 'symbol'], type => {
+    each(['enumerable', 'unenumerable', 'symbol'], (type) => {
       if (!data[type]) return
 
       const typeKeys = keys(data[type])
@@ -101,11 +101,13 @@ export default class JsonViewer extends Emitter {
       const referenceId = val.reference
       const objAbstract = getObjAbstract(val) || upperFirst(type)
 
-      let obj = `<li ${
-        firstLevel ? 'data-first-level="true"' : ''
-      } ${'data-object-id="' + (referenceId || id) + '"'}><span class="${
-        firstLevel ? '' : `${classPrefix}expanded ${classPrefix}collapsed`
-      }"></span>${wrapKey(key)}<span class="${classPrefix}open">${
+      const icon = firstLevel
+        ? ''
+        : `<span class="${classPrefix}expanded ${classPrefix}collapsed"><span class="${classPrefix}icon ${classPrefix}icon-arrow-right"></span><span class="${classPrefix}icon ${classPrefix}icon-arrow-down"></span></span>`
+
+      let obj = `<li ${firstLevel ? 'data-first-level="true"' : ''} ${
+        'data-object-id="' + (referenceId || id) + '"'
+      }>${icon}${wrapKey(key)}<span class="${classPrefix}open">${
         firstLevel ? '' : objAbstract
       }</span><ul class="${classPrefix + type}" ${
         firstLevel ? '' : 'style="display:none"'
@@ -132,8 +134,9 @@ export default class JsonViewer extends Emitter {
       return `<span class="${keyClass}">${encode(key)}</span>: `
     }
 
-    return `<li>${wrapKey(key)}<span class="${classPrefix +
-      typeof val}">"${encode(val)}"</span></li>`
+    return `<li>${wrapKey(key)}<span class="${
+      classPrefix + typeof val
+    }">"${encode(val)}"</span></li>`
   }
   private appendTpl() {
     const data = this.map[this.data.id]
@@ -143,13 +146,11 @@ export default class JsonViewer extends Emitter {
   private bindEvent() {
     const self = this
 
-    this.$container.on('click', 'li', function(this: Element, e: any) {
+    this.$container.on('click', 'li', function (this: Element, e: any) {
       const map = self.map
       const $this = $(this)
       const circularId = $this.data('object-id')
-      const $firstSpan: any = $(this)
-        .find('span')
-        .eq(0)
+      const $firstSpan: any = $(this).find('span').eq(0)
 
       if ($this.data('first-level')) return
       if (circularId) {
@@ -188,7 +189,7 @@ function createMap(map: any, data: any) {
   map[id] = data
 
   const values = []
-  each(['enumerable', 'unenumerable', 'symbol'], type => {
+  each(['enumerable', 'unenumerable', 'symbol'], (type) => {
     if (!data[type]) return
     for (const key in data[type]) {
       values.push(data[type][key])
@@ -206,12 +207,12 @@ function createMap(map: any, data: any) {
 function splitBigArr(data: any) {
   let idx = 0
   const enumerable: any = {}
-  each(chunk(data, 100), val => {
+  each(chunk(data, 100), (val) => {
     const obj: any = {}
     const startIdx = idx
     obj.type = '[' + startIdx
     obj.enumerable = {}
-    each(val, val => {
+    each(val, (val) => {
       obj.enumerable[idx] = val
       idx += 1
     })

@@ -11,9 +11,9 @@ export default {
   decorators: [withKnobs, addReadme],
   parameters: {
     readme: {
-      sidebar: readme
-    }
-  }
+      sidebar: readme,
+    },
+  },
 }
 
 export const Basic = () => {
@@ -26,7 +26,7 @@ export const Basic = () => {
   if (window[target]) {
     const objectViewer = new ObjectViewer(container, {
       unenumerable,
-      accessGetter
+      accessGetter,
     })
 
     objectViewer.set(window[target])
@@ -48,7 +48,7 @@ export const Static = () => {
     objectViewer.set(
       stringifyAll(window[target], {
         unenumerable,
-        accessGetter
+        accessGetter,
       })
     )
     objectViewer.on('change', () => console.log('change'))

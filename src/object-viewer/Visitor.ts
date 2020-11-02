@@ -11,7 +11,7 @@ export default class Visitor {
     const { visited, id } = this
     const obj = {
       id,
-      val
+      val,
     }
     extend(obj, extra)
     visited.push(obj)

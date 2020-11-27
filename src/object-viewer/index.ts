@@ -26,7 +26,9 @@ import './style.scss'
 
 const classPrefix = 'luna-object-viewer-'
 
-module.exports = class ObjectViewer extends Emitter {
+module.exports = class ObjectViewer extends (
+  Emitter
+) {
   private data: any[]
   private $container: $.$
   private visitor: Visitor

@@ -23,7 +23,8 @@ async function format(argv) {
   const component = getComponent(argv)
   if (!component) return
 
-  await runScript('prettier', [
+  await runScript('lsla', [
+    'prettier',
     `src/${component}/*.{ts,js,html,json}`,
     '--write',
   ])
@@ -61,7 +62,7 @@ async function genIcon(argv) {
     '--name',
     `${component}-icon`,
   ])
-  await runScript('prettier', [`src/${component}/icon.css`, '--write'])
+  await runScript('lsla', ['prettier', `src/${component}/icon.css`, '--write'])
 }
 
 async function build(argv) {

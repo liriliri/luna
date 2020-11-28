@@ -1,4 +1,9 @@
 {
-  "object-viewer": {},
-  "notification": {}
+  "object-viewer": {
+    "build": true,
+    "icon": true
+  },
+  "notification": {
+    "build": true
+  }
 }

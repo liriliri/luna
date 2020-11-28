@@ -20,9 +20,9 @@ class Notification {
     {
       position = {
         x: 'right',
-        y: 'bottom'
+        y: 'bottom',
       },
-      duration = 2000
+      duration = 2000,
     } = {}
   ) {
     this.$container = $(container)
@@ -54,7 +54,7 @@ class Notification {
     const { notifications } = this
     const notification = find(
       notifications,
-      notification => notification.id === id
+      (notification) => notification.id === id
     )
     if (!notification) return
     this.$notification.find('#' + id).remove()

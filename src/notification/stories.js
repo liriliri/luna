@@ -10,9 +10,9 @@ export default {
   decorators: [withKnobs, addReadme],
   parameters: {
     readme: {
-      sidebar: readme
-    }
-  }
+      sidebar: readme,
+    },
+  },
 }
 
 export const Basic = () => {
@@ -24,8 +24,8 @@ export const Basic = () => {
   const notification = new Notification(container, {
     position: {
       x,
-      y
-    }
+      y,
+    },
   })
 
   const content = text('Content', 'Luna Notification')
@@ -33,12 +33,12 @@ export const Basic = () => {
     range: true,
     min: 0,
     max: 100000,
-    step: 1000
+    step: 1000,
   })
 
   function notify() {
     notification.notify(content, {
-      duration
+      duration,
     })
   }
 

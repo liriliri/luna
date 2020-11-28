@@ -7,52 +7,31 @@ const shell = require('shelljs')
 const noop = require('licia/noop')
 const clone = require('licia/clone')
 const extend = require('licia/extend')
+const each = require('licia/each')
 const fs = require('licia/fs')
-const { command } = require('yargs')
 
-yargs
-  .usage('Usage: <command> <component>')
-  .command('format', 'format code', noop, format)
-  .command('dev', 'start webpack-dev-server', noop, dev)
-  .command('build', 'build package', noop, build)
-  .command('lint', 'lint code', noop, lint)
-  .command('genIcon', 'generate icon file', noop, genIcon)
-  .help('h').argv
-
-async function format(argv) {
-  const component = getComponent(argv)
-  if (!component) return
-
+const format = wrap(async function (component) {
   await runScript('lsla', [
     'prettier',
     `src/${component}/*.{ts,js,html,json}`,
     '--write',
   ])
-}
+})
 
-async function dev(argv) {
-  const component = getComponent(argv)
-  if (!component) return
-
+const dev = wrap(async function (component) {
   await runScript('webpack', [
     '--config',
     `./src/${component}/webpack.config.js`,
     '--mode=development',
     '--watch',
   ])
-}
+})
 
-async function lint(argv) {
-  const component = getComponent(argv)
-  if (!component) return
-
+const lint = wrap(async function (component) {
   await runScript('tslint', [`src/${component}/*.ts`])
-}
+})
 
-async function genIcon(argv) {
-  const component = getComponent(argv)
-  if (!component) return
-
+const genIcon = wrap(async function (component) {
   await runScript('lsla', [
     'genIcon',
     '--input',
@@ -63,12 +42,9 @@ async function genIcon(argv) {
     `${component}-icon`,
   ])
   await runScript('lsla', ['prettier', `src/${component}/icon.css`, '--write'])
-}
+}, 'icon')
 
-async function build(argv) {
-  const component = getComponent(argv)
-  if (!component) return
-
+const build = wrap(async function (component) {
   await runScript('webpack', [
     '--config',
     `src/${component}/webpack.config.js`,
@@ -93,7 +69,7 @@ async function build(argv) {
     resolve(`../src/${component}/README.md`),
     resolve(`../dist/${component}`)
   )
-}
+}, 'build')
 
 function resolve(p) {
   return path.resolve(__dirname, p)
@@ -118,3 +94,42 @@ function runScript(name, args) {
     stdio: 'inherit',
   })
 }
+
+function wrap(fn, condition) {
+  return async function (argv) {
+    let components = []
+    if (argv.all) {
+      each(require('../index.json'), (val, key) => {
+        if (condition && !val[condition]) {
+          return
+        }
+        
+        components.push(key)
+      })
+    } else {
+      const component = getComponent(argv)
+      if (!component) {
+        console.log('Component is not specified')
+        return
+      }
+      components.push(component)
+    }
+    for (let component of components) {
+      await fn(component)
+    }
+  }
+}
+
+yargs
+  .usage('Usage: <command> <component>')
+  .command('format', 'format code', noop, format)
+  .command('dev', 'start webpack-dev-server', noop, dev)
+  .command('build', 'build package', noop, build)
+  .command('lint', 'lint code', noop, lint)
+  .command('genIcon', 'generate icon file', noop, genIcon)
+  .option('all', {
+    alias: 'a',
+    type: 'boolean',
+    description: 'Run with all components',
+  })
+  .help('h').argv

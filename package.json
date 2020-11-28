@@ -7,6 +7,9 @@
     "luna": "./bin/luna.js"
   },
   "scripts": {
+    "ci": "npm run lint && npm run build",
+    "lint": "luna lint --all",
+    "build": "luna build --all",
     "format": "lsla prettier \"src/share/*.{ts,js}\" \"*.{json,js}\" \"bin/*.js\" \".storybook/*.js\" --write",
     "storybook": "start-storybook -p 3000",
     "build-storybook": "build-storybook -o .storybook/out"

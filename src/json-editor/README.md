@@ -1,6 +1,6 @@
 # Luna Json Editor
 
-JSON Editor.
+JSON editor.
 
 ## Install
 

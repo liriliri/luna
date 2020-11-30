@@ -42,7 +42,7 @@ module.exports = class JsonEditor extends (
   constructor(
     container: Element,
     {
-      name = undefined,
+      name,
       value = null,
       showName = true,
       nameEditable = true,
@@ -161,7 +161,7 @@ module.exports = class JsonEditor extends (
       }
     }
 
-    if (type != 'object' && type != 'array') {
+    if (type !== 'object' && type !== 'array') {
       return this.collapse()
     }
 
@@ -180,10 +180,11 @@ module.exports = class JsonEditor extends (
   }
   destroy() {
     const { children } = this
-    let child
+    let child = children.pop()
 
-    while ((child = children.pop())) {
+    while (child) {
       this.removeChild(child)
+      child = children.pop()
     }
 
     this.$container.remove()
@@ -192,14 +193,14 @@ module.exports = class JsonEditor extends (
     return this.name
   }
   setName(newName: any) {
-    let nameType = typeof newName
-    let oldName = this.name
+    const nameType = typeof newName
+    const oldName = this.name
 
     if (newName === this.name) {
       return
     }
 
-    if (nameType != 'string' && nameType != 'number') {
+    if (nameType !== 'string' && nameType !== 'number') {
       throw new Error('Name must be either string or number, ' + newName)
     }
 
@@ -211,7 +212,7 @@ module.exports = class JsonEditor extends (
     return this.value
   }
   setValue(newValue: any) {
-    let oldValue = this.value
+    const oldValue = this.value
     let str
 
     this.type = getType(newValue)
@@ -247,7 +248,7 @@ module.exports = class JsonEditor extends (
     let child
 
     for (let i = 0, len = children.length; i < len; i++) {
-      if (children[i].name == key) {
+      if (children[i].getName() === key) {
         child = children[i]
         break
       }
@@ -303,17 +304,17 @@ module.exports = class JsonEditor extends (
   }
   private editField = (field: any) => {
     const editable =
-      field == 'name' ? this.isNameEditable() : this.isValueEditable()
+      field === 'name' ? this.isNameEditable() : this.isValueEditable()
     if (!editable) {
       return
     }
     let $el = this.$name
 
-    if (field == 'name') {
+    if (field === 'name') {
       this.edittingName = true
     }
 
-    if (field == 'value') {
+    if (field === 'value') {
       $el = this.$value
       this.edittingValue = true
     }
@@ -326,14 +327,14 @@ module.exports = class JsonEditor extends (
   private editFieldStop = (field: any) => {
     let $el = this.$name
 
-    if (field == 'name') {
+    if (field === 'name') {
       if (!this.edittingName) {
         return
       }
       this.edittingName = false
     }
 
-    if (field == 'value') {
+    if (field === 'value') {
       if (!this.edittingValue) {
         return
       }
@@ -341,7 +342,7 @@ module.exports = class JsonEditor extends (
       this.edittingValue = false
     }
 
-    if (field == 'name') {
+    if (field === 'name') {
       this.setName($el.text())
     } else {
       try {
@@ -365,9 +366,9 @@ module.exports = class JsonEditor extends (
   }
   private editFieldTabPressed(field: any, e: any) {
     e = e.origEvent
-    if (e.key == 'Tab') {
+    if (e.key === 'Tab') {
       this.editFieldStop(field)
-      if (field == 'name') {
+      if (field === 'name') {
         e.preventDefault()
         this.editField('value')
       } else {
@@ -379,7 +380,7 @@ module.exports = class JsonEditor extends (
     let increment = 0
     let currentValue
 
-    if (this.type != 'number') {
+    if (this.type !== 'number') {
       return
     }
 
@@ -419,10 +420,10 @@ module.exports = class JsonEditor extends (
     }
   }
   private onInsertClick = () => {
-    const newName = this.type == 'array' ? this.value.length : undefined
+    const newName = this.type === 'array' ? this.value.length : undefined
     const child = this.addChild(newName, null)
 
-    if (this.type == 'array') {
+    if (this.type === 'array') {
       this.value.push(null)
       child.editValue()
     } else {
@@ -461,7 +462,7 @@ module.exports = class JsonEditor extends (
   private onChildDelete = (child: JsonEditor) => {
     const key = child.getName()
 
-    if (this.type == 'array') {
+    if (this.type === 'array') {
       this.value.splice(key, 1)
     } else {
       delete this.value[key]
@@ -470,7 +471,7 @@ module.exports = class JsonEditor extends (
     this.refresh()
   }
   refresh = () => {
-    const expandable = this.type == 'object' || this.type == 'array'
+    const expandable = this.type === 'object' || this.type === 'array'
 
     each(this.children, (child) => child.refresh())
 

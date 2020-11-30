@@ -1,4 +1,8 @@
 {
+  "json-editor": {
+    "build": true,
+    "icon": true
+  },
   "object-viewer": {
     "build": true,
     "icon": true

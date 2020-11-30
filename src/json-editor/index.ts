@@ -8,6 +8,8 @@ import map from 'licia/map'
 import keys from 'licia/keys'
 import contain from 'licia/contain'
 import has from 'licia/has'
+import trim from 'licia/trim'
+import toStr from 'licia/toStr'
 import './style.scss'
 import './icon.css'
 
@@ -17,10 +19,11 @@ const classPrefix = 'luna-json-editor-'
 module.exports = class JsonEditor extends (
   Emitter
 ) {
-  public name: any
-  public value: any
+  private name: any
+  private value: any
   private $container: $.$
   private $name: $.$
+  private $separator: $.$
   private $toggle: $.$
   private $value: $.$
   private $delete: $.$
@@ -28,12 +31,36 @@ module.exports = class JsonEditor extends (
   private $insert: $.$
   private type: string = 'unknown'
   private children: JsonEditor[] = []
+  private parent: JsonEditor | null = null
   private expanded = false
   private edittingName = false
   private edittingValue = false
   private nameEditable = true
   private valueEditable = true
-  constructor(container: Element, { name = undefined, value = null } = {}) {
+  private enableInsert = true
+  private enableDelete = true
+  constructor(
+    container: Element,
+    {
+      name = undefined,
+      value = null,
+      showName = true,
+      nameEditable = true,
+      valueEditable = true,
+      parent = null,
+      enableDelete = true,
+      enableInsert = true,
+    }: {
+      name?: any
+      value?: any
+      showName?: boolean
+      nameEditable?: boolean
+      valueEditable?: boolean
+      parent?: JsonEditor | null
+      enableDelete?: boolean
+      enableInsert?: boolean
+    } = {}
+  ) {
     super()
 
     const $container = $(container)
@@ -43,10 +70,30 @@ module.exports = class JsonEditor extends (
 
     this.$toggle = $container.find(`.${classPrefix}toggle`)
     this.$name = $container.find(`.${classPrefix}name`)
+    this.$separator = $container.find(`.${classPrefix}separator`)
     this.$value = $container.find(`.${classPrefix}value`)
     this.$delete = $container.find(`.${classPrefix}delete`)
     this.$children = $container.find(`.${classPrefix}children`)
     this.$insert = $container.find(`.${classPrefix}insert`)
+
+    if (!showName) {
+      this.$name.hide()
+      this.$separator.hide()
+    }
+
+    if (!enableDelete) {
+      this.$delete.hide()
+    }
+
+    if (!enableInsert) {
+      this.$insert.hide()
+    }
+
+    this.nameEditable = nameEditable
+    this.valueEditable = valueEditable
+    this.parent = parent
+    this.enableInsert = enableInsert
+    this.enableDelete = enableDelete
 
     this.bindEvent()
 
@@ -108,7 +155,7 @@ module.exports = class JsonEditor extends (
     for (let i = children.length - 1; i >= 0; i--) {
       const child = children[i]
 
-      if (!contain(_keys, child.name)) {
+      if (!contain(_keys, child.getName())) {
         children.splice(i, 1)
         this.removeChild(child)
       }
@@ -141,6 +188,9 @@ module.exports = class JsonEditor extends (
 
     this.$container.remove()
   }
+  getName() {
+    return this.name
+  }
   setName(newName: any) {
     let nameType = typeof newName
     let oldName = this.name
@@ -153,9 +203,12 @@ module.exports = class JsonEditor extends (
       throw new Error('Name must be either string or number, ' + newName)
     }
 
-    this.$name.text(newName)
+    this.$name.text(trim(toStr(newName)) === '' ? `"${newName}"` : newName)
     this.name = newName
     this.emit('rename', this, oldName, newName)
+  }
+  getValue() {
+    return this.value
   }
   setValue(newValue: any) {
     let oldValue = this.value
@@ -186,13 +239,6 @@ module.exports = class JsonEditor extends (
 
     this.value = newValue
 
-    if (this.type == 'array' || this.type == 'object') {
-      this.valueEditable = false
-      if (this.type == 'array') {
-        this.nameEditable = false
-      }
-    }
-
     this.refresh()
     this.emit('change', name, oldValue, newValue)
   }
@@ -214,6 +260,11 @@ module.exports = class JsonEditor extends (
       child = new JsonEditor(container, {
         name: key,
         value: val,
+        parent: this,
+        nameEditable: this.nameEditable,
+        valueEditable: this.valueEditable,
+        enableDelete: this.enableDelete,
+        enableInsert: this.enableInsert,
       })
       child.once('rename', this.onChildRename)
       child.on('delete', this.onChildDelete)
@@ -227,14 +278,32 @@ module.exports = class JsonEditor extends (
   removeChild = (child: JsonEditor) => {
     child.destroy()
   }
+  getType() {
+    return this.type
+  }
   editName = () => {
     this.editField('name')
   }
   editValue = () => {
     this.editField('value')
   }
+  private isNameEditable() {
+    if (!this.nameEditable) {
+      return false
+    }
+
+    return !(this.parent && this.parent.getType() === 'array')
+  }
+  private isValueEditable() {
+    if (!this.valueEditable) {
+      return false
+    }
+
+    return this.type !== 'array' && this.type !== 'object'
+  }
   private editField = (field: any) => {
-    const editable = field == 'name' ? this.nameEditable : this.valueEditable
+    const editable =
+      field == 'name' ? this.isNameEditable() : this.isValueEditable()
     if (!editable) {
       return
     }
@@ -364,15 +433,15 @@ module.exports = class JsonEditor extends (
     this.emit('delete', this)
   }
   private onChildRename = (child: JsonEditor, oldName: any, newName: any) => {
-    const allow = newName && this.type != 'array' && !has(this.value, newName)
+    const allow = newName && this.type !== 'array' && !has(this.value, newName)
 
     if (allow) {
-      this.value[newName] = child.value
+      this.value[newName] = child.getValue()
       delete this.value[oldName]
     } else if (oldName === undefined) {
       this.removeChild(child)
     } else {
-      child.name = oldName
+      child.setName(oldName)
     }
 
     child.once('rename', this.onChildRename)
@@ -390,7 +459,7 @@ module.exports = class JsonEditor extends (
     this.emit('change', this.name + '.' + keyPath, oldValue, newValue, true)
   }
   private onChildDelete = (child: JsonEditor) => {
-    const key = child.name
+    const key = child.getName()
 
     if (this.type == 'array') {
       this.value.splice(key, 1)

@@ -17,8 +17,8 @@ const classPrefix = 'luna-json-editor-'
 module.exports = class JsonEditor extends (
   Emitter
 ) {
-  private name: any
-  private value: any
+  public name: any
+  public value: any
   private $container: $.$
   private $name: $.$
   private $toggle: $.$
@@ -93,7 +93,7 @@ module.exports = class JsonEditor extends (
     this.$container.addClass(`${classPrefix}collapsed`)
     this.$container.rmClass(`${classPrefix}expanded`)
   }
-  expand = (recursive?: any) => {
+  expand = (recursive?: boolean) => {
     const { type, value, children } = this
     let _keys: any[]
 
@@ -224,10 +224,16 @@ module.exports = class JsonEditor extends (
 
     return child
   }
-  removeChild = (child: any) => {
+  removeChild = (child: JsonEditor) => {
     child.destroy()
   }
-  editField = (field: any) => {
+  editName = () => {
+    this.editField('name')
+  }
+  editValue = () => {
+    this.editField('value')
+  }
+  private editField = (field: any) => {
     const editable = field == 'name' ? this.nameEditable : this.valueEditable
     if (!editable) {
       return
@@ -248,7 +254,7 @@ module.exports = class JsonEditor extends (
     ;($el.get(0) as any).focus()
     document.execCommand('selectAll', false, undefined)
   }
-  editFieldStop = (field: any) => {
+  private editFieldStop = (field: any) => {
     let $el = this.$name
 
     if (field == 'name') {
@@ -279,7 +285,7 @@ module.exports = class JsonEditor extends (
     $el.rmClass(`${classPrefix}edit`)
     $el.rmAttr('contenteditable')
   }
-  editFieldKeyPressed = (field: any, e: any) => {
+  private editFieldKeyPressed = (field: any, e: any) => {
     e = e.origEvent
     switch (e.key) {
       case 'Escape':
@@ -288,7 +294,7 @@ module.exports = class JsonEditor extends (
         break
     }
   }
-  editFieldTabPressed(field: any, e: any) {
+  private editFieldTabPressed(field: any, e: any) {
     e = e.origEvent
     if (e.key == 'Tab') {
       this.editFieldStop(field)
@@ -300,7 +306,7 @@ module.exports = class JsonEditor extends (
       }
     }
   }
-  numericValueKeyDown = (e: any) => {
+  private numericValueKeyDown = (e: any) => {
     let increment = 0
     let currentValue
 
@@ -336,20 +342,14 @@ module.exports = class JsonEditor extends (
       }
     }
   }
-  editName = () => {
-    this.editField('name')
-  }
-  editValue = () => {
-    this.editField('value')
-  }
-  onToggleClick = () => {
+  private onToggleClick = () => {
     if (this.expanded) {
       this.collapse()
     } else {
       this.expand()
     }
   }
-  onInsertClick = () => {
+  private onInsertClick = () => {
     const newName = this.type == 'array' ? this.value.length : undefined
     const child = this.addChild(newName, null)
 
@@ -360,10 +360,10 @@ module.exports = class JsonEditor extends (
       child.editName()
     }
   }
-  onDeleteClick = () => {
+  private onDeleteClick = () => {
     this.emit('delete', this)
   }
-  onChildRename = (child: any, oldName: any, newName: any) => {
+  private onChildRename = (child: JsonEditor, oldName: any, newName: any) => {
     const allow = newName && this.type != 'array' && !has(this.value, newName)
 
     if (allow) {
@@ -377,7 +377,7 @@ module.exports = class JsonEditor extends (
 
     child.once('rename', this.onChildRename)
   }
-  onChildChange = (
+  private onChildChange = (
     keyPath: any,
     oldValue: any,
     newValue: any,
@@ -389,7 +389,7 @@ module.exports = class JsonEditor extends (
 
     this.emit('change', this.name + '.' + keyPath, oldValue, newValue, true)
   }
-  onChildDelete = (child: any) => {
+  private onChildDelete = (child: JsonEditor) => {
     const key = child.name
 
     if (this.type == 'array') {

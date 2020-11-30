@@ -1,0 +1,134 @@
+.luna-json-editor {
+  position: relative;
+  margin-left: 12px;
+  font-family: Consolas, 'Lucida Console', Menlo, 'dejavu sans mono', monospace;
+  font-size: 12px;
+  line-height: 16px;
+  cursor: default;
+  color: #727272;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  & > div {
+    display: inline-block;
+  }
+  & > .expand {
+    .icon-arrow-down {
+      display: none;
+    }
+  }
+  & > .collapse {
+    font-size: 12px;
+    .icon-arrow-right {
+      display: none;
+    }
+  }
+  & > .insert {
+    display: none;
+  }
+}
+
+.icon-arrow-right,
+.icon-arrow-down {
+  position: absolute !important;
+  font-size: 12px !important;
+}
+
+.icon-arrow-down {
+  top: 1px;
+}
+
+.icon-arrow-right {
+  top: 0px;
+}
+
+.children,
+.insert {
+  display: block;
+}
+
+.name {
+  color: rgb(136, 19, 145);
+}
+
+.separator:before {
+  content: ':';
+}
+
+.separator {
+  padding-right: 5px;
+}
+
+.value.null {
+  color: rgb(128, 128, 128);
+}
+
+.value.boolean,
+.value.number {
+  color: rgb(28, 0, 207);
+}
+
+.value.number[contenteditable='true'] {
+  outline: 1px solid #727272;
+}
+
+.value.string:not(.edit):before,
+.value.string:not(.edit):after {
+  content: '"';
+}
+
+.value.string {
+  color: rgb(196, 26, 22);
+}
+
+.expand,
+.collapse {
+  min-width: 12px;
+  margin-left: -12px;
+}
+
+.edit {
+  outline: 1px solid #727272;
+  background: #fff;
+  white-space: nowrap;
+}
+
+.edit br {
+  display: none;
+}
+
+.edit * {
+  display: inline;
+  white-space: nowrap;
+}
+
+.value.edit {
+  color: #000;
+}
+
+.delete {
+  opacity: 0;
+  position: relative;
+  top: 2px;
+  margin-left: 5px;
+}
+
+.delete .icon {
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.delete:hover {
+  opacity: 1;
+}
+
+.expanded > .insert {
+  display: inline-block;
+  margin-left: 10px;
+  & .icon {
+    font-size: 12px;
+  }
+}
+
+.insert:hover {
+  color: #000;
+}

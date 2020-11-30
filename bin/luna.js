@@ -13,7 +13,7 @@ const fs = require('licia/fs')
 const format = wrap(async function (component) {
   await runScript('lsla', [
     'prettier',
-    `src/${component}/*.{ts,js,html,json}`,
+    `src/${component}/*.{ts,js,html,json,css,scss}`,
     '--write',
   ])
 })

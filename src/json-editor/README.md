@@ -1,3 +1,3 @@
 # Luna Json Editor
 
-Json Editor.
+JSON Editor.

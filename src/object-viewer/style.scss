@@ -18,7 +18,7 @@
   }
   ul {
     padding: 0 !important;
-    padding-left: 15px !important;
+    padding-left: 12px !important;
     margin: 0 !important;
   }
   li {
@@ -62,10 +62,15 @@
 }
 .expanded .icon, .collapsed .icon {
   position: absolute!important;
-  left: -16px;
-  top: 1px;
+  left: -12px;
   color: #727272;
-  font-size: 14px;
+  font-size: 12px;
+}
+.icon-arrow-right {
+  top: 1px;
+}
+.icon-arrow-down {
+  top: 2px;
 }
 .expanded > .icon-arrow-down {
   display: inline;

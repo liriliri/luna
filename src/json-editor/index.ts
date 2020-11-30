@@ -241,7 +241,7 @@ module.exports = class JsonEditor extends (
     this.value = newValue
 
     this.refresh()
-    this.emit('change', name, oldValue, newValue)
+    this.emit('change', this.name, oldValue, newValue)
   }
   addChild = (key: any, val: any) => {
     const { children } = this

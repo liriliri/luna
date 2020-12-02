@@ -6,6 +6,7 @@
     "removeComments": true,
     "noUnusedLocals": true,
     "target": "ES5",
+    "sourceMap": true,
     "esModuleInterop": true
   }
 }

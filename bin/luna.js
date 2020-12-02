@@ -103,7 +103,7 @@ function wrap(fn, condition) {
         if (condition && !val[condition]) {
           return
         }
-        
+
         components.push(key)
       })
     } else {

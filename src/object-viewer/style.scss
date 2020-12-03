@@ -60,8 +60,9 @@
 .key-lighter {
   opacity: 0.6;
 }
-.expanded .icon, .collapsed .icon {
-  position: absolute!important;
+.expanded .icon,
+.collapsed .icon {
+  position: absolute !important;
   left: -12px;
   color: #727272;
   font-size: 12px;

@@ -6,7 +6,7 @@ const camelCase = require('licia/camelCase')
 const upperFirst = require('licia/upperFirst')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-module.exports = function (name) {
+module.exports = function (name, { useIcon = false } = {}) {
   const postcssLoader = {
     loader: 'postcss-loader',
     options: {
@@ -21,9 +21,15 @@ module.exports = function (name) {
     },
   }
 
+  const entry = [`./src/${name}/index.ts`, `./src/${name}/style.scss`]
+
+  if (useIcon) {
+    entry.push(`./src/${name}/icon.css`)
+  }
+
   return function (env, options) {
     return {
-      entry: `./src/${name}/index.ts`,
+      entry,
       devtool:
         options.mode === 'production' ? 'source-map' : 'inline-source-map',
       output: {

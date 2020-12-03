@@ -21,8 +21,6 @@ import noop from 'licia/noop'
 import Visitor from './Visitor'
 import { encode, getFnAbstract, sortObjName } from './util'
 import Static from './Static'
-import './icon.css'
-import './style.scss'
 
 const classPrefix = 'luna-object-viewer-'
 

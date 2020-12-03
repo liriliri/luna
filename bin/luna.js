@@ -8,6 +8,12 @@ const noop = require('licia/noop')
 const clone = require('licia/clone')
 const extend = require('licia/extend')
 const each = require('licia/each')
+const filter = require('licia/filter')
+const map = require('licia/map')
+const promisify = require('licia/promisify')
+const endWith = require('licia/endWith')
+const rmdir = promisify(require('licia/rmdir'))
+const concat = require('licia/concat')
 const fs = require('licia/fs')
 
 const format = wrap(async function (component) {
@@ -45,6 +51,10 @@ const genIcon = wrap(async function (component) {
 }, 'icon')
 
 const build = wrap(async function (component) {
+  try {
+    await rmdir(resolve(`../dist/${component}`))
+  } catch (e) {}
+
   await runScript('webpack', [
     '--config',
     `src/${component}/webpack.config.js`,
@@ -55,7 +65,7 @@ const build = wrap(async function (component) {
   delete pkg.scripts
   delete pkg.devDependencies
   delete pkg.bin
-  pkg.main = `luna-${component}.js`
+  pkg.main = `index.js`
   const componentPkg = require(`../src/${component}/package.json`)
   extend(pkg, componentPkg)
 
@@ -63,6 +73,28 @@ const build = wrap(async function (component) {
     resolve(`../dist/${component}/package.json`),
     JSON.stringify(pkg, null, 2),
     'utf8'
+  )
+
+  const files = await fs.readdir(resolve(`../src/${component}`))
+  const tsFiles = map(
+    filter(files, (file) => endWith(file, '.ts')),
+    (file) => `./src/${component}/${file}`
+  )
+
+  await runScript(
+    'tsc',
+    concat(
+      [
+        '--target',
+        'es2020',
+        '--esModuleInterop',
+        '--module',
+        'commonjs',
+        '--outDir',
+        `dist/${component}/`,
+      ],
+      tsFiles
+    )
   )
 
   shell.cp(

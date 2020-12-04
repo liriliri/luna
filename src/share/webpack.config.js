@@ -21,10 +21,10 @@ module.exports = function (name, { useIcon = false } = {}) {
     },
   }
 
-  const entry = [`./src/${name}/index.ts`, `./src/${name}/style.scss`]
+  const entry = [`./src/${name}/style.scss`, `./src/${name}/index.ts`]
 
   if (useIcon) {
-    entry.push(`./src/${name}/icon.css`)
+    entry.unshift(`./src/${name}/icon.css`)
   }
 
   return function (env, options) {

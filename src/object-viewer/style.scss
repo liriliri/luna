@@ -34,32 +34,41 @@
     color: #999;
   }
 }
+
 .array .object .key {
   display: inline;
 }
+
 .null {
   color: #5e5e5e;
 }
+
 .string,
 .regexp {
   color: #c41a16;
 }
+
 .number {
   color: #1c00cf;
 }
+
 .boolean {
   color: #0d22aa;
 }
+
 .special {
   color: #5e5e5e;
 }
+
 .key,
 .key-lighter {
   color: #881391;
 }
+
 .key-lighter {
   opacity: 0.6;
 }
+
 .expanded .icon,
 .collapsed .icon {
   position: absolute !important;
@@ -67,24 +76,31 @@
   color: #727272;
   font-size: 12px;
 }
+
 .icon-arrow-right {
   top: 1px;
 }
+
 .icon-arrow-down {
   top: 2px;
 }
+
 .expanded > .icon-arrow-down {
   display: inline;
 }
+
 .expanded > .icon-arrow-right {
   display: none;
 }
+
 .collapsed > .icon-arrow-down {
   display: none;
 }
+
 .collapsed > .icon-arrow-right {
   display: inline;
 }
+
 .hidden ~ ul {
   display: none;
 }

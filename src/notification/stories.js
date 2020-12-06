@@ -1,6 +1,6 @@
 import h from 'licia/h'
-import 'notification.css'
-import Notification from 'notification.js'
+import 'luna-notification.css'
+import Notification from 'luna-notification.js'
 import readme from './README.md'
 import { addReadme } from 'storybook-readme/html'
 import { withKnobs, select, text, number, button } from '@storybook/addon-knobs'

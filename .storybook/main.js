@@ -35,8 +35,12 @@ module.exports = {
     })
 
     each(components, (component) => {
+      config.resolve.alias[`luna-${component}`] = path.resolve(
+        __dirname,
+        `../dist/${component}/luna-${component}.js`
+      )
       each(['css', 'js'], (extension) => {
-        config.resolve.alias[`${component}.${extension}`] = path.resolve(
+        config.resolve.alias[`luna-${component}.${extension}`] = path.resolve(
           __dirname,
           `../dist/${component}/luna-${component}.${extension}`
         )

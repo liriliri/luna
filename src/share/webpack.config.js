@@ -4,9 +4,10 @@ const autoprefixer = require('autoprefixer')
 const clean = require('postcss-clean')
 const camelCase = require('licia/camelCase')
 const upperFirst = require('licia/upperFirst')
+const each = require('licia/each')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-module.exports = function (name, { useIcon = false } = {}) {
+module.exports = function (name, { useIcon = false, dependencies = [] } = {}) {
   const postcssLoader = {
     loader: 'postcss-loader',
     options: {
@@ -26,6 +27,17 @@ module.exports = function (name, { useIcon = false } = {}) {
   if (useIcon) {
     entry.unshift(`./src/${name}/icon.css`)
   }
+
+  const externals = {}
+  each(dependencies, (dependency) => {
+    const pkgName = 'luna-' + dependency
+    externals[pkgName] = {
+      root: 'Luna' + upperFirst(camelCase(dependency)),
+      commonjs: pkgName,
+      commonjs2: pkgName,
+      amd: pkgName,
+    }
+  })
 
   return function (env, options) {
     return {
@@ -68,6 +80,7 @@ module.exports = function (name, { useIcon = false } = {}) {
           },
         ],
       },
+      externals,
     }
   }
 }

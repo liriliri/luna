@@ -1,6 +1,6 @@
-import 'json-editor.css'
+import 'luna-json-editor.css'
 import h from 'licia/h'
-import JsonEditor from 'json-editor.js'
+import JsonEditor from 'luna-json-editor.js'
 import { withKnobs, text, boolean } from '@storybook/addon-knobs'
 import { addReadme } from 'storybook-readme/html'
 import readme from './README.md'

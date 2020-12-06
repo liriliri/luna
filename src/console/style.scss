@@ -1,0 +1,220 @@
+@mixin overflow-auto($direction: 'both') {
+  @if $direction == 'both' {
+    overflow: auto;
+  } @else {
+    overflow-#{$direction}: auto;
+  }
+  -webkit-overflow-scrolling: touch;
+}
+
+@mixin clear-float {
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+
+$padding: 10px;
+$font-size: 14px;
+$font-size-s: 12px;
+$border: #ccc;
+$foreground: #333;
+$link-color: #15c;
+$text-color: #8097bd;
+$darker-background: #f3f3f3;
+$contrast: #f2f7fd;
+$console-error-background: #fff0f0;
+$console-error-foreground: #f00;
+$console-error-border: #ffd6d6;
+$console-warn-foreground: #5c5c00;
+$console-warn-background: #fffbe5;
+$console-warn-border: #fff5c2;
+
+.luna-console {
+  background: #fff;
+  @include overflow-auto(y);
+  height: 100%;
+  position: relative;
+  will-change: scroll-position;
+  cursor: default;
+}
+
+.hidden {
+  display: none;
+}
+
+.fake-logs {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  visibility: hidden;
+  width: 100%;
+  * {
+    overflow: hidden;
+    color: black;
+    position: static;
+  }
+}
+
+.logs {
+  font-size: $font-size;
+  padding-top: 1px;
+  position: absolute;
+  width: 100%;
+}
+
+.log-container {
+  box-sizing: content-box;
+}
+
+.header {
+  white-space: nowrap;
+  display: flex;
+  font-size: $font-size-s;
+  color: $link-color;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid $border;
+  .time-container {
+    @include overflow-auto(x);
+    padding: 3px $padding;
+  }
+}
+
+.nesting-level {
+  width: 14px;
+  flex-shrink: 0;
+  margin-top: -1px;
+  margin-bottom: -1px;
+  position: relative;
+  border-right: 1px solid $border;
+  &.group-closed::before {
+    content: '';
+  }
+  &::before {
+    border-bottom: 1px solid $border;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: 100%;
+    width: 5px;
+    height: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.log-item {
+  position: relative;
+  display: flex;
+  @include clear-float();
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid $border;
+  margin-top: -1px;
+  min-height: 24px;
+  color: $foreground;
+  a {
+    color: $link-color !important;
+  }
+  .icon-container {
+    padding-top: 2px;
+    margin: 0 -6px 0 $padding;
+    .icon {
+      line-height: 20px;
+      font-size: $font-size-s;
+      color: $foreground;
+      position: relative;
+    }
+    .icon-caret-right,
+    .icon-caret-down {
+      left: -2px;
+    }
+    .icon-error {
+      color: #ef3842;
+    }
+    .icon-warn {
+      top: -1px;
+      color: #e8a400;
+    }
+  }
+  .count {
+    background: $text-color;
+    padding: 2px 4px;
+    color: #000;
+    border-radius: 10px;
+    font-size: $font-size-s;
+    float: left;
+    margin: 2px -6px 0 $padding;
+  }
+  .log-content-wrapper {
+    flex: 1;
+    overflow: hidden;
+  }
+  .log-content {
+    padding: 3px 0;
+    margin: 0 $padding;
+    @include overflow-auto(x);
+    white-space: pre-wrap;
+    user-select: text;
+    * {
+      user-select: text;
+    }
+  }
+  &.html,
+  &.table {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      color: $foreground;
+      th {
+        background: $darker-background;
+      }
+      th,
+      td {
+        border: 1px solid $border;
+        padding: 3px $padding;
+      }
+      tr:nth-child(even) {
+        background: $contrast;
+      }
+    }
+  }
+  &.error {
+    z-index: 50;
+    background: $console-error-background;
+    color: $console-error-foreground;
+    border-top: 1px solid $console-error-border;
+    border-bottom: 1px solid $console-error-border;
+    .stack {
+      padding-left: 1.2em;
+      white-space: nowrap;
+    }
+    .count {
+      background: $console-error-foreground;
+    }
+  }
+  &.debug {
+    z-index: 20;
+  }
+  &.input {
+    border-bottom-color: transparent;
+  }
+  &.warn {
+    z-index: 40;
+    color: $console-warn-foreground;
+    background: $console-warn-background;
+    border-top: 1px solid $console-warn-border;
+    border-bottom: 1px solid $console-warn-border;
+    .count {
+      background: #e8a400;
+    }
+  }
+  &.info {
+    z-index: 30;
+  }
+  &.group,
+  &.groupCollapsed {
+    font-weight: bold;
+  }
+}

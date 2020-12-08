@@ -29,7 +29,7 @@ module.exports = class JsonEditor extends (
   private $delete: $.$
   private $children: $.$
   private $insert: $.$
-  private type: string = 'unknown'
+  private type = 'unknown'
   private children: JsonEditor[] = []
   private parent: JsonEditor | null = null
   private expanded = false

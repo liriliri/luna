@@ -109,12 +109,12 @@ module.exports = class Console extends (
         if (!isStr(value)) value = JSON.stringify(value, null, 2)
         copy(value)
       },
-      $() {
-        return document.querySelector.apply(document, arguments as any)
+      $(selectors: string) {
+        return document.querySelector(selectors)
       },
-      $$() {
+      $$(selectors: string) {
         return toArr(
-          document.querySelectorAll.apply(document, arguments as any)
+          document.querySelectorAll(selectors)
         )
       },
       $x(path: string) {
@@ -496,7 +496,7 @@ module.exports = class Console extends (
     let endIdx = displayLogs.length - 1
 
     let middleLog: any
-    let middleIdx: number = 0
+    let middleIdx = 0
 
     while (startIdx <= endIdx) {
       middleIdx = startIdx + Math.floor((endIdx - startIdx) / 2)

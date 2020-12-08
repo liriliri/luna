@@ -34,7 +34,7 @@ const dev = wrap(async function (component) {
 })
 
 const lint = wrap(async function (component) {
-  await runScript('tslint', [`src/${component}/*.ts`])
+  await runScript('eslint', [`src/${component}/*.ts`])
 })
 
 const genIcon = wrap(async function (component) {

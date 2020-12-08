@@ -70,14 +70,14 @@ export default class Log extends Emitter {
   public targetGroup?: IGroup
   public args: any[]
   public header: IHeader | void
-  public count: number = 1
+  public count = 1
   public ignoreFilter: boolean
   public collapsed: boolean
   public el: Element
   public $el: $.$
   public src: any
-  public width: number = 0
-  public height: number = 0
+  public width = 0
+  public height = 0
   private content: Element
   private $content: $.$
   constructor({
@@ -586,6 +586,7 @@ const render = function (data: any) {
   let html = ''
 
   if (data.header) {
+    
   }
 
   let indent = ''

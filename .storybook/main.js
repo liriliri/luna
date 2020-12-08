@@ -12,6 +12,7 @@ const stories = map(components, (component) => `../src/${component}/stories.js`)
 module.exports = {
   stories,
   addons: [
+    'storybook-readme/register',
     '@storybook/addon-knobs/register',
     {
       name: '@storybook/addon-storysource',
@@ -22,8 +23,6 @@ module.exports = {
         },
       },
     },
-    '@storybook/addon-backgrounds/register',
-    'storybook-readme/register',
   ],
   webpackFinal: (config) => {
     const rules = config.module.rules

@@ -586,7 +586,6 @@ const render = function (data: any) {
   let html = ''
 
   if (data.header) {
-    
   }
 
   let indent = ''

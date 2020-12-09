@@ -113,9 +113,7 @@ module.exports = class Console extends (
         return document.querySelector(selectors)
       },
       $$(selectors: string) {
-        return toArr(
-          document.querySelectorAll(selectors)
-        )
+        return toArr(document.querySelectorAll(selectors))
       },
       $x(path: string) {
         return xpath(path)

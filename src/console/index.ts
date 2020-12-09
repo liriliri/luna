@@ -644,20 +644,9 @@ module.exports = class Console extends (
     const self = this
     const { $el } = this
 
-    $el
-      .on('click', `.${c('log-container')}`, function (this: any) {
-        this.log.click(self)
-      })
-      .on('click', `.${c('ico-arrow-down')}`, function (this: HTMLElement) {
-        const $el = $(this).parent().parent().parent()
-
-        self._collapseGroup(($el.get(0) as any).log)
-      })
-      .on('click', '.eruda-icon-arrow-right', function (this: HTMLElement) {
-        const $el = $(this).parent().parent().parent()
-
-        self._openGroup(($el.get(0) as any).log)
-      })
+    $el.on('click', `.${c('log-container')}`, function (this: any) {
+      this.log.click(self)
+    })
 
     this.$container.on('scroll', () => {
       const { scrollHeight, offsetHeight, scrollTop } = this.container

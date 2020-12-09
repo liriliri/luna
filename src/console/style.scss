@@ -125,15 +125,17 @@ $console-warn-border: #fff5c2;
       color: $foreground;
       position: relative;
     }
-    .icon-caret-right,
-    .icon-caret-down {
+    .icon-arrow-right,
+    .icon-arrow-down {
+      top: 2px;
       left: -2px;
     }
     .icon-error {
+      top: 1px;
       color: #ef3842;
     }
     .icon-warn {
-      top: -1px;
+      top: 1px;
       color: #e8a400;
     }
   }
@@ -216,5 +218,26 @@ $console-warn-border: #fff5c2;
   &.group,
   &.groupCollapsed {
     font-weight: bold;
+  }
+}
+
+.abstract {
+  .key {
+    color: #881391;
+  }
+  .number {
+    color: #1c00cf;
+  }
+  .null {
+    color: #5e5e5e;
+  }
+  .string {
+    color: #c41a16;
+  }
+  .boolean {
+    color: #0d22aa;
+  }
+  .special {
+    color: #5e5e5e;
   }
 }

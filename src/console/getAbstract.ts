@@ -8,6 +8,9 @@ import each from 'licia/each'
 import endWith from 'licia/endWith'
 import isEmpty from 'licia/isEmpty'
 import { getObjType } from './util'
+import { classPrefix } from '../share/util'
+
+const c = classPrefix('console')
 
 // Modified from: https://jsconsole.com/
 export default function getAbstract(
@@ -38,12 +41,12 @@ export default function getAbstract(
   const passOpts = { getterVal, unenumerable, level: level + 1 }
   const doStringify = level === 0
 
-  const keyWrapper = '<span class="eruda-key">'
-  const numWrapper = '<span class="eruda-number">'
-  const nullWrapper = '<span class="eruda-null">'
-  const strWrapper = '<span class="eruda-string">'
-  const boolWrapper = '<span class="eruda-boolean">'
-  const specialWrapper = '<span class="eruda-special">'
+  const keyWrapper = `<span class="${c('key')}">`
+  const numWrapper = `<span class="${c('number')}">`
+  const nullWrapper = `<span class="${c('null')}">`
+  const strWrapper = `<span class="${c('string')}">`
+  const boolWrapper = `<span class="${c('boolean')}">`
+  const specialWrapper = `<span class="${c('special')}">`
   const strEscape = (str: string) =>
     escape(str)
       .replace(/\\n/g, '↵')

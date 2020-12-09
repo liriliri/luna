@@ -615,14 +615,14 @@ module.exports = class Console extends (
   _collapseGroup(log: Log) {
     const { targetGroup } = log
     ;(targetGroup as IGroup).collapsed = true
-    log.updateIcon('caret-right')
+    log.updateIcon('arrow-right')
 
     this._updateGroup(log)
   }
   _openGroup(log: Log) {
     const { targetGroup } = log
     ;(targetGroup as IGroup).collapsed = false
-    log.updateIcon('caret-down')
+    log.updateIcon('arrow-down')
 
     this._updateGroup(log)
   }
@@ -648,12 +648,12 @@ module.exports = class Console extends (
       .on('click', `.${c('log-container')}`, function (this: any) {
         this.log.click(self)
       })
-      .on('click', `.${c('icon-caret-down')}`, function (this: HTMLElement) {
+      .on('click', `.${c('ico-arrow-down')}`, function (this: HTMLElement) {
         const $el = $(this).parent().parent().parent()
 
         self._collapseGroup(($el.get(0) as any).log)
       })
-      .on('click', '.eruda-icon-caret-right', function (this: HTMLElement) {
+      .on('click', '.eruda-icon-arrow-right', function (this: HTMLElement) {
         const $el = $(this).parent().parent().parent()
 
         self._openGroup(($el.get(0) as any).log)

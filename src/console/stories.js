@@ -2,9 +2,17 @@ import 'luna-console.css'
 import h from 'licia/h'
 import extend from 'licia/extend'
 import Console from 'luna-console.js'
+import readme from './README.md'
+import { addReadme } from 'storybook-readme/html'
 
 export default {
   title: 'Console',
+  decorators: [addReadme],
+  parameters: {
+    readme: {
+      sidebar: readme,
+    },
+  },
 }
 
 export const Basic = () => {

@@ -131,9 +131,9 @@ export default class Log extends Emitter {
     return false
   }
   updateIcon(icon: string) {
-    const $icon = this.$el.find('.eruda-icon')
+    const $icon = this.$el.find(`.${c('icon')}`)
 
-    $icon.rmAttr('class').addClass(['eruda-icon', `eruda-icon-${icon}`])
+    $icon.rmAttr('class').addClass([c('icon'), c(`icon-${icon}`)])
 
     return this
   }
@@ -330,11 +330,11 @@ export default class Log extends Emitter {
         break
       case 'groupCollapsed':
         msg = formatMsg(args)
-        icon = 'caret-right'
+        icon = 'arrow-right'
         break
       case 'group':
         msg = formatMsg(args)
-        icon = 'caret-down'
+        icon = 'arrow-down'
         break
     }
 
@@ -358,7 +358,7 @@ export default class Log extends Emitter {
 
 const getAbstract = wrap(origGetAbstract, function (fn, obj) {
   return (
-    '<span class="eruda-abstract">' +
+    `<span class="${c('abstract')}">` +
     fn(obj, {
       getterVal: Log.showGetterVal,
       unenumerable: false,

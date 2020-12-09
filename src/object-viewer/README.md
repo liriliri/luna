@@ -1,19 +1,53 @@
 # Luna Object Viewer
 
-JavaScript object viewer.
+JavaScript object viewer, useful for building debugging tool.
+
+## Demo
+
+https://luna.liriliri.io/?path=/story/object-viewer
 
 ## Install
 
-```bash
-npm install luna-object-viewer --save
-```
+Add the following script and style to your page.
 
 ```html
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-object-viewer/luna-object-viewer.css" />
 <script src="//cdn.jsdelivr.net/npm/luna-object-viewer/luna-object-viewer.js"></script>
 ```
 
+You can also get it on npm.
+
+```bash
+npm install luna-object-viewer --save
+```
+
+```javascript
+import LunaObjectViewer from 'luna-object-viewer'
+import 'luna-object-viewer/luna-object-viewer.css'
+```
+
+## Usage
+
+```javascript
+const container = document.getElementById('container')
+const objectViewer = new LunaObjectViewer(container, {
+  unenumerable: false,  
+  accessGetter: true,
+})
+objectViewer.set(window.navigator)
+```
+
 ## Configuration
 
 * unenumerable: Show unenumerable properties.
 * accessGetter: Access getter value.
+
+## Api
+
+### set(data: object): void
+
+Set the JavaScript object to display.
+
+```javascript
+objectViewer.set(window.navigator)
+```

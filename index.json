@@ -5,7 +5,8 @@
   },
   "object-viewer": {
     "build": true,
-    "icon": true
+    "icon": true,
+    "test": true
   },
   "notification": {
     "build": true

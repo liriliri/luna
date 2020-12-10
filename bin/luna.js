@@ -33,6 +33,10 @@ const dev = wrap(async function (component) {
   ])
 })
 
+const test = wrap(async function (component) {
+  await runScript('karma', ['start', `./src/${component}/karma.conf.js`])
+}, 'test')
+
 const lint = wrap(async function (component) {
   await runScript('eslint', [`src/${component}/*.ts`])
 })
@@ -159,9 +163,13 @@ yargs
   .command('build', 'build package', noop, build)
   .command('lint', 'lint code', noop, lint)
   .command('genIcon', 'generate icon file', noop, genIcon)
+  .command('test', 'run test', noop, test)
   .option('all', {
     alias: 'a',
     type: 'boolean',
     description: 'Run with all components',
+  })
+  .fail(function () {
+    process.exit(1)
   })
   .help('h').argv

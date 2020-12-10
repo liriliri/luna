@@ -41,6 +41,7 @@ module.exports = function (name, { useIcon = false, dependencies = [] } = {}) {
 
   return function (env, options) {
     return {
+      mode: options.mode,
       entry,
       devtool:
         options.mode === 'production' ? 'source-map' : 'inline-source-map',

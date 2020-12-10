@@ -1,6 +1,12 @@
 language: node_js
 node_js:
   - "10"
+addons:
+  chrome: stable
+before_script:
+  - npm install -g codecov  
 script:
   - npm link
   - npm run ci
+after_script:
+  - codecov --disable=gcov  

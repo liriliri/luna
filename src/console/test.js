@@ -1,18 +1,14 @@
-const ObjectViewer = require('./index')
+const Console = require('./index')
 require('./style.scss')
 require('./icon.css')
 
 const container = document.createElement('div')
 document.body.appendChild(container)
 
-const objectViewer = new ObjectViewer(container, {
-  unenumerable: true,
-  accessGetter: true,
-})
+const console = new Console(container)
+console.log({ a: 1 })
 
-objectViewer.set({ a: 1 })
-
-describe('object-viewer', function () {
+describe('console', function () {
   it('basic', function () {
     expect(container.innerHTML).to.not.equal('test')
   })

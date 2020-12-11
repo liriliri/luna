@@ -40,9 +40,7 @@ type AsyncItem = [
   IHeader | undefined
 ]
 
-export = class Console extends (
-  Emitter
-) {
+export = class Console extends Emitter {
   private $container: $.$
   private container: HTMLElement
   private $el: $.$

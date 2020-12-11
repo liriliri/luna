@@ -7,8 +7,8 @@
     "luna": "./bin/luna.js"
   },
   "scripts": {
-    "ci": "npm run lint && npm test && npm run build",
-    "test": "luna test --all",
+    "ci": "npm run lint && npm test",
+    "test": "npm run build && luna test --all",
     "lint": "luna lint --all",
     "build": "luna build --all",
     "format": "lsla prettier \"src/share/*.{ts,js}\" \"*.{json,js}\" \"bin/*.js\" \".storybook/*.js\" --write",

@@ -1,4 +1,5 @@
 const path = require('path')
+const each = require('licia/each')
 
 module.exports = function (name) {
   const webpackCfg = require(`../${name}/webpack.config.js`)(
@@ -11,10 +12,9 @@ module.exports = function (name) {
   const cssRule = webpackCfg.module.rules[2]
   cssRule.loaders.shift()
   cssRule.loaders.unshift('style-loader')
-  delete webpackCfg.output
   webpackCfg.module.rules.push({
     test: /\.ts$/,
-    exclude: /node_modules/,
+    exclude: /node_modules|share/,
     loader: 'istanbul-instrumenter-loader',
     enforce: 'post',
     options: {
@@ -22,10 +22,18 @@ module.exports = function (name) {
     },
   })
 
+  const files = ['test.js']
+
+  each(webpackCfg.externals, (external, key) => {
+    const name = key.replace('luna-', '')
+    files.unshift(`../../dist/${name}/${key}.css`)
+    files.unshift(`../../dist/${name}/${key}.js`)
+  })
+
   return function (config) {
     config.set({
       basePath: `../${name}`,
-      files: ['test.js'],
+      files,
       frameworks: ['mocha', 'chai'],
       plugins: [
         'karma-chai',
@@ -45,6 +53,7 @@ module.exports = function (name) {
         'test.js': ['webpack', 'sourcemap'],
       },
       browsers: ['ChromeHeadless'],
+      browserNoActivityTimeout: 100000,
       singleRun: true,
       concurrency: Infinity,
     })

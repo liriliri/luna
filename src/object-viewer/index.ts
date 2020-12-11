@@ -24,9 +24,7 @@ import Static from './Static'
 
 const classPrefix = 'luna-object-viewer-'
 
-export = class ObjectViewer extends (
-  Emitter
-) {
+export = class ObjectViewer extends Emitter {
   private data: any[]
   private $container: $.$
   private visitor: Visitor

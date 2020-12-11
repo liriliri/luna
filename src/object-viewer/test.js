@@ -1,8 +1,12 @@
+const ObjectViewer = require('./index')
+require('./style.scss')
+require('./icon.css')
+
 const container = document.createElement('div')
 document.body.appendChild(container)
 
-const objectViewer = new LunaObjectViewer(container, {
-  unenumerable: false,
+const objectViewer = new ObjectViewer(container, {
+  unenumerable: true,
   accessGetter: true,
 })
 

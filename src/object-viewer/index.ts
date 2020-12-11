@@ -21,8 +21,9 @@ import noop from 'licia/noop'
 import Visitor from './Visitor'
 import { encode, getFnAbstract, sortObjName } from './util'
 import Static from './Static'
+import { classPrefix } from '../share/util'
 
-const classPrefix = 'luna-object-viewer-'
+const c = classPrefix('object-viewer')
 
 export = class ObjectViewer extends Emitter {
   private data: any[]
@@ -198,11 +199,9 @@ export = class ObjectViewer extends Emitter {
     if (keyType === 'virtual') valType = key
 
     if (val === null) {
-      return `<li>${wrapKey(
-        key
-      )}<span class="${classPrefix}null">null</span></li>`
+      return `<li>${wrapKey(key)}<span class="${c('null')}">null</span></li>`
     } else if (isNum(val) || isBool(val)) {
-      return `<li>${wrapKey(key)}<span class="${classPrefix + t}">${encode(
+      return `<li>${wrapKey(key)}<span class="${c(t)}">${encode(
         val
       )}</span></li>`
     }
@@ -211,17 +210,17 @@ export = class ObjectViewer extends Emitter {
     if (valType === 'Number') t = 'number'
 
     if (valType === 'Number' || valType === 'RegExp') {
-      return `<li>${wrapKey(key)}<span class="${classPrefix + t}">${encode(
+      return `<li>${wrapKey(key)}<span class="${c(t)}">${encode(
         val.value
       )}</span></li>`
     } else if (valType === 'Undefined' || valType === 'Symbol') {
-      return `<li>${wrapKey(
-        key
-      )}<span class="${classPrefix}special">${lowerCase(valType)}</span></li>`
+      return `<li>${wrapKey(key)}<span class="${c('special')}">${lowerCase(
+        valType
+      )}</span></li>`
     } else if (val === '(...)') {
-      return `<li>${wrapKey(
-        key
-      )}<span class="${classPrefix}special">${val}</span></li>`
+      return `<li>${wrapKey(key)}<span class="${c(
+        'special'
+      )}">${val}</span></li>`
     } else if (isObj(val)) {
       const visitedObj = visitor.get(val)
       let id
@@ -239,40 +238,40 @@ export = class ObjectViewer extends Emitter {
 
       const icon = firstLevel
         ? ''
-        : `<span class="${classPrefix}expanded ${classPrefix}collapsed"><span class="${classPrefix}icon ${classPrefix}icon-arrow-right"></span><span class="${classPrefix}icon ${classPrefix}icon-arrow-down"></span></span>`
+        : `<span class="${c('expanded collapsed')}"><span class="${c(
+            'icon icon-arrow-right'
+          )}"></span><span class="${c('icon icon-arrow-down')}"></span></span>`
 
       let obj = `<li ${firstLevel ? 'data-first-level="true"' : ''} ${
         'data-object-id="' + id + '"'
-      }>${icon}${wrapKey(key)}<span class="${classPrefix}open">${
+      }>${icon}${wrapKey(key)}<span class="${c('open')}">${
         firstLevel ? '' : objAbstract
-      }</span><ul class="${classPrefix + t}" ${
-        firstLevel ? '' : 'style="display:none"'
-      }>`
+      }</span><ul class="${c(t)}" ${firstLevel ? '' : 'style="display:none"'}>`
 
       if (firstLevel) obj += this.objToHtml(val)
 
-      return obj + `</ul><span class="${classPrefix}close"></span></li>`
+      return obj + `</ul><span class="${c('close')}"></span></li>`
     }
 
     function wrapKey(key: string) {
       if (firstLevel) return ''
       if (isObj(val) && keyType === 'virtual') return ''
 
-      let keyClass = `${classPrefix}key`
+      let keyClass = c('key')
       if (
         keyType === 'unenumerable' ||
         keyType === 'proto' ||
         keyType === 'symbol'
       ) {
-        keyClass = `${classPrefix}key-lighter`
+        keyClass = c('key-lighter')
       }
 
       return `<span class="${keyClass}">${encode(key)}</span>: `
     }
 
-    return `<li>${wrapKey(key)}<span class="${
-      classPrefix + typeof val
-    }">"${encode(val)}"</span></li>`
+    return `<li>${wrapKey(key)}<span class="${c(typeof val)}">"${encode(
+      val
+    )}"</span></li>`
   }
   private appendTpl() {
     this.$container.html(this.objToHtml(this.data, true))
@@ -294,14 +293,14 @@ export = class ObjectViewer extends Emitter {
 
       e.stopImmediatePropagation()
 
-      if (!$firstSpan.hasClass(`${classPrefix}expanded`)) return
+      if (!$firstSpan.hasClass(c('expanded'))) return
 
       const $ul: any = $this.find('ul').eq(0)
-      if ($firstSpan.hasClass(`${classPrefix}collapsed`)) {
-        $firstSpan.rmClass(`${classPrefix}collapsed`)
+      if ($firstSpan.hasClass(c('collapsed'))) {
+        $firstSpan.rmClass(c('collapsed'))
         $ul.show()
       } else {
-        $firstSpan.addClass(`${classPrefix}collapsed`)
+        $firstSpan.addClass(c('collapsed'))
         $ul.hide()
       }
 

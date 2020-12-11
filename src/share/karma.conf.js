@@ -34,8 +34,9 @@ module.exports = function (name) {
     config.set({
       basePath: `../${name}`,
       files,
-      frameworks: ['mocha', 'chai'],
+      frameworks: ['mocha', 'chai', 'jquery-3.4.0'],
       plugins: [
+        'karma-jquery',
         'karma-chai',
         'karma-mocha',
         'karma-webpack',

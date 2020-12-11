@@ -30,7 +30,6 @@ export const Basic = () => {
     })
 
     objectViewer.set(window[target])
-    objectViewer.on('change', () => console.log('change'))
   }
 
   return container
@@ -51,7 +50,6 @@ export const Static = () => {
         accessGetter,
       })
     )
-    objectViewer.on('change', () => console.log('change'))
   }
 
   return container

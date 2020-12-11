@@ -92,6 +92,7 @@ const build = wrap(async function (component) {
         '--target',
         'es2020',
         '--esModuleInterop',
+        '-d',
         '--module',
         'commonjs',
         '--outDir',

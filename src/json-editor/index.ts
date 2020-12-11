@@ -16,7 +16,7 @@ import './icon.css'
 const classPrefix = 'luna-json-editor-'
 
 // https://github.com/richard-livingston/json-view
-module.exports = class JsonEditor extends (
+export = class JsonEditor extends (
   Emitter
 ) {
   private name: any

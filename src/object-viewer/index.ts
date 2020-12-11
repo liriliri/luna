@@ -24,7 +24,7 @@ import Static from './Static'
 
 const classPrefix = 'luna-object-viewer-'
 
-module.exports = class ObjectViewer extends (
+export = class ObjectViewer extends (
   Emitter
 ) {
   private data: any[]

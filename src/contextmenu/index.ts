@@ -1,6 +1,6 @@
 import './style.scss'
 
-module.exports = class Contextmenu {
+export = class Contextmenu {
   private menuItems: MenuItem[] = []
   constructor(container: Element) {
   }

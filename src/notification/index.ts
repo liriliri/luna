@@ -106,4 +106,4 @@ class NotificationItem {
   }
 }
 
-module.exports = Notification
+export = Notification

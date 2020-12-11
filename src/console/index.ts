@@ -40,7 +40,7 @@ type AsyncItem = [
   IHeader | undefined
 ]
 
-module.exports = class Console extends (
+export = class Console extends (
   Emitter
 ) {
   private $container: $.$

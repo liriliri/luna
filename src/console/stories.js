@@ -66,5 +66,10 @@ export const Basic = () => {
     return false
   })
 
+  button('Clear', () => {
+    console.clear()
+    return false
+  })
+
   return wrapper
 }

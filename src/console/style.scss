@@ -38,6 +38,7 @@ $console-warn-border: #fff5c2;
   position: relative;
   will-change: scroll-position;
   cursor: default;
+  font-size: $font-size;
 }
 
 .hidden {
@@ -59,7 +60,6 @@ $console-warn-border: #fff5c2;
 }
 
 .logs {
-  font-size: $font-size;
   padding-top: 1px;
   position: absolute;
   width: 100%;

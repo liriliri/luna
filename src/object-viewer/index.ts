@@ -52,6 +52,11 @@ export = class ObjectViewer extends Emitter {
 
     this.appendTpl()
   }
+  destroy() {
+    this.$container.off('click', 'li', this.onItemClick)
+    this.$container.rmClass('luna-object-viewer')
+    this.$container.html('')
+  }
   private objToHtml(data: any, firstLevel?: boolean) {
     const { visitor } = this
     let self = data
@@ -277,35 +282,34 @@ export = class ObjectViewer extends Emitter {
     this.$container.html(this.objToHtml(this.data, true))
   }
   private bindEvent() {
-    const self = this
+    this.$container.on('click', 'li', this.onItemClick)
+  }
+  private onItemClick = (e: any) => {
+    const { map } = this
+    const $this = $(e.curTarget)
+    const circularId = $this.data('object-id')
+    const $firstSpan: any = $this.find('span').eq(0)
 
-    this.$container.on('click', 'li', function (this: Element, e: any) {
-      const { map } = self
-      const $this = $(this)
-      const circularId = $this.data('object-id')
-      const $firstSpan: any = $(this).find('span').eq(0)
+    if ($this.data('first-level')) return
+    if (circularId) {
+      $this.find('ul').html(this.objToHtml(map[circularId], false))
+      $this.rmAttr('data-object-id')
+    }
 
-      if ($this.data('first-level')) return
-      if (circularId) {
-        $this.find('ul').html(self.objToHtml(map[circularId], false))
-        $this.rmAttr('data-object-id')
-      }
+    e.stopImmediatePropagation()
 
-      e.stopImmediatePropagation()
+    if (!$firstSpan.hasClass(c('expanded'))) return
 
-      if (!$firstSpan.hasClass(c('expanded'))) return
+    const $ul: any = $this.find('ul').eq(0)
+    if ($firstSpan.hasClass(c('collapsed'))) {
+      $firstSpan.rmClass(c('collapsed'))
+      $ul.show()
+    } else {
+      $firstSpan.addClass(c('collapsed'))
+      $ul.hide()
+    }
 
-      const $ul: any = $this.find('ul').eq(0)
-      if ($firstSpan.hasClass(c('collapsed'))) {
-        $firstSpan.rmClass(c('collapsed'))
-        $ul.show()
-      } else {
-        $firstSpan.addClass(c('collapsed'))
-        $ul.hide()
-      }
-
-      self.emit('change')
-    })
+    this.emit('change')
   }
   static Static = Static
 }

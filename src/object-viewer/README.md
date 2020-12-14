@@ -51,3 +51,11 @@ Set the JavaScript object to display.
 ```javascript
 objectViewer.set(window.navigator)
 ```
+
+### destroy(): void
+
+Destroy object viewer.
+
+```javascript
+objectViewer.destroy()
+```

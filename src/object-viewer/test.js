@@ -49,6 +49,8 @@ describe('object-viewer', function () {
     expect($icon.hasClass('luna-object-viewer-collapsed')).to.be.false
     $arrLi.click()
     expect($icon.hasClass('luna-object-viewer-collapsed')).to.be.true
+
+    objectViewer.destroy()
   })
 
   it('static', function () {
@@ -74,5 +76,7 @@ describe('object-viewer', function () {
     expect($fnLi.children('span').eq(1).text()).to.equal('b')
     expect($fnLi.children('span').eq(2).text()).to.equal('ƒ ()')
     $fnLi.click()
+
+    objectViewer.destroy()
   })
 })

@@ -4,7 +4,7 @@ import 'luna-object-viewer.css'
 import ObjectViewer from 'luna-object-viewer.js'
 import readme from './README.md'
 import { addReadme } from 'storybook-readme/html'
-import { withKnobs, text, boolean } from '@storybook/addon-knobs'
+import { withKnobs, text, boolean, button } from '@storybook/addon-knobs'
 
 export default {
   title: 'Object Viewer',
@@ -30,6 +30,11 @@ export const Basic = () => {
     })
 
     objectViewer.set(window[target])
+
+    button('Destroy', () => {
+      objectViewer.destroy()
+      return false
+    })
   }
 
   return container
@@ -44,12 +49,18 @@ export const Static = () => {
 
   if (window[target]) {
     const objectViewer = new ObjectViewer.Static(container)
+
     objectViewer.set(
       stringifyAll(window[target], {
         unenumerable,
         accessGetter,
       })
     )
+
+    button('Destroy', () => {
+      objectViewer.destroy()
+      return false
+    })
   }
 
   return container

@@ -5,7 +5,9 @@ require('./icon.css')
 const container = document.createElement('div')
 document.body.appendChild(container)
 
-const console = new Console(container)
+const console = new Console(container, {
+  asyncRender: false,
+})
 console.log({ a: 1 })
 
 describe('console', function () {

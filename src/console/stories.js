@@ -4,7 +4,7 @@ import extend from 'licia/extend'
 import Console from 'luna-console.js'
 import readme from './README.md'
 import { addReadme } from 'storybook-readme/html'
-import { withKnobs, button, number } from '@storybook/addon-knobs'
+import { withKnobs, button, number, boolean } from '@storybook/addon-knobs'
 
 export default {
   title: 'Console',
@@ -35,8 +35,11 @@ export const Basic = () => {
     step: 100,
   })
 
+  const asyncRender = boolean('Asynchronous Rendering', true)
+
   const console = new Console(container, {
     maxNum,
+    asyncRender,
   })
 
   function logMessage() {

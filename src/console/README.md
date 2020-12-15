@@ -40,6 +40,7 @@ console.log('luna')
 ## Configuration
 
 * maxNum(number): Max log number, zero means infinite.
+* asyncRender(boolean): Asynchronous rendering.
 
 ## Api
 

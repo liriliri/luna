@@ -62,7 +62,7 @@ export = class Console extends Emitter {
   private timer: { [key: string]: number } = {}
   private counter: { [key: string]: number } = {}
   private lastLog?: Log
-  private asyncRender = false
+  private asyncRender: boolean
   private asyncList: AsyncItem[] = []
   private asyncTimer: any = null
   private isAtBottom = true
@@ -76,8 +76,10 @@ export = class Console extends Emitter {
     container: HTMLElement,
     {
       maxNum = 0,
+      asyncRender = true,
     }: {
       maxNum?: number
+      asyncRender?: boolean
     } = {}
   ) {
     super()
@@ -90,6 +92,7 @@ export = class Console extends Emitter {
     this.appendTpl()
 
     this.maxNum = maxNum
+    this.asyncRender = asyncRender
 
     this.$el = $container.find(`.${c('logs')}`)
     this.el = this.$el.get(0) as HTMLElement
@@ -137,9 +140,6 @@ export = class Console extends Emitter {
     }
 
     this.bindEvent()
-  }
-  renderAsync(flag: boolean) {
-    this.asyncRender = flag
   }
   setGlobal(name: string, val: any) {
     this.global[name] = val

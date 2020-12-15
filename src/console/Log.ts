@@ -105,7 +105,7 @@ export default class Log extends Emitter {
     this.width = 0
     this.$el = $(this.el)
 
-    this._formatMsg()
+    this.formatMsg()
 
     if (this.group) {
       this.checkGroup()
@@ -190,7 +190,7 @@ export default class Log extends Emitter {
   text() {
     return this.content.textContent || ''
   }
-  _needSrc() {
+  private needSrc() {
     const { type, args } = this
 
     if (type === 'html') return false
@@ -201,7 +201,7 @@ export default class Log extends Emitter {
 
     return false
   }
-  extractObj(cb = noop) {
+  private extractObj(cb = noop) {
     const { args, type } = this
 
     const setSrc = (result: any) => {
@@ -268,14 +268,14 @@ export default class Log extends Emitter {
 
     this.updateSize(false)
   }
-  _formatMsg() {
+  private formatMsg() {
     let { args } = this
     const { type, id, header, group } = this
 
     // Don't change original args for lazy evaluation.
     args = clone(args)
 
-    if (this._needSrc() && !Log.lazyEvaluation) {
+    if (this.needSrc() && !Log.lazyEvaluation) {
       this.extractObj()
     }
 
@@ -338,7 +338,7 @@ export default class Log extends Emitter {
         break
     }
 
-    if (!this._needSrc() || !Log.lazyEvaluation) {
+    if (!this.needSrc() || !Log.lazyEvaluation) {
       delete (this as any).args
     }
 

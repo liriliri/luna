@@ -30,7 +30,7 @@ export const Basic = () => {
 
   const console = new Console(container)
 
-  button('Log Message', () => {
+  function logMessage() {
     console.log('log')
     console.warn('warn')
     console.error(Error('test'))
@@ -63,6 +63,12 @@ export const Basic = () => {
     var arr = []
     for (var i = 0; i < 10000; i++) arr.push(i)
     console.log(arr)
+  }
+
+  logMessage()
+
+  button('Log Message', () => {
+    logMessage()
     return false
   })
 

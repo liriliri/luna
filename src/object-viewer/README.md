@@ -22,8 +22,8 @@ npm install luna-object-viewer --save
 ```
 
 ```javascript
-import LunaObjectViewer from 'luna-object-viewer'
 import 'luna-object-viewer/luna-object-viewer.css'
+import LunaObjectViewer from 'luna-object-viewer'
 ```
 
 ## Usage

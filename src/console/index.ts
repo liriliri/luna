@@ -297,7 +297,7 @@ export = class Console extends Emitter {
     })
 
     try {
-      this.output(this._evalJs(jsCode))
+      this.output(this.evalJs(jsCode))
     } catch (e) {
       this.insert({
         type: 'error',
@@ -323,11 +323,11 @@ export = class Console extends Emitter {
 
     this.$el.html('')
     this.isAtBottom = true
-    this._updateBottomSpace(0)
-    this._updateTopSpace(0)
+    this.updateBottomSpace(0)
+    this.updateTopSpace(0)
     this.displayLogs = []
     for (let i = 0, len = logs.length; i < len; i++) {
-      this._attachLog(logs[i])
+      this.attachLog(logs[i])
     }
 
     return this
@@ -350,7 +350,7 @@ export = class Console extends Emitter {
   insertAsync(type: string | InsertOptions, args?: any[], header?: IHeader) {
     this.asyncList.push([type, args, header])
 
-    this._handleAsyncList()
+    this.handleAsyncList()
   }
   insertSync(type: string | InsertOptions, args?: any[], header?: IHeader) {
     const { logs, groupStack } = this
@@ -411,7 +411,7 @@ export = class Console extends Emitter {
       lastLog.addCount()
       if (log.header) lastLog.updateTime(log.header.time)
       log = lastLog
-      this._detachLog(lastLog)
+      this.detachLog(lastLog)
     } else {
       logs.push(log)
       this.lastLog = log
@@ -419,11 +419,11 @@ export = class Console extends Emitter {
 
     if (this._maxNum !== 'infinite' && logs.length > this._maxNum) {
       const firstLog = logs[0]
-      this._detachLog(firstLog)
+      this.detachLog(firstLog)
       logs.shift()
     }
 
-    this._attachLog(log)
+    this.attachLog(log)
 
     this.emit('insert', log)
 
@@ -432,22 +432,22 @@ export = class Console extends Emitter {
   toggleGroup(log: Log) {
     const { targetGroup } = log
     ;(targetGroup as IGroup).collapsed
-      ? this._openGroup(log)
-      : this._collapseGroup(log)
+      ? this.openGroup(log)
+      : this.collapseGroup(log)
   }
-  _updateTopSpace(height: number) {
+  private updateTopSpace(height: number) {
     this.topSpaceHeight = height
     this.el.style.top = height + 'px'
   }
-  _updateBottomSpace(height: number) {
+  private updateBottomSpace(height: number) {
     this.bottomSpaceHeight = height
   }
-  _updateSpace(height: number) {
+  private updateSpace(height: number) {
     if (this.spaceHeight === height) return
     this.spaceHeight = height
     this.space.style.height = height + 'px'
   }
-  _detachLog(log: Log) {
+  private detachLog(log: Log) {
     const { displayLogs } = this
 
     const idx = displayLogs.indexOf(log)
@@ -457,8 +457,8 @@ export = class Console extends Emitter {
     }
   }
   // Binary search
-  _attachLog(log: Log) {
-    if (!this._filterLog(log) || log.collapsed) return
+  private attachLog(log: Log) {
+    if (!this.filterLog(log) || log.collapsed) return
 
     const { displayLogs } = this
 
@@ -504,7 +504,7 @@ export = class Console extends Emitter {
 
     this.renderViewport()
   }
-  _handleAsyncList(timeout = 20) {
+  private handleAsyncList(timeout = 20) {
     const asyncList = this.asyncList
 
     if (this.asyncTimer) return
@@ -542,37 +542,37 @@ export = class Console extends Emitter {
         const [type, args, header] = asyncList.shift() as AsyncItem
         this.insertSync(type, args, header)
       }
-      if (!done) raf(() => this._handleAsyncList(timeout))
+      if (!done) raf(() => this.handleAsyncList(timeout))
     }, timeout)
   }
-  _injectGlobal() {
+  private injectGlobal() {
     each(this.global, (val, name) => {
       if (window[name]) return
       ;(window as any)[name] = val
     })
   }
-  _clearGlobal() {
+  private clearGlobal() {
     each(this.global, (val, name) => {
       if (window[name] && window[name] === val) {
         delete window[name]
       }
     })
   }
-  _evalJs(jsInput: string) {
+  private evalJs(jsInput: string) {
     let ret
 
-    this._injectGlobal()
+    this.injectGlobal()
     try {
       ret = eval.call(window, `(${jsInput})`)
     } catch (e) {
       ret = eval.call(window, jsInput)
     }
     this.setGlobal('$_', ret)
-    this._clearGlobal()
+    this.clearGlobal()
 
     return ret
   }
-  _filterLog(log: Log) {
+  private filterLog(log: Log) {
     const filter = this._filter
 
     if (filter === 'all') return true
@@ -586,32 +586,21 @@ export = class Console extends Emitter {
 
     return log.type === filter
   }
-  _getLog(id: number) {
-    const { logs } = this
-    let log
-
-    for (let i = 0, len = logs.length; i < len; i++) {
-      log = logs[i]
-      if (log.id === id) break
-    }
-
-    return log
-  }
-  _collapseGroup(log: Log) {
+  private collapseGroup(log: Log) {
     const { targetGroup } = log
     ;(targetGroup as IGroup).collapsed = true
     log.updateIcon('arrow-right')
 
-    this._updateGroup(log)
+    this.updateGroup(log)
   }
-  _openGroup(log: Log) {
+  private openGroup(log: Log) {
     const { targetGroup } = log
     ;(targetGroup as IGroup).collapsed = false
     log.updateIcon('arrow-down')
 
-    this._updateGroup(log)
+    this.updateGroup(log)
   }
-  _updateGroup(log: Log) {
+  private updateGroup(log: Log) {
     const { targetGroup } = log
     const { logs } = this
     const len = logs.length
@@ -621,7 +610,7 @@ export = class Console extends Emitter {
       if (!log.checkGroup() && log.group === targetGroup) {
         break
       }
-      log.collapsed ? this._detachLog(log) : this._attachLog(log)
+      log.collapsed ? this.detachLog(log) : this.attachLog(log)
       i++
     }
   }
@@ -691,7 +680,7 @@ export = class Console extends Emitter {
       })
     })
   }
-  _renderViewport({ topTolerance = 500, bottomTolerance = 500 } = {}) {
+  private _renderViewport({ topTolerance = 500, bottomTolerance = 500 } = {}) {
     const { el, container } = this
     if (isHidden(container)) return
     const { scrollTop, clientWidth, offsetHeight } = container
@@ -741,9 +730,9 @@ export = class Console extends Emitter {
       currentHeight += height
     }
 
-    this._updateSpace(currentHeight)
-    this._updateTopSpace(topSpaceHeight)
-    this._updateBottomSpace(bottomSpaceHeight)
+    this.updateSpace(currentHeight)
+    this.updateTopSpace(topSpaceHeight)
+    this.updateBottomSpace(bottomSpaceHeight)
 
     while (el.firstChild) {
       if (el.lastChild) {

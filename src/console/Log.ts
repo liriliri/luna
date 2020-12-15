@@ -556,7 +556,6 @@ function correctStyle(val: string) {
   })
   style['display'] = 'inline-block'
   style['max-width'] = '100%'
-  style['contain'] = 'paint'
   delete style.width
   delete style.height
 

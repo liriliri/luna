@@ -16,8 +16,7 @@
 }
 
 $padding: 10px;
-$font-size: 14px;
-$font-size-s: 12px;
+$font-size: 12px;
 $border: #ccc;
 $foreground: #333;
 $link-color: #15c;
@@ -39,6 +38,7 @@ $console-warn-border: #fff5c2;
   will-change: scroll-position;
   cursor: default;
   font-size: $font-size;
+  font-family: Consolas, Lucida Console, Courier New, monospace;
 }
 
 .hidden {
@@ -72,7 +72,7 @@ $console-warn-border: #fff5c2;
 .header {
   white-space: nowrap;
   display: flex;
-  font-size: $font-size-s;
+  font-size: $font-size;
   color: $link-color;
   border-top: 1px solid transparent;
   border-bottom: 1px solid $border;
@@ -111,31 +111,29 @@ $console-warn-border: #fff5c2;
   border-top: 1px solid transparent;
   border-bottom: 1px solid $border;
   margin-top: -1px;
-  min-height: 24px;
   color: $foreground;
   a {
     color: $link-color !important;
   }
   .icon-container {
-    padding-top: 2px;
     margin: 0 -6px 0 $padding;
     .icon {
       line-height: 20px;
-      font-size: $font-size-s;
+      font-size: $font-size;
       color: $foreground;
       position: relative;
     }
     .icon-arrow-right,
     .icon-arrow-down {
-      top: 2px;
+      top: 0;
       left: -2px;
     }
     .icon-error {
-      top: 1px;
+      top: 0;
       color: #ef3842;
     }
     .icon-warn {
-      top: 1px;
+      top: 0;
       color: #e8a400;
     }
   }
@@ -144,7 +142,7 @@ $console-warn-border: #fff5c2;
     padding: 2px 4px;
     color: #000;
     border-radius: 10px;
-    font-size: $font-size-s;
+    font-size: $font-size;
     float: left;
     margin: 2px -6px 0 $padding;
   }

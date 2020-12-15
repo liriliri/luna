@@ -137,9 +137,9 @@ export default function getAbstract(
     names = unenumerable ? Object.getOwnPropertyNames(obj) : Object.keys(obj)
     if (doStringify) {
       i = 1
-      json = '{ '
+      json = '{'
       each(names, objIteratee)
-      json += parts.join(', ') + objEllipsis + ' }'
+      json += parts.join(', ') + objEllipsis + '}'
     } else {
       json = getObjType(obj)
       if (json === 'Object') json = '{…}'
@@ -167,12 +167,12 @@ export default function getAbstract(
 
       if (doStringify) {
         i = 1
-        json = '{ '
+        json = '{'
         names = unenumerable
           ? Object.getOwnPropertyNames(obj)
           : Object.keys(obj)
         each(names, objIteratee)
-        json += parts.join(', ') + objEllipsis + ' }'
+        json += parts.join(', ') + objEllipsis + '}'
       } else {
         json = getObjType(obj)
         if (json === 'Object') json = '{…}'

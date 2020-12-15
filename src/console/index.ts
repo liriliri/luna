@@ -719,7 +719,6 @@ export = class Console extends Emitter {
     }
     if (logs.length > 0) {
       fakeEl.appendChild(fakeFrag)
-      console.log(fakeFrag)
       for (let i = 0, len = logs.length; i < len; i++) {
         logs[i].updateSize()
       }

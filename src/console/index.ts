@@ -1,6 +1,5 @@
 import Log, { IGroup, IHeader, ILogOptions } from './Log'
 import Emitter from 'licia/Emitter'
-import isNum from 'licia/isNum'
 import isUndef from 'licia/isUndef'
 import perfNow from 'licia/perfNow'
 import now from 'licia/now'
@@ -70,10 +69,17 @@ export = class Console extends Emitter {
   private groupStack = new Stack()
   private renderViewport: (options?: any) => void
   private global: any
+  private maxNum: number
   private _filter: any = 'all'
-  private _maxNum: string | number = 'infinite'
   private _displayHeader = false
-  constructor(container: HTMLElement) {
+  constructor(
+    container: HTMLElement,
+    {
+      maxNum = 0,
+    }: {
+      maxNum?: number
+    } = {}
+  ) {
     super()
 
     this.container = container
@@ -82,6 +88,8 @@ export = class Console extends Emitter {
     $container.addClass('luna-console')
 
     this.appendTpl()
+
+    this.maxNum = maxNum
 
     this.$el = $container.find(`.${c('logs')}`)
     this.el = this.$el.get(0) as HTMLElement
@@ -139,11 +147,11 @@ export = class Console extends Emitter {
   displayHeader(flag: boolean) {
     this._displayHeader = flag
   }
-  maxNum(val: number | string) {
+  setMaxNum(val: number) {
     const { logs } = this
 
-    this._maxNum = val
-    if (isNum(val) && logs.length > val) {
+    this.maxNum = val
+    if (val > 0 && logs.length > val) {
       this.logs = logs.slice(logs.length - (val as number))
       this.render()
     }
@@ -417,7 +425,7 @@ export = class Console extends Emitter {
       this.lastLog = log
     }
 
-    if (this._maxNum !== 'infinite' && logs.length > this._maxNum) {
+    if (this.maxNum !== 0 && logs.length > this.maxNum) {
       const firstLog = logs[0]
       this.detachLog(firstLog)
       logs.shift()

@@ -39,8 +39,8 @@ objectViewer.set(window.navigator)
 
 ## Configuration
 
-* unenumerable: Show unenumerable properties.
-* accessGetter: Access getter value.
+* unenumerable(boolean): Show unenumerable properties.
+* accessGetter(boolean): Access getter value.
 
 ## Api
 

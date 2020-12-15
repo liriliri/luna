@@ -4,7 +4,7 @@ import extend from 'licia/extend'
 import Console from 'luna-console.js'
 import readme from './README.md'
 import { addReadme } from 'storybook-readme/html'
-import { withKnobs, button } from '@storybook/addon-knobs'
+import { withKnobs, button, number } from '@storybook/addon-knobs'
 
 export default {
   title: 'Console',
@@ -28,7 +28,16 @@ export const Basic = () => {
   const container = h('div')
   wrapper.appendChild(container)
 
-  const console = new Console(container)
+  const maxNum = number('Max Number', 1000, {
+    range: true,
+    min: 0,
+    max: 10000,
+    step: 100,
+  })
+
+  const console = new Console(container, {
+    maxNum,
+  })
 
   function logMessage() {
     console.log('log')
@@ -69,6 +78,13 @@ export const Basic = () => {
 
   button('Log Message', () => {
     logMessage()
+    return false
+  })
+
+  button('Log 10000 Messages', () => {
+    for (var i = 0; i < 10000; i++) {
+      console.log('Number: ', i)
+    }
     return false
   })
 

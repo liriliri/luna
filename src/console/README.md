@@ -39,4 +39,14 @@ console.log('luna')
 
 ## Configuration
 
+* maxNum(number): Max log number, zero means infinite.
+
 ## Api
+
+### setMaxNum(num: number): void
+
+Set max log number.
+
+```javascript
+console.setMaxNum(1000)
+```

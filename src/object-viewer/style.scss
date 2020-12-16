@@ -1,6 +1,7 @@
+@import '../share/mixin';
+
 .luna-object-viewer {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  @include overflow-auto(x);
   cursor: default;
   font-size: 12px;
   line-height: 1.2;

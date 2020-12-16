@@ -1,19 +1,4 @@
-@mixin overflow-auto($direction: 'both') {
-  @if $direction == 'both' {
-    overflow: auto;
-  } @else {
-    overflow-#{$direction}: auto;
-  }
-  -webkit-overflow-scrolling: touch;
-}
-
-@mixin clear-float {
-  &:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
-}
+@import '../share/mixin';
 
 $padding: 10px;
 $font-size: 12px;

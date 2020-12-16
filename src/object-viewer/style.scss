@@ -74,27 +74,27 @@
   font-size: 12px;
 }
 
-.icon-arrow-right {
+.icon-caret-right {
   top: 1px;
 }
 
-.icon-arrow-down {
+.icon-caret-down {
   top: 2px;
 }
 
-.expanded > .icon-arrow-down {
+.expanded > .icon-caret-down {
   display: inline;
 }
 
-.expanded > .icon-arrow-right {
+.expanded > .icon-caret-right {
   display: none;
 }
 
-.collapsed > .icon-arrow-down {
+.collapsed > .icon-caret-down {
   display: none;
 }
 
-.collapsed > .icon-arrow-right {
+.collapsed > .icon-caret-right {
   display: inline;
 }
 

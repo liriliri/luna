@@ -297,15 +297,15 @@ export = class Console extends Emitter {
   groupEnd() {
     this.insert('groupEnd')
   }
-  input(jsCode: string) {
+  evaluate(code: string) {
     this.insert({
       type: 'input',
-      args: [jsCode],
+      args: [code],
       ignoreFilter: true,
     })
 
     try {
-      this.output(this.evalJs(jsCode))
+      this.output(this.evalJs(code))
     } catch (e) {
       this.insert({
         type: 'error',
@@ -313,10 +313,8 @@ export = class Console extends Emitter {
         args: [e],
       })
     }
-
-    return this
   }
-  output(val: string) {
+  private output(val: string) {
     return this.insert({
       type: 'output',
       args: [val],
@@ -597,14 +595,14 @@ export = class Console extends Emitter {
   private collapseGroup(log: Log) {
     const { targetGroup } = log
     ;(targetGroup as IGroup).collapsed = true
-    log.updateIcon('arrow-right')
+    log.updateIcon('caret-right')
 
     this.updateGroup(log)
   }
   private openGroup(log: Log) {
     const { targetGroup } = log
     ;(targetGroup as IGroup).collapsed = false
-    log.updateIcon('arrow-down')
+    log.updateIcon('caret-down')
 
     this.updateGroup(log)
   }

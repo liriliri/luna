@@ -108,8 +108,8 @@ export default class JsonViewer extends Emitter {
       const icon = firstLevel
         ? ''
         : `<span class="${c('expanded collapsed')}"><span class="${c(
-            'icon icon-arrow-right'
-          )}"></span><span class="${c('icon icon-arrow-down')}"></span></span>`
+            'icon icon-caret-right'
+          )}"></span><span class="${c('icon icon-caret-down')}"></span></span>`
 
       let obj = `<li ${firstLevel ? 'data-first-level="true"' : ''} ${
         'data-object-id="' + (referenceId || id) + '"'

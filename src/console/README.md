@@ -44,10 +44,10 @@ console.log('luna')
 
 ## Api
 
+### evaluate(code: string): void
+
+Evaluate JavaScript.
+
 ### setMaxNum(num: number): void
 
 Set max log number.
-
-```javascript
-console.setMaxNum(1000)
-```

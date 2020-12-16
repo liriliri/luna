@@ -322,19 +322,19 @@ export default class Log extends Emitter {
         break
       case 'input':
         msg = formatJs(args[0])
-        icon = 'arrow-right'
+        icon = 'input'
         break
       case 'output':
         msg = formatMsg(args)
-        icon = 'arrow-left'
+        icon = 'output'
         break
       case 'groupCollapsed':
         msg = formatMsg(args)
-        icon = 'arrow-right'
+        icon = 'caret-right'
         break
       case 'group':
         msg = formatMsg(args)
-        icon = 'arrow-down'
+        icon = 'caret-down'
         break
     }
 

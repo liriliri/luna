@@ -4,7 +4,13 @@ import extend from 'licia/extend'
 import Console from 'luna-console.js'
 import readme from './README.md'
 import { addReadme } from 'storybook-readme/html'
-import { withKnobs, button, number, boolean } from '@storybook/addon-knobs'
+import {
+  withKnobs,
+  button,
+  number,
+  boolean,
+  text,
+} from '@storybook/addon-knobs'
 
 export default {
   title: 'Console',
@@ -78,6 +84,12 @@ export const Basic = () => {
   }
 
   logMessage()
+
+  const code = text('JavaScript', '1 + 2')
+  button('Evaluate', () => {
+    console.evaluate(code)
+    return false
+  })
 
   button('Log Message', () => {
     logMessage()

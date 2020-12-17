@@ -10,15 +10,12 @@ import contain from 'licia/contain'
 import has from 'licia/has'
 import trim from 'licia/trim'
 import toStr from 'licia/toStr'
-import './style.scss'
-import './icon.css'
+import { classPrefix } from '../share/util'
 
-const classPrefix = 'luna-json-editor-'
+const c = classPrefix('json-editor')
 
 // https://github.com/richard-livingston/json-view
-export = class JsonEditor extends (
-  Emitter
-) {
+export = class JsonEditor extends Emitter {
   private name: any
   private value: any
   private $container: $.$
@@ -68,13 +65,13 @@ export = class JsonEditor extends (
     this.$container = $container
     this.appendTpl()
 
-    this.$toggle = $container.find(`.${classPrefix}toggle`)
-    this.$name = $container.find(`.${classPrefix}name`)
-    this.$separator = $container.find(`.${classPrefix}separator`)
-    this.$value = $container.find(`.${classPrefix}value`)
-    this.$delete = $container.find(`.${classPrefix}delete`)
-    this.$children = $container.find(`.${classPrefix}children`)
-    this.$insert = $container.find(`.${classPrefix}insert`)
+    this.$toggle = $container.find(`.${c('toggle')}`)
+    this.$name = $container.find(`.${c('name')}`)
+    this.$separator = $container.find(`.${c('separator')}`)
+    this.$value = $container.find(`.${c('value')}`)
+    this.$delete = $container.find(`.${c('delete')}`)
+    this.$children = $container.find(`.${c('children')}`)
+    this.$insert = $container.find(`.${c('insert')}`)
 
     if (!showName) {
       this.$name.hide()
@@ -103,13 +100,19 @@ export = class JsonEditor extends (
   appendTpl() {
     this.$container.html(
       [
-        `<div class="${classPrefix}toggle"><span class="${classPrefix}icon ${classPrefix}icon-arrow-right"></span><span class="${classPrefix}icon ${classPrefix}icon-arrow-down"></span></div>`,
-        `<div class="${classPrefix}name"></div>`,
-        `<div class="${classPrefix}separator"></div>`,
-        `<div class="${classPrefix}value"></div>`,
-        `<div class="${classPrefix}delete"><span class="${classPrefix}icon ${classPrefix}icon-delete"></span></div>`,
-        `<div class="${classPrefix}children"></div>`,
-        `<div class="${classPrefix}insert"><span class="${classPrefix}icon ${classPrefix}icon-add"></span></div>`,
+        `<div class="${c('toggle')}"><span class="${c(
+          'icon icon-arrow-right'
+        )}"></span><span class="${c('icon icon-arrow-down')}"></span></div>`,
+        `<div class="${c('name')}"></div>`,
+        `<div class="${c('separator')}"></div>`,
+        `<div class="${c('value')}"></div>`,
+        `<div class="${c('delete')}"><span class="${c(
+          'icon icon-delete'
+        )}"></span></div>`,
+        `<div class="${c('children')}"></div>`,
+        `<div class="${c('insert')}"><span class="${c(
+          'icon icon-add'
+        )}"></span></div>`,
       ].join('')
     )
   }
@@ -135,10 +138,10 @@ export = class JsonEditor extends (
     this.expanded = false
 
     this.$children.hide()
-    this.$toggle.addClass(`${classPrefix}expand`)
-    this.$toggle.rmClass(`${classPrefix}collapse`)
-    this.$container.addClass(`${classPrefix}collapsed`)
-    this.$container.rmClass(`${classPrefix}expanded`)
+    this.$toggle.addClass(c('expand'))
+    this.$toggle.rmClass(`${c('collapse')}`)
+    this.$container.addClass(`${c('collapsed')}`)
+    this.$container.rmClass(`${c('expanded')}`)
   }
   expand = (recursive?: boolean) => {
     const { type, value, children } = this
@@ -173,10 +176,10 @@ export = class JsonEditor extends (
 
     this.expanded = true
     this.$children.css('display', 'block')
-    this.$toggle.addClass(`${classPrefix}collapse`)
-    this.$toggle.rmClass(`${classPrefix}expand`)
-    this.$container.addClass(`${classPrefix}expanded`)
-    this.$container.rmClass(`${classPrefix}collapsed`)
+    this.$toggle.addClass(c('collapse'))
+    this.$toggle.rmClass(c('expand'))
+    this.$container.addClass(c('expanded'))
+    this.$container.rmClass(c('collapsed'))
   }
   destroy() {
     const { children } = this
@@ -232,7 +235,7 @@ export = class JsonEditor extends (
         break
     }
     this.$value.text(str)
-    this.$value.attr('class', `${classPrefix}value ${classPrefix + this.type}`)
+    this.$value.attr('class', c(`value ${this.type}`))
 
     if (newValue === this.value) {
       return
@@ -319,7 +322,7 @@ export = class JsonEditor extends (
       this.edittingValue = true
     }
 
-    $el.addClass(`${classPrefix}edit`)
+    $el.addClass(c('edit'))
     $el.attr('contenteditable', 'true')
     ;($el.get(0) as any).focus()
     document.execCommand('selectAll', false, undefined)
@@ -352,7 +355,7 @@ export = class JsonEditor extends (
       }
     }
 
-    $el.rmClass(`${classPrefix}edit`)
+    $el.rmClass(c('edit'))
     $el.rmAttr('contenteditable')
   }
   private editFieldKeyPressed = (field: any, e: any) => {

@@ -1,8 +1,10 @@
-import './style.scss'
 import $ from 'licia/$'
 import stripIndent from 'licia/stripIndent'
 import uniqId from 'licia/uniqId'
 import find from 'licia/find'
+import { classPrefix } from '../share/util'
+
+const c = classPrefix('notification')
 
 interface IPosition {
   x: string
@@ -97,10 +99,10 @@ class NotificationItem {
     const { y } = this.container.position
 
     return stripIndent`
-      <div id="${this.id}" class="luna-notification-item luna-notification-${
-      y === 'bottom' ? 'lower' : 'upper'
-    }">
-        <div class="luna-notification-content">${this.content}</div>
+      <div id="${this.id}" class="${c(
+      `item ${y === 'bottom' ? 'lower' : 'upper'}`
+    )}">
+        <div class="${c('content')}">${this.content}</div>
       </div>
     `
   }

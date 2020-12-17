@@ -69,7 +69,7 @@ const build = wrap(async function (component) {
   delete pkg.scripts
   delete pkg.devDependencies
   delete pkg.bin
-  pkg.main = `index.js`
+  pkg.main = `cjs/${component}/index.js`
   const componentPkg = require(`../src/${component}/package.json`)
   extend(pkg, componentPkg)
 
@@ -96,7 +96,7 @@ const build = wrap(async function (component) {
         '--module',
         'commonjs',
         '--outDir',
-        `dist/${component}/`,
+        `dist/${component}/cjs/`,
       ],
       tsFiles
     )

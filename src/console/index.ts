@@ -70,16 +70,18 @@ export = class Console extends Emitter {
   private renderViewport: (options?: any) => void
   private global: any
   private maxNum: number
+  private showHeader = false
   private _filter: any = 'all'
-  private _displayHeader = false
   constructor(
     container: HTMLElement,
     {
       maxNum = 0,
       asyncRender = true,
+      showHeader = false
     }: {
       maxNum?: number
       asyncRender?: boolean
+      showHeader?: boolean
     } = {}
   ) {
     super()
@@ -93,6 +95,7 @@ export = class Console extends Emitter {
 
     this.maxNum = maxNum
     this.asyncRender = asyncRender
+    this.showHeader = showHeader
 
     this.$el = $container.find(`.${c('logs')}`)
     this.el = this.$el.get(0) as HTMLElement
@@ -143,9 +146,6 @@ export = class Console extends Emitter {
   }
   setGlobal(name: string, val: any) {
     this.global[name] = val
-  }
-  displayHeader(flag: boolean) {
-    this._displayHeader = flag
   }
   setMaxNum(val: number) {
     const { logs } = this
@@ -344,7 +344,7 @@ export = class Console extends Emitter {
   }
   insert(type: string | InsertOptions, args?: any[]) {
     let header
-    if (this._displayHeader) {
+    if (this.showHeader) {
       header = {
         time: getCurTime(),
         from: getFrom(),

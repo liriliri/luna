@@ -1,4 +1,8 @@
 {
+  "console": {
+    "build": true,
+    "icon": true
+  },
   "json-editor": {
     "build": true,
     "icon": true

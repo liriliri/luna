@@ -42,10 +42,12 @@ export const Basic = () => {
   })
 
   const asyncRender = boolean('Asynchronous Rendering', true)
+  const showHeader = boolean('Show Log Time and From', false)
 
   const console = new Console(container, {
     maxNum,
     asyncRender,
+    showHeader,
   })
 
   function logMessage() {

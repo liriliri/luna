@@ -584,15 +584,23 @@ function formatEl(val: string) {
 const render = function (data: any) {
   let html = ''
 
-  if (data.header) {
-  }
-
   let indent = ''
   if (data.group) {
     const { indentLevel } = data.group
     for (let i = 0; i < indentLevel; i++) {
       indent += `<div class="${c('nesting-level')}"></div>`
     }
+  }
+  
+  if (data.header) {
+    html += stripIndent`
+      <div class="${c('header')}">
+        ${indent}
+        <div class="${c('time-from-container')}">
+          <span>${data.header.time}</span> <span>${data.header.from}</span>
+        </div>
+      </div>
+    `
   }
 
   let icon = ''

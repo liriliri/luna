@@ -4,7 +4,6 @@ $padding: 10px;
 $font-size: 12px;
 $border: #ccc;
 $foreground: #333;
-$link-color: #15c;
 $text-color: #8097bd;
 $darker-background: #f3f3f3;
 $contrast: #f2f7fd;
@@ -23,7 +22,7 @@ $console-warn-border: #fff5c2;
   will-change: scroll-position;
   cursor: default;
   font-size: $font-size;
-  font-family: Consolas, Lucida Console, Courier New, monospace;
+  font-family: Menlo, Consolas, Lucida Console, Courier New, monospace;
 }
 
 .hidden {
@@ -57,11 +56,11 @@ $console-warn-border: #fff5c2;
 .header {
   white-space: nowrap;
   display: flex;
-  font-size: $font-size;
-  color: $link-color;
+  font-size: 11px;
+  color: #545454;
   border-top: 1px solid transparent;
   border-bottom: 1px solid $border;
-  .time-container {
+  .time-from-container {
     @include overflow-auto(x);
     padding: 3px $padding;
   }
@@ -98,7 +97,7 @@ $console-warn-border: #fff5c2;
   margin-top: -1px;
   color: $foreground;
   a {
-    color: $link-color !important;
+    color: #15c !important;
   }
   .icon-container {
     margin: 0 -6px 0 $padding;

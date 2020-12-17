@@ -41,6 +41,7 @@ console.log('luna')
 
 * maxNum(number): Max log number, zero means infinite.
 * asyncRender(boolean): Asynchronous rendering.
+* showHeader(boolean): Show time and from.
 
 ## Api
 

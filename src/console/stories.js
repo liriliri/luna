@@ -108,5 +108,10 @@ export const Basic = () => {
     return false
   })
 
+  button('Destroy', () => {
+    console.destroy()
+    return false
+  })
+
   return wrapper
 }

@@ -51,3 +51,7 @@ Evaluate JavaScript.
 ### setMaxNum(num: number): void
 
 Set max log number.
+
+### destroy(): void
+
+Destroy console.

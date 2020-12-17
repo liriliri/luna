@@ -168,7 +168,11 @@ export = class Console extends Emitter {
   viewLogInSources(flag: boolean) {
     Log.showSrcInSources = flag
   }
-  destroy() {}
+  destroy() {
+    this.$container.off('scroll', this.onScroll)
+    this.$container.rmClass('luna-console')
+    this.$container.html('')
+  }
   filter(val: any) {
     this._filter = val
     this.emit('filter', val)
@@ -628,62 +632,63 @@ export = class Console extends Emitter {
       this.log.click(self)
     })
 
-    this.$container.on('scroll', () => {
-      const { scrollHeight, offsetHeight, scrollTop } = this.container
-      // safari bounce effect
-      if (scrollTop <= 0) return
-      if (offsetHeight + scrollTop > scrollHeight) return
+    this.$container.on('scroll', this.onScroll)
+  }
+  private onScroll = () => {
+    const { scrollHeight, offsetHeight, scrollTop } = this.container
+    // safari bounce effect
+    if (scrollTop <= 0) return
+    if (offsetHeight + scrollTop > scrollHeight) return
 
-      let isAtBottom = false
-      if (scrollHeight === offsetHeight) {
-        isAtBottom = true
-      } else if (scrollTop === scrollHeight - offsetHeight) {
-        isAtBottom = true
-      }
-      this.isAtBottom = isAtBottom
+    let isAtBottom = false
+    if (scrollHeight === offsetHeight) {
+      isAtBottom = true
+    } else if (scrollTop === scrollHeight - offsetHeight) {
+      isAtBottom = true
+    }
+    this.isAtBottom = isAtBottom
 
-      const lastScrollTop = this.lastScrollTop
-      const lastTimestamp = this.lastTimestamp
+    const lastScrollTop = this.lastScrollTop
+    const lastTimestamp = this.lastTimestamp
 
-      const timestamp = now()
-      const duration = timestamp - lastTimestamp
-      const distance = scrollTop - lastScrollTop
-      const speed = Math.abs(distance / duration)
-      let speedTolerance = speed * this.speedToleranceFactor
-      if (duration > 1000) {
-        speedTolerance = 1000
-      }
-      if (speedTolerance > this.maxSpeedTolerance) {
-        speedTolerance = this.maxSpeedTolerance
-      }
-      if (speedTolerance < this.minSpeedTolerance) {
-        speedTolerance = this.minSpeedTolerance
-      }
-      this.lastScrollTop = scrollTop
-      this.lastTimestamp = timestamp
+    const timestamp = now()
+    const duration = timestamp - lastTimestamp
+    const distance = scrollTop - lastScrollTop
+    const speed = Math.abs(distance / duration)
+    let speedTolerance = speed * this.speedToleranceFactor
+    if (duration > 1000) {
+      speedTolerance = 1000
+    }
+    if (speedTolerance > this.maxSpeedTolerance) {
+      speedTolerance = this.maxSpeedTolerance
+    }
+    if (speedTolerance < this.minSpeedTolerance) {
+      speedTolerance = this.minSpeedTolerance
+    }
+    this.lastScrollTop = scrollTop
+    this.lastTimestamp = timestamp
 
-      let topTolerance = 0
-      let bottomTolerance = 0
-      if (lastScrollTop < scrollTop) {
-        topTolerance = this.minSpeedTolerance
-        bottomTolerance = speedTolerance
-      } else {
-        topTolerance = speedTolerance
-        bottomTolerance = this.minSpeedTolerance
-      }
+    let topTolerance = 0
+    let bottomTolerance = 0
+    if (lastScrollTop < scrollTop) {
+      topTolerance = this.minSpeedTolerance
+      bottomTolerance = speedTolerance
+    } else {
+      topTolerance = speedTolerance
+      bottomTolerance = this.minSpeedTolerance
+    }
 
-      if (
-        this.topSpaceHeight < scrollTop - topTolerance &&
-        this.topSpaceHeight + this.el.offsetHeight >
-          scrollTop + offsetHeight + bottomTolerance
-      ) {
-        return
-      }
+    if (
+      this.topSpaceHeight < scrollTop - topTolerance &&
+      this.topSpaceHeight + this.el.offsetHeight >
+        scrollTop + offsetHeight + bottomTolerance
+    ) {
+      return
+    }
 
-      this.renderViewport({
-        topTolerance: topTolerance * 2,
-        bottomTolerance: bottomTolerance * 2,
-      })
+    this.renderViewport({
+      topTolerance: topTolerance * 2,
+      bottomTolerance: bottomTolerance * 2,
     })
   }
   private _renderViewport({ topTolerance = 500, bottomTolerance = 500 } = {}) {

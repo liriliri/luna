@@ -17,6 +17,8 @@ describe('json-editor', function () {
     jsonEditor.expand(true)
 
     const $container = $(container)
-    expect($container.find('.luna-json-editor-name').text()).to.equal('luna')
+    expect($container.children('.luna-json-editor-name').text()).to.equal(
+      'luna'
+    )
   })
 })

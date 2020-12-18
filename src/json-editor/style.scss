@@ -1,7 +1,9 @@
+@import '../share/variable';
+
 .luna-json-editor {
   position: relative;
   margin-left: 12px;
-  font-family: Consolas, 'Lucida Console', Menlo, 'dejavu sans mono', monospace;
+  font-family: $font-family-code;
   font-size: 12px;
   line-height: 16px;
   cursor: default;

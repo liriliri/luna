@@ -13,6 +13,7 @@
     "test": true
   },
   "notification": {
-    "build": true
+    "build": true,
+    "test": true
   }
 }

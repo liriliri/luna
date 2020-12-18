@@ -45,7 +45,7 @@ notification.dissmissAll()
 ## Configuration
 
 * position(object): Notification position.
-* duration(number): Default duration.
+* duration(number): Default duration, 0 means infinite.
 
 Position:
 

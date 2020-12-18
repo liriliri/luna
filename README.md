@@ -14,6 +14,7 @@ Yet another UI library.
 
 ## Components
 
+* [console](./src/console/README.md): Console for logging.
 * [json-editor](./src/json-editor/README.md): JSON editor.
 * [notification](./src/notification/README.md): Show notifications.
 * [object-viewer](./src/object-viewer/README.md): JavaScript object viewer.

@@ -1,20 +1,17 @@
 @import '../share/mixin';
+@import '../share/variable';
 
 .luna-object-viewer {
   @include overflow-auto(x);
   cursor: default;
+  font-family: $font-family-code;
   font-size: 12px;
   line-height: 1.2;
   min-height: 100%;
   color: #333;
   list-style: none !important;
-  & > li > .key {
-    display: none;
-  }
   ul {
     list-style: none !important;
-  }
-  ul {
     padding: 0 !important;
     padding-left: 12px !important;
     margin: 0 !important;
@@ -24,6 +21,9 @@
     white-space: nowrap;
     line-height: 16px;
     min-height: 16px;
+  }
+  & > li > .key {
+    display: none;
   }
   span {
     position: static !important;

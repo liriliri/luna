@@ -44,7 +44,7 @@ export const Basic = () => {
 
   notify()
 
-  button('Add', () => {
+  button('Notify', () => {
     notify()
     return false
   })

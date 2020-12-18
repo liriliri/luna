@@ -77,7 +77,7 @@ export = class Console extends Emitter {
     {
       maxNum = 0,
       asyncRender = true,
-      showHeader = false
+      showHeader = false,
     }: {
       maxNum?: number
       asyncRender?: boolean

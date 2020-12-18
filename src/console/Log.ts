@@ -591,7 +591,7 @@ const render = function (data: any) {
       indent += `<div class="${c('nesting-level')}"></div>`
     }
   }
-  
+
   if (data.header) {
     html += stripIndent`
       <div class="${c('header')}">

@@ -15,7 +15,7 @@ export default {
   },
 }
 
-export const Basic = () => {
+export const notification = () => {
   const container = h('div')
 
   const x = select('X', ['left', 'center', 'right'], 'center')

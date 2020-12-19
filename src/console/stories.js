@@ -22,7 +22,7 @@ export default {
   },
 }
 
-export const Basic = () => {
+export const console = () => {
   const wrapper = h('div')
   extend(wrapper.style, {
     position: 'fixed',

@@ -16,7 +16,7 @@ export default {
   },
 }
 
-export const Basic = () => {
+export const objectViewer = () => {
   const container = h('div')
 
   const target = text('Target', 'navigator')
@@ -30,32 +30,6 @@ export const Basic = () => {
     })
 
     objectViewer.set(window[target])
-
-    button('Destroy', () => {
-      objectViewer.destroy()
-      return false
-    })
-  }
-
-  return container
-}
-
-export const Static = () => {
-  const container = h('div')
-
-  const target = text('Target', 'navigator')
-  const unenumerable = boolean('Show Unenumerable', false)
-  const accessGetter = boolean('Access Getter', false)
-
-  if (window[target]) {
-    const objectViewer = new ObjectViewer.Static(container)
-
-    objectViewer.set(
-      stringifyAll(window[target], {
-        unenumerable,
-        accessGetter,
-      })
-    )
 
     button('Destroy', () => {
       objectViewer.destroy()

@@ -18,7 +18,7 @@ export default {
   },
 }
 
-export const Basic = () => {
+export const jsonEditor = () => {
   const container = h('div')
 
   const name = text('Name', 'example')

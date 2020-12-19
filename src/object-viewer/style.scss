@@ -3,6 +3,7 @@
 
 .luna-object-viewer {
   @include overflow-auto(x);
+  overflow-y: hidden;
   cursor: default;
   font-family: $font-family-code;
   font-size: 12px;

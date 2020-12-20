@@ -4,12 +4,13 @@ import openFile from 'licia/openFile'
 import createUrl from 'licia/createUrl'
 import { classPrefix } from '../share/util'
 import each from 'licia/each'
-import last from 'licia/last'
 import { splitName } from './util'
 import durationFormat from 'licia/durationFormat'
 import Emitter from 'licia/Emitter'
 import convertBin from 'licia/convertBin'
 import jsmediatags from 'jsmediatags'
+import toStr from 'licia/toStr'
+import toNum from 'licia/toNum'
 
 const c = classPrefix('music-player')
 
@@ -58,6 +59,7 @@ export = class MusicPlayer extends Emitter {
   private $play: $.$
   private $bar: $.$
   private $barPlayed: $.$
+  private $list: $.$
   private audioList: IAudio[] = []
   private curAudio: IAudio | undefined
   private audio: HTMLAudioElement = new Audio()
@@ -78,6 +80,7 @@ export = class MusicPlayer extends Emitter {
     this.$play = $container.find(`.${c('play')}`)
     this.$barPlayed = $container.find(`.${c('bar-played')}`)
     this.$bar = $container.find(`.${c('controller-left')}`)
+    this.$list = $container.find(`.${c('list')}`)
 
     this.bindEvent()
   }
@@ -103,6 +106,11 @@ export = class MusicPlayer extends Emitter {
       multiple: true,
     })
 
+    if (fileList.length === 0) {
+      return
+    }
+
+    const curIdx = audioList.length
     each(fileList, (file) => {
       const { title, artist } = splitName(file.name)
       audioList.push({
@@ -113,12 +121,12 @@ export = class MusicPlayer extends Emitter {
       })
     })
 
-    this.setCur(last(audioList))
-    this.play()
+    this.setCur(curIdx)
   }
   destroy() {
     this.$container.rmClass('luna-music-player')
     this.$container.html('')
+    this.pause()
   }
   seek(time: number) {
     if (!this.curAudio) {
@@ -130,21 +138,22 @@ export = class MusicPlayer extends Emitter {
 
     this.audio.currentTime = time
   }
-  private toggle = () => {
+  private togglePlay = () => {
     if (this.audio.paused) {
       this.play()
     } else {
       this.pause()
     }
   }
-  private setCur(curAudio: IAudio) {
-    const { audio } = this
+  private setCur(idx: number) {
+    const { audio, audioList } = this
 
-    this.curAudio = curAudio
-    audio.src = curAudio.url
+    this.curAudio = audioList[idx]
+    audio.src = this.curAudio.url
     audio.load()
 
     this.updateInfo()
+    this.renderList()
 
     this.play()
   }
@@ -153,6 +162,23 @@ export = class MusicPlayer extends Emitter {
     const clientX = e.clientX || e.changedTouches[0].clientX
     const { left, width } = this.$bar.offset()
     this.seek(((clientX - left) / width) * this.audio.duration)
+  }
+  private renderList() {
+    let html = ''
+
+    each(this.audioList, (audio, idx) => {
+      html += stripIndent`
+        <div class="${c(
+          'list-item' + (audio === this.curAudio ? ' active' : '')
+        )}" data-idx="${toStr(idx)}">
+          <span class="${c('list-idx')}">${idx + 1}</span>
+          <span class="${c('list-title')}">${audio.title}</span>
+          <span class="${c('list-artist')}">${audio.artist}</span>
+        </div>
+      `
+    })
+
+    this.$list.html(html)
   }
   private updateInfo() {
     if (!this.curAudio) {
@@ -166,9 +192,22 @@ export = class MusicPlayer extends Emitter {
     this.$cover.css('background-image', cover ? `url(${cover})` : 'none')
     this.$bar.on('click', this.onBarClick)
   }
+  private onListItemClick = (e: any) => {
+    const idx = toNum($(e.curTarget).data('idx'))
+
+    this.setCur(idx)
+  }
+  private toggleList = () => {
+    const { $list } = this
+    const { height } = $list.offset()
+    $list.css('height', height > 0 ? '0' : 'auto')
+  }
   private bindEvent() {
-    this.$body.on('click', `.${c('icon-file')}`, this.open)
-    this.$play.on('click', this.toggle)
+    this.$body
+      .on('click', `.${c('icon-file')}`, this.open)
+      .on('click', `.${c('icon-list')}`, this.toggleList)
+      .on('click', `.${c('play')}`, this.togglePlay)
+    this.$list.on('click', `.${c('list-item')}`, this.onListItemClick)
 
     each(audioEvents, (event) => {
       this.audio.addEventListener(
@@ -262,6 +301,7 @@ export = class MusicPlayer extends Emitter {
                 <span class="${c('duration')}">00:00</span>
               </span>
               <span class="${c('icon icon-file')}"></span>
+              <span class="${c('icon icon-list')}"></span>
             </div>
           </div>
         </div>

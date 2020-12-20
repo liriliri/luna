@@ -1,10 +1,12 @@
 @import '../share/variable';
+@import '../share/mixin';
 
 .luna-music-player {
   font-family: $font-family;
   box-shadow: $box-shadow;
   background: #fff;
   font-size: 14px;
+  cursor: default;
   * {
     box-sizing: border-box;
   }
@@ -50,6 +52,7 @@
   margin-left: 90px;
   height: 90px;
   padding: 10px 7px 0;
+  border-bottom: 1px solid #e9e9e9;
 }
 
 .info {
@@ -74,11 +77,14 @@
   height: 17px;
   color: #999;
   padding-left: 7px;
-}
-
-.controller-right .icon {
-  position: relative;
-  top: 3px;
+  .icon {
+    position: relative;
+    top: 3px;
+    transition: color 0.3s;
+    &:hover {
+      color: #000;
+    }
+  }
 }
 
 .bar {
@@ -116,4 +122,35 @@
   height: 2px;
   background: $secondary-color;
   transition: width 0.3s;
+}
+
+.list {
+  @include overflow-auto(y);
+  max-height: 160px;
+}
+
+.list-item {
+  position: relative;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 15px;
+  font-size: 12px;
+  border-top: 1px solid #e9e9e9;
+  margin: 0;
+  transition: background 0.3s;
+  &:first-child {
+    border-top: none;
+  }
+  &.active,
+  &:hover {
+    background: #e9e9e9;
+  }
+}
+
+.list-idx {
+  margin-right: 12px;
+}
+
+.list-artist {
+  float: right;
 }

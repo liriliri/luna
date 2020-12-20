@@ -7,6 +7,7 @@ const shell = require('shelljs')
 const noop = require('licia/noop')
 const clone = require('licia/clone')
 const extendDeep = require('licia/extendDeep')
+const extend = require('licia/extend')
 const each = require('licia/each')
 const filter = require('licia/filter')
 const map = require('licia/map')
@@ -36,6 +37,12 @@ const dev = wrap(async function (component) {
 const test = wrap(async function (component) {
   await runScript('karma', ['start', `./src/${component}/karma.conf.js`])
 }, 'test')
+
+const install = wrap(async function (component) {
+  await runScript('npm', ['install'], {
+    cwd: resolve(`../src/${component}/`),
+  })
+}, 'install')
 
 const lint = wrap(async function (component) {
   await runScript('eslint', [`src/${component}/*.ts`])
@@ -124,12 +131,19 @@ function getComponent(argv) {
   return component
 }
 
-function runScript(name, args) {
-  return execa(name, args, {
-    preferLocal: true,
-    cwd: resolve('../'),
-    stdio: 'inherit',
-  })
+function runScript(name, args, options = {}) {
+  return execa(
+    name,
+    args,
+    extend(
+      {
+        preferLocal: true,
+        cwd: resolve('../'),
+        stdio: 'inherit',
+      },
+      options
+    )
+  )
 }
 
 function wrap(fn, condition) {
@@ -165,6 +179,7 @@ yargs
   .command('lint', 'lint code', noop, lint)
   .command('genIcon', 'generate icon file', noop, genIcon)
   .command('test', 'run test', noop, test)
+  .command('install', 'install dependencies', noop, install)
   .option('all', {
     alias: 'a',
     type: 'boolean',

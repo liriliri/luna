@@ -8,6 +8,10 @@
     "icon": true,
     "test": true
   },
+  "music-player": {
+    "icon": true,
+    "install": true
+  },
   "object-viewer": {
     "build": true,
     "icon": true,

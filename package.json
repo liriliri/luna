@@ -7,7 +7,7 @@
     "luna": "./bin/luna.js"
   },
   "scripts": {
-    "ci": "npm run lint && npm test",
+    "ci": "luna install --all && npm run lint && npm test",
     "test": "npm run build && luna test --all",
     "lint": "luna lint --all",
     "build": "luna build --all",

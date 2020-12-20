@@ -1,3 +1,1 @@
-const exports = require('../share/webpack.config')
-
-module.exports = exports
+module.exports = require('../share/webpack.config')('music-player')

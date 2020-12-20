@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'music-player-icon';
+  src: url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAVIAAsAAAAACFgAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAAGEAAACGIQsl3k9TLzIAAAFsAAAAPQAAAFZL+UksY21hcAAAAawAAAC3AAACSqfbCRpnbHlmAAACZAAAAOMAAAEob3gj+GhlYWQAAANIAAAALgAAADZzob41aGhlYQAAA3gAAAAYAAAAJAGFANZobXR4AAADkAAAABAAAAA0AlgAAGxvY2EAAAOgAAAAEgAAABwDMgNgbWF4cAAAA7QAAAAfAAAAIAEaAEBuYW1lAAAD1AAAASkAAAIWm5e+CnBvc3QAAAUAAAAARwAAAGHzl4LbeJxjYGRgYOBiMGCwY2BycfMJYeDLSSzJY5BiYGGAAJA8MpsxJzM9kYEDxgPKsYBpDiA2YWACmiUBFgVhVgY2BnagGBuDEJBkZeAEynIDRZiBcmxAHg9QFROQzQEATQoGLAAAAHicY2Bk0GOcwMDKwMBQx9ADJGWgdAIDJ4MxAwMTAyszA1YQkOaawnCAIfEjM8MJIFcITDIwMIIIAGWpCLMAAAB4nM2SMQ6CQBBF37ILiFhYEE/hpSgwMbEwMSRyGwsrb8cJ8M/uFmosLRzyQuYvmfnDLFACXuxFAPfAYXGX6qLuWUc9cFXesZUS6Dlw5MSZCyPT7JdFpz3Dm+qi+hlOVTp2bw801KpbUrGiVc+NvivMm6u+1Ph1NKIO8X9YuxXRA3LxH5F83F6yPmPOh0wtDhkNo10kbMunjI13zmhMbSrRijFjk08Z9Zpdwm7EXCSwt0/gn6VgH48AeJxdTz9rwnAQvXf3+xO1QbDROqgBC5UiRJpIAhUpDbgLDs5Cu/lJnJ07dSoUCm7SD9dLFql3cLwHd+/eI6Gqfumb+pRSRlRMkWCGIn9BFqO3wAgxvGtjkhVpkS85wRTjGe4nYzdEdKcbXwd2TQAcyhPfAqVrVexGViUMWwT2lbnDjy4Q48sBGh770IA7QNPxNhQEYPFrsVbPG/bdGFu54trbWbtNsTrrRk5fPywxzxdIe/6Kny0/s63H2wWePirwf6gqau2TJm+psne1iuaNfo5ijBx5t1FPn8LYwBD9Aa7/HuwAeJxjYGRgYABi+wUP6uL5bb4ycDOcAApEcT7e14CggWAPEDIwcDAwgTgAT0YLPgAAeJxjYGRgYDjBwAAn9zAwMqACXgA6GQJceJxjYACCE0iYCAAAZPwCWXicY2AAAj+GGoYpmBAASxoGkwAAeJxjYGRgYOBlMGFgZgABJiDmAkIGhv9gPgMADwIBWwB4nGWQPW7CQBSEx2BIAlKCFCkps1UKIpmfkgNAT0GXwpi1MbK91npBossJcoQcIaeIcoIcKGPzaGAtP38zb97uygAG+IWHenm4bWq9WrihOnGb9CDsk5+FO+jjRbhLfyjcwxumwn084p07eP4dnQFK4Rbu8SHcpv8p7JO/hDt4wrdwl/6PcA8r/An38eoN08gUsSncUif7LLRnef6utK1SU6hJMD5bC11oGzq9Ueujqg7J1LlYxdbkas6uzjKjSmt2OnLB1rlyNhrF4geRyZEigkGBuKkOS2gk2CNDCHvVvdQrpi0q+rVWmCDA+Cq1YKpokiGVxobJNY6sFQ48bUrXMa34Ws7kpLnMat4kIyv+77q3oxPRD7BtpkrMMOITX+SD5g75Pz0RXqgAAAB4nF3FOw6AIBBAwX0I4g/vSAEJyRabEApub2FsnGbEyev7L+FY8ARWIhs7BycXiVt8bVqC5dGLN82TSkMpGJlBZ4o83dAJ4wA=')
+    format('woff');
+}
+
+[class^='icon-'],
+[class*=' icon-'] {
+  font-family: 'music-player-icon' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-file:before {
+  content: '\f101';
+}
+.icon-pause:before {
+  content: '\f102';
+}
+.icon-play:before {
+  content: '\f103';
+}

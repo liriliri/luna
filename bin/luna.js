@@ -6,7 +6,7 @@ const execa = require('execa')
 const shell = require('shelljs')
 const noop = require('licia/noop')
 const clone = require('licia/clone')
-const extend = require('licia/extend')
+const extendDeep = require('licia/extendDeep')
 const each = require('licia/each')
 const filter = require('licia/filter')
 const map = require('licia/map')
@@ -67,11 +67,11 @@ const build = wrap(async function (component) {
 
   const pkg = require('../package.json')
   delete pkg.scripts
-  delete pkg.devDependencies
   delete pkg.bin
   pkg.main = `cjs/${component}/index.js`
   const componentPkg = require(`../src/${component}/package.json`)
-  extend(pkg, componentPkg)
+  extendDeep(pkg, componentPkg)
+  delete pkg.devDependencies
 
   await fs.writeFile(
     resolve(`../dist/${component}/package.json`),

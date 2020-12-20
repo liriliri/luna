@@ -3,9 +3,117 @@
 .luna-music-player {
   font-family: $font-family;
   box-shadow: $box-shadow;
+  background: #fff;
+  font-size: 14px;
+  * {
+    box-sizing: border-box;
+  }
 }
 
 .body-left {
+  background: $primary-color;
   width: 90px;
   height: 90px;
+  float: left;
+}
+
+.cover {
+  position: relative;
+  background-size: cover;
+  background-position: 50%;
+}
+
+.play {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  bottom: 50%;
+  right: 50%;
+  margin: 0 -15px -15px 0;
+  background: rgba(0, 0, 0, 0.2);
+  .icon {
+    position: absolute;
+    color: #fff;
+    top: 5px;
+  }
+  .icon-play {
+    left: 7px;
+  }
+  .icon-pause {
+    left: 5px;
+  }
+}
+
+.body-right {
+  margin-left: 90px;
+  height: 90px;
+  padding: 10px 7px 0;
+}
+
+.info {
+  height: 22px;
+  margin: 0 0 35px 5px;
+}
+
+.controller {
+  display: flex;
+}
+
+.controller-left {
+  margin: 0 0 0 5px;
+  padding: 6px 0;
+  flex: 1;
+}
+
+.controller-right {
+  position: relative;
+  right: 0;
+  bottom: 4px;
+  height: 17px;
+  color: #999;
+  padding-left: 7px;
+}
+
+.controller-right .icon {
+  position: relative;
+  top: 3px;
+}
+
+.bar {
+  position: relative;
+  height: 2px;
+  width: 100%;
+  background: #cdcdcd;
+}
+
+.controller-left:hover {
+  .bar-thumb {
+    position: absolute;
+    margin-right: -4px;
+    right: 0;
+    top: -3px;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    background: $secondary-color;
+    border-radius: 50%;
+    opacity: 1;
+  }
+}
+
+.bar-thumb {
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.bar-played {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 2px;
+  background: $secondary-color;
+  transition: width 0.3s;
 }

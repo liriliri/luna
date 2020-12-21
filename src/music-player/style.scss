@@ -2,6 +2,7 @@
 @import '../share/mixin';
 
 .luna-music-player {
+  min-width: 375px;
   font-family: $font-family;
   box-shadow: $box-shadow;
   background: #fff;

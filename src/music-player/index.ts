@@ -63,6 +63,7 @@ export = class MusicPlayer extends Emitter {
   private audioList: IAudio[] = []
   private curAudio: IAudio | undefined
   private audio: HTMLAudioElement = new Audio()
+  private loop: string = 'all'
   constructor(container: Element) {
     super()
 
@@ -202,11 +203,29 @@ export = class MusicPlayer extends Emitter {
     const { height } = $list.offset()
     $list.css('height', height > 0 ? '0' : 'auto')
   }
+  private onLoopClick = (e: any) => {
+    let { loop } = this
+    switch (loop) {
+      case 'all':
+        loop = 'one'
+        break
+      case 'one':
+        console.log('lalal')
+        loop = 'off'
+        break
+      case 'off':
+        loop = 'all'
+        break
+    }
+    this.loop = loop
+    $(e.curTarget).attr('class', c(`icon icon-loop-${loop} loop`))
+  }
   private bindEvent() {
     this.$body
       .on('click', `.${c('icon-file')}`, this.open)
       .on('click', `.${c('icon-list')}`, this.toggleList)
       .on('click', `.${c('play')}`, this.togglePlay)
+      .on('click', `.${c('loop')}`, this.onLoopClick)
     this.$list.on('click', `.${c('list-item')}`, this.onListItemClick)
 
     each(audioEvents, (event) => {
@@ -300,6 +319,9 @@ export = class MusicPlayer extends Emitter {
                 <span class="${c('cur-time')}">00:00</span> /
                 <span class="${c('duration')}">00:00</span>
               </span>
+              <span class="${c(
+                'icon icon-loop-' + this.loop + ' loop'
+              )}"></span>
               <span class="${c('icon icon-file')}"></span>
               <span class="${c('icon icon-list')}"></span>
             </div>

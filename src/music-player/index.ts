@@ -13,6 +13,7 @@ import toStr from 'licia/toStr'
 import toNum from 'licia/toNum'
 import isEmpty from 'licia/isEmpty'
 import random from 'licia/random'
+import clamp from 'licia/clamp'
 
 const c = classPrefix('music-player')
 
@@ -59,8 +60,9 @@ export = class MusicPlayer extends Emitter {
   private $duration: $.$
   private $cover: $.$
   private $play: $.$
-  private $bar: $.$
   private $barPlayed: $.$
+  private $volumeBarFill: $.$
+  private $volumeIcon: $.$
   private $list: $.$
   private audioList: IAudio[] = []
   private curAudioIdx = -1
@@ -84,8 +86,9 @@ export = class MusicPlayer extends Emitter {
     this.$cover = $container.find(`.${c('cover')}`)
     this.$play = $container.find(`.${c('play')}`)
     this.$barPlayed = $container.find(`.${c('bar-played')}`)
-    this.$bar = $container.find(`.${c('controller-left')}`)
     this.$list = $container.find(`.${c('list')}`)
+    this.$volumeBarFill = $container.find(`.${c('volume-bar-fill')}`)
+    this.$volumeIcon = $container.find(`.${c('volume')}`).find('span')
 
     this.bindEvent()
   }
@@ -95,6 +98,13 @@ export = class MusicPlayer extends Emitter {
     }
 
     this.audio.play()
+  }
+  volume(percentage: number) {
+    percentage = clamp(percentage, 0, 1)
+    this.audio.volume = percentage
+
+    this.$volumeBarFill.css('height', percentage * 100 + '%')
+    this.$volumeIcon.attr('class', c('icon icon-' + this.getVolumeIcon()))
   }
   pause = () => {
     if (!this.curAudio) {
@@ -161,6 +171,19 @@ export = class MusicPlayer extends Emitter {
 
     this.setCur(idx)
   }
+  private getVolumeIcon() {
+    const { volume } = this.audio
+
+    if (volume === 0) {
+      return 'volume-off'
+    }
+
+    if (volume < 0.5) {
+      return 'volume-down'
+    }
+
+    return 'volume'
+  }
   private togglePlay = () => {
     if (this.audio.paused) {
       this.play()
@@ -189,10 +212,16 @@ export = class MusicPlayer extends Emitter {
 
     this.play()
   }
+  private onVolumeClick = (e: any) => {
+    const { top, height } = $(e.curTarget).offset()
+    e = e.origEvent
+    const clientY = e.clientY || e.changedTouches[0].clientY
+    this.volume(1 - (clientY - top) / (height - 5))
+  }
   private onBarClick = (e: any) => {
+    const { left, width } = $(e.curTarget).offset()
     e = e.origEvent
     const clientX = e.clientX || e.changedTouches[0].clientX
-    const { left, width } = this.$bar.offset()
     this.seek(((clientX - left) / width) * this.audio.duration)
   }
   private renderList() {
@@ -222,7 +251,6 @@ export = class MusicPlayer extends Emitter {
     this.$title.text(title)
     this.$artist.text(artist ? ` - ${artist}` : '')
     this.$cover.css('background-image', cover ? `url(${cover})` : 'none')
-    this.$bar.on('click', this.onBarClick)
   }
   private onListItemClick = (e: any) => {
     const idx = toNum($(e.curTarget).data('idx'))
@@ -257,6 +285,8 @@ export = class MusicPlayer extends Emitter {
       .on('click', `.${c('play')}`, this.togglePlay)
       .on('click', `.${c('loop')}`, this.onLoopClick)
       .on('click', `.${c('shuffle')}`, this.toggleShuffle)
+      .on('click', `.${c('controller-left')}`, this.onBarClick)
+      .on('click', `.${c('volume-controller')}`, this.onVolumeClick)
     this.$list.on('click', `.${c('list-item')}`, this.onListItemClick)
 
     each(audioEvents, (event) => {
@@ -365,6 +395,16 @@ export = class MusicPlayer extends Emitter {
                 <span class="${c('cur-time')}">00:00</span> /
                 <span class="${c('duration')}">00:00</span>
               </span>
+              <div class="${c('volume')}">
+                <span class="${c('icon icon-' + this.getVolumeIcon())}"></span>
+                <div class="${c('volume-controller')}">
+                  <div class="${c('volume-bar')}">
+                    <div class="${c('volume-bar-fill')}" style="height: ${toStr(
+      this.audio.volume * 100
+    )}%"></div>
+                  </div>
+                </div>
+              </div>
               <span class="${c(
                 'icon icon-shuffle' +
                   (this.shuffle ? '' : '-disabled') +

@@ -127,6 +127,49 @@
   transition: width 0.3s;
 }
 
+.volume {
+  position: relative;
+  display: inline-block;
+  &:hover {
+    .volume-controller {
+      height: 50px;
+    }
+    .volume-bar {
+      height: 45px;
+    }
+  }
+}
+
+.volume-controller {
+  height: 0;
+  position: absolute;
+  bottom: 15px;
+  right: -5px;
+  width: 26px;
+  overflow: hidden;
+  transition: height 0.3s;
+}
+
+.volume-bar {
+  position: relative;
+  width: 5px;
+  height: 0;
+  background: #aaa;
+  margin: 0 auto;
+  border-radius: 2.5px;
+  overflow: hidden;
+  transition: height 0.3s;
+}
+
+.volume-bar-fill {
+  background: $secondary-color;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 5px;
+  transition: height 0.3s;
+}
+
 .list {
   @include overflow-auto(y);
   max-height: 160px;

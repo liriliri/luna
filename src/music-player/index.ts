@@ -11,6 +11,8 @@ import convertBin from 'licia/convertBin'
 import jsmediatags from 'jsmediatags'
 import toStr from 'licia/toStr'
 import toNum from 'licia/toNum'
+import isEmpty from 'licia/isEmpty'
+import random from 'licia/random'
 
 const c = classPrefix('music-player')
 
@@ -61,9 +63,11 @@ export = class MusicPlayer extends Emitter {
   private $barPlayed: $.$
   private $list: $.$
   private audioList: IAudio[] = []
+  private curAudioIdx = -1
   private curAudio: IAudio | undefined
   private audio: HTMLAudioElement = new Audio()
-  private loop: string = 'all'
+  private loop = 'all'
+  private shuffle = false
   constructor(container: Element) {
     super()
 
@@ -139,6 +143,24 @@ export = class MusicPlayer extends Emitter {
 
     this.audio.currentTime = time
   }
+  next() {
+    if (isEmpty(this.audioList)) {
+      return
+    }
+
+    let idx = this.curAudioIdx
+    const len = this.audioList.length
+    if (this.shuffle) {
+      idx = random(0, len - 1)
+    } else {
+      idx++
+      if (idx >= len) {
+        idx = 0
+      }
+    }
+
+    this.setCur(idx)
+  }
   private togglePlay = () => {
     if (this.audio.paused) {
       this.play()
@@ -146,9 +168,18 @@ export = class MusicPlayer extends Emitter {
       this.pause()
     }
   }
+  private toggleShuffle = (e: any) => {
+    this.shuffle = !this.shuffle
+
+    $(e.curTarget).attr(
+      'class',
+      c('icon icon-shuffle' + (this.shuffle ? '' : '-disabled') + ' shuffle')
+    )
+  }
   private setCur(idx: number) {
     const { audio, audioList } = this
 
+    this.curAudioIdx = idx
     this.curAudio = audioList[idx]
     audio.src = this.curAudio.url
     audio.load()
@@ -210,7 +241,6 @@ export = class MusicPlayer extends Emitter {
         loop = 'one'
         break
       case 'one':
-        console.log('lalal')
         loop = 'off'
         break
       case 'off':
@@ -226,6 +256,7 @@ export = class MusicPlayer extends Emitter {
       .on('click', `.${c('icon-list')}`, this.toggleList)
       .on('click', `.${c('play')}`, this.togglePlay)
       .on('click', `.${c('loop')}`, this.onLoopClick)
+      .on('click', `.${c('shuffle')}`, this.toggleShuffle)
     this.$list.on('click', `.${c('list-item')}`, this.onListItemClick)
 
     each(audioEvents, (event) => {
@@ -242,6 +273,21 @@ export = class MusicPlayer extends Emitter {
     this.on('timeupdate', this.onTimeUpdate)
     this.on('play', this.onPlay)
     this.on('pause', this.onPause)
+    this.on('ended', this.onEnded)
+  }
+  private onEnded = () => {
+    switch (this.loop) {
+      case 'off':
+        this.seek(0)
+        break
+      case 'one':
+        this.seek(0)
+        this.play()
+        break
+      case 'all':
+        this.next()
+        break
+    }
   }
   private onPlay = () => {
     this.$play.html(`<span class="${c('icon icon-pause')}"></span>`)
@@ -319,6 +365,11 @@ export = class MusicPlayer extends Emitter {
                 <span class="${c('cur-time')}">00:00</span> /
                 <span class="${c('duration')}">00:00</span>
               </span>
+              <span class="${c(
+                'icon icon-shuffle' +
+                  (this.shuffle ? '' : '-disabled') +
+                  ' shuffle'
+              )}"></span>
               <span class="${c(
                 'icon icon-loop-' + this.loop + ' loop'
               )}"></span>

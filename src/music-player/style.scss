@@ -7,6 +7,7 @@
   box-shadow: $box-shadow;
   background: #fff;
   font-size: 14px;
+  user-select: none;
   cursor: default;
   * {
     box-sizing: border-box;
@@ -36,6 +37,7 @@
   right: 50%;
   margin: 0 -15px -15px 0;
   background: rgba(0, 0, 0, 0.2);
+  opacity: 0.8;
   .icon {
     position: absolute;
     color: #fff;

@@ -1,10 +1,8 @@
 {
   "console": {
-    "build": true,
     "icon": true
   },
   "json-editor": {
-    "build": true,
     "icon": true,
     "test": true
   },
@@ -13,12 +11,10 @@
     "install": true
   },
   "object-viewer": {
-    "build": true,
     "icon": true,
     "test": true
   },
   "notification": {
-    "build": true,
     "test": true
   }
 }

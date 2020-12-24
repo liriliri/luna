@@ -1,58 +1,55 @@
-import h from 'licia/h'
 import 'luna-notification.css'
 import Notification from 'luna-notification.js'
 import readme from './README.md'
-import { addReadme } from 'storybook-readme/html'
-import { withKnobs, select, text, number, button } from '@storybook/addon-knobs'
+import { select, text, number, button } from '@storybook/addon-knobs'
+import story from '../share/story'
 
-export default {
-  title: 'Notification',
-  decorators: [withKnobs, addReadme],
-  parameters: {
-    readme: {
-      sidebar: readme,
-    },
-  },
-}
+const def = story(
+  'notification',
+  (container) => {
+    const x = select('X', ['left', 'center', 'right'], 'center')
+    const y = select('Y', ['top', 'bottom'], 'top')
 
-export const notification = () => {
-  const container = h('div')
-
-  const x = select('X', ['left', 'center', 'right'], 'center')
-  const y = select('Y', ['top', 'bottom'], 'top')
-
-  const notification = new Notification(container, {
-    position: {
-      x,
-      y,
-    },
-  })
-
-  const content = text('Content', 'Luna Notification')
-  const duration = number('Duration', 5000, {
-    range: true,
-    min: 0,
-    max: 100000,
-    step: 1000,
-  })
-
-  function notify() {
-    notification.notify(content, {
-      duration,
+    const notification = new Notification(container, {
+      position: {
+        x,
+        y,
+      },
     })
-  }
 
-  notify()
+    const content = text('Content', 'Luna Notification')
+    const duration = number('Duration', 5000, {
+      range: true,
+      min: 0,
+      max: 100000,
+      step: 1000,
+    })
 
-  button('Notify', () => {
+    function notify() {
+      notification.notify(content, {
+        duration,
+      })
+    }
+
     notify()
-    return false
-  })
 
-  button('Dismiss All', () => {
-    notification.dismissAll()
-    return false
-  })
+    button('Notify', () => {
+      notify()
+      return false
+    })
 
-  return container
-}
+    button('Dismiss All', () => {
+      notification.dismissAll()
+      return false
+    })
+
+    return notification
+  },
+  {
+    readme,
+  }
+)
+
+export default def
+
+export const { notification } = def

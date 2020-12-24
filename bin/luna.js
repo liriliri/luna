@@ -113,7 +113,7 @@ const build = wrap(async function (component) {
     resolve(`../src/${component}/README.md`),
     resolve(`../dist/${component}`)
   )
-}, 'build')
+})
 
 function resolve(p) {
   return path.resolve(__dirname, p)

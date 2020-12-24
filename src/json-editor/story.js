@@ -1,68 +1,62 @@
 import 'luna-json-editor.css'
-import h from 'licia/h'
 import JsonEditor from 'luna-json-editor.js'
-import { withKnobs, text, boolean } from '@storybook/addon-knobs'
-import { addReadme } from 'storybook-readme/html'
+import { text, boolean } from '@storybook/addon-knobs'
 import readme from './README.md'
+import story from '../share/story'
 
-export default {
-  title: 'Json Editor',
-  decorators: [withKnobs, addReadme],
-  parameters: {
-    knobs: {
-      escapeHTML: false,
-    },
-    readme: {
-      sidebar: readme,
-    },
-  },
-}
+const def = story(
+  'json-editor',
+  (container) => {
+    const name = text('Name', 'example')
+    let value = text(
+      'Value',
+      JSON.stringify({
+        hello: 'world',
+        doubleClick: 'me to edit',
+        a: null,
+        b: true,
+        c: false,
+        d: 1,
+        e: { nested: 'object' },
+        f: [1, 2, 3],
+      })
+    )
 
-export const jsonEditor = () => {
-  const container = h('div')
+    try {
+      value = JSON.parse(value)
+    } catch (e) {
+      value = 'Invalid JSON'
+    }
 
-  const name = text('Name', 'example')
-  let value = text(
-    'Value',
-    JSON.stringify({
-      hello: 'world',
-      doubleClick: 'me to edit',
-      a: null,
-      b: true,
-      c: false,
-      d: 1,
-      e: { nested: 'object' },
-      f: [1, 2, 3],
+    const showName = boolean('Show Name', true)
+    const nameEditable = boolean('Name Editable', true)
+    const valueEditable = boolean('Value Editable', true)
+    const enableInsert = boolean('Enable Insert', true)
+    const enableDelete = boolean('Enable Delete', true)
+
+    const jsonEditor = new JsonEditor(container, {
+      showName,
+      name,
+      value,
+      nameEditable,
+      valueEditable,
+      enableDelete,
+      enableInsert,
     })
-  )
 
-  try {
-    value = JSON.parse(value)
-  } catch (e) {
-    value = 'Invalid JSON'
+    jsonEditor.on('change', function (key, oldValue, newValue) {
+      console.log('change', key, oldValue, '=>', newValue)
+    })
+
+    jsonEditor.expand(true)
+
+    return jsonEditor
+  },
+  {
+    readme,
   }
+)
 
-  const showName = boolean('Show Name', true)
-  const nameEditable = boolean('Name Editable', true)
-  const valueEditable = boolean('Value Editable', true)
-  const enableInsert = boolean('Enable Insert', true)
-  const enableDelete = boolean('Enable Delete', true)
+export default def
 
-  const jsonEditor = new JsonEditor(container, {
-    showName,
-    name,
-    value,
-    nameEditable,
-    valueEditable,
-    enableDelete,
-    enableInsert,
-  })
-
-  jsonEditor.on('change', function (key, oldValue, newValue) {
-    console.log('change', key, oldValue, '=>', newValue)
-  })
-
-  jsonEditor.expand(true)
-
-  return container
-}
+export const { jsonEditor } = def

@@ -49,6 +49,9 @@ class Notification {
       notification = notifications[0]
     }
   }
+  destroy() {
+    this.$container.html('')
+  }
   private add(notification: NotificationItem) {
     this.$notification.append(notification.html())
   }

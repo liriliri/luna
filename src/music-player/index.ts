@@ -389,6 +389,8 @@ export = class MusicPlayer extends Emitter {
     )
   }
   private appendTpl() {
+    const volumeHeight = toStr(this.audio.volume * 100)
+
     this.$container.html(stripIndent`
       <div class="${c('body')}">
         <div class="${c('body-left cover')}">
@@ -418,9 +420,9 @@ export = class MusicPlayer extends Emitter {
                 <span class="${c('icon icon-' + this.getVolumeIcon())}"></span>
                 <div class="${c('volume-controller')}">
                   <div class="${c('volume-bar')}">
-                    <div class="${c('volume-bar-fill')}" style="height: ${toStr(
-      this.audio.volume * 100
-    )}%"></div>
+                    <div class="${c(
+                      'volume-bar-fill'
+                    )}" style="height: ${volumeHeight}%"></div>
                   </div>
                 </div>
               </div>

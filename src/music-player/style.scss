@@ -172,7 +172,7 @@
 
 .list {
   @include overflow-auto(y);
-  max-height: 160px;
+  max-height: 150px;
 }
 
 .list-item {

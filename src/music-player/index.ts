@@ -14,6 +14,8 @@ import toNum from 'licia/toNum'
 import isEmpty from 'licia/isEmpty'
 import random from 'licia/random'
 import clamp from 'licia/clamp'
+import isArr from 'licia/isArr'
+import toArr from 'licia/toArr'
 
 const c = classPrefix('music-player')
 
@@ -51,6 +53,10 @@ const audioEvents = [
   'waiting',
 ]
 
+interface IOptions {
+  audio?: IAudio | IAudio[]
+}
+
 export = class MusicPlayer extends Emitter {
   private $container: $.$
   private $body: $.$
@@ -70,8 +76,15 @@ export = class MusicPlayer extends Emitter {
   private audio: HTMLAudioElement = new Audio()
   private loop = 'all'
   private shuffle = false
-  constructor(container: Element) {
+  constructor(container: Element, { audio }: IOptions = {}) {
     super()
+
+    if (audio) {
+      if (!isArr(audio)) {
+        audio = toArr(audio)
+      }
+      this.audioList = audio as IAudio[]
+    }
 
     const $container = $(container)
     $container.addClass('luna-music-player')
@@ -91,13 +104,17 @@ export = class MusicPlayer extends Emitter {
     this.$volumeIcon = $container.find(`.${c('volume')}`).find('span')
 
     this.bindEvent()
+
+    if (!isEmpty(this.audioList)) {
+      this.setCur(0, false)
+    }
   }
   play = () => {
     if (!this.curAudio) {
       return
     }
 
-    this.audio.play()
+    return this.audio.play()
   }
   volume(percentage: number) {
     percentage = clamp(percentage, 0, 1)
@@ -199,7 +216,7 @@ export = class MusicPlayer extends Emitter {
       c('icon icon-shuffle' + (this.shuffle ? '' : '-disabled') + ' shuffle')
     )
   }
-  private setCur(idx: number) {
+  private setCur(idx: number, autoplay = true) {
     const { audio, audioList } = this
 
     this.curAudioIdx = idx
@@ -210,7 +227,9 @@ export = class MusicPlayer extends Emitter {
     this.updateInfo()
     this.renderList()
 
-    this.play()
+    if (autoplay) {
+      this.play()
+    }
   }
   private onVolumeClick = (e: any) => {
     const { top, height } = $(e.curTarget).offset()

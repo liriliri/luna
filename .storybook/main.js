@@ -1,13 +1,11 @@
 const path = require('path')
-const glob = require('glob')
 const map = require('licia/map')
 const each = require('licia/each')
+const keys = require('licia/keys')
 
-const components = glob.sync('*', {
-  cwd: path.resolve(__dirname, '../dist'),
-})
+const components = keys(require('../index.json'))
 
-const stories = map(components, (component) => `../src/${component}/stories.js`)
+const stories = map(components, (component) => `../src/${component}/story.js`)
 
 module.exports = {
   stories,

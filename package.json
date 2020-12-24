@@ -47,7 +47,6 @@
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.0.0",
     "execa": "^4.0.0",
-    "glob": "^7.1.6",
     "istanbul-instrumenter-loader": "^3.0.1",
     "karma": "^5.2.3",
     "karma-chai": "^0.1.0",

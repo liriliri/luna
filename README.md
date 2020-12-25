@@ -16,5 +16,6 @@ Yet another UI library.
 
 * [console](./src/console/README.md): Console for logging.
 * [json-editor](./src/json-editor/README.md): JSON editor.
+* [music-player](./src/music-player/README.md): Music player.
 * [notification](./src/notification/README.md): Show notifications.
 * [object-viewer](./src/object-viewer/README.md): JavaScript object viewer.

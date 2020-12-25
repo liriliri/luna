@@ -12,7 +12,7 @@ Add the following script and style to your page.
 
 ```html
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-json-editor/luna-json-editor.css" />
-<script src="//cdn.jsdelivr.net/npm/luna-object-viewer/luna-json-editor.js"></script>
+<script src="//cdn.jsdelivr.net/npm/luna-json-editor/luna-json-editor.js"></script>
 ```
 
 You can also get it on npm.

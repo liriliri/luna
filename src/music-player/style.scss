@@ -126,11 +126,11 @@
   top: 0;
   bottom: 0;
   height: 2px;
-  transition: width 0.3s;
 }
 
 .bar-loaded {
   background: #aaa;
+  transition: width 0.3s;
 }
 
 .bar-played {
@@ -140,7 +140,8 @@
 .volume {
   position: relative;
   display: inline-block;
-  &:hover {
+  &:hover,
+  &.active {
     .volume-controller {
       height: 50px;
     }
@@ -177,7 +178,6 @@
   bottom: 0;
   left: 0;
   width: 5px;
-  transition: height 0.3s;
 }
 
 .list {

@@ -43,8 +43,7 @@ module.exports = function (name, { useIcon = false, dependencies = [] } = {}) {
     return {
       mode: options.mode,
       entry,
-      devtool:
-        options.mode === 'production' ? 'source-map' : 'inline-source-map',
+      devtool: 'source-map',
       output: {
         filename: `luna-${name}.js`,
         path: path.resolve(__dirname, `../../dist/${name}`),

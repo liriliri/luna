@@ -2,7 +2,7 @@ import $ from 'licia/$'
 import stripIndent from 'licia/stripIndent'
 import openFile from 'licia/openFile'
 import createUrl from 'licia/createUrl'
-import { classPrefix } from '../share/util'
+import { classPrefix, drag, eventClient } from '../share/util'
 import each from 'licia/each'
 import { splitName } from './util'
 import durationFormat from 'licia/durationFormat'
@@ -18,6 +18,7 @@ import isArr from 'licia/isArr'
 import toArr from 'licia/toArr'
 
 const c = classPrefix('music-player')
+const $document = $(document as any)
 
 interface IAudio {
   title: string
@@ -66,8 +67,11 @@ export = class MusicPlayer extends Emitter {
   private $duration: $.$
   private $cover: $.$
   private $play: $.$
+  private $bar: $.$
   private $barPlayed: $.$
   private $barLoaded: $.$
+  private $volume: $.$
+  private $volumeController: $.$
   private $volumeBarFill: $.$
   private $volumeIcon: $.$
   private $list: $.$
@@ -77,6 +81,7 @@ export = class MusicPlayer extends Emitter {
   private audio: HTMLAudioElement = new Audio()
   private loop = 'all'
   private shuffle = false
+  private audioTimeUpdate = true
   constructor(container: Element, { audio }: IOptions = {}) {
     super()
 
@@ -99,9 +104,12 @@ export = class MusicPlayer extends Emitter {
     this.$duration = $container.find(`.${c('duration')}`)
     this.$cover = $container.find(`.${c('cover')}`)
     this.$play = $container.find(`.${c('play')}`)
+    this.$bar = $container.find(`.${c('controller-left')}`)
     this.$barPlayed = $container.find(`.${c('bar-played')}`)
     this.$barLoaded = $container.find(`.${c('bar-loaded')}`)
     this.$list = $container.find(`.${c('list')}`)
+    this.$volume = $container.find(`.${c('volume')}`)
+    this.$volumeController = $container.find(`.${c('volume-controller')}`)
     this.$volumeBarFill = $container.find(`.${c('volume-bar-fill')}`)
     this.$volumeIcon = $container.find(`.${c('volume')}`).find('span')
 
@@ -234,16 +242,19 @@ export = class MusicPlayer extends Emitter {
     }
   }
   private onVolumeClick = (e: any) => {
-    const { top, height } = $(e.curTarget).offset()
-    e = e.origEvent
-    const clientY = e.clientY || e.changedTouches[0].clientY
+    const { top, height } = this.$volumeController.offset()
+    const clientY = eventClient('y', e.origEvent)
     this.volume(1 - (clientY - top) / (height - 5))
   }
   private onBarClick = (e: any) => {
-    const { left, width } = $(e.curTarget).offset()
-    e = e.origEvent
-    const clientX = e.clientX || e.changedTouches[0].clientX
-    this.seek(((clientX - left) / width) * this.audio.duration)
+    const time = this.getBarClickTime(e)
+    this.seek(time)
+    this.updateTimeUi(time)
+  }
+  private getBarClickTime(e: any) {
+    const { left, width } = this.$bar.offset()
+    const percent = clamp((eventClient('x', e.origEvent) - left) / width, 0, 1)
+    return percent * this.audio.duration
   }
   private renderList() {
     let html = ''
@@ -299,6 +310,34 @@ export = class MusicPlayer extends Emitter {
     this.loop = loop
     $(e.curTarget).attr('class', c(`icon icon-loop-${loop} loop`))
   }
+  private onBarDragStart = () => {
+    this.audioTimeUpdate = false
+    $document.on(drag('move'), this.onBarDragMove)
+    $document.on(drag('end'), this.onBarDragEnd)
+  }
+  private onBarDragMove = (e: any) => {
+    this.updateTimeUi(this.getBarClickTime(e))
+  }
+  private onBarDragEnd = (e: any) => {
+    $document.off(drag('move'), this.onBarDragMove)
+    $document.off(drag('end'), this.onBarDragEnd)
+    this.audioTimeUpdate = true
+    this.onBarClick(e)
+  }
+  private onVolumeDragStart = () => {
+    this.$volume.addClass(c('active'))
+    $document.on(drag('move'), this.onVolumeDragMove)
+    $document.on(drag('end'), this.onVolumeDragEnd)
+  }
+  private onVolumeDragMove = (e: any) => {
+    this.onVolumeClick(e)
+  }
+  private onVolumeDragEnd = (e: any) => {
+    this.$volume.rmClass(c('active'))
+    $document.off(drag('move'), this.onVolumeDragMove)
+    $document.off(drag('end'), this.onVolumeDragEnd)
+    this.onVolumeClick(e)
+  }
   private bindEvent() {
     this.$body
       .on('click', `.${c('icon-file')}`, this.open)
@@ -307,7 +346,10 @@ export = class MusicPlayer extends Emitter {
       .on('click', `.${c('loop')}`, this.onLoopClick)
       .on('click', `.${c('shuffle')}`, this.toggleShuffle)
       .on('click', `.${c('controller-left')}`, this.onBarClick)
+      .on(drag('start'), `.${c('controller-left')}`, this.onBarDragStart)
       .on('click', `.${c('volume-controller')}`, this.onVolumeClick)
+      .on(drag('start'), `.${c('volume-controller')}`, this.onVolumeDragStart)
+
     this.$list.on('click', `.${c('list-item')}`, this.onListItemClick)
 
     each(audioEvents, (event) => {
@@ -359,7 +401,12 @@ export = class MusicPlayer extends Emitter {
     this.$play.html(`<span class="${c('icon icon-play')}"></span>`)
   }
   private onTimeUpdate = () => {
-    const { currentTime, duration } = this.audio
+    if (this.audioTimeUpdate) {
+      this.updateTimeUi(this.audio.currentTime)
+    }
+  }
+  private updateTimeUi(currentTime: number) {
+    const { duration } = this.audio
     const percent = (currentTime / duration) * 100
     this.$barPlayed.css('width', percent.toFixed(2) + '%')
     this.$curTime.text(durationFormat(Math.round(currentTime * 1000), 'mm:ss'))

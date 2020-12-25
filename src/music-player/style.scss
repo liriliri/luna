@@ -39,6 +39,7 @@
   background: rgba(0, 0, 0, 0.2);
   opacity: 0.8;
   .icon {
+    cursor: pointer;
     position: absolute;
     color: #fff;
     top: 5px;
@@ -81,6 +82,7 @@
   color: #999;
   padding-left: 7px;
   .icon {
+    cursor: pointer;
     position: relative;
     top: 3px;
     transition: color 0.3s;
@@ -117,14 +119,22 @@
   transition: opacity 0.5s;
 }
 
-.bar-played {
+.bar-played,
+.bar-loaded {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
   height: 2px;
-  background: $secondary-color;
   transition: width 0.3s;
+}
+
+.bar-loaded {
+  background: #aaa;
+}
+
+.bar-played {
+  background: $secondary-color;
 }
 
 .volume {
@@ -181,7 +191,7 @@
   line-height: 32px;
   padding: 0 15px;
   font-size: 12px;
-  border-top: 1px solid #e9e9e9;
+  border-top: 1px solid #f5f5f5;
   margin: 0;
   transition: background 0.3s;
   &:first-child {
@@ -189,7 +199,10 @@
   }
   &.active,
   &:hover {
-    background: #e9e9e9;
+    background: #f5f5f5;
+  }
+  &.active {
+    color: $secondary-color;
   }
 }
 

@@ -67,6 +67,7 @@ export = class MusicPlayer extends Emitter {
   private $cover: $.$
   private $play: $.$
   private $barPlayed: $.$
+  private $barLoaded: $.$
   private $volumeBarFill: $.$
   private $volumeIcon: $.$
   private $list: $.$
@@ -99,6 +100,7 @@ export = class MusicPlayer extends Emitter {
     this.$cover = $container.find(`.${c('cover')}`)
     this.$play = $container.find(`.${c('play')}`)
     this.$barPlayed = $container.find(`.${c('bar-played')}`)
+    this.$barLoaded = $container.find(`.${c('bar-loaded')}`)
     this.$list = $container.find(`.${c('list')}`)
     this.$volumeBarFill = $container.find(`.${c('volume-bar-fill')}`)
     this.$volumeIcon = $container.find(`.${c('volume')}`).find('span')
@@ -323,6 +325,18 @@ export = class MusicPlayer extends Emitter {
     this.on('play', this.onPlay)
     this.on('pause', this.onPause)
     this.on('ended', this.onEnded)
+    this.on('canplay', this.onLoaded)
+    this.on('progress', this.onLoaded)
+  }
+  private onLoaded = () => {
+    const { audio } = this
+    let percent = 0
+    const len = audio.buffered.length
+    if (len) {
+      percent = (audio.buffered.end(len - 1) / audio.duration) * 100
+    }
+
+    this.$barLoaded.css('width', percent.toFixed(2) + '%')
   }
   private onEnded = () => {
     switch (this.loop) {
@@ -406,6 +420,7 @@ export = class MusicPlayer extends Emitter {
           <div class="${c('controller')}">
             <div class="${c('controller-left')}">
               <div class="${c('bar')}">
+                <div class="${c('bar-loaded')}"></div>
                 <div class="${c('bar-played')}">
                   <span class="${c('bar-thumb')}"></span>
                 </div>

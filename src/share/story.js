@@ -22,9 +22,6 @@ export default function story(name, storyFn, { readme } = {}) {
     },
     [camelCase(name)]: () => {
       if (window.component) {
-        if (!window.component.destroy) {
-          console.log(window.component)
-        }
         window.component.destroy()
       }
       window.component = storyFn(container)

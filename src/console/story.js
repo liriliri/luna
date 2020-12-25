@@ -95,11 +95,6 @@ const def = story(
       return false
     })
 
-    button('Destroy', () => {
-      console.destroy()
-      return false
-    })
-
     return console
   },
   {

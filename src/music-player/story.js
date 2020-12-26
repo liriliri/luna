@@ -1,8 +1,8 @@
+import 'luna-music-player.css'
 import story from '../share/story'
 import h from 'licia/h'
 import extend from 'licia/extend'
 import MusicPlayer from 'luna-music-player.js'
-import 'luna-music-player.css'
 import { object } from '@storybook/addon-knobs'
 import isPromise from 'licia/isPromise'
 import noop from 'licia/noop'
@@ -53,6 +53,7 @@ const def = story(
   },
   {
     readme,
+    source: __STORY__,
   }
 )
 

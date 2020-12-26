@@ -16,8 +16,13 @@ module.exports = {
       name: '@storybook/addon-storysource',
       options: {
         rule: {
-          test: [/stories\.js/],
+          test: [/story\.js/],
+          exclude: /share/,
           include: [path.resolve(__dirname, '../src')],
+        },
+        loaderOptions: {
+          injectDecorator: false,
+          injectStoryParameters: false,
         },
       },
     },

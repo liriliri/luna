@@ -99,6 +99,7 @@ const def = story(
   },
   {
     readme,
+    source: __STORY__,
   }
 )
 

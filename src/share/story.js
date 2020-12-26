@@ -6,7 +6,7 @@ import h from 'licia/h'
 import upperFirst from 'licia/upperFirst'
 import { addReadme } from 'storybook-readme/html'
 
-export default function story(name, storyFn, { readme } = {}) {
+export default function story(name, storyFn, { readme, source } = {}) {
   const container = h('div')
 
   return {
@@ -18,6 +18,9 @@ export default function story(name, storyFn, { readme } = {}) {
       },
       readme: {
         sidebar: readme,
+      },
+      storySource: {
+        source,
       },
     },
     [camelCase(name)]: () => {

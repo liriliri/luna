@@ -1,12 +1,14 @@
 {
   "console": {
-    "icon": true
+    "icon": true,
+    "test": true
   },
   "json-editor": {
     "icon": true,
     "test": true
   },
   "music-player": {
+    "test": true,
     "icon": true,
     "install": true
   },

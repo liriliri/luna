@@ -119,7 +119,7 @@ export = class MusicPlayer extends Emitter {
       this.setCur(0, false)
     }
   }
-  play = () => {
+  play() {
     if (!this.curAudio) {
       return
     }
@@ -133,7 +133,7 @@ export = class MusicPlayer extends Emitter {
     this.$volumeBarFill.css('height', percentage * 100 + '%')
     this.$volumeIcon.attr('class', c('icon icon-' + this.getVolumeIcon()))
   }
-  pause = () => {
+  pause() {
     if (!this.curAudio) {
       return
     }

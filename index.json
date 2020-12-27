@@ -18,5 +18,8 @@
   },
   "notification": {
     "test": true
+  },
+  "video-player": {
+    "icon": true
   }
 }

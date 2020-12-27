@@ -1,7 +1,7 @@
 import 'luna-music-player.css'
 import story from '../share/story'
 import h from 'licia/h'
-import extend from 'licia/extend'
+import $ from 'licia/$'
 import MusicPlayer from 'luna-music-player.js'
 import { object } from '@storybook/addon-knobs'
 import isPromise from 'licia/isPromise'
@@ -11,11 +11,13 @@ import readme from './README.md'
 const def = story(
   'music-player',
   (wrapper) => {
-    extend(wrapper.style, {
-      width: '600px',
-      margin: '0 auto',
-      maxWidth: '100%',
-    })
+    $(wrapper)
+      .css({
+        width: 600,
+        margin: '0 auto',
+        maxWidth: '100%',
+      })
+      .html('')
     const container = h('div')
     wrapper.appendChild(container)
 

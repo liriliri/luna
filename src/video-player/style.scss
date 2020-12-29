@@ -12,6 +12,9 @@
       opacity: 1;
     }
   }
+  * {
+    box-sizing: border-box;
+  }
 }
 
 .video {
@@ -41,9 +44,8 @@
 .controller-top {
   padding: 5px 0;
   position: absolute;
-  bottom: 33px;
+  bottom: 38px;
   width: calc(100% - 40px);
-  height: 3px;
 }
 
 .controller-top:hover {
@@ -91,50 +93,88 @@
   background: $secondary-color;
 }
 
-.controller-left {
+.controller-left,
+.controller-right {
   height: 38px;
   position: absolute;
   bottom: 0;
-  left: 20px;
   .icon {
-    margin-right: 8px;
+    vertical-align: top;
+    cursor: pointer;
+    color: #eee;
+    height: 100%;
+    line-height: 38px;
+    &:hover {
+      color: #fff;
+    }
   }
 }
 
-.controller-left .icon,
-.controller-right .icon {
-  line-height: 38px;
-  cursor: pointer;
-  color: #eee;
-  &:hover {
-    color: #fff;
+.controller-left {
+  left: 20px;
+}
+
+.controller-right {
+  right: 20px;
+  .icon {
+    margin-left: 8px;
   }
 }
 
-.play {
+.play,
+.volume {
+  margin-right: 8px;
+  height: 100%;
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .icon-play,
 .icon-pause {
-  position: relative;
-  top: -1px;
   color: #fff;
+}
+
+.volume {
+  height: 100%;
+  &:hover,
+  &.active {
+    .volume-controller {
+      width: 50px;
+    }
+    .volume-bar {
+      width: 45px;
+    }
+  }
+}
+
+.volume-controller {
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: top;
+  transition: width 0.3s;
+}
+
+.volume-bar {
+  height: 3px;
+  position: relative;
+  top: 18px;
+  border-radius: 1.5px;
+  overflow: hidden;
+  background: #aaa;
+  transition: width 0.3s;
+}
+
+.volume-bar-fill {
+  background: $secondary-color;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
 }
 
 .time {
   color: #eee;
   font-size: 12px;
   line-height: 38px;
-}
-
-.controller-right {
-  height: 38px;
-  position: absolute;
-  bottom: 0;
-  right: 20px;
-  .icon {
-    margin-left: 8px;
-  }
 }

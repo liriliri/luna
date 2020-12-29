@@ -3,6 +3,7 @@ import each from 'licia/each'
 import Emitter from 'licia/Emitter'
 import clamp from 'licia/clamp'
 import stripIndent from 'licia/stripIndent'
+import toStr from 'licia/toStr'
 import durationFormat from 'licia/durationFormat'
 import fullscreen from 'licia/fullscreen'
 import { classPrefix, eventClient, drag } from '../share/util'
@@ -51,7 +52,7 @@ export = class VideoPlayer extends Emitter {
   private $play: $.$
   private $barPlayed: $.$
   private $barLoaded: $.$
-  private video: HTMLVideoElement
+  private video: HTMLVideoElement = document.createElement('video')
   private videoTimeUpdate = true
   constructor(container: Element, { url = '' }: IOptions = {}) {
     super()
@@ -70,7 +71,7 @@ export = class VideoPlayer extends Emitter {
     this.$barPlayed = $container.find(`.${c('bar-played')}`)
     this.$barLoaded = $container.find(`.${c('bar-loaded')}`)
     this.$video = $container.find(`.${c('video')}`)
-    this.video = $container.find('video').get(0) as HTMLVideoElement
+    this.$video.get(0).appendChild(this.video)
 
     this.bindEvent()
 
@@ -210,11 +211,24 @@ export = class VideoPlayer extends Emitter {
     this.$barPlayed.css('width', percent.toFixed(2) + '%')
     this.$curTime.text(durationFormat(Math.round(currentTime * 1000), 'mm:ss'))
   }
+  private getVolumeIcon() {
+    const { volume } = this.video
+
+    if (volume === 0) {
+      return 'volume-off'
+    }
+
+    if (volume < 0.5) {
+      return 'volume-down'
+    }
+
+    return 'volume'
+  }
   private appendTpl() {
+    const volumeHeight = toStr(this.video.volume * 100)
+
     this.$container.html(stripIndent`
-      <div class="${c('video')}">
-        <video></video>
-      </div>
+      <div class="${c('video')}"></div>
       <div class="${c('controller active')}">
         <div class="${c('controller-top')}">
           <div class="${c('bar')}">
@@ -227,6 +241,16 @@ export = class VideoPlayer extends Emitter {
         <div class="${c('controller-left')}">
           <div class="${c('play')}">
             <span class="${c('icon icon-play')}"></span>
+          </div>
+          <div class="${c('volume')}">
+            <span class="${c('icon icon-' + this.getVolumeIcon())}"></span>
+            <div class="${c('volume-controller')}">
+              <div class="${c('volume-bar')}">
+                <div class="${c(
+                  'volume-bar-fill'
+                )}" style="width: ${volumeHeight}%"></div>
+              </div>
+            </div>
           </div>
           <span class="${c('time')}">
             <span class="${c('cur-time')}">00:00</span> /

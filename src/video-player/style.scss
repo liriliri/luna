@@ -6,6 +6,7 @@
   height: 100%;
   user-select: none;
   position: relative;
+  font-size: 14px;
 }
 
 .video {
@@ -87,10 +88,24 @@
   .icon {
     line-height: 38px;
     cursor: pointer;
+    margin-right: 8px;
   }
+}
+
+.play {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .icon-play,
 .icon-pause {
+  position: relative;
+  top: -1px;
   color: #fff;
+}
+
+.time {
+  color: #eee;
+  font-size: 12px;
+  line-height: 38px;
 }

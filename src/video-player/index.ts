@@ -3,6 +3,7 @@ import each from 'licia/each'
 import Emitter from 'licia/Emitter'
 import clamp from 'licia/clamp'
 import stripIndent from 'licia/stripIndent'
+import durationFormat from 'licia/durationFormat'
 import { classPrefix, eventClient, drag } from '../share/util'
 
 const c = classPrefix('video-player')
@@ -42,6 +43,8 @@ export = class VideoPlayer extends Emitter {
   private $container: $.$
   private $video: $.$
   private $controller: $.$
+  private $curTime: $.$
+  private $duration: $.$
   private $bar: $.$
   private $play: $.$
   private $barPlayed: $.$
@@ -57,6 +60,8 @@ export = class VideoPlayer extends Emitter {
     this.appendTpl()
 
     this.$controller = $container.find(`.${c('controller')}`)
+    this.$curTime = $container.find(`.${c('cur-time')}`)
+    this.$duration = $container.find(`.${c('duration')}`)
     this.$play = $container.find(`.${c('play')}`)
     this.$bar = $container.find(`.${c('controller-top')}`)
     this.$barPlayed = $container.find(`.${c('bar-played')}`)
@@ -121,11 +126,17 @@ export = class VideoPlayer extends Emitter {
       )
     })
 
+    this.on('loadedmetadata', this.onLoadedMetaData)
     this.on('timeupdate', this.onTimeUpdate)
     this.on('play', this.onPlay)
     this.on('pause', this.onPause)
     this.on('canplay', this.onLoaded)
     this.on('progress', this.onLoaded)
+  }
+  private onLoadedMetaData = () => {
+    this.$duration.text(
+      durationFormat(Math.round(this.video.duration * 1000), 'mm:ss')
+    )
   }
   private onPlay = () => {
     this.$play.html(`<span class="${c('icon icon-pause')}"></span>`)
@@ -175,6 +186,7 @@ export = class VideoPlayer extends Emitter {
   private updateTimeUi(currentTime: number) {
     const percent = (currentTime / this.video.duration) * 100
     this.$barPlayed.css('width', percent.toFixed(2) + '%')
+    this.$curTime.text(durationFormat(Math.round(currentTime * 1000), 'mm:ss'))
   }
   private appendTpl() {
     this.$container.html(stripIndent`
@@ -194,6 +206,10 @@ export = class VideoPlayer extends Emitter {
           <div class="${c('play')}">
             <span class="${c('icon icon-play')}"></span>
           </div>
+          <span class="${c('time')}">
+            <span class="${c('cur-time')}">00:00</span> /
+            <span class="${c('duration')}">00:00</span>
+          </span>
         </div>
       </div>
     `)

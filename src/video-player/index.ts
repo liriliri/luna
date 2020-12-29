@@ -113,12 +113,20 @@ export = class VideoPlayer extends Emitter {
       this.pause()
     }
   }
+  private togglePip = () => {
+    if ((document as any).pictureInPictureElement) {
+      ;(document as any).exitPictureInPicture()
+    } else {
+      ;(this.video as any).requestPictureInPicture()
+    }
+  }
   private bindEvent() {
     this.$controller
       .on('click', `.${c('play')}`, this.togglePlay)
       .on('click', `.${c('controller-top')}`, this.onBarClick)
       .on(drag('start'), `.${c('controller-top')}`, this.onBarDragStart)
       .on('click', `.${c('icon-fullscreen')}`, this.toggleFullscreen)
+      .on('click', `.${c('icon-pip')}`, this.togglePip)
 
     this.$video.on('click', this.togglePlay)
 
@@ -226,6 +234,7 @@ export = class VideoPlayer extends Emitter {
           </span>
         </div>
         <div class="${c('controller-right')}">
+          <span class="${c('icon icon-pip')}"></span>
           <span class="${c('icon icon-fullscreen')}"></span>
         </div>
       </div>

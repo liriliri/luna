@@ -3,6 +3,8 @@ import story from '../share/story'
 import VideoPlayer from 'luna-video-player.js'
 import $ from 'licia/$'
 import h from 'licia/h'
+import noop from 'licia/noop'
+import isPromise from 'licia/isPromise'
 import readme from './README.md'
 
 const def = story(
@@ -22,6 +24,11 @@ const def = story(
       url:
         'https://api.dogecloud.com/player/get.mp4?vcode=9dbb405e2141b5e8&userId=2096&flsign=1c02d5e60d2a0f29e1fd2ec0c0762b8b&ext=.mp4',
     })
+
+    const result = videoPlayer.play()
+    if (isPromise(result)) {
+      result.catch(noop)
+    }
 
     return videoPlayer
   },

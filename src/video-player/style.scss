@@ -85,10 +85,19 @@
   height: 38px;
   position: absolute;
   bottom: 0;
+  left: 20px;
   .icon {
-    line-height: 38px;
-    cursor: pointer;
     margin-right: 8px;
+  }
+}
+
+.controller-left .icon,
+.controller-right .icon {
+  line-height: 38px;
+  cursor: pointer;
+  color: #eee;
+  &:hover {
+    color: #fff;
   }
 }
 
@@ -108,4 +117,14 @@
   color: #eee;
   font-size: 12px;
   line-height: 38px;
+}
+
+.controller-right {
+  height: 38px;
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  .icon {
+    margin-left: 8px;
+  }
 }

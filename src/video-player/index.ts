@@ -4,6 +4,7 @@ import Emitter from 'licia/Emitter'
 import clamp from 'licia/clamp'
 import stripIndent from 'licia/stripIndent'
 import durationFormat from 'licia/durationFormat'
+import fullscreen from 'licia/fullscreen'
 import { classPrefix, eventClient, drag } from '../share/util'
 
 const c = classPrefix('video-player')
@@ -40,6 +41,7 @@ const videoEvents = [
 ]
 
 export = class VideoPlayer extends Emitter {
+  private container: Element
   private $container: $.$
   private $video: $.$
   private $controller: $.$
@@ -56,6 +58,7 @@ export = class VideoPlayer extends Emitter {
 
     const $container = $(container)
     $container.addClass('luna-video-player')
+    this.container = container
     this.$container = $container
     this.appendTpl()
 
@@ -115,6 +118,7 @@ export = class VideoPlayer extends Emitter {
       .on('click', `.${c('play')}`, this.togglePlay)
       .on('click', `.${c('controller-top')}`, this.onBarClick)
       .on(drag('start'), `.${c('controller-top')}`, this.onBarDragStart)
+      .on('click', `.${c('icon-fullscreen')}`, this.toggleFullscreen)
 
     this.$video.on('click', this.togglePlay)
 
@@ -129,9 +133,17 @@ export = class VideoPlayer extends Emitter {
     this.on('loadedmetadata', this.onLoadedMetaData)
     this.on('timeupdate', this.onTimeUpdate)
     this.on('play', this.onPlay)
+    this.on('ended', this.onEnded)
     this.on('pause', this.onPause)
     this.on('canplay', this.onLoaded)
     this.on('progress', this.onLoaded)
+  }
+  private toggleFullscreen = () => {
+    fullscreen.toggle(this.container)
+  }
+  private onEnded = () => {
+    this.seek(0)
+    this.play()
   }
   private onLoadedMetaData = () => {
     this.$duration.text(
@@ -210,6 +222,9 @@ export = class VideoPlayer extends Emitter {
             <span class="${c('cur-time')}">00:00</span> /
             <span class="${c('duration')}">00:00</span>
           </span>
+        </div>
+        <div class="${c('controller-right')}">
+          <span class="${c('icon icon-fullscreen')}"></span>
         </div>
       </div>
     `)

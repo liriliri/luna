@@ -43,6 +43,7 @@ export = class VideoPlayer extends Emitter {
   private $video: $.$
   private $controller: $.$
   private $bar: $.$
+  private $play: $.$
   private $barPlayed: $.$
   private $barLoaded: $.$
   private video: HTMLVideoElement
@@ -56,6 +57,7 @@ export = class VideoPlayer extends Emitter {
     this.appendTpl()
 
     this.$controller = $container.find(`.${c('controller')}`)
+    this.$play = $container.find(`.${c('play')}`)
     this.$bar = $container.find(`.${c('controller-top')}`)
     this.$barPlayed = $container.find(`.${c('bar-played')}`)
     this.$barLoaded = $container.find(`.${c('bar-loaded')}`)
@@ -105,6 +107,7 @@ export = class VideoPlayer extends Emitter {
   }
   private bindEvent() {
     this.$controller
+      .on('click', `.${c('play')}`, this.togglePlay)
       .on('click', `.${c('controller-top')}`, this.onBarClick)
       .on(drag('start'), `.${c('controller-top')}`, this.onBarDragStart)
 
@@ -119,8 +122,16 @@ export = class VideoPlayer extends Emitter {
     })
 
     this.on('timeupdate', this.onTimeUpdate)
+    this.on('play', this.onPlay)
+    this.on('pause', this.onPause)
     this.on('canplay', this.onLoaded)
     this.on('progress', this.onLoaded)
+  }
+  private onPlay = () => {
+    this.$play.html(`<span class="${c('icon icon-pause')}"></span>`)
+  }
+  private onPause = () => {
+    this.$play.html(`<span class="${c('icon icon-play')}"></span>`)
   }
   private onLoaded = () => {
     const { video } = this
@@ -177,6 +188,11 @@ export = class VideoPlayer extends Emitter {
             <div class="${c('bar-played')}">
               <span class="${c('bar-thumb')}"></span>
             </div>
+          </div>
+        </div>
+        <div class="${c('controller-left')}">
+          <div class="${c('play')}">
+            <span class="${c('icon icon-play')}"></span>
           </div>
         </div>
       </div>

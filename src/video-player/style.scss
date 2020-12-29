@@ -79,3 +79,18 @@
 .bar-played {
   background: $secondary-color;
 }
+
+.controller-left {
+  height: 38px;
+  position: absolute;
+  bottom: 0;
+  .icon {
+    line-height: 38px;
+    cursor: pointer;
+  }
+}
+
+.icon-play,
+.icon-pause {
+  color: #fff;
+}

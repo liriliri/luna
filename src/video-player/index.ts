@@ -151,9 +151,11 @@ export = class VideoPlayer extends Emitter {
     )
   }
   private onPlay = () => {
+    this.$controller.rmClass(c('active'))
     this.$play.html(`<span class="${c('icon icon-pause')}"></span>`)
   }
   private onPause = () => {
+    this.$controller.addClass(c('active'))
     this.$play.html(`<span class="${c('icon icon-play')}"></span>`)
   }
   private onLoaded = () => {
@@ -205,7 +207,7 @@ export = class VideoPlayer extends Emitter {
       <div class="${c('video')}">
         <video></video>
       </div>
-      <div class="${c('controller')}">
+      <div class="${c('controller active')}">
         <div class="${c('controller-top')}">
           <div class="${c('bar')}">
             <div class="${c('bar-loaded')}"></div>

@@ -7,6 +7,11 @@
   user-select: none;
   position: relative;
   font-size: 14px;
+  &:hover {
+    .controller {
+      opacity: 1;
+    }
+  }
 }
 
 .video {
@@ -20,12 +25,17 @@
 }
 
 .controller {
+  opacity: 0;
   left: 0;
   right: 0;
   height: 41px;
   padding: 0 20px;
   position: absolute;
   bottom: 0;
+  transition: opacity 0.3s;
+  &.active {
+    opacity: 1;
+  }
 }
 
 .controller-top {

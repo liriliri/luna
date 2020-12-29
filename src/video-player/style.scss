@@ -1,15 +1,81 @@
+@import '../share/variable';
+
 .luna-video-player {
   background: #000;
   width: 100%;
   height: 100%;
+  user-select: none;
+  position: relative;
 }
 
 .video {
   display: flex;
   width: 100%;
   height: 100%;
-  & video {
+  video {
     width: 100%;
     max-height: 100%;
   }
+}
+
+.controller {
+  left: 0;
+  right: 0;
+  height: 41px;
+  padding: 0 20px;
+  position: absolute;
+  bottom: 0;
+}
+
+.controller-top {
+  padding: 5px 0;
+  position: absolute;
+  bottom: 33px;
+  width: calc(100% - 40px);
+  height: 3px;
+}
+
+.controller-top:hover {
+  .bar-thumb {
+    opacity: 1;
+  }
+}
+
+.bar-thumb {
+  opacity: 0;
+  transition: opacity 0.5s;
+  position: absolute;
+  margin-right: -4px;
+  right: 0;
+  top: -2px;
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  background: $secondary-color;
+  border-radius: 50%;
+}
+
+.bar {
+  position: relative;
+  height: 3px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.bar-played,
+.bar-loaded {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 3px;
+}
+
+.bar-loaded {
+  background: rgba(255, 255, 255, 0.5);
+  transition: width 0.3s;
+}
+
+.bar-played {
+  background: $secondary-color;
 }

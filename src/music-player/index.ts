@@ -406,8 +406,7 @@ export = class MusicPlayer extends Emitter {
     }
   }
   private updateTimeUi(currentTime: number) {
-    const { duration } = this.audio
-    const percent = (currentTime / duration) * 100
+    const percent = (currentTime / this.audio.duration) * 100
     this.$barPlayed.css('width', percent.toFixed(2) + '%')
     this.$curTime.text(durationFormat(Math.round(currentTime * 1000), 'mm:ss'))
   }

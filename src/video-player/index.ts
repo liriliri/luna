@@ -52,6 +52,10 @@ export = class VideoPlayer extends Emitter {
   private $play: $.$
   private $barPlayed: $.$
   private $barLoaded: $.$
+  private $volume: $.$
+  private $volumeController: $.$
+  private $volumeBarFill: $.$
+  private $volumeIcon: $.$
   private video: HTMLVideoElement = document.createElement('video')
   private videoTimeUpdate = true
   constructor(container: Element, { url = '' }: IOptions = {}) {
@@ -64,6 +68,10 @@ export = class VideoPlayer extends Emitter {
     this.appendTpl()
 
     this.$controller = $container.find(`.${c('controller')}`)
+    this.$volume = $container.find(`.${c('volume')}`)
+    this.$volumeController = $container.find(`.${c('volume-controller')}`)
+    this.$volumeBarFill = $container.find(`.${c('volume-bar-fill')}`)
+    this.$volumeIcon = this.$volume.find('span')
     this.$curTime = $container.find(`.${c('cur-time')}`)
     this.$duration = $container.find(`.${c('duration')}`)
     this.$play = $container.find(`.${c('play')}`)
@@ -96,6 +104,7 @@ export = class VideoPlayer extends Emitter {
   destroy() {
     this.$container.rmClass('luna-video-player')
     this.$container.html('')
+    this.pause()
   }
   seek(time: number) {
     if (!this.video.src) {
@@ -106,6 +115,13 @@ export = class VideoPlayer extends Emitter {
     time = Math.min(time, this.video.duration)
 
     this.video.currentTime = time
+  }
+  volume(percentage: number) {
+    percentage = clamp(percentage, 0, 1)
+    this.video.volume = percentage
+
+    this.$volumeBarFill.css('width', percentage * 100 + '%')
+    this.$volumeIcon.attr('class', c('icon icon-' + this.getVolumeIcon()))
   }
   private togglePlay = () => {
     if (this.video.paused) {
@@ -121,6 +137,25 @@ export = class VideoPlayer extends Emitter {
       ;(this.video as any).requestPictureInPicture()
     }
   }
+  private onVolumeClick = (e: any) => {
+    const { left, width } = this.$volumeController.offset()
+    const clientX = eventClient('x', e.origEvent)
+    this.volume((clientX - left) / (width - 5))
+  }
+  private onVolumeDragStart = () => {
+    this.$volume.addClass(c('active'))
+    $document.on(drag('move'), this.onVolumeDragMove)
+    $document.on(drag('end'), this.onVolumeDragEnd)
+  }
+  private onVolumeDragMove = (e: any) => {
+    this.onVolumeClick(e)
+  }
+  private onVolumeDragEnd = (e: any) => {
+    this.$volume.rmClass(c('active'))
+    $document.off(drag('move'), this.onVolumeDragMove)
+    $document.off(drag('end'), this.onVolumeDragEnd)
+    this.onVolumeClick(e)
+  }
   private bindEvent() {
     this.$controller
       .on('click', `.${c('play')}`, this.togglePlay)
@@ -128,6 +163,8 @@ export = class VideoPlayer extends Emitter {
       .on(drag('start'), `.${c('controller-top')}`, this.onBarDragStart)
       .on('click', `.${c('icon-fullscreen')}`, this.toggleFullscreen)
       .on('click', `.${c('icon-pip')}`, this.togglePip)
+      .on('click', `.${c('volume-controller')}`, this.onVolumeClick)
+      .on(drag('start'), `.${c('volume-controller')}`, this.onVolumeDragStart)
 
     this.$video.on('click', this.togglePlay)
 

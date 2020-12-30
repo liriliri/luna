@@ -111,7 +111,7 @@ export = class MusicPlayer extends Emitter {
     this.$volume = $container.find(`.${c('volume')}`)
     this.$volumeController = $container.find(`.${c('volume-controller')}`)
     this.$volumeBarFill = $container.find(`.${c('volume-bar-fill')}`)
-    this.$volumeIcon = $container.find(`.${c('volume')}`).find('span')
+    this.$volumeIcon = this.$volume.find('span')
 
     this.bindEvent()
 

@@ -97,20 +97,20 @@ export = class MusicPlayer extends Emitter {
     this.$container = $container
     this.appendTpl()
 
-    this.$body = $container.find(`.${c('body')}`)
-    this.$title = $container.find(`.${c('title')}`)
-    this.$artist = $container.find(`.${c('artist')}`)
-    this.$curTime = $container.find(`.${c('cur-time')}`)
-    this.$duration = $container.find(`.${c('duration')}`)
-    this.$cover = $container.find(`.${c('cover')}`)
-    this.$play = $container.find(`.${c('play')}`)
-    this.$bar = $container.find(`.${c('controller-left')}`)
-    this.$barPlayed = $container.find(`.${c('bar-played')}`)
-    this.$barLoaded = $container.find(`.${c('bar-loaded')}`)
-    this.$list = $container.find(`.${c('list')}`)
-    this.$volume = $container.find(`.${c('volume')}`)
-    this.$volumeController = $container.find(`.${c('volume-controller')}`)
-    this.$volumeBarFill = $container.find(`.${c('volume-bar-fill')}`)
+    this.$body = $container.find(c('.body'))
+    this.$title = $container.find(c('.title'))
+    this.$artist = $container.find(c('.artist'))
+    this.$curTime = $container.find(c('.cur-time'))
+    this.$duration = $container.find(c('.duration'))
+    this.$cover = $container.find(c('.cover'))
+    this.$play = $container.find(c('.play'))
+    this.$bar = $container.find(c('.controller-left'))
+    this.$barPlayed = $container.find(c('.bar-played'))
+    this.$barLoaded = $container.find(c('.bar-loaded'))
+    this.$list = $container.find(c('.list'))
+    this.$volume = $container.find(c('.volume'))
+    this.$volumeController = $container.find(c('.volume-controller'))
+    this.$volumeBarFill = $container.find(c('.volume-bar-fill'))
     this.$volumeIcon = this.$volume.find('span')
 
     this.bindEvent()
@@ -340,17 +340,17 @@ export = class MusicPlayer extends Emitter {
   }
   private bindEvent() {
     this.$body
-      .on('click', `.${c('icon-file')}`, this.open)
-      .on('click', `.${c('icon-list')}`, this.toggleList)
-      .on('click', `.${c('play')}`, this.togglePlay)
-      .on('click', `.${c('loop')}`, this.onLoopClick)
-      .on('click', `.${c('shuffle')}`, this.toggleShuffle)
-      .on('click', `.${c('controller-left')}`, this.onBarClick)
-      .on(drag('start'), `.${c('controller-left')}`, this.onBarDragStart)
-      .on('click', `.${c('volume-controller')}`, this.onVolumeClick)
-      .on(drag('start'), `.${c('volume-controller')}`, this.onVolumeDragStart)
+      .on('click', c('.icon-file'), this.open)
+      .on('click', c('.icon-list'), this.toggleList)
+      .on('click', c('.play'), this.togglePlay)
+      .on('click', c('.loop'), this.onLoopClick)
+      .on('click', c('.shuffle'), this.toggleShuffle)
+      .on('click', c('.controller-left'), this.onBarClick)
+      .on(drag('start'), c('.controller-left'), this.onBarDragStart)
+      .on('click', c('.volume-controller'), this.onVolumeClick)
+      .on(drag('start'), c('.volume-controller'), this.onVolumeDragStart)
 
-    this.$list.on('click', `.${c('list-item')}`, this.onListItemClick)
+    this.$list.on('click', c('.list-item'), this.onListItemClick)
 
     each(audioEvents, (event) => {
       this.audio.addEventListener(

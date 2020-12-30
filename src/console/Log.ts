@@ -131,7 +131,7 @@ export default class Log extends Emitter {
     return false
   }
   updateIcon(icon: string) {
-    const $icon = this.$el.find(`.${c('icon')}`)
+    const $icon = this.$el.find(c('.icon'))
 
     $icon.rmAttr('class').addClass([c('icon'), c(`icon-${icon}`)])
 
@@ -233,7 +233,7 @@ export default class Log extends Emitter {
       case 'group':
       case 'groupCollapsed':
         if (src || args) {
-          const $json = $el.find(`.${c('json')}`)
+          const $json = $el.find(c('.json'))
           if ($json.hasClass(c('hidden'))) {
             if ($json.data('init') !== 'true') {
               if (src) {
@@ -262,7 +262,7 @@ export default class Log extends Emitter {
         }
         break
       case 'error':
-        $el.find(`.${c('stack')}`).toggleClass(c('hidden'))
+        $el.find(c('.stack')).toggleClass(c('hidden'))
         break
     }
 
@@ -351,7 +351,7 @@ export default class Log extends Emitter {
     msg = render({ msg, type, icon, id, header, group })
 
     this.$el.addClass(`${c('log-container')}`).html(msg)
-    this.$content = this.$el.find(`.${c('log-content')}`)
+    this.$content = this.$el.find(c('.log-content'))
     this.content = this.$content.get(0)
   }
 }

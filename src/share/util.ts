@@ -5,10 +5,9 @@ import root from 'licia/root'
 export function classPrefix(name: string) {
   const prefix = `luna-${name}-`
   return function (str: string) {
-    return map(
-      trim(str).split(/\s+/),
-      (singleClass) => `${prefix}${singleClass}`
-    ).join(' ')
+    return map(trim(str).split(/\s+/), (singleClass) => {
+      return singleClass.replace(/[\w-]+/, (match) => `${prefix}${match}`)
+    }).join(' ')
   }
 }
 

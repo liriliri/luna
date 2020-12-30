@@ -97,11 +97,11 @@ export = class Console extends Emitter {
     this.asyncRender = asyncRender
     this.showHeader = showHeader
 
-    this.$el = $container.find(`.${c('logs')}`)
+    this.$el = $container.find(c('.logs'))
     this.el = this.$el.get(0) as HTMLElement
-    this.$fakeEl = $container.find(`.${c('fake-logs')}`)
+    this.$fakeEl = $container.find(c('.fake-logs'))
     this.fakeEl = this.$fakeEl.get(0) as HTMLElement
-    this.$space = $container.find(`.${c('logs-space')}`)
+    this.$space = $container.find(c('.logs-space'))
     this.space = this.$space.get(0) as HTMLElement
 
     // For android slowing rendering
@@ -628,7 +628,7 @@ export = class Console extends Emitter {
     const self = this
     const { $el } = this
 
-    $el.on('click', `.${c('log-container')}`, function (this: any) {
+    $el.on('click', c('.log-container'), function (this: any) {
       this.log.click(self)
     })
 

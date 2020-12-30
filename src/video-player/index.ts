@@ -67,18 +67,18 @@ export = class VideoPlayer extends Emitter {
     this.$container = $container
     this.appendTpl()
 
-    this.$controller = $container.find(`.${c('controller')}`)
-    this.$volume = $container.find(`.${c('volume')}`)
-    this.$volumeController = $container.find(`.${c('volume-controller')}`)
-    this.$volumeBarFill = $container.find(`.${c('volume-bar-fill')}`)
+    this.$controller = $container.find(c('.controller'))
+    this.$volume = $container.find(c('.volume'))
+    this.$volumeController = $container.find(c('.volume-controller'))
+    this.$volumeBarFill = $container.find(c('.volume-bar-fill'))
     this.$volumeIcon = this.$volume.find('span')
-    this.$curTime = $container.find(`.${c('cur-time')}`)
-    this.$duration = $container.find(`.${c('duration')}`)
-    this.$play = $container.find(`.${c('play')}`)
-    this.$bar = $container.find(`.${c('controller-top')}`)
-    this.$barPlayed = $container.find(`.${c('bar-played')}`)
-    this.$barLoaded = $container.find(`.${c('bar-loaded')}`)
-    this.$video = $container.find(`.${c('video')}`)
+    this.$curTime = $container.find(c('.cur-time'))
+    this.$duration = $container.find(c('.duration'))
+    this.$play = $container.find(c('.play'))
+    this.$bar = $container.find(c('.controller-top'))
+    this.$barPlayed = $container.find(c('.bar-played'))
+    this.$barLoaded = $container.find(c('.bar-loaded'))
+    this.$video = $container.find(c('.video'))
     this.$video.get(0).appendChild(this.video)
 
     this.bindEvent()
@@ -158,13 +158,13 @@ export = class VideoPlayer extends Emitter {
   }
   private bindEvent() {
     this.$controller
-      .on('click', `.${c('play')}`, this.togglePlay)
-      .on('click', `.${c('controller-top')}`, this.onBarClick)
-      .on(drag('start'), `.${c('controller-top')}`, this.onBarDragStart)
-      .on('click', `.${c('icon-fullscreen')}`, this.toggleFullscreen)
-      .on('click', `.${c('icon-pip')}`, this.togglePip)
-      .on('click', `.${c('volume-controller')}`, this.onVolumeClick)
-      .on(drag('start'), `.${c('volume-controller')}`, this.onVolumeDragStart)
+      .on('click', c('.play'), this.togglePlay)
+      .on('click', c('.controller-top'), this.onBarClick)
+      .on(drag('start'), c('.controller-top'), this.onBarDragStart)
+      .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
+      .on('click', c('.icon-pip'), this.togglePip)
+      .on('click', c('.volume-controller'), this.onVolumeClick)
+      .on(drag('start'), c('.volume-controller'), this.onVolumeDragStart)
 
     this.$video.on('click', this.togglePlay)
 

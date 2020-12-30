@@ -65,13 +65,13 @@ export = class JsonEditor extends Emitter {
     this.$container = $container
     this.appendTpl()
 
-    this.$toggle = $container.find(`.${c('toggle')}`)
-    this.$name = $container.find(`.${c('name')}`)
-    this.$separator = $container.find(`.${c('separator')}`)
-    this.$value = $container.find(`.${c('value')}`)
-    this.$delete = $container.find(`.${c('delete')}`)
-    this.$children = $container.find(`.${c('children')}`)
-    this.$insert = $container.find(`.${c('insert')}`)
+    this.$toggle = $container.find(c('.toggle'))
+    this.$name = $container.find(c('.name'))
+    this.$separator = $container.find(c('.separator'))
+    this.$value = $container.find(c('.value'))
+    this.$delete = $container.find(c('.delete'))
+    this.$children = $container.find(c('.children'))
+    this.$insert = $container.find(c('.insert'))
 
     if (!showName) {
       this.$name.hide()

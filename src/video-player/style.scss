@@ -10,6 +10,12 @@
   &:hover {
     .controller {
       opacity: 1;
+      &.controller-hidden {
+        opacity: 0;
+        &:hover {
+          opacity: 1;
+        }
+      }
     }
   }
   * {
@@ -37,7 +43,7 @@
   bottom: 0;
   transition: opacity 0.3s;
   &.active {
-    opacity: 1;
+    opacity: 1 !important;
   }
 }
 

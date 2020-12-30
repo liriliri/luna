@@ -58,6 +58,7 @@ export = class VideoPlayer extends Emitter {
   private $volumeIcon: $.$
   private video: HTMLVideoElement = document.createElement('video')
   private videoTimeUpdate = true
+  private autoHideTimer: any = 0
   constructor(container: Element, { url = '' }: IOptions = {}) {
     super()
 
@@ -156,6 +157,13 @@ export = class VideoPlayer extends Emitter {
     $document.off(drag('end'), this.onVolumeDragEnd)
     this.onVolumeClick(e)
   }
+  private onMouseMove = () => {
+    this.$controller.rmClass(c('controller-hidden'))
+    clearTimeout(this.autoHideTimer)
+    this.autoHideTimer = setTimeout(() => {
+      this.$controller.addClass(c('controller-hidden'))
+    }, 3000)
+  }
   private bindEvent() {
     this.$controller
       .on('click', c('.play'), this.togglePlay)
@@ -166,6 +174,7 @@ export = class VideoPlayer extends Emitter {
       .on('click', c('.volume-controller'), this.onVolumeClick)
       .on(drag('start'), c('.volume-controller'), this.onVolumeDragStart)
 
+    this.$container.on('mousemove', this.onMouseMove)
     this.$video.on('click', this.togglePlay)
 
     each(videoEvents, (event) => {

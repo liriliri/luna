@@ -3,6 +3,9 @@
     "icon": true,
     "test": true
   },
+  "editor": {
+    "icon": true
+  },
   "json-editor": {
     "icon": true,
     "test": true

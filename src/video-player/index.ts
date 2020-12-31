@@ -276,6 +276,7 @@ export = class VideoPlayer extends Emitter {
     this.$container.html(stripIndent`
       <div class="${c('video')}"></div>
       <div class="${c('controller active')}">
+        <div class="${c('controller-mask')}"></div>
         <div class="${c('controller-top')}">
           <div class="${c('bar')}">
             <div class="${c('bar-loaded')}"></div>

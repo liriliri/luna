@@ -19,3 +19,4 @@ Yet another UI library.
 * [music-player](./src/music-player/README.md): Music player.
 * [notification](./src/notification/README.md): Show notifications.
 * [object-viewer](./src/object-viewer/README.md): JavaScript object viewer.
+* [video-player](./src/video-player/README.md): Video player.

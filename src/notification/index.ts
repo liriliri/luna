@@ -85,16 +85,16 @@ class Notification extends Component {
 }
 
 class NotificationItem {
-  private container: Notification
+  private notification: Notification
   private content: string
   id: string
   constructor(container: Notification, content: string) {
-    this.container = container
+    this.notification = container
     this.content = content
     this.id = uniqId('luna-notification-')
   }
   html() {
-    const { c, position } = this.container
+    const { c, position } = this.notification
     const { y } = position
 
     return stripIndent`

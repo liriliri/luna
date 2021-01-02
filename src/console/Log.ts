@@ -1,11 +1,10 @@
-import origGetAbstract from './getAbstract'
+import getAbstract from './getAbstract'
 // @ts-ignore
 import LunaObjectViewer from 'luna-object-viewer'
 import isObj from 'licia/isObj'
 import isStr from 'licia/isStr'
 import isErr from 'licia/isErr'
 import isPrimitive from 'licia/isPrimitive'
-import wrap from 'licia/wrap'
 import defaults from 'licia/defaults'
 import isEl from 'licia/isEl'
 import toStr from 'licia/toStr'
@@ -33,9 +32,7 @@ import nextTick from 'licia/nextTick'
 import linkify from 'licia/linkify'
 import { getObjType } from './util'
 import stripIndent from 'licia/stripIndent'
-import { classPrefix } from '../share/util'
-
-const c = classPrefix('console')
+import Console from './index'
 
 export interface IGroup {
   id: string
@@ -80,17 +77,22 @@ export default class Log extends Emitter {
   public height = 0
   private content: Element
   private $content: $.$
-  constructor({
-    type = 'log',
-    args = [],
-    id,
-    group,
-    targetGroup,
-    header,
-    ignoreFilter = false,
-  }: ILogOptions) {
+  private console: Console
+  constructor(
+    console: Console,
+    {
+      type = 'log',
+      args = [],
+      id,
+      group,
+      targetGroup,
+      header,
+      ignoreFilter = false,
+    }: ILogOptions
+  ) {
     super()
 
+    this.console = console
     this.type = type
     this.group = group
     this.targetGroup = targetGroup
@@ -131,6 +133,7 @@ export default class Log extends Emitter {
     return false
   }
   updateIcon(icon: string) {
+    const { c } = this.console
     const $icon = this.$el.find(c('.icon'))
 
     $icon.rmAttr('class').addClass([c('icon'), c(`icon-${icon}`)])
@@ -140,6 +143,7 @@ export default class Log extends Emitter {
   addCount() {
     this.count++
     const { $el, count } = this
+    const { c } = this.console
     const $container = $el.find('.eruda-count-container')
     const $icon = $el.find('.eruda-icon-container')
     const $count = $container.find('.eruda-count')
@@ -153,6 +157,7 @@ export default class Log extends Emitter {
   }
   groupEnd() {
     const { $el } = this
+    const { c } = this.console
     const $lastNesting = $el
       .find(`.${c('nesting-level')}:not(.${c('group-closed')})`)
       .last()
@@ -218,8 +223,9 @@ export default class Log extends Emitter {
       )
     }
   }
-  click(logger: any) {
-    const { type, src, $el } = this
+  click() {
+    const { type, src, $el, console } = this
+    const { c } = console
     let { args } = this
 
     switch (type) {
@@ -258,7 +264,7 @@ export default class Log extends Emitter {
             $json.addClass(c('hidden'))
           }
         } else if (type === 'group' || type === 'groupCollapsed') {
-          logger.toggleGroup(this)
+          console.toggleGroup(this)
         }
         break
       case 'error':
@@ -271,6 +277,7 @@ export default class Log extends Emitter {
   private formatMsg() {
     let { args } = this
     const { type, id, header, group } = this
+    const { c } = this.console
 
     // Don't change original args for lazy evaluation.
     args = clone(args)
@@ -291,49 +298,49 @@ export default class Log extends Emitter {
 
     switch (type) {
       case 'log':
-        msg = formatMsg(args)
+        msg = this._formatMsg(args)
         break
       case 'debug':
-        msg = formatMsg(args)
+        msg = this._formatMsg(args)
         break
       case 'dir':
-        msg = formatDir(args)
+        msg = this.formatDir(args)
         break
       case 'info':
-        msg = formatMsg(args)
+        msg = this._formatMsg(args)
         break
       case 'warn':
         icon = 'warn'
-        msg = formatMsg(args)
+        msg = this._formatMsg(args)
         break
       case 'error':
-        if (isStr(args[0]) && args.length !== 1) args = substituteStr(args)
+        if (isStr(args[0]) && args.length !== 1) args = this.substituteStr(args)
         err = args[0]
         icon = 'error'
-        err = isErr(err) ? err : new Error(formatMsg(args))
+        err = isErr(err) ? err : new Error(this._formatMsg(args))
         this.src = err
-        msg = formatErr(err)
+        msg = this.formatErr(err)
         break
       case 'table':
-        msg = formatTable(args)
+        msg = this.formatTable(args)
         break
       case 'html':
         msg = args[0]
         break
       case 'input':
-        msg = formatJs(args[0])
+        msg = this.formatJs(args[0])
         icon = 'input'
         break
       case 'output':
-        msg = formatMsg(args)
+        msg = this._formatMsg(args)
         icon = 'output'
         break
       case 'groupCollapsed':
-        msg = formatMsg(args)
+        msg = this._formatMsg(args)
         icon = 'caret-right'
         break
       case 'group':
-        msg = formatMsg(args)
+        msg = this._formatMsg(args)
         icon = 'caret-down'
         break
     }
@@ -348,202 +355,256 @@ export default class Log extends Emitter {
         return `<a href="${url}" target="_blank">${url}</a>`
       })
     }
-    msg = render({ msg, type, icon, id, header, group })
+    msg = this.render({ msg, type, icon, id, header, group })
 
     this.$el.addClass(`${c('log-container')}`).html(msg)
     this.$content = this.$el.find(c('.log-content'))
     this.content = this.$content.get(0)
   }
-}
+  private render(data: any) {
+    const { c } = this.console
+    let html = ''
 
-const getAbstract = wrap(origGetAbstract, function (fn, obj) {
-  return (
-    `<span class="${c('abstract')}">` +
-    fn(obj, {
-      getterVal: Log.showGetterVal,
-      unenumerable: false,
-    }) +
-    '</span>'
-  )
-})
-
-const Value = '__ErudaValue'
-
-function formatTable(args: any[]) {
-  const table = args[0]
-  let ret = ''
-  let filter = args[1]
-  let columns: string[] = []
-
-  if (isStr(filter)) filter = toArr(filter)
-  if (!isArr(filter)) filter = null
-
-  if (!isObj(table)) return formatMsg(args)
-
-  each(table, (val) => {
-    if (isPrimitive(val)) {
-      columns.push(Value)
-    } else if (isObj(val)) {
-      columns = columns.concat(keys(val))
+    let indent = ''
+    if (data.group) {
+      const { indentLevel } = data.group
+      for (let i = 0; i < indentLevel; i++) {
+        indent += `<div class="${c('nesting-level')}"></div>`
+      }
     }
-  })
-  columns = unique(columns)
-  columns.sort()
-  if (filter) columns = columns.filter((val) => contain(filter, val))
-  if (columns.length > 20) columns = columns.slice(0, 20)
-  if (isEmpty(columns)) return formatMsg(args)
 
-  ret += '<table><thead><tr><th>(index)</th>'
-  columns.forEach(
-    (val) => (ret += `<th>${val === Value ? 'Value' : toStr(val)}</th>`)
-  )
-  ret += '</tr></thead><tbody>'
+    if (data.header) {
+      html += stripIndent`
+      <div class="${c('header')}">
+        ${indent}
+        <div class="${c('time-from-container')}">
+          <span>${data.header.time}</span> <span>${data.header.from}</span>
+        </div>
+      </div>
+    `
+    }
 
-  each(table, (obj: any, idx) => {
-    ret += `<tr><td>${idx}</td>`
-    columns.forEach((column) => {
-      if (isObj(obj)) {
-        ret +=
-          column === Value
-            ? '<td></td>'
-            : `<td>${formatTableVal(obj[column])}</td>`
-      } else if (isPrimitive(obj)) {
-        ret +=
-          column === Value ? `<td>${formatTableVal(obj)}</td>` : '<td></td>'
+    let icon = ''
+    if (data.icon) {
+      icon = `<div class="${c('icon-container')}"><span class="${c(
+        'icon icon-' + data.icon
+      )}"></span></div>`
+    }
+
+    html += stripIndent`
+    <div class="${c(data.type + ' log-item')}">
+      ${indent}
+      ${icon}
+      <div class="${c('count-container hidden')}">
+        <div class="${c('count')}"></div>
+      </div>    
+      <div class="${c('log-content-wrapper')}">
+        <div class="${c('log-content')}">${data.msg}</div>
+      </div>
+    </div>
+  `
+
+    return html
+  }
+  private formatTable(args: any[]) {
+    const Value = '__ErudaValue'
+    const table = args[0]
+    let ret = ''
+    let filter = args[1]
+    let columns: string[] = []
+
+    if (isStr(filter)) filter = toArr(filter)
+    if (!isArr(filter)) filter = null
+
+    if (!isObj(table)) return this._formatMsg(args)
+
+    each(table, (val) => {
+      if (isPrimitive(val)) {
+        columns.push(Value)
+      } else if (isObj(val)) {
+        columns = columns.concat(keys(val))
       }
     })
-    ret += '</tr>'
-  })
+    columns = unique(columns)
+    columns.sort()
+    if (filter) columns = columns.filter((val) => contain(filter, val))
+    if (columns.length > 20) columns = columns.slice(0, 20)
+    if (isEmpty(columns)) return this._formatMsg(args)
 
-  ret += '</tbody></table>'
-  ret += `<div class="${c('json hidden')}"></div>`
+    ret += '<table><thead><tr><th>(index)</th>'
+    columns.forEach(
+      (val) => (ret += `<th>${val === Value ? 'Value' : toStr(val)}</th>`)
+    )
+    ret += '</tr></thead><tbody>'
 
-  return ret
-}
+    each(table, (obj: any, idx) => {
+      ret += `<tr><td>${idx}</td>`
+      columns.forEach((column) => {
+        if (isObj(obj)) {
+          ret +=
+            column === Value
+              ? '<td></td>'
+              : `<td>${this.formatTableVal(obj[column])}</td>`
+        } else if (isPrimitive(obj)) {
+          ret +=
+            column === Value
+              ? `<td>${this.formatTableVal(obj)}</td>`
+              : '<td></td>'
+        }
+      })
+      ret += '</tr>'
+    })
 
-function formatTableVal(val: any) {
-  if (isObj(val)) return (val = '{…}')
-  if (isPrimitive(val)) return getAbstract(val)
+    ret += '</tbody></table>'
+    ret += `<div class="${this.console.c('json hidden')}"></div>`
 
-  return toStr(val)
+    return ret
+  }
+  private formatErr(err: Error) {
+    let lines = err.stack ? err.stack.split('\n') : []
+    const msg = `${err.message || lines[0]}<br/>`
+
+    lines = lines
+      .filter((val: string) => !regErudaJs.test(val))
+      .map((val: string) => escape(val))
+
+    const stack = `<div class="${this.console.c('stack hidden')}">${lines
+      .slice(1)
+      .join('<br/>')}</div>`
+
+    return (
+      msg +
+      stack.replace(
+        regJsUrl,
+        (match) => `<a href="${match}" target="_blank">${match}</a>`
+      )
+    )
+  }
+  private _formatMsg(args: any[], { htmlForEl = true } = {}) {
+    const needStrSubstitution = isStr(args[0]) && args.length !== 1
+    if (needStrSubstitution) args = this.substituteStr(args)
+
+    for (let i = 0, len = args.length; i < len; i++) {
+      let val = args[i]
+
+      if (isEl(val) && htmlForEl) {
+        args[i] = this.formatEl(val)
+      } else if (isFn(val)) {
+        args[i] = this.formatFn(val)
+      } else if (isObj(val)) {
+        args[i] = this.formatObj(val)
+      } else if (isUndef(val)) {
+        args[i] = 'undefined'
+      } else if (isNull(val)) {
+        args[i] = 'null'
+      } else {
+        val = toStr(val)
+        if (i !== 0 || !needStrSubstitution) val = escape(val)
+        args[i] = val
+      }
+    }
+
+    return (
+      args.join(' ') + `<div class="${this.console.c('json hidden')}"></div>`
+    )
+  }
+  private formatDir(args: any[]) {
+    return this._formatMsg(args, { htmlForEl: false })
+  }
+  private formatTableVal(val: any) {
+    if (isObj(val)) return (val = '{…}')
+    if (isPrimitive(val)) return this.getAbstract(val)
+
+    return toStr(val)
+  }
+  private getAbstract(obj: any) {
+    return (
+      `<span class="${this.console.c('abstract')}">` +
+      getAbstract(obj, {
+        getterVal: Log.showGetterVal,
+        unenumerable: false,
+      }) +
+      '</span>'
+    )
+  }
+  private substituteStr(args: any[]) {
+    const str = escape(args[0])
+    let isInCss = false
+    let newStr = ''
+
+    args.shift()
+
+    for (let i = 0, len = str.length; i < len; i++) {
+      const c = str[i]
+
+      if (c === '%' && args.length !== 0) {
+        i++
+        const arg = args.shift()
+        switch (str[i]) {
+          case 'i':
+          case 'd':
+            newStr += toInt(arg)
+            break
+          case 'f':
+            newStr += toNum(arg)
+            break
+          case 's':
+            newStr += toStr(arg)
+            break
+          case 'O':
+            if (isObj(arg)) {
+              newStr += this.getAbstract(arg)
+            }
+            break
+          case 'o':
+            if (isEl(arg)) {
+              newStr += this.formatEl(arg)
+            } else if (isObj(arg)) {
+              newStr += this.getAbstract(arg)
+            }
+            break
+          case 'c':
+            if (str.length <= i + 1) {
+              break
+            }
+            if (isInCss) newStr += '</span>'
+            isInCss = true
+            newStr += `<span style="${correctStyle(arg)}">`
+            break
+          default:
+            i--
+            args.unshift(arg)
+            newStr += c
+        }
+      } else {
+        newStr += c
+      }
+    }
+    if (isInCss) newStr += '</span>'
+
+    args.unshift(newStr)
+
+    return args
+  }
+  private formatJs(val: string) {
+    return val
+  }
+  private formatObj(val: any) {
+    let type = getObjType(val)
+    if (type === 'Array' && val.length > 1) type = `(${val.length})`
+
+    return `${type} ${this.getAbstract(val)}`
+  }
+  private formatFn(val: any) {
+    return `<pre style="display:inline">${this.formatJs(val.toString())}</pre>`
+  }
+  private formatEl(val: string) {
+    return val
+  }
 }
 
 const regJsUrl = /https?:\/\/([0-9.\-A-Za-z]+)(?::(\d+))?\/[A-Z.a-z0-9/]*\.js/g
 const regErudaJs = /eruda(\.min)?\.js/
-
-function formatErr(err: Error) {
-  let lines = err.stack ? err.stack.split('\n') : []
-  const msg = `${err.message || lines[0]}<br/>`
-
-  lines = lines
-    .filter((val: string) => !regErudaJs.test(val))
-    .map((val: string) => escape(val))
-
-  const stack = `<div class="${c('stack hidden')}">${lines
-    .slice(1)
-    .join('<br/>')}</div>`
-
-  return (
-    msg +
-    stack.replace(
-      regJsUrl,
-      (match) => `<a href="${match}" target="_blank">${match}</a>`
-    )
-  )
-}
-
-function formatJs(val: string) {
-  return val
-}
-
-function formatMsg(args: any[], { htmlForEl = true } = {}) {
-  const needStrSubstitution = isStr(args[0]) && args.length !== 1
-  if (needStrSubstitution) args = substituteStr(args)
-
-  for (let i = 0, len = args.length; i < len; i++) {
-    let val = args[i]
-
-    if (isEl(val) && htmlForEl) {
-      args[i] = formatEl(val)
-    } else if (isFn(val)) {
-      args[i] = formatFn(val)
-    } else if (isObj(val)) {
-      args[i] = formatObj(val)
-    } else if (isUndef(val)) {
-      args[i] = 'undefined'
-    } else if (isNull(val)) {
-      args[i] = 'null'
-    } else {
-      val = toStr(val)
-      if (i !== 0 || !needStrSubstitution) val = escape(val)
-      args[i] = val
-    }
-  }
-
-  return args.join(' ') + `<div class="${c('json hidden')}"></div>`
-}
-
-const formatDir = (args: any[]) => formatMsg(args, { htmlForEl: false })
-
-function substituteStr(args: any[]) {
-  const str = escape(args[0])
-  let isInCss = false
-  let newStr = ''
-
-  args.shift()
-
-  for (let i = 0, len = str.length; i < len; i++) {
-    const c = str[i]
-
-    if (c === '%' && args.length !== 0) {
-      i++
-      const arg = args.shift()
-      switch (str[i]) {
-        case 'i':
-        case 'd':
-          newStr += toInt(arg)
-          break
-        case 'f':
-          newStr += toNum(arg)
-          break
-        case 's':
-          newStr += toStr(arg)
-          break
-        case 'O':
-          if (isObj(arg)) {
-            newStr += getAbstract(arg)
-          }
-          break
-        case 'o':
-          if (isEl(arg)) {
-            newStr += formatEl(arg)
-          } else if (isObj(arg)) {
-            newStr += getAbstract(arg)
-          }
-          break
-        case 'c':
-          if (str.length <= i + 1) {
-            break
-          }
-          if (isInCss) newStr += '</span>'
-          isInCss = true
-          newStr += `<span style="${correctStyle(arg)}">`
-          break
-        default:
-          i--
-          args.unshift(arg)
-          newStr += c
-      }
-    } else {
-      newStr += c
-    }
-  }
-  if (isInCss) newStr += '</span>'
-
-  args.unshift(newStr)
-
-  return args
-}
 
 function correctStyle(val: string) {
   val = lowerCase(val)
@@ -564,66 +625,6 @@ function correctStyle(val: string) {
     ret += `${key}:${val};`
   })
   return ret
-}
-
-function formatObj(val: any) {
-  let type = getObjType(val)
-  if (type === 'Array' && val.length > 1) type = `(${val.length})`
-
-  return `${type} ${getAbstract(val)}`
-}
-
-function formatFn(val: any) {
-  return `<pre style="display:inline">${formatJs(val.toString())}</pre>`
-}
-
-function formatEl(val: string) {
-  return val
-}
-
-const render = function (data: any) {
-  let html = ''
-
-  let indent = ''
-  if (data.group) {
-    const { indentLevel } = data.group
-    for (let i = 0; i < indentLevel; i++) {
-      indent += `<div class="${c('nesting-level')}"></div>`
-    }
-  }
-
-  if (data.header) {
-    html += stripIndent`
-      <div class="${c('header')}">
-        ${indent}
-        <div class="${c('time-from-container')}">
-          <span>${data.header.time}</span> <span>${data.header.from}</span>
-        </div>
-      </div>
-    `
-  }
-
-  let icon = ''
-  if (data.icon) {
-    icon = `<div class="${c('icon-container')}"><span class="${c(
-      'icon icon-' + data.icon
-    )}"></span></div>`
-  }
-
-  html += stripIndent`
-    <div class="${c(data.type + ' log-item')}">
-      ${indent}
-      ${icon}
-      <div class="${c('count-container hidden')}">
-        <div class="${c('count')}"></div>
-      </div>    
-      <div class="${c('log-content-wrapper')}">
-        <div class="${c('log-content')}">${data.msg}</div>
-      </div>
-    </div>
-  `
-
-  return html
 }
 
 function extractObj(obj: any, options = {}, cb: Function) {

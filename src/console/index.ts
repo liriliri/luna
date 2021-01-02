@@ -395,7 +395,7 @@ export = class Console extends Component {
       groupStack.push(group)
     }
 
-    let log = new Log(options as ILogOptions)
+    let log = new Log(this, options as ILogOptions)
     log.on('updateSize', () => {
       this.isAtBottom = false
       this.renderViewport()
@@ -617,11 +617,10 @@ export = class Console extends Component {
     }
   }
   private bindEvent() {
-    const self = this
     const { $el } = this
 
     $el.on('click', c('.log-container'), function (this: any) {
-      this.log.click(self)
+      this.log.click()
     })
 
     this.$container.on('scroll', this.onScroll)

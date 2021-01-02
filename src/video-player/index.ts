@@ -1,14 +1,13 @@
 import $ from 'licia/$'
 import each from 'licia/each'
-import Emitter from 'licia/Emitter'
 import clamp from 'licia/clamp'
 import stripIndent from 'licia/stripIndent'
 import toStr from 'licia/toStr'
 import durationFormat from 'licia/durationFormat'
 import fullscreen from 'licia/fullscreen'
-import { classPrefix, eventClient, drag } from '../share/util'
+import { eventClient, drag } from '../share/util'
+import Component from '../share/Component'
 
-const c = classPrefix('video-player')
 const $document = $(document as any)
 
 interface IOptions {
@@ -41,9 +40,7 @@ const videoEvents = [
   'waiting',
 ]
 
-export = class VideoPlayer extends Emitter {
-  private container: Element
-  private $container: $.$
+export = class VideoPlayer extends Component {
   private $video: $.$
   private $controller: $.$
   private $curTime: $.$
@@ -60,26 +57,22 @@ export = class VideoPlayer extends Emitter {
   private videoTimeUpdate = true
   private autoHideTimer: any = 0
   constructor(container: Element, { url = '' }: IOptions = {}) {
-    super()
+    super(container, { compName: 'video-player' })
 
-    const $container = $(container)
-    $container.addClass('luna-video-player')
-    this.container = container
-    this.$container = $container
     this.appendTpl()
 
-    this.$controller = $container.find(c('.controller'))
-    this.$volume = $container.find(c('.volume'))
-    this.$volumeController = $container.find(c('.volume-controller'))
-    this.$volumeBarFill = $container.find(c('.volume-bar-fill'))
+    this.$controller = this.find('.controller')
+    this.$volume = this.find('.volume')
+    this.$volumeController = this.find('.volume-controller')
+    this.$volumeBarFill = this.find('.volume-bar-fill')
     this.$volumeIcon = this.$volume.find('span')
-    this.$curTime = $container.find(c('.cur-time'))
-    this.$duration = $container.find(c('.duration'))
-    this.$play = $container.find(c('.play'))
-    this.$bar = $container.find(c('.controller-top'))
-    this.$barPlayed = $container.find(c('.bar-played'))
-    this.$barLoaded = $container.find(c('.bar-loaded'))
-    this.$video = $container.find(c('.video'))
+    this.$curTime = this.find('.cur-time')
+    this.$duration = this.find('.duration')
+    this.$play = this.find('.play')
+    this.$bar = this.find('.controller-top')
+    this.$barPlayed = this.find('.bar-played')
+    this.$barLoaded = this.find('.bar-loaded')
+    this.$video = this.find('.video')
     this.$video.get(0).appendChild(this.video)
 
     this.bindEvent()
@@ -103,8 +96,7 @@ export = class VideoPlayer extends Emitter {
     this.video.pause()
   }
   destroy() {
-    this.$container.rmClass('luna-video-player')
-    this.$container.html('')
+    super.destroy()
     this.pause()
   }
   seek(time: number) {
@@ -122,7 +114,7 @@ export = class VideoPlayer extends Emitter {
     this.video.volume = percentage
 
     this.$volumeBarFill.css('width', percentage * 100 + '%')
-    this.$volumeIcon.attr('class', c('icon icon-' + this.getVolumeIcon()))
+    this.$volumeIcon.attr('class', this.c('icon icon-' + this.getVolumeIcon()))
   }
   private togglePlay = () => {
     if (this.video.paused) {
@@ -144,7 +136,7 @@ export = class VideoPlayer extends Emitter {
     this.volume((clientX - left) / (width - 5))
   }
   private onVolumeDragStart = () => {
-    this.$volume.addClass(c('active'))
+    this.$volume.addClass(this.c('active'))
     $document.on(drag('move'), this.onVolumeDragMove)
     $document.on(drag('end'), this.onVolumeDragEnd)
   }
@@ -152,12 +144,14 @@ export = class VideoPlayer extends Emitter {
     this.onVolumeClick(e)
   }
   private onVolumeDragEnd = (e: any) => {
-    this.$volume.rmClass(c('active'))
+    this.$volume.rmClass(this.c('active'))
     $document.off(drag('move'), this.onVolumeDragMove)
     $document.off(drag('end'), this.onVolumeDragEnd)
     this.onVolumeClick(e)
   }
   private onMouseMove = () => {
+    const { c } = this
+
     this.$controller.rmClass(c('controller-hidden'))
     clearTimeout(this.autoHideTimer)
     this.autoHideTimer = setTimeout(() => {
@@ -165,6 +159,8 @@ export = class VideoPlayer extends Emitter {
     }, 3000)
   }
   private bindEvent() {
+    const { c } = this
+
     this.$controller
       .on('click', c('.play'), this.togglePlay)
       .on('click', c('.controller-top'), this.onBarClick)
@@ -206,10 +202,14 @@ export = class VideoPlayer extends Emitter {
     )
   }
   private onPlay = () => {
+    const { c } = this
+
     this.$controller.rmClass(c('active'))
     this.$play.html(`<span class="${c('icon icon-pause')}"></span>`)
   }
   private onPause = () => {
+    const { c } = this
+
     this.$controller.addClass(c('active'))
     this.$play.html(`<span class="${c('icon icon-play')}"></span>`)
   }
@@ -271,6 +271,7 @@ export = class VideoPlayer extends Emitter {
     return 'volume'
   }
   private appendTpl() {
+    const { c } = this
     const volumeHeight = toStr(this.video.volume * 100)
 
     this.$container.html(stripIndent`

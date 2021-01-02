@@ -1,4 +1,3 @@
-import Emitter from 'licia/Emitter'
 import $ from 'licia/$'
 import h from 'licia/h'
 import each from 'licia/each'
@@ -10,15 +9,12 @@ import contain from 'licia/contain'
 import has from 'licia/has'
 import trim from 'licia/trim'
 import toStr from 'licia/toStr'
-import { classPrefix } from '../share/util'
-
-const c = classPrefix('json-editor')
+import Component from '../share/Component'
 
 // https://github.com/richard-livingston/json-view
-export = class JsonEditor extends Emitter {
+export = class JsonEditor extends Component {
   private name: any
   private value: any
-  private $container: $.$
   private $name: $.$
   private $separator: $.$
   private $toggle: $.$
@@ -58,20 +54,17 @@ export = class JsonEditor extends Emitter {
       enableInsert?: boolean
     } = {}
   ) {
-    super()
+    super(container, { compName: 'json-editor' })
 
-    const $container = $(container)
-    $container.addClass('luna-json-editor')
-    this.$container = $container
     this.appendTpl()
 
-    this.$toggle = $container.find(c('.toggle'))
-    this.$name = $container.find(c('.name'))
-    this.$separator = $container.find(c('.separator'))
-    this.$value = $container.find(c('.value'))
-    this.$delete = $container.find(c('.delete'))
-    this.$children = $container.find(c('.children'))
-    this.$insert = $container.find(c('.insert'))
+    this.$toggle = this.find('.toggle')
+    this.$name = this.find('.name')
+    this.$separator = this.find('.separator')
+    this.$value = this.find('.value')
+    this.$delete = this.find('.delete')
+    this.$children = this.find('.children')
+    this.$insert = this.find('.insert')
 
     if (!showName) {
       this.$name.hide()
@@ -98,6 +91,7 @@ export = class JsonEditor extends Emitter {
     this.setValue(value)
   }
   appendTpl() {
+    const { c } = this
     this.$container.html(
       [
         `<div class="${c('toggle')}"><span class="${c(
@@ -131,6 +125,7 @@ export = class JsonEditor extends Emitter {
     this.$delete.on('click', this.onDeleteClick)
   }
   collapse = (recursive?: boolean) => {
+    const { c } = this
     if (recursive) {
       each(this.children, (child) => child.collapse(true))
     }
@@ -144,7 +139,7 @@ export = class JsonEditor extends Emitter {
     this.$container.rmClass(`${c('expanded')}`)
   }
   expand = (recursive?: boolean) => {
-    const { type, value, children } = this
+    const { type, value, children, c } = this
     let _keys: any[]
 
     if (type === 'object') {
@@ -235,7 +230,7 @@ export = class JsonEditor extends Emitter {
         break
     }
     this.$value.text(str)
-    this.$value.attr('class', c(`value ${this.type}`))
+    this.$value.attr('class', this.c(`value ${this.type}`))
 
     if (newValue === this.value) {
       return
@@ -322,7 +317,7 @@ export = class JsonEditor extends Emitter {
       this.edittingValue = true
     }
 
-    $el.addClass(c('edit'))
+    $el.addClass(this.c('edit'))
     $el.attr('contenteditable', 'true')
     ;($el.get(0) as any).focus()
     document.execCommand('selectAll', false, undefined)
@@ -355,7 +350,7 @@ export = class JsonEditor extends Emitter {
       }
     }
 
-    $el.rmClass(c('edit'))
+    $el.rmClass(this.c('edit'))
     $el.rmAttr('contenteditable')
   }
   private editFieldKeyPressed = (field: any, e: any) => {

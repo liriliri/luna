@@ -7,7 +7,7 @@ interface IOptions {
 }
 
 export default class Component extends Emitter {
-  protected c: (name: string) => string
+  public c: (name: string) => string
   protected container: Element
   protected $container: $.$
   private compName: string

@@ -2,17 +2,14 @@ import $ from 'licia/$'
 import stripIndent from 'licia/stripIndent'
 import uniqId from 'licia/uniqId'
 import find from 'licia/find'
-import { classPrefix } from '../share/util'
-
-const c = classPrefix('notification')
+import Component from '../share/Component'
 
 interface IPosition {
   x: string
   y: string
 }
 
-class Notification {
-  private $container: $.$
+class Notification extends Component {
   private $notification: $.$
   private notifications: NotificationItem[] = []
   private duration: number
@@ -27,7 +24,8 @@ class Notification {
       duration = 2000,
     } = {}
   ) {
-    this.$container = $(container)
+    super(container, { compName: 'notification' })
+
     this.position = position
     this.duration = duration
 
@@ -48,9 +46,6 @@ class Notification {
       this.remove(notification.id)
       notification = notifications[0]
     }
-  }
-  destroy() {
-    this.$container.html('')
   }
   private add(notification: NotificationItem) {
     this.$notification.append(notification.html())
@@ -99,7 +94,8 @@ class NotificationItem {
     this.id = uniqId('luna-notification-')
   }
   html() {
-    const { y } = this.container.position
+    const { c, position } = this.container
+    const { y } = position
 
     return stripIndent`
       <div id="${this.id}" class="${c(

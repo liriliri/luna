@@ -1,5 +1,4 @@
 import Log, { IGroup, IHeader, ILogOptions } from './Log'
-import Emitter from 'licia/Emitter'
 import isUndef from 'licia/isUndef'
 import perfNow from 'licia/perfNow'
 import now from 'licia/now'
@@ -25,6 +24,7 @@ import dateFormat from 'licia/dateFormat'
 import isHidden from 'licia/isHidden'
 import stripIndent from 'licia/stripIndent'
 import { classPrefix } from '../share/util'
+import Component from '../share/Component'
 
 const u = navigator.userAgent
 const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
@@ -39,9 +39,7 @@ type AsyncItem = [
   IHeader | undefined
 ]
 
-export = class Console extends Emitter {
-  private $container: $.$
-  private container: HTMLElement
+export = class Console extends Component {
   private $el: $.$
   private el: HTMLElement
   private $fakeEl: $.$
@@ -84,12 +82,7 @@ export = class Console extends Emitter {
       showHeader?: boolean
     } = {}
   ) {
-    super()
-
-    this.container = container
-    const $container = $(container)
-    this.$container = $container
-    $container.addClass('luna-console')
+    super(container, { compName: 'console' })
 
     this.appendTpl()
 
@@ -97,11 +90,11 @@ export = class Console extends Emitter {
     this.asyncRender = asyncRender
     this.showHeader = showHeader
 
-    this.$el = $container.find(c('.logs'))
+    this.$el = this.find('.logs')
     this.el = this.$el.get(0) as HTMLElement
-    this.$fakeEl = $container.find(c('.fake-logs'))
+    this.$fakeEl = this.find('.fake-logs')
     this.fakeEl = this.$fakeEl.get(0) as HTMLElement
-    this.$space = $container.find(c('.logs-space'))
+    this.$space = this.find('.logs-space')
     this.space = this.$space.get(0) as HTMLElement
 
     // For android slowing rendering
@@ -169,9 +162,8 @@ export = class Console extends Emitter {
     Log.showSrcInSources = flag
   }
   destroy() {
+    super.destroy()
     this.$container.off('scroll', this.onScroll)
-    this.$container.rmClass('luna-console')
-    this.$container.html('')
   }
   filter(val: any) {
     this._filter = val
@@ -635,7 +627,8 @@ export = class Console extends Emitter {
     this.$container.on('scroll', this.onScroll)
   }
   private onScroll = () => {
-    const { scrollHeight, offsetHeight, scrollTop } = this.container
+    const { scrollHeight, offsetHeight, scrollTop } = this
+      .container as HTMLElement
     // safari bounce effect
     if (scrollTop <= 0) return
     if (offsetHeight + scrollTop > scrollHeight) return
@@ -694,7 +687,7 @@ export = class Console extends Emitter {
   private _renderViewport({ topTolerance = 500, bottomTolerance = 500 } = {}) {
     const { el, container } = this
     if (isHidden(container)) return
-    const { scrollTop, clientWidth, offsetHeight } = container
+    const { scrollTop, clientWidth, offsetHeight } = container as HTMLElement
     const top = scrollTop - topTolerance
     const bottom = scrollTop + offsetHeight + bottomTolerance
 

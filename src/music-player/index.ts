@@ -2,11 +2,10 @@ import $ from 'licia/$'
 import stripIndent from 'licia/stripIndent'
 import openFile from 'licia/openFile'
 import createUrl from 'licia/createUrl'
-import { classPrefix, drag, eventClient } from '../share/util'
+import { drag, eventClient } from '../share/util'
 import each from 'licia/each'
 import { splitName } from './util'
 import durationFormat from 'licia/durationFormat'
-import Emitter from 'licia/Emitter'
 import convertBin from 'licia/convertBin'
 import jsmediatags from 'jsmediatags'
 import toStr from 'licia/toStr'
@@ -16,8 +15,8 @@ import random from 'licia/random'
 import clamp from 'licia/clamp'
 import isArr from 'licia/isArr'
 import toArr from 'licia/toArr'
+import Component from '../share/Component'
 
-const c = classPrefix('music-player')
 const $document = $(document as any)
 
 interface IAudio {
@@ -58,8 +57,7 @@ interface IOptions {
   audio?: IAudio | IAudio[]
 }
 
-export = class MusicPlayer extends Emitter {
-  private $container: $.$
+export = class MusicPlayer extends Component {
   private $body: $.$
   private $title: $.$
   private $artist: $.$
@@ -83,7 +81,7 @@ export = class MusicPlayer extends Emitter {
   private shuffle = false
   private audioTimeUpdate = true
   constructor(container: Element, { audio }: IOptions = {}) {
-    super()
+    super(container, { compName: 'music-player' })
 
     if (audio) {
       if (!isArr(audio)) {
@@ -92,25 +90,22 @@ export = class MusicPlayer extends Emitter {
       this.audioList = audio as IAudio[]
     }
 
-    const $container = $(container)
-    $container.addClass('luna-music-player')
-    this.$container = $container
     this.appendTpl()
 
-    this.$body = $container.find(c('.body'))
-    this.$title = $container.find(c('.title'))
-    this.$artist = $container.find(c('.artist'))
-    this.$curTime = $container.find(c('.cur-time'))
-    this.$duration = $container.find(c('.duration'))
-    this.$cover = $container.find(c('.cover'))
-    this.$play = $container.find(c('.play'))
-    this.$bar = $container.find(c('.controller-left'))
-    this.$barPlayed = $container.find(c('.bar-played'))
-    this.$barLoaded = $container.find(c('.bar-loaded'))
-    this.$list = $container.find(c('.list'))
-    this.$volume = $container.find(c('.volume'))
-    this.$volumeController = $container.find(c('.volume-controller'))
-    this.$volumeBarFill = $container.find(c('.volume-bar-fill'))
+    this.$body = this.find('.body')
+    this.$title = this.find('.title')
+    this.$artist = this.find('.artist')
+    this.$curTime = this.find('.cur-time')
+    this.$duration = this.find('.duration')
+    this.$cover = this.find('.cover')
+    this.$play = this.find('.play')
+    this.$bar = this.find('.controller-left')
+    this.$barPlayed = this.find('.bar-played')
+    this.$barLoaded = this.find('.bar-loaded')
+    this.$list = this.find('.list')
+    this.$volume = this.find('.volume')
+    this.$volumeController = this.find('.volume-controller')
+    this.$volumeBarFill = this.find('.volume-bar-fill')
     this.$volumeIcon = this.$volume.find('span')
 
     this.bindEvent()
@@ -131,7 +126,7 @@ export = class MusicPlayer extends Emitter {
     this.audio.volume = percentage
 
     this.$volumeBarFill.css('height', percentage * 100 + '%')
-    this.$volumeIcon.attr('class', c('icon icon-' + this.getVolumeIcon()))
+    this.$volumeIcon.attr('class', this.c('icon icon-' + this.getVolumeIcon()))
   }
   pause() {
     if (!this.curAudio) {
@@ -166,8 +161,7 @@ export = class MusicPlayer extends Emitter {
     this.setCur(curIdx)
   }
   destroy() {
-    this.$container.rmClass('luna-music-player')
-    this.$container.html('')
+    super.destroy()
     this.pause()
   }
   seek(time: number) {
@@ -223,7 +217,9 @@ export = class MusicPlayer extends Emitter {
 
     $(e.curTarget).attr(
       'class',
-      c('icon icon-shuffle' + (this.shuffle ? '' : '-disabled') + ' shuffle')
+      this.c(
+        'icon icon-shuffle' + (this.shuffle ? '' : '-disabled') + ' shuffle'
+      )
     )
   }
   private setCur(idx: number, autoplay = true) {
@@ -257,6 +253,7 @@ export = class MusicPlayer extends Emitter {
     return percent * this.audio.duration
   }
   private renderList() {
+    const { c } = this
     let html = ''
 
     each(this.audioList, (audio, idx) => {
@@ -308,7 +305,7 @@ export = class MusicPlayer extends Emitter {
         break
     }
     this.loop = loop
-    $(e.curTarget).attr('class', c(`icon icon-loop-${loop} loop`))
+    $(e.curTarget).attr('class', this.c(`icon icon-loop-${loop} loop`))
   }
   private onBarDragStart = () => {
     this.audioTimeUpdate = false
@@ -325,7 +322,7 @@ export = class MusicPlayer extends Emitter {
     this.onBarClick(e)
   }
   private onVolumeDragStart = () => {
-    this.$volume.addClass(c('active'))
+    this.$volume.addClass(this.c('active'))
     $document.on(drag('move'), this.onVolumeDragMove)
     $document.on(drag('end'), this.onVolumeDragEnd)
   }
@@ -333,12 +330,13 @@ export = class MusicPlayer extends Emitter {
     this.onVolumeClick(e)
   }
   private onVolumeDragEnd = (e: any) => {
-    this.$volume.rmClass(c('active'))
+    this.$volume.rmClass(this.c('active'))
     $document.off(drag('move'), this.onVolumeDragMove)
     $document.off(drag('end'), this.onVolumeDragEnd)
     this.onVolumeClick(e)
   }
   private bindEvent() {
+    const { c } = this
     this.$body
       .on('click', c('.icon-file'), this.open)
       .on('click', c('.icon-list'), this.toggleList)
@@ -395,10 +393,10 @@ export = class MusicPlayer extends Emitter {
     }
   }
   private onPlay = () => {
-    this.$play.html(`<span class="${c('icon icon-pause')}"></span>`)
+    this.$play.html(`<span class="${this.c('icon icon-pause')}"></span>`)
   }
   private onPause = () => {
-    this.$play.html(`<span class="${c('icon icon-play')}"></span>`)
+    this.$play.html(`<span class="${this.c('icon icon-play')}"></span>`)
   }
   private onTimeUpdate = () => {
     if (this.audioTimeUpdate) {
@@ -449,6 +447,7 @@ export = class MusicPlayer extends Emitter {
     )
   }
   private appendTpl() {
+    const { c } = this
     const volumeHeight = toStr(this.audio.volume * 100)
 
     this.$container.html(stripIndent`

@@ -1,4 +1,3 @@
-import Emitter from 'licia/Emitter'
 import getProto from 'licia/getProto'
 import isNum from 'licia/isNum'
 import isBool from 'licia/isBool'
@@ -21,13 +20,10 @@ import noop from 'licia/noop'
 import Visitor from './Visitor'
 import { encode, getFnAbstract, sortObjName } from './util'
 import Static from './Static'
-import { classPrefix } from '../share/util'
+import Component from '../share/Component'
 
-const c = classPrefix('object-viewer')
-
-export = class ObjectViewer extends Emitter {
+export = class ObjectViewer extends Component {
   private data: any[]
-  private $container: $.$
   private visitor: Visitor
   private map: any
   private unenumerable: boolean
@@ -36,10 +32,8 @@ export = class ObjectViewer extends Emitter {
     container: Element,
     { unenumerable = false, accessGetter = false } = {}
   ) {
-    super()
+    super(container, { compName: 'object-viewer' })
 
-    this.$container = $(container)
-    this.$container.addClass('luna-object-viewer')
     this.unenumerable = unenumerable
     this.accessGetter = accessGetter
 
@@ -53,9 +47,8 @@ export = class ObjectViewer extends Emitter {
     this.appendTpl()
   }
   destroy() {
+    super.destroy()
     this.$container.off('click', 'li', this.onItemClick)
-    this.$container.rmClass('luna-object-viewer')
-    this.$container.html('')
   }
   private objToHtml(data: any, firstLevel?: boolean) {
     const { visitor } = this
@@ -198,7 +191,7 @@ export = class ObjectViewer extends Emitter {
     keyType: string,
     firstLevel = false
   ) {
-    const { visitor } = this
+    const { visitor, c } = this
     let t: any = typeof val
     let valType = type(val, false)
     if (keyType === 'virtual') valType = key
@@ -285,7 +278,7 @@ export = class ObjectViewer extends Emitter {
     this.$container.on('click', 'li', this.onItemClick)
   }
   private onItemClick = (e: any) => {
-    const { map } = this
+    const { map, c } = this
     const $this = $(e.curTarget)
     const circularId = $this.data('object-id')
     const $firstSpan: any = $this.find('span').eq(0)

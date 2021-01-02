@@ -12,21 +12,14 @@ import isBool from 'licia/isBool'
 import isStr from 'licia/isStr'
 import keys from 'licia/keys'
 import lowerCase from 'licia/lowerCase'
-import Emitter from 'licia/Emitter'
 import { encode, sortObjName, getFnAbstract } from './util'
-import { classPrefix } from '../share/util'
+import Component from '../share/Component'
 
-const c = classPrefix('object-viewer')
-
-export default class JsonViewer extends Emitter {
+export default class JsonViewer extends Component {
   private data: any
-  private $container: $.$
   private map: any
   constructor(container: Element) {
-    super()
-
-    this.$container = $(container)
-    this.$container.addClass('luna-object-viewer')
+    super(container, { compName: 'object-viewer' })
 
     this.bindEvent()
   }
@@ -46,9 +39,8 @@ export default class JsonViewer extends Emitter {
     this.appendTpl()
   }
   destroy() {
+    super.destroy()
     this.$container.off('click', 'li', this.onItemClick)
-    this.$container.rmClass('luna-object-viewer')
-    this.$container.html('')
   }
   private objToHtml(data: any, firstLevel?: boolean) {
     let ret = ''
@@ -75,6 +67,7 @@ export default class JsonViewer extends Emitter {
     return ret
   }
   private createEl(key: string, val: any, keyType: string, firstLevel = false) {
+    const { c } = this
     let type: any = typeof val
 
     if (val === null) {
@@ -153,7 +146,7 @@ export default class JsonViewer extends Emitter {
     this.$container.on('click', 'li', this.onItemClick)
   }
   private onItemClick = (e: any) => {
-    const { map } = this
+    const { map, c } = this
     const $this = $(e.curTarget)
     const circularId = $this.data('object-id')
     const $firstSpan: any = $this.find('span').eq(0)

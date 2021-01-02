@@ -91,23 +91,18 @@ export = class JsonEditor extends Component {
     this.setValue(value)
   }
   appendTpl() {
-    const { c } = this
     this.$container.html(
-      [
-        `<div class="${c('toggle')}"><span class="${c(
-          'icon icon-arrow-right'
-        )}"></span><span class="${c('icon icon-arrow-down')}"></span></div>`,
-        `<div class="${c('name')}"></div>`,
-        `<div class="${c('separator')}"></div>`,
-        `<div class="${c('value')}"></div>`,
-        `<div class="${c('delete')}"><span class="${c(
-          'icon icon-delete'
-        )}"></span></div>`,
-        `<div class="${c('children')}"></div>`,
-        `<div class="${c('insert')}"><span class="${c(
-          'icon icon-add'
-        )}"></span></div>`,
-      ].join('')
+      this.c(
+        [
+          '<div class="toggle"><span class="icon icon-arrow-right"></span><span class="icon icon-arrow-down"></span></div>',
+          '<div class="name"></div>',
+          '<div class="separator"></div>',
+          '<div class="value"></div>',
+          '<div class="delete"><span class="icon icon-delete"></span></div>',
+          '<div class="children"></div>',
+          '<div class="insert"><span class="icon icon-add"></span></div>',
+        ].join('')
+      )
     )
   }
   bindEvent() {

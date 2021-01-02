@@ -750,12 +750,14 @@ export = class Console extends Component {
     }
   }
   private appendTpl() {
-    this.$container.html(stripIndent`
-      <div class="${c('logs-space')}">
-        <div class="${c('fake-logs')}"></div>
-        <div class="${c('logs')}"></div>
+    this.$container.html(
+      this.c(stripIndent`
+      <div class="logs-space">
+        <div class="fake-logs"></div>
+        <div class="logs"></div>
       </div>
     `)
+    )
   }
 }
 

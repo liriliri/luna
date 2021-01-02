@@ -205,13 +205,13 @@ export = class VideoPlayer extends Component {
     const { c } = this
 
     this.$controller.rmClass(c('active'))
-    this.$play.html(`<span class="${c('icon icon-pause')}"></span>`)
+    this.$play.html(c('<span class="icon icon-pause"></span>'))
   }
   private onPause = () => {
     const { c } = this
 
     this.$controller.addClass(c('active'))
-    this.$play.html(`<span class="${c('icon icon-play')}"></span>`)
+    this.$play.html(c('<span class="icon icon-play"></span>'))
   }
   private onLoaded = () => {
     const { video } = this
@@ -271,45 +271,44 @@ export = class VideoPlayer extends Component {
     return 'volume'
   }
   private appendTpl() {
-    const { c } = this
     const volumeHeight = toStr(this.video.volume * 100)
 
-    this.$container.html(stripIndent`
-      <div class="${c('video')}"></div>
-      <div class="${c('controller active')}">
-        <div class="${c('controller-mask')}"></div>
-        <div class="${c('controller-top')}">
-          <div class="${c('bar')}">
-            <div class="${c('bar-loaded')}"></div>
-            <div class="${c('bar-played')}">
-              <span class="${c('bar-thumb')}"></span>
+    this.$container.html(
+      this.c(stripIndent`
+      <div class="video"></div>
+      <div class="controller active">
+        <div class="controller-mask"></div>
+        <div class="controller-top">
+          <div class="bar">
+            <div class="bar-loaded"></div>
+            <div class="bar-played">
+              <span class="bar-thumb"></span>
             </div>
           </div>
         </div>
-        <div class="${c('controller-left')}">
-          <div class="${c('play')}">
-            <span class="${c('icon icon-play')}"></span>
+        <div class="controller-left">
+          <div class="play">
+            <span class="icon icon-play"></span>
           </div>
-          <div class="${c('volume')}">
-            <span class="${c('icon icon-' + this.getVolumeIcon())}"></span>
-            <div class="${c('volume-controller')}">
-              <div class="${c('volume-bar')}">
-                <div class="${c(
-                  'volume-bar-fill'
-                )}" style="width: ${volumeHeight}%"></div>
+          <div class="volume">
+            <span class="icon icon-${this.getVolumeIcon()}"></span>
+            <div class="volume-controller">
+              <div class="volume-bar">
+                <div class="volume-bar-fill" style="width: ${volumeHeight}%"></div>
               </div>
             </div>
           </div>
-          <span class="${c('time')}">
-            <span class="${c('cur-time')}">00:00</span> /
-            <span class="${c('duration')}">00:00</span>
+          <span class="time">
+            <span class="cur-time">00:00</span> /
+            <span class="duration">00:00</span>
           </span>
         </div>
-        <div class="${c('controller-right')}">
-          <span class="${c('icon icon-pip')}"></span>
-          <span class="${c('icon icon-fullscreen')}"></span>
+        <div class="controller-right">
+          <span class="icon icon-pip"></span>
+          <span class="icon icon-fullscreen"></span>
         </div>
       </div>
     `)
+    )
   }
 }

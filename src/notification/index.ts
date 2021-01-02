@@ -97,13 +97,11 @@ class NotificationItem {
     const { c, position } = this.notification
     const { y } = position
 
-    return stripIndent`
-      <div id="${this.id}" class="${c(
-      `item ${y === 'bottom' ? 'lower' : 'upper'}`
-    )}">
-        <div class="${c('content')}">${this.content}</div>
+    return c(stripIndent`
+      <div id="${this.id}" class="item ${y === 'bottom' ? 'lower' : 'upper'}">
+        <div class="content">${this.content}</div>
       </div>
-    `
+    `)
   }
 }
 

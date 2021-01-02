@@ -253,19 +253,18 @@ export = class MusicPlayer extends Component {
     return percent * this.audio.duration
   }
   private renderList() {
-    const { c } = this
     let html = ''
 
     each(this.audioList, (audio, idx) => {
-      html += stripIndent`
-        <div class="${c(
-          'list-item' + (audio === this.curAudio ? ' active' : '')
-        )}" data-idx="${toStr(idx)}">
-          <span class="${c('list-idx')}">${idx + 1}</span>
-          <span class="${c('list-title')}">${audio.title}</span>
-          <span class="${c('list-artist')}">${audio.artist}</span>
+      html += this.c(stripIndent`
+        <div class="list-item${
+          audio === this.curAudio ? ' active' : ''
+        }" data-idx="${toStr(idx)}">
+          <span class="list-idx">${idx + 1}</span>
+          <span class="list-title">${audio.title}</span>
+          <span class="list-artist">${audio.artist}</span>
         </div>
-      `
+      `)
     })
 
     this.$list.html(html)
@@ -393,10 +392,10 @@ export = class MusicPlayer extends Component {
     }
   }
   private onPlay = () => {
-    this.$play.html(`<span class="${this.c('icon icon-pause')}"></span>`)
+    this.$play.html(this.c('<span class="icon icon-pause"></span>'))
   }
   private onPause = () => {
-    this.$play.html(`<span class="${this.c('icon icon-play')}"></span>`)
+    this.$play.html(this.c('<span class="icon icon-play"></span>'))
   }
   private onTimeUpdate = () => {
     if (this.audioTimeUpdate) {
@@ -447,60 +446,55 @@ export = class MusicPlayer extends Component {
     )
   }
   private appendTpl() {
-    const { c } = this
     const volumeHeight = toStr(this.audio.volume * 100)
 
-    this.$container.html(stripIndent`
-      <div class="${c('body')}">
-        <div class="${c('body-left cover')}">
-          <div class="${c('play')}">
-            <span class="${c('icon icon-play')}"></span>
+    this.$container.html(
+      this.c(stripIndent`
+      <div class="body">
+        <div class="body-left cover">
+          <div class="play">
+            <span class="icon icon-play"></span>
           </div>
         </div>
-        <div class="${c('body-right')}">
-          <div class="${c('info')}">
-            <span class="${c('title')}">Title</span>
-            <span class="${c('artist')}"> - Artist</span>
+        <div class="body-right">
+          <div class="info">
+            <span class="title">Title</span>
+            <span class="artist"> - Artist</span>
           </div>
-          <div class="${c('controller')}">
-            <div class="${c('controller-left')}">
-              <div class="${c('bar')}">
-                <div class="${c('bar-loaded')}"></div>
-                <div class="${c('bar-played')}">
-                  <span class="${c('bar-thumb')}"></span>
+          <div class="controller">
+            <div class="controller-left">
+              <div class="bar">
+                <div class="bar-loaded"></div>
+                <div class="bar-played">
+                  <span class="bar-thumb"></span>
                 </div>
               </div>
             </div>
-            <div class="${c('controller-right')}">
-              <span class="${c('time')}">
-                <span class="${c('cur-time')}">00:00</span> /
-                <span class="${c('duration')}">00:00</span>
+            <div class="controller-right">
+              <span class="time">
+                <span class="cur-time">00:00</span> /
+                <span class="duration">00:00</span>
               </span>
-              <div class="${c('volume')}">
-                <span class="${c('icon icon-' + this.getVolumeIcon())}"></span>
-                <div class="${c('volume-controller')}">
-                  <div class="${c('volume-bar')}">
-                    <div class="${c(
-                      'volume-bar-fill'
-                    )}" style="height: ${volumeHeight}%"></div>
+              <div class="volume">
+                <span class="icon icon-${this.getVolumeIcon()}"></span>
+                <div class="volume-controller">
+                  <div class="volume-bar">
+                    <div class="volume-bar-fill" style="height: ${volumeHeight}%"></div>
                   </div>
                 </div>
               </div>
-              <span class="${c(
-                'icon icon-shuffle' +
-                  (this.shuffle ? '' : '-disabled') +
-                  ' shuffle'
-              )}"></span>
-              <span class="${c(
-                'icon icon-loop-' + this.loop + ' loop'
-              )}"></span>
-              <span class="${c('icon icon-file')}"></span>
-              <span class="${c('icon icon-list')}"></span>
+              <span class="icon icon-shuffle${
+                this.shuffle ? '' : '-disabled'
+              } shuffle"></span>
+              <span class="icon icon-loop-${this.loop} loop"></span>
+              <span class="icon icon-file"></span>
+              <span class="icon icon-list"></span>
             </div>
           </div>
         </div>
       </div>
-      <div class="${c('list')}"></div>
+      <div class="list"></div>
     `)
+    )
   }
 }

@@ -1,1 +1,3 @@
-module.exports = require('../share/webpack.config')('editor')
+module.exports = require('../share/webpack.config')('editor', {
+  useIcon: true,
+})

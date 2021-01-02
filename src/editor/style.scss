@@ -1,0 +1,51 @@
+.luna-editor {
+  border: 1px solid #eee;
+  background: #fff;
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.toolbar {
+  padding: 0 6px;
+  font-size: 0;
+  border-bottom: 1px solid #eee;
+}
+
+.button {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  background: #fff;
+  cursor: pointer;
+  border: none;
+  &:hover {
+    background: #f6f6f6;
+    .icon {
+      color: #000;
+    }
+  }
+  &:active {
+    outline: none;
+  }
+  .icon {
+    vertical-align: middle;
+    line-height: 30px;
+    font-size: 20px;
+    color: #999;
+  }
+}
+
+.body {
+  height: 300px;
+}
+
+.content {
+  padding: 6px;
+  width: 100%;
+  height: 100%;
+  &:focus {
+    outline: none;
+  }
+}

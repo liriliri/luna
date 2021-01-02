@@ -6,6 +6,7 @@ import readme from './README.md'
 const def = story(
   'editor',
   (container) => {
+    container.innerHTML = 'Luna Editor'
     const editor = new Editor(container)
 
     return editor

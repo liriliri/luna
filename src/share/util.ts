@@ -4,8 +4,6 @@ import root from 'licia/root'
 import html from 'licia/html'
 import contain from 'licia/contain'
 
-const regHtmlTag = /<[^>]*>/g
-
 export function classPrefix(name: string) {
   const prefix = `luna-${name}-`
 
@@ -14,13 +12,13 @@ export function classPrefix(name: string) {
       if (contain(singleClass, prefix)) {
         return singleClass
       }
-      
+
       return singleClass.replace(/[\w-]+/, (match) => `${prefix}${match}`)
     }).join(' ')
   }
 
   return function (str: string) {
-    if (regHtmlTag.test(str)) {
+    if (/<[^>]*>/g.test(str)) {
       try {
         const tree = html.parse(str)
         traverseTree(tree, (node: any) => {

@@ -1,24 +1,112 @@
 import Editor from './index'
 import Component from '../share/Component'
 import each from 'licia/each'
+import h from 'licia/h'
+import $ from 'licia/$'
 
 class Action {
+  container: HTMLElement = h('button')
+  protected $container: $.$
   protected editor: Editor
-  constructor(editor: Editor) {
+  protected name: string
+  constructor(editor: Editor, { name }: { name: string }) {
     this.editor = editor
+    this.$container = $(this.container)
+    this.name = name
+    this.initTpl()
+  }
+  private initTpl() {
+    const { name } = this
+    const { c } = this.editor
+    this.$container.attr('class', c(`button ${name}`))
+    this.$container.html(c(`<span class="icon icon-${name}"></span>`))
   }
 }
 
 interface IAction {
-  onClick(): void
+  update(): void
 }
 
-class Bold extends Action implements IAction {
-  onClick() {}
+class CommonAction extends Action implements IAction {
+  private cmd: string
+  private cmdVal?: string
+  constructor(
+    editor: Editor,
+    { name, cmd, cmdVal }: { name: string; cmd?: string; cmdVal?: string }
+  ) {
+    super(editor, { name })
+    this.cmd = cmd || name
+    this.cmdVal = cmdVal
+
+    this.bindEvent()
+  }
+  update() {
+    const { $container } = this
+
+    if (document.queryCommandState(this.cmd)) {
+      $container.addClass(this.editor.c('active'))
+    } else {
+      $container.rmClass(this.editor.c('active'))
+    }
+  }
+  private onClick = () => {
+    this.editor.exec(this.cmd, this.cmdVal)
+    this.update()
+  }
+  private bindEvent() {
+    this.$container.on('click', this.onClick)
+  }
 }
 
-const actionMap: any = {
-  bold: Bold,
+const actionClassMap: any = {
+  bold: {
+    Action: CommonAction,
+    options: {
+      name: 'bold',
+    },
+  },
+  italic: {
+    Action: CommonAction,
+    options: {
+      name: 'italic',
+    },
+  },
+  underline: {
+    Action: CommonAction,
+    options: {
+      name: 'underline',
+    },
+  },
+  'strike-through': {
+    Action: CommonAction,
+    options: {
+      name: 'strike-through',
+      cmd: 'strikeThrough',
+    },
+  },
+  quote: {
+    Action: CommonAction,
+    options: {
+      name: 'quote',
+      cmd: 'formatBlock',
+      cmdVal: '<blockquote>',
+    },
+  },
+  header: {
+    Action: CommonAction,
+    options: {
+      name: 'header',
+      cmd: 'formatBlock',
+      cmdVal: '<h1>',
+    },
+  },
+  'horizontal-rule': {
+    Action: CommonAction,
+    options: {
+      name: 'horizontal-rule',
+      cmd: 'insertHorizontalRule',
+    },
+  },
 }
 
 interface IOptions {
@@ -28,16 +116,35 @@ interface IOptions {
 export default class Toolbar extends Component {
   private actionNames: string[]
   private actions: Array<Action & IAction> = []
-  static defaultActions = ['bold']
+  static defaultActions = [
+    'bold',
+    'italic',
+    'underline',
+    'stike-through',
+    'quote',
+    'header',
+    'horizontal-rule',
+  ]
   constructor(container: Element, { actions }: IOptions) {
     super(container, { compName: 'editor-toolbar' })
     this.actionNames = actions
   }
   init(editor: Editor) {
     each(this.actionNames, (actionName) => {
-      if (actionMap[actionName]) {
-        this.actions.push(new actionMap[actionName](editor))
+      const actionClass = actionClassMap[actionName]
+      if (actionClass) {
+        let action: Action & IAction
+        if (actionClass.Action) {
+          action = new actionClass.Action(editor, actionClass.options)
+        } else {
+          action = new actionClass(editor)
+        }
+        this.actions.push(action)
+        this.container.appendChild(action.container)
       }
     })
+  }
+  update() {
+    each(this.actions, (action) => action.update())
   }
 }

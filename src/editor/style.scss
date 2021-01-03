@@ -1,4 +1,5 @@
 @import '../share/mixin';
+@import '../share/variable';
 
 .luna-editor {
   border: 1px solid #eee;
@@ -22,11 +23,13 @@
   background: #fff;
   cursor: pointer;
   border: none;
+  color: #999;
   &:hover {
     background: #f6f6f6;
-    .icon {
-      color: #000;
-    }
+    color: #000;
+  }
+  &.active {
+    color: $primary-color;
   }
   &:active {
     outline: none;
@@ -35,7 +38,6 @@
     vertical-align: middle;
     line-height: 30px;
     font-size: 20px;
-    color: #999;
   }
 }
 

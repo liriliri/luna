@@ -8,7 +8,7 @@ interface IOptions {
 
 export default class Component extends Emitter {
   public c: (name: string) => string
-  protected container: Element
+  protected container: HTMLElement
   protected $container: $.$
   private compName: string
   constructor(container: Element, { compName }: IOptions) {
@@ -16,7 +16,7 @@ export default class Component extends Emitter {
     this.compName = compName
     this.c = classPrefix(compName)
 
-    this.container = container
+    this.container = container as HTMLElement
     this.$container = $(container)
     this.$container.addClass(`luna-${compName}`)
   }

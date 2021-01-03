@@ -15,7 +15,7 @@
 }
 
 .body-left {
-  background: $primary-color;
+  background: $secondary-color;
   width: 90px;
   height: 90px;
   float: left;
@@ -115,7 +115,7 @@
   width: 8px;
   height: 8px;
   display: inline-block;
-  background: $secondary-color;
+  background: $primary-color;
   border-radius: 50%;
 }
 
@@ -134,7 +134,7 @@
 }
 
 .bar-played {
-  background: $secondary-color;
+  background: $primary-color;
 }
 
 .volume {
@@ -173,7 +173,7 @@
 }
 
 .volume-bar-fill {
-  background: $secondary-color;
+  background: $primary-color;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -202,7 +202,7 @@
     background: #f5f5f5;
   }
   &.active {
-    color: $secondary-color;
+    color: $primary-color;
   }
 }
 

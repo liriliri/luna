@@ -12,7 +12,6 @@ interface IOptions {
 
 export = class Editor extends Component {
   public selection: Selection
-  private $toolbar: $.$
   private $content: $.$
   private content: HTMLElement
   private toolbar: Toolbar
@@ -27,7 +26,6 @@ export = class Editor extends Component {
 
     this.initTpl()
 
-    this.$toolbar = this.find('.toolbar')
     this.$content = this.find('.content')
     this.content = this.$content.get(0) as HTMLElement
 
@@ -56,31 +54,19 @@ export = class Editor extends Component {
     this.content.focus()
   }
   private bindEvent() {
-    const { c } = this
-    this.$toolbar
-      .on('click', c('.bold'), this.onBoldClick)
-      .on('click', c('.italic'), this.onItalicClick)
-      .on('click', c('.underline'), this.onUnderlineClick)
-      .on('click', c('.strike-through'), this.onStrikeThroughClick)
-      .on('click', c('.quote'), this.onQuoteClick)
-      .on('click', c('.header'), this.onHeaderClick)
-      .on('click', c('.horizontal-rule'), this.onHorizontalRuleClick)
+    this.$content
+      .on('keyup', this.onContentKeyUp)
+      .on('mouseup', this.onContentMouseUp)
   }
-  private onBoldClick = () => this.exec('bold')
-  private onItalicClick = () => this.exec('italic')
-  private onUnderlineClick = () => this.exec('underline')
-  private onStrikeThroughClick = () => this.exec('strikeThrough')
-  private onQuoteClick = () => this.exec('formatBlock', '<blockquote>')
-  private onHeaderClick = () => this.exec('formatBlock', '<h1>')
-  private onHorizontalRuleClick = () => this.exec('insertHorizontalRule')
+  private onContentKeyUp = () => {
+    this.toolbar.update()
+  }
+  private onContentMouseUp = () => {
+    this.toolbar.update()
+  }
   private initTpl() {
     this.$container.html(
       this.c(stripIndent`
-      <div class="toolbar">
-        <button class="button header">
-          <span class="icon icon-header"></span>
-        </button>
-      </div>  
       <div class="body">
         <div class="content" contenteditable></div>
       </div>

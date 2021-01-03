@@ -137,7 +137,7 @@ export default class JsonViewer extends Component {
       val
     )}"</span></li>`
   }
-  private initTpl() {
+  private render() {
     const data = this.map[this.data.id]
 
     this.$container.html(this.objToHtml(data, true))

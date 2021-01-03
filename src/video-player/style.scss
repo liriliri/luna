@@ -81,7 +81,7 @@
   width: 8px;
   height: 8px;
   display: inline-block;
-  background: $secondary-color;
+  background: $primary-color;
   border-radius: 50%;
 }
 
@@ -107,7 +107,7 @@
 }
 
 .bar-played {
-  background: $secondary-color;
+  background: $primary-color;
 }
 
 .controller-left,
@@ -183,7 +183,7 @@
 }
 
 .volume-bar-fill {
-  background: $secondary-color;
+  background: $primary-color;
   position: absolute;
   top: 0;
   left: 0;

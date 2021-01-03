@@ -1,3 +1,5 @@
+@import '../share/mixin';
+
 .luna-editor {
   border: 1px solid #eee;
   background: #fff;
@@ -45,6 +47,7 @@
   padding: 6px;
   width: 100%;
   height: 100%;
+  @include overflow-auto(y);
   &:focus {
     outline: none;
   }

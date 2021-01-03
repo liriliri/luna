@@ -90,7 +90,7 @@ export = class MusicPlayer extends Component {
       this.audioList = audio as IAudio[]
     }
 
-    this.appendTpl()
+    this.initTpl()
 
     this.$body = this.find('.body')
     this.$title = this.find('.title')
@@ -445,7 +445,7 @@ export = class MusicPlayer extends Component {
       durationFormat(Math.round(this.audio.duration * 1000), 'mm:ss')
     )
   }
-  private appendTpl() {
+  private initTpl() {
     const volumeHeight = toStr(this.audio.volume * 100)
 
     this.$container.html(

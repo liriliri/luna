@@ -59,7 +59,7 @@ export = class VideoPlayer extends Component {
   constructor(container: Element, { url = '' }: IOptions = {}) {
     super(container, { compName: 'video-player' })
 
-    this.appendTpl()
+    this.initTpl()
 
     this.$controller = this.find('.controller')
     this.$volume = this.find('.volume')
@@ -270,7 +270,7 @@ export = class VideoPlayer extends Component {
 
     return 'volume'
   }
-  private appendTpl() {
+  private initTpl() {
     const volumeHeight = toStr(this.video.volume * 100)
 
     this.$container.html(

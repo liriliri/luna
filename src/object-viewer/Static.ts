@@ -36,7 +36,7 @@ export default class JsonViewer extends Component {
 
     createMap(this.map, this.data)
 
-    this.appendTpl()
+    this.render()
   }
   destroy() {
     super.destroy()
@@ -137,7 +137,7 @@ export default class JsonViewer extends Component {
       val
     )}"</span></li>`
   }
-  private appendTpl() {
+  private initTpl() {
     const data = this.map[this.data.id]
 
     this.$container.html(this.objToHtml(data, true))

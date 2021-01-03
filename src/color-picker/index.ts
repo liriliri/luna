@@ -6,9 +6,9 @@ export = class ColorPicker {
   constructor(container: Element) {
     this.$container = $(container)
 
-    this.appendTpl()
+    this.initTpl()
   }
-  private appendTpl() {
+  private initTpl() {
     const { $container } = this
     $container.html('')
   }

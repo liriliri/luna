@@ -56,7 +56,7 @@ export = class JsonEditor extends Component {
   ) {
     super(container, { compName: 'json-editor' })
 
-    this.appendTpl()
+    this.initTpl()
 
     this.$toggle = this.find('.toggle')
     this.$name = this.find('.name')
@@ -90,7 +90,7 @@ export = class JsonEditor extends Component {
     this.setName(name)
     this.setValue(value)
   }
-  appendTpl() {
+  initTpl() {
     this.$container.html(
       this.c(
         [

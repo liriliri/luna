@@ -44,7 +44,7 @@ export = class ObjectViewer extends Component {
     this.visitor = new Visitor()
     this.map = {}
 
-    this.appendTpl()
+    this.render()
   }
   destroy() {
     super.destroy()
@@ -271,7 +271,7 @@ export = class ObjectViewer extends Component {
       val
     )}"</span></li>`
   }
-  private appendTpl() {
+  private render() {
     this.$container.html(this.objToHtml(this.data, true))
   }
   private bindEvent() {

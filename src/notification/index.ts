@@ -28,7 +28,7 @@ class Notification extends Component {
     this.position = position
     this.duration = duration
 
-    this.render()
+    this.initTpl()
   }
   notify(content: string, { duration = this.duration } = {}) {
     const notification = new NotificationItem(this, content)
@@ -60,7 +60,7 @@ class Notification extends Component {
     const idx = notifications.indexOf(notification)
     notifications.splice(idx, 1)
   }
-  private render() {
+  private initTpl() {
     const { $container } = this
     const { x, y } = this.position
 

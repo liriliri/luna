@@ -1,3 +1,1 @@
-export default class Selection {
-  
-}
+export default class Selection {}

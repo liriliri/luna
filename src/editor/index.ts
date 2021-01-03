@@ -17,12 +17,15 @@ export = class Editor extends Component {
   private content: HTMLElement
   private toolbar: Toolbar
   static Toolbar = Toolbar
-  constructor(container: Element, { toolbar = Toolbar.defaultActions } : IOptions = {}) {
+  constructor(
+    container: Element,
+    { toolbar = Toolbar.defaultActions }: IOptions = {}
+  ) {
     super(container, { compName: 'editor' })
 
     const html = this.$container.html()
 
-    this.appendTpl()
+    this.initTpl()
 
     this.$toolbar = this.find('.toolbar')
     this.$content = this.find('.content')
@@ -33,11 +36,13 @@ export = class Editor extends Component {
     if (isArr(toolbar)) {
       const toolbarContainer = h('div')
       this.container.prepend(toolbarContainer)
-      this.toolbar = new Toolbar(toolbarContainer, {actions: toolbar as string[]})
+      this.toolbar = new Toolbar(toolbarContainer, {
+        actions: toolbar as string[],
+      })
     } else {
       this.toolbar = toolbar as Toolbar
     }
-    this.toolbar.init(this) 
+    this.toolbar.init(this)
 
     this.$content.html(html)
 
@@ -68,7 +73,7 @@ export = class Editor extends Component {
   private onQuoteClick = () => this.exec('formatBlock', '<blockquote>')
   private onHeaderClick = () => this.exec('formatBlock', '<h1>')
   private onHorizontalRuleClick = () => this.exec('insertHorizontalRule')
-  private appendTpl() {
+  private initTpl() {
     this.$container.html(
       this.c(stripIndent`
       <div class="toolbar">

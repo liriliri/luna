@@ -84,7 +84,7 @@ export = class Console extends Component {
   ) {
     super(container, { compName: 'console' })
 
-    this.appendTpl()
+    this.initTpl()
 
     this.maxNum = maxNum
     this.asyncRender = asyncRender
@@ -749,7 +749,7 @@ export = class Console extends Component {
       container.scrollTop = 10000000
     }
   }
-  private appendTpl() {
+  private initTpl() {
     this.$container.html(
       this.c(stripIndent`
       <div class="logs-space">

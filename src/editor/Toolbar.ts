@@ -13,14 +13,12 @@ interface IAction {
   onClick(): void
 }
 
-class Bold extends Action implements IAction{
-  onClick() {
-
-  }
+class Bold extends Action implements IAction {
+  onClick() {}
 }
 
 const actionMap: any = {
-  bold: Bold
+  bold: Bold,
 }
 
 interface IOptions {
@@ -31,12 +29,12 @@ export default class Toolbar extends Component {
   private actionNames: string[]
   private actions: Array<Action & IAction> = []
   static defaultActions = ['bold']
-  constructor(container: Element, { actions } : IOptions) {
+  constructor(container: Element, { actions }: IOptions) {
     super(container, { compName: 'editor-toolbar' })
     this.actionNames = actions
   }
   init(editor: Editor) {
-    each(this.actionNames, actionName => {
+    each(this.actionNames, (actionName) => {
       if (actionMap[actionName]) {
         this.actions.push(new actionMap[actionName](editor))
       }

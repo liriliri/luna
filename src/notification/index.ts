@@ -1,7 +1,7 @@
 import $ from 'licia/$'
-import stripIndent from 'licia/stripIndent'
 import uniqId from 'licia/uniqId'
 import find from 'licia/find'
+import h from 'licia/h'
 import Component from '../share/Component'
 
 interface IPosition {
@@ -10,7 +10,6 @@ interface IPosition {
 }
 
 class Notification extends Component {
-  private $notification: $.$
   private notifications: NotificationItem[] = []
   private duration: number
   position: IPosition
@@ -29,7 +28,7 @@ class Notification extends Component {
     this.position = position
     this.duration = duration
 
-    this.appendTpl()
+    this.render()
   }
   notify(content: string, { duration = this.duration } = {}) {
     const notification = new NotificationItem(this, content)
@@ -48,7 +47,7 @@ class Notification extends Component {
     }
   }
   private add(notification: NotificationItem) {
-    this.$notification.append(notification.html())
+    this.container.appendChild(notification.container)
   }
   private remove(id: string) {
     const { notifications } = this
@@ -57,11 +56,11 @@ class Notification extends Component {
       (notification) => notification.id === id
     )
     if (!notification) return
-    this.$notification.find('#' + id).remove()
+    notification.destroy()
     const idx = notifications.indexOf(notification)
     notifications.splice(idx, 1)
   }
-  private appendTpl() {
+  private render() {
     const { $container } = this
     const { x, y } = this.position
 
@@ -77,31 +76,41 @@ class Notification extends Component {
     }
     if (y === 'top') justifyContent = 'flex-start'
 
-    $container.append(stripIndent`
-      <div class="luna-notification" style="justify-content: ${justifyContent}; align-items: ${alignItems}"></div>
-    `)
-    this.$notification = $container.find('.luna-notification')
+    $container.attr(
+      'style',
+      `justify-content: ${justifyContent}; align-items: ${alignItems}`
+    )
   }
 }
 
 class NotificationItem {
+  id: string
+  container: HTMLElement = h('div')
+  private $container: $.$
   private notification: Notification
   private content: string
-  id: string
   constructor(notification: Notification, content: string) {
-    this.notification = notification 
+    this.$container = $(this.container)
+    this.notification = notification
     this.content = content
     this.id = uniqId('luna-notification-')
-  }
-  html() {
-    const { c, position } = this.notification
-    const { y } = position
 
-    return c(stripIndent`
-      <div id="${this.id}" class="item ${y === 'bottom' ? 'lower' : 'upper'}">
-        <div class="content">${this.content}</div>
-      </div>
-    `)
+    this.$container.attr({
+      id: this.id,
+      class: notification.c(
+        `item ${notification.position.y === 'bottom' ? 'lower' : 'upper'}`
+      ),
+    })
+
+    this.render()
+  }
+  destroy() {
+    this.$container.remove()
+  }
+  private render() {
+    this.$container.html(
+      this.notification.c(`<div class="content">${this.content}</div>`)
+    )
   }
 }
 

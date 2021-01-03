@@ -26,6 +26,7 @@ import trim from 'licia/trim'
 import lowerCase from 'licia/lowerCase'
 import keys from 'licia/keys'
 import $ from 'licia/$'
+import h from 'licia/h'
 import Emitter from 'licia/Emitter'
 import stringifyAll from 'licia/stringifyAll'
 import nextTick from 'licia/nextTick'
@@ -61,6 +62,7 @@ export default class Log extends Emitter {
   static showUnenumerable = true
   static lazyEvaluation = true
   static showSrcInSources = false
+  container: HTMLElement = h('div')
   public id: number
   public type: string
   public group?: IGroup
@@ -70,11 +72,10 @@ export default class Log extends Emitter {
   public count = 1
   public ignoreFilter: boolean
   public collapsed: boolean
-  public el: Element
-  public $el: $.$
   public src: any
   public width = 0
   public height = 0
+  private $container: $.$
   private content: Element
   private $content: $.$
   private console: Console
@@ -101,11 +102,10 @@ export default class Log extends Emitter {
     this.header = header
     this.ignoreFilter = ignoreFilter
     this.collapsed = false
-    this.el = document.createElement('div')
-    ;(this.el as any).log = this
+    ;(this.container as any).log = this
     this.height = 0
     this.width = 0
-    this.$el = $(this.el)
+    this.$container = $(this.container)
 
     this.formatMsg()
 
@@ -134,7 +134,7 @@ export default class Log extends Emitter {
   }
   updateIcon(icon: string) {
     const { c } = this.console
-    const $icon = this.$el.find(c('.icon'))
+    const $icon = this.$container.find(c('.icon'))
 
     $icon.rmAttr('class').addClass([c('icon'), c(`icon-${icon}`)])
 
@@ -142,11 +142,11 @@ export default class Log extends Emitter {
   }
   addCount() {
     this.count++
-    const { $el, count } = this
+    const { $container, count } = this
     const { c } = this.console
-    const $container = $el.find('.eruda-count-container')
-    const $icon = $el.find('.eruda-icon-container')
-    const $count = $container.find('.eruda-count')
+    const $countContainer = $container.find('.eruda-count-container')
+    const $icon = $container.find('.eruda-icon-container')
+    const $count = $countContainer.find('.eruda-count')
     if (count === 2) {
       $container.rmClass(c('hidden'))
     }
@@ -156,9 +156,9 @@ export default class Log extends Emitter {
     return this
   }
   groupEnd() {
-    const { $el } = this
+    const { $container } = this
     const { c } = this.console
-    const $lastNesting = $el
+    const $lastNesting = $container
       .find(`.${c('nesting-level')}:not(.${c('group-closed')})`)
       .last()
 
@@ -167,22 +167,21 @@ export default class Log extends Emitter {
     return this
   }
   updateTime(time: string) {
-    const $el = this.$el
-    const $container = $el.find('.eruda-time-container')
+    const $timeContainer = this.$container.find('.eruda-time-container')
 
     if (this.header) {
-      $container.find('span').eq(0).text(time)
+      $timeContainer.find('span').eq(0).text(time)
       this.header.time = time
     }
 
     return this
   }
   isAttached() {
-    return !!this.el.parentNode
+    return !!this.container.parentNode
   }
   updateSize(silent = true) {
-    const height = (this.el as HTMLElement).offsetHeight
-    const width = (this.el as HTMLElement).offsetWidth
+    const height = this.container.offsetHeight
+    const width = this.container.offsetWidth
     if (this.height !== height || this.width !== width) {
       this.height = height
       this.width = width
@@ -190,7 +189,7 @@ export default class Log extends Emitter {
     }
   }
   html() {
-    return this.el.outerHTML
+    return this.container.outerHTML
   }
   text() {
     return this.content.textContent || ''
@@ -224,7 +223,7 @@ export default class Log extends Emitter {
     }
   }
   click() {
-    const { type, src, $el, console } = this
+    const { type, src, $container, console } = this
     const { c } = console
     let { args } = this
 
@@ -239,7 +238,7 @@ export default class Log extends Emitter {
       case 'group':
       case 'groupCollapsed':
         if (src || args) {
-          const $json = $el.find(c('.json'))
+          const $json = $container.find(c('.json'))
           if ($json.hasClass(c('hidden'))) {
             if ($json.data('init') !== 'true') {
               if (src) {
@@ -268,7 +267,7 @@ export default class Log extends Emitter {
         }
         break
       case 'error':
-        $el.find(c('.stack')).toggleClass(c('hidden'))
+        $container.find(c('.stack')).toggleClass(c('hidden'))
         break
     }
 
@@ -357,8 +356,8 @@ export default class Log extends Emitter {
     }
     msg = this.render({ msg, type, icon, id, header, group })
 
-    this.$el.addClass(`${c('log-container')}`).html(msg)
-    this.$content = this.$el.find(c('.log-content'))
+    this.$container.addClass(`${c('log-container')}`).html(msg)
+    this.$content = this.$container.find(c('.log-content'))
     this.content = this.$content.get(0)
   }
   private render(data: any) {

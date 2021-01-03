@@ -705,7 +705,7 @@ export = class Console extends Component {
       const log = displayLogs[i]
       const { width, height } = log
       if (height === 0 || width !== clientWidth) {
-        fakeFrag.appendChild(log.el)
+        fakeFrag.appendChild(log.container)
         logs.push(log)
       }
     }
@@ -720,12 +720,12 @@ export = class Console extends Component {
     const frag = document.createDocumentFragment()
     for (let i = 0; i < len; i++) {
       const log = displayLogs[i]
-      const { el, height } = log
+      const { container, height } = log
 
       if (currentHeight > bottom) {
         bottomSpaceHeight += height
       } else if (currentHeight + height > top) {
-        frag.appendChild(el)
+        frag.appendChild(container)
       } else if (currentHeight < top) {
         topSpaceHeight += height
       }

@@ -1,12 +1,23 @@
 import Component from '../share/Component'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
+import Toolbar from './toolbar'
+import Selection from './Selection'
+import isArr from 'licia/isArr'
+import h from 'licia/h'
+
+interface IOptions {
+  toolbar?: string[] | Toolbar
+}
 
 export = class Editor extends Component {
+  public selection: Selection
   private $toolbar: $.$
   private $content: $.$
   private content: HTMLElement
-  constructor(container: Element) {
+  private toolbar: Toolbar
+  static Toolbar = Toolbar
+  constructor(container: Element, { toolbar = Toolbar.defaultActions } : IOptions = {}) {
     super(container, { compName: 'editor' })
 
     const html = this.$container.html()
@@ -17,9 +28,27 @@ export = class Editor extends Component {
     this.$content = this.find('.content')
     this.content = this.$content.get(0) as HTMLElement
 
+    this.selection = new Selection()
+
+    if (isArr(toolbar)) {
+      const toolbarContainer = h('div')
+      this.container.prepend(toolbarContainer)
+      this.toolbar = new Toolbar(toolbarContainer, {actions: toolbar as string[]})
+    } else {
+      this.toolbar = toolbar as Toolbar
+    }
+    this.toolbar.init(this) 
+
     this.$content.html(html)
 
     this.bindEvent()
+  }
+  exec(command: string, val?: string) {
+    document.execCommand(command, false, val)
+    this.focus()
+  }
+  focus() {
+    this.content.focus()
   }
   private bindEvent() {
     const { c } = this
@@ -39,34 +68,12 @@ export = class Editor extends Component {
   private onQuoteClick = () => this.exec('formatBlock', '<blockquote>')
   private onHeaderClick = () => this.exec('formatBlock', '<h1>')
   private onHorizontalRuleClick = () => this.exec('insertHorizontalRule')
-  private exec(command: string, val?: string) {
-    document.execCommand(command, false, val)
-    this.content.focus()
-  }
   private appendTpl() {
     this.$container.html(
       this.c(stripIndent`
       <div class="toolbar">
         <button class="button header">
           <span class="icon icon-header"></span>
-        </button>
-        <button class="button bold">
-          <span class="icon icon-bold"></span>
-        </button>
-        <button class="button italic">
-          <span class="icon icon-italic"></span>
-        </button>
-        <button class="button underline">
-          <span class="icon icon-underline"></span>
-        </button>
-        <button class="button strike-through">
-          <span class="icon icon-strike-through"></span>
-        </button>
-        <button class="button quote">
-          <span class="icon icon-quote"></span>
-        </button>
-        <button class="button horizontal-rule">
-          <span class="icon icon-horizontal-rule"></span>
         </button>
       </div>  
       <div class="body">

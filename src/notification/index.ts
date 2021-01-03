@@ -88,8 +88,8 @@ class NotificationItem {
   private notification: Notification
   private content: string
   id: string
-  constructor(container: Notification, content: string) {
-    this.notification = container
+  constructor(notification: Notification, content: string) {
+    this.notification = notification 
     this.content = content
     this.id = uniqId('luna-notification-')
   }

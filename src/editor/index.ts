@@ -53,6 +53,10 @@ export = class Editor extends Component {
   focus() {
     this.content.focus()
   }
+  destroy() {
+    this.toolbar.destroy()
+    super.destroy()
+  }
   private bindEvent() {
     this.$content
       .on('keyup', this.onContentKeyUp)

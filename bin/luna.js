@@ -124,10 +124,6 @@ function getComponent(argv) {
   _.shift()
   const component = _.shift()
 
-  if (!component) {
-    console.log('A component name must be given.')
-  }
-
   return component
 }
 
@@ -149,7 +145,10 @@ function runScript(name, args, options = {}) {
 function wrap(fn, condition) {
   return async function (argv) {
     let components = []
-    if (argv.all) {
+    const component = getComponent(argv)
+    if (component) {
+      components.push(component)
+    } else {
       each(require('../index.json'), (val, key) => {
         if (condition && !val[condition]) {
           return
@@ -157,13 +156,6 @@ function wrap(fn, condition) {
 
         components.push(key)
       })
-    } else {
-      const component = getComponent(argv)
-      if (!component) {
-        console.log('Component is not specified')
-        return
-      }
-      components.push(component)
     }
     for (let component of components) {
       await fn(component)
@@ -180,11 +172,6 @@ yargs
   .command('genIcon', 'generate icon file', noop, genIcon)
   .command('test', 'run test', noop, test)
   .command('install', 'install dependencies', noop, install)
-  .option('all', {
-    alias: 'a',
-    type: 'boolean',
-    description: 'Run with all components',
-  })
   .fail(function () {
     process.exit(1)
   })

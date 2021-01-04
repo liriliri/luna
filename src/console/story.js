@@ -1,6 +1,6 @@
 import 'luna-console.css'
 import h from 'licia/h'
-import extend from 'licia/extend'
+import $ from 'licia/$'
 import Console from 'luna-console.js'
 import readme from './README.md'
 import { button, number, boolean, text } from '@storybook/addon-knobs'
@@ -9,13 +9,15 @@ import story from '../share/story'
 const def = story(
   'console',
   (wrapper) => {
-    extend(wrapper.style, {
-      position: 'fixed',
-      left: '0',
-      top: '0',
-      width: '100%',
-      height: '100%',
-    })
+    $(wrapper)
+      .css({
+        position: 'fixed',
+        left: '0',
+        top: '0',
+        width: '100%',
+        height: '100%',
+      })
+      .html('')
     const container = h('div')
     wrapper.appendChild(container)
 

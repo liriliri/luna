@@ -117,7 +117,7 @@ const actionClassMap: any = {
 }
 
 interface IOptions {
-  actions: string[]
+  actions?: string[]
 }
 
 export default class Toolbar extends Component {
@@ -132,7 +132,10 @@ export default class Toolbar extends Component {
     'header',
     'horizontal-rule',
   ]
-  constructor(container: Element, { actions }: IOptions) {
+  constructor(
+    container: Element,
+    { actions = Toolbar.defaultActions }: IOptions = {}
+  ) {
     super(container, { compName: 'editor-toolbar' })
     this.actionNames = actions
   }

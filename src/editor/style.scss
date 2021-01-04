@@ -3,13 +3,13 @@
 
 .luna-editor {
   border: 1px solid #eee;
-  background: #fff;
   * {
     box-sizing: border-box;
   }
 }
 
 .toolbar {
+  background: #fff;
   padding: 0 6px;
   font-size: 0;
   border-bottom: 1px solid #eee;
@@ -42,6 +42,7 @@
 }
 
 .body {
+  background: #fff;
   height: 300px;
 }
 

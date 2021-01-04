@@ -15,6 +15,18 @@ class Action {
     this.name = name
     this.initTpl()
   }
+  update() {
+    const { $container } = this
+
+    if (this.isActive()) {
+      $container.addClass(this.editor.c('active'))
+    } else {
+      $container.rmClass(this.editor.c('active'))
+    }
+  }
+  isActive() {
+    return false
+  }
   private initTpl() {
     const { name } = this
     const { c } = this.editor
@@ -23,11 +35,7 @@ class Action {
   }
 }
 
-interface IAction {
-  update(): void
-}
-
-class CommonAction extends Action implements IAction {
+class CommonAction extends Action {
   private cmd: string
   private cmdVal?: string
   constructor(
@@ -40,14 +48,13 @@ class CommonAction extends Action implements IAction {
 
     this.bindEvent()
   }
-  update() {
-    const { $container } = this
-
-    if (document.queryCommandState(this.cmd)) {
-      $container.addClass(this.editor.c('active'))
-    } else {
-      $container.rmClass(this.editor.c('active'))
+  isActive() {
+    if (this.cmd === 'formatBlock') {
+      const val = document.queryCommandValue(this.cmd)
+      return `<${val}>` === this.cmdVal
     }
+
+    return document.queryCommandState(this.cmd)
   }
   private onClick = () => {
     this.editor.exec(this.cmd, this.cmdVal)
@@ -115,7 +122,7 @@ interface IOptions {
 
 export default class Toolbar extends Component {
   private actionNames: string[]
-  private actions: Array<Action & IAction> = []
+  private actions: Action[] = []
   static defaultActions = [
     'bold',
     'italic',
@@ -133,7 +140,7 @@ export default class Toolbar extends Component {
     each(this.actionNames, (actionName) => {
       const actionClass = actionClassMap[actionName]
       if (actionClass) {
-        let action: Action & IAction
+        let action: Action
         if (actionClass.Action) {
           action = new actionClass.Action(editor, actionClass.options)
         } else {

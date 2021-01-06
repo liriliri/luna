@@ -3,8 +3,10 @@ import camelCase from 'licia/camelCase'
 import spaceCase from 'licia/spaceCase'
 import map from 'licia/map'
 import h from 'licia/h'
+import toArr from 'licia/toArr'
 import upperFirst from 'licia/upperFirst'
 import { addReadme } from 'storybook-readme/html'
+import each from 'licia/each'
 
 export default function story(name, storyFn, { readme, source } = {}) {
   const container = h('div')
@@ -24,10 +26,10 @@ export default function story(name, storyFn, { readme, source } = {}) {
       },
     },
     [camelCase(name)]: () => {
-      if (window.component) {
-        window.component.destroy()
+      if (window.components) {
+        each(window.components, (component) => component.destroy())
       }
-      window.component = storyFn(container)
+      window.components = toArr(storyFn(container))
 
       return container
     },

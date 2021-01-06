@@ -4,11 +4,14 @@ import h from 'licia/h'
 import $ from 'licia/$'
 import story from '../share/story'
 import readme from './README.md'
+import { text } from '@storybook/addon-knobs'
 
 const def = story(
   'editor',
   (wrapper) => {
     $(wrapper).html('')
+
+    const content = text('Initial Content', readme)
 
     const toolbarContainer = h('div')
     $(toolbarContainer).css({
@@ -17,17 +20,22 @@ const def = story(
     const toolbar = new Editor.Toolbar(toolbarContainer)
     wrapper.appendChild(toolbarContainer)
 
-    const editorContainer = h('div')
-    $(editorContainer).css({
-      marginTop: 10,
-    })
-    editorContainer.innerHTML = 'Luna Editor'
-    wrapper.appendChild(editorContainer)
-    const editor = new Editor(editorContainer, {
+    const editorContainerA = h('div')
+    $(editorContainerA).css('marginTop', 10)
+    editorContainerA.innerHTML = content.replace(/\n/g, '<br/>')
+    const editorContainerB = h('div')
+    $(editorContainerB).css('marginTop', 10)
+    editorContainerB.innerHTML = editorContainerA.innerHTML
+    wrapper.appendChild(editorContainerA)
+    wrapper.appendChild(editorContainerB)
+
+    const editorA = new Editor(editorContainerA, {
       toolbar,
     })
 
-    return editor
+    const editorB = new Editor(editorContainerB)
+
+    return [editorA, editorB]
   },
   {
     readme,

@@ -58,7 +58,6 @@ class CommonAction extends Action {
   }
   private onClick = () => {
     this.editor.exec(this.cmd, this.cmdVal)
-    this.update()
   }
   private bindEvent() {
     this.$container.on('click', this.onClick)
@@ -138,6 +137,8 @@ export default class Toolbar extends Component {
   ) {
     super(container, { compName: 'editor-toolbar' })
     this.actionNames = actions
+
+    this.bindEvent()
   }
   init(editor: Editor) {
     each(this.actionNames, (actionName) => {
@@ -154,7 +155,15 @@ export default class Toolbar extends Component {
       }
     })
   }
-  update() {
+  update = () => {
     each(this.actions, (action) => action.update())
+  }
+  destroy() {
+    super.destroy()
+
+    this.$container.off('click', this.update)
+  }
+  private bindEvent() {
+    this.$container.on('click', this.update)
   }
 }

@@ -54,4 +54,10 @@
   &:focus {
     outline: none;
   }
+  blockquote {
+    margin: 10px 0;
+    padding: 5px 10px;
+    border-left: 8px solid $primary-color;
+    background: #f1f1f1;
+  }
 }

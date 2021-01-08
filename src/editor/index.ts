@@ -47,6 +47,9 @@ export = class Editor extends Component {
 
     this.bindEvent()
   }
+  html() {
+    return this.$content.html()
+  }
   exec(command: string, val?: string) {
     document.execCommand(command, false, val)
     this.focus()

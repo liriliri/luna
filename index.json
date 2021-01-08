@@ -4,7 +4,8 @@
     "test": true
   },
   "editor": {
-    "icon": true
+    "icon": true,
+    "test": true
   },
   "json-editor": {
     "icon": true,

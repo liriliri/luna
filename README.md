@@ -15,6 +15,7 @@ Yet another UI library.
 ## Components
 
 * [console](./src/console/README.md): Console for logging.
+* [editor](./src/editor/README.md): Wysiwyg editor.
 * [json-editor](./src/json-editor/README.md): JSON editor.
 * [music-player](./src/music-player/README.md): Music player.
 * [notification](./src/notification/README.md): Show notifications.

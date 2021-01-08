@@ -192,9 +192,6 @@ export default class Toolbar extends Component {
 
     this.bindEvent()
   }
-  addAction(name: string, Action: { new (): Action }) {
-    actionClassMap[name] = Action
-  }
   init(editor: Editor) {
     each(this.actionNames, (actionName) => {
       const actionClass = actionClassMap[actionName]

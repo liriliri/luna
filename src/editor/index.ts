@@ -5,20 +5,21 @@ import Toolbar from './Toolbar'
 import Selection from './Selection'
 import isArr from 'licia/isArr'
 import h from 'licia/h'
+import concat from 'licia/concat'
 
 interface IOptions {
   toolbar?: string[] | Toolbar
 }
 
 export = class Editor extends Component {
-  public selection: Selection
+  selection: Selection
+  toolbar: Toolbar
   private $content: $.$
   private content: HTMLElement
-  private toolbar: Toolbar
   static Toolbar = Toolbar
   constructor(
     container: Element,
-    { toolbar = Toolbar.defaultActions }: IOptions = {}
+    { toolbar = concat(Toolbar.defaultActions, ['fullscreen']) }: IOptions = {}
   ) {
     super(container, { compName: 'editor' })
 

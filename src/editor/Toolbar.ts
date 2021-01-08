@@ -24,6 +24,9 @@ class Action {
       $container.rmClass(this.editor.c('active'))
     }
   }
+  destroy() {
+    this.$container.remove()
+  }
   isActive() {
     return false
   }
@@ -58,6 +61,54 @@ class CommonAction extends Action {
   }
   private onClick = () => {
     this.editor.exec(this.cmd, this.cmdVal)
+  }
+  private bindEvent() {
+    this.$container.on('click', this.onClick)
+  }
+}
+
+class FullscreenAction extends Action {
+  private normalHeight = 0
+  constructor(editor: Editor) {
+    super(editor, { name: 'fullscreen' })
+
+    this.bindEvent()
+  }
+  destroy() {
+    super.destroy()
+
+    const { $container, c } = this.editor
+    $container.rmClass(c('fullscreen'))
+  }
+  isActive() {
+    const { $container, c } = this.editor
+
+    return $container.hasClass(c('fullscreen'))
+  }
+  private enterFullscreen() {
+    const { toolbar, $container, c } = this.editor
+    const $body = $container.find(c('.body'))
+    $container.addClass(c('fullscreen'))
+    this.normalHeight = $body.offset().height
+
+    $body.css(
+      'height',
+      `${window.innerHeight - toolbar.$container.offset().height}px`
+    )
+  }
+  private exitFullScreen() {
+    const { $container, c } = this.editor
+    $container.rmClass(c('fullscreen'))
+
+    const $body = $container.find(c('.body'))
+    $body.css('height', this.normalHeight + 'px')
+  }
+  private onClick = () => {
+    if (this.isActive()) {
+      this.exitFullScreen()
+    } else {
+      this.enterFullscreen()
+    }
   }
   private bindEvent() {
     this.$container.on('click', this.onClick)
@@ -113,6 +164,7 @@ const actionClassMap: any = {
       cmd: 'insertHorizontalRule',
     },
   },
+  fullscreen: FullscreenAction,
 }
 
 interface IOptions {
@@ -140,6 +192,9 @@ export default class Toolbar extends Component {
 
     this.bindEvent()
   }
+  addAction(name: string, Action: { new (): Action }) {
+    actionClassMap[name] = Action
+  }
   init(editor: Editor) {
     each(this.actionNames, (actionName) => {
       const actionClass = actionClassMap[actionName]
@@ -159,6 +214,8 @@ export default class Toolbar extends Component {
     each(this.actions, (action) => action.update())
   }
   destroy() {
+    each(this.actions, (action) => action.destroy())
+
     super.destroy()
 
     this.$container.off('click', this.update)

@@ -7,9 +7,9 @@ interface IOptions {
 }
 
 export default class Component extends Emitter {
-  public c: (name: string) => string
-  protected container: HTMLElement
-  protected $container: $.$
+  c: (name: string) => string
+  container: HTMLElement
+  $container: $.$
   private compName: string
   constructor(container: Element, { compName }: IOptions) {
     super()

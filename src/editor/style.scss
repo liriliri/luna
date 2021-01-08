@@ -6,6 +6,14 @@
   * {
     box-sizing: border-box;
   }
+  &.fullscreen {
+    position: fixed;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    left: 0;
+    top: 0;
+  }
 }
 
 .toolbar {
@@ -31,7 +39,8 @@
   &.active {
     color: $primary-color;
   }
-  &:active {
+  &:active,
+  &:focus {
     outline: none;
   }
   .icon {

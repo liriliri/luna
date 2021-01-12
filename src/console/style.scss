@@ -97,6 +97,25 @@ $console-warn-border: #fff5c2;
   border-bottom: 1px solid $border;
   margin-top: -1px;
   color: $foreground;
+  .code {
+    display: inline;
+    font-family: $font-family-code;
+    .keyword {
+      color: #881280;
+    }
+    .number {
+      color: #1c00cf;
+    }
+    .operator {
+      color: #808080;
+    }
+    .comment {
+      color: #236e25;
+    }
+    .string {
+      color: #1a1aa6;
+    }
+  }
   a {
     color: #15c !important;
   }

@@ -31,6 +31,7 @@ import Emitter from 'licia/Emitter'
 import stringifyAll from 'licia/stringifyAll'
 import nextTick from 'licia/nextTick'
 import linkify from 'licia/linkify'
+import highlight from 'licia/highlight'
 import { getObjType } from './util'
 import stripIndent from 'licia/stripIndent'
 import Console from './index'
@@ -55,6 +56,16 @@ export interface ILogOptions {
   targetGroup?: IGroup
   header?: IHeader
   ignoreFilter?: boolean
+}
+
+const regJsUrl = /https?:\/\/([0-9.\-A-Za-z]+)(?::(\d+))?\/[A-Z.a-z0-9/]*\.js/g
+const regErudaJs = /eruda(\.min)?\.js/
+const emptyHighlightStyle = {
+  comment: '',
+  string: '',
+  number: '',
+  keyword: '',
+  operator: '',
 }
 
 export default class Log extends Emitter {
@@ -586,7 +597,7 @@ export default class Log extends Emitter {
     return args
   }
   private formatJs(val: string) {
-    return val
+    return this.console.c(highlight(val, 'js', emptyHighlightStyle))
   }
   private formatObj(val: any) {
     let type = getObjType(val)
@@ -595,15 +606,18 @@ export default class Log extends Emitter {
     return `${type} ${this.getAbstract(val)}`
   }
   private formatFn(val: any) {
-    return `<pre style="display:inline">${this.formatJs(val.toString())}</pre>`
+    return `<pre class="${this.console.c('code')}">${this.formatJs(
+      val.toString()
+    )}</pre>`
   }
-  private formatEl(val: string) {
-    return val
+  private formatEl(val: HTMLElement) {
+    const { c } = this.console
+
+    return `<pre class="${c('code')}">${c(
+      highlight(val.outerHTML, 'html', emptyHighlightStyle)
+    )}</pre>`
   }
 }
-
-const regJsUrl = /https?:\/\/([0-9.\-A-Za-z]+)(?::(\d+))?\/[A-Z.a-z0-9/]*\.js/g
-const regErudaJs = /eruda(\.min)?\.js/
 
 function correctStyle(val: string) {
   val = lowerCase(val)

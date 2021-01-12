@@ -1,7 +1,8 @@
 {
   "console": {
     "icon": true,
-    "test": true
+    "test": true,
+    "install": true
   },
   "editor": {
     "icon": true,

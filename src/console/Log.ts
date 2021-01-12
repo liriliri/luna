@@ -35,6 +35,7 @@ import highlight from 'licia/highlight'
 import { getObjType } from './util'
 import stripIndent from 'licia/stripIndent'
 import Console from './index'
+import beautify from 'js-beautify'
 
 export interface IGroup {
   id: string
@@ -308,26 +309,26 @@ export default class Log extends Emitter {
 
     switch (type) {
       case 'log':
-        msg = this._formatMsg(args)
+        msg = this.formatCommon(args)
         break
       case 'debug':
-        msg = this._formatMsg(args)
+        msg = this.formatCommon(args)
         break
       case 'dir':
         msg = this.formatDir(args)
         break
       case 'info':
-        msg = this._formatMsg(args)
+        msg = this.formatCommon(args)
         break
       case 'warn':
         icon = 'warn'
-        msg = this._formatMsg(args)
+        msg = this.formatCommon(args)
         break
       case 'error':
         if (isStr(args[0]) && args.length !== 1) args = this.substituteStr(args)
         err = args[0]
         icon = 'error'
-        err = isErr(err) ? err : new Error(this._formatMsg(args))
+        err = isErr(err) ? err : new Error(this.formatCommon(args))
         this.src = err
         msg = this.formatErr(err)
         break
@@ -342,15 +343,15 @@ export default class Log extends Emitter {
         icon = 'input'
         break
       case 'output':
-        msg = this._formatMsg(args)
+        msg = this.formatCommon(args)
         icon = 'output'
         break
       case 'groupCollapsed':
-        msg = this._formatMsg(args)
+        msg = this.formatCommon(args)
         icon = 'caret-right'
         break
       case 'group':
-        msg = this._formatMsg(args)
+        msg = this.formatCommon(args)
         icon = 'caret-down'
         break
     }
@@ -390,8 +391,7 @@ export default class Log extends Emitter {
         <div class="${c('time-from-container')}">
           <span>${data.header.time}</span> <span>${data.header.from}</span>
         </div>
-      </div>
-    `
+      </div>`
     }
 
     let icon = ''
@@ -401,7 +401,7 @@ export default class Log extends Emitter {
       )}"></span></div>`
     }
 
-    html += stripIndent`
+    html += `
     <div class="${c(data.type + ' log-item')}">
       ${indent}
       ${icon}
@@ -411,8 +411,7 @@ export default class Log extends Emitter {
       <div class="${c('log-content-wrapper')}">
         <div class="${c('log-content')}">${data.msg}</div>
       </div>
-    </div>
-  `
+    </div>`
 
     return html
   }
@@ -426,7 +425,7 @@ export default class Log extends Emitter {
     if (isStr(filter)) filter = toArr(filter)
     if (!isArr(filter)) filter = null
 
-    if (!isObj(table)) return this._formatMsg(args)
+    if (!isObj(table)) return this.formatCommon(args)
 
     each(table, (val) => {
       if (isPrimitive(val)) {
@@ -439,7 +438,7 @@ export default class Log extends Emitter {
     columns.sort()
     if (filter) columns = columns.filter((val) => contain(filter, val))
     if (columns.length > 20) columns = columns.slice(0, 20)
-    if (isEmpty(columns)) return this._formatMsg(args)
+    if (isEmpty(columns)) return this.formatCommon(args)
 
     ret += '<table><thead><tr><th>(index)</th>'
     columns.forEach(
@@ -490,7 +489,7 @@ export default class Log extends Emitter {
       )
     )
   }
-  private _formatMsg(args: any[], { htmlForEl = true } = {}) {
+  private formatCommon(args: any[], { htmlForEl = true } = {}) {
     const needStrSubstitution = isStr(args[0]) && args.length !== 1
     if (needStrSubstitution) args = this.substituteStr(args)
 
@@ -499,6 +498,7 @@ export default class Log extends Emitter {
 
       if (isEl(val) && htmlForEl) {
         args[i] = this.formatEl(val)
+        console.log(args[i])
       } else if (isFn(val)) {
         args[i] = this.formatFn(val)
       } else if (isObj(val)) {
@@ -519,7 +519,7 @@ export default class Log extends Emitter {
     )
   }
   private formatDir(args: any[]) {
-    return this._formatMsg(args, { htmlForEl: false })
+    return this.formatCommon(args, { htmlForEl: false })
   }
   private formatTableVal(val: any) {
     if (isObj(val)) return (val = '{…}')
@@ -597,7 +597,9 @@ export default class Log extends Emitter {
     return args
   }
   private formatJs(val: string) {
-    return this.console.c(highlight(val, 'js', emptyHighlightStyle))
+    return this.console.c(
+      highlight(beautify(val, { indent_size: 2 }), 'js', emptyHighlightStyle)
+    )
   }
   private formatObj(val: any) {
     let type = getObjType(val)
@@ -614,7 +616,11 @@ export default class Log extends Emitter {
     const { c } = this.console
 
     return `<pre class="${c('code')}">${c(
-      highlight(val.outerHTML, 'html', emptyHighlightStyle)
+      highlight(
+        beautify.html(val.outerHTML, { unformatted: [], indent_size: 2 }),
+        'html',
+        emptyHighlightStyle
+      )
     )}</pre>`
   }
 }

@@ -1,5 +1,11 @@
 {
   "name": "luna-console",
   "version": "0.1.0",
-  "description": "Console for logging"
+  "description": "Console for logging",
+  "dependencies": {
+    "js-beautify": "^1.13.2"
+  },
+  "devDependencies": {
+    "@types/js-beautify": "^1.13.1"
+  }
 }

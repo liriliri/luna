@@ -30,6 +30,7 @@ export default function story(name, storyFn, { readme, source } = {}) {
         each(window.components, (component) => component.destroy())
       }
       window.components = toArr(storyFn(container))
+      window.component = window.components[0]
 
       return container
     },

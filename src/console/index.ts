@@ -17,14 +17,15 @@ import toArr from 'licia/toArr'
 import keys from 'licia/keys'
 import last from 'licia/last'
 import throttle from 'licia/throttle'
-import raf from 'licia/raf'
 import xpath from 'licia/xpath'
 import lowerCase from 'licia/lowerCase'
 import dateFormat from 'licia/dateFormat'
 import isHidden from 'licia/isHidden'
 import stripIndent from 'licia/stripIndent'
+import types from 'licia/types'
 import { classPrefix } from '../share/util'
 import Component from '../share/Component'
+import raf = require('licia/raf')
 
 const u = navigator.userAgent
 const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
@@ -39,7 +40,15 @@ type AsyncItem = [
   IHeader | undefined
 ]
 
+interface IOptions {
+  maxNum?: number
+  asyncRender?: boolean
+  showHeader?: boolean
+  filter?: string | RegExp | types.AnyFn
+}
+
 export = class Console extends Component {
+  renderViewport: (options?: any) => void
   private $el: $.$
   private el: HTMLElement
   private $fakeEl: $.$
@@ -60,35 +69,31 @@ export = class Console extends Component {
   private timer: { [key: string]: number } = {}
   private counter: { [key: string]: number } = {}
   private lastLog?: Log
-  private asyncRender: boolean
   private asyncList: AsyncItem[] = []
   private asyncTimer: any = null
   private isAtBottom = true
   private groupStack = new Stack()
-  private renderViewport: (options?: any) => void
   private global: any
-  private maxNum: number
-  private showHeader = false
-  private _filter: any = 'all'
+  private options: Required<IOptions>
   constructor(
     container: HTMLElement,
     {
       maxNum = 0,
       asyncRender = true,
       showHeader = false,
-    }: {
-      maxNum?: number
-      asyncRender?: boolean
-      showHeader?: boolean
-    } = {}
+      filter = 'all',
+    }: IOptions = {}
   ) {
     super(container, { compName: 'console' })
 
     this.initTpl()
 
-    this.maxNum = maxNum
-    this.asyncRender = asyncRender
-    this.showHeader = showHeader
+    this.options = {
+      maxNum,
+      asyncRender,
+      showHeader,
+      filter,
+    }
 
     this.$el = this.find('.logs')
     this.el = this.$el.get(0) as HTMLElement
@@ -140,13 +145,23 @@ export = class Console extends Component {
   setGlobal(name: string, val: any) {
     this.global[name] = val
   }
-  setMaxNum(val: number) {
+  setOption(name: string, val: any) {
     const { logs } = this
+    const options: any = this.options
 
-    this.maxNum = val
-    if (val > 0 && logs.length > val) {
-      this.logs = logs.slice(logs.length - (val as number))
-      this.render()
+    const oldVal = options[name]
+    options[name] = val
+    this.emit('optionChange', val, oldVal)
+
+    switch (name) {
+      case 'maxNum':
+        if (val > 0 && logs.length > val) {
+          this.logs = logs.slice(logs.length - (val as number))
+          this.render()
+        }
+      case 'filter':
+        this.render()
+        break
     }
   }
   displayUnenumerable(flag: boolean) {
@@ -165,23 +180,15 @@ export = class Console extends Component {
     super.destroy()
     this.$container.off('scroll', this.onScroll)
   }
-  filter(val: any) {
-    this._filter = val
-    this.emit('filter', val)
-
-    return this.render()
-  }
   count(label = 'default') {
     const { counter } = this
 
     !isUndef(counter[label]) ? counter[label]++ : (counter[label] = 1)
 
-    return this.info(`${label}: ${counter[label]}`)
+    this.info(`${label}: ${counter[label]}`)
   }
   countReset(label = 'default') {
     this.counter[label] = 0
-
-    return this
   }
   assert(...args: any[]) {
     if (isEmpty(args)) return
@@ -191,36 +198,34 @@ export = class Console extends Component {
     if (!exp) {
       if (args.length === 0) args.unshift('console.assert')
       args.unshift('Assertion failed: ')
-      return this.insert('error', args)
+      this.insert('error', args)
     }
   }
   log(...args: any[]) {
     if (isEmpty(args)) return
 
-    return this.insert('log', args)
+    this.insert('log', args)
   }
   debug(...args: any[]) {
     if (isEmpty(args)) return
 
-    return this.insert('debug', args)
+    this.insert('debug', args)
   }
   dir(obj: any) {
     if (isUndef(obj)) return
 
-    return this.insert('dir', [obj])
+    this.insert('dir', [obj])
   }
   table(...args: any[]) {
     if (isEmpty(args)) return
 
-    return this.insert('table', args)
+    this.insert('table', args)
   }
   time(name = 'default') {
     if (this.timer[name]) {
       return this.insert('warn', [`Timer '${name}' already exists`])
     }
     this.timer[name] = perfNow()
-
-    return this
   }
   timeLog(name = 'default') {
     const startTime = this.timer[name]
@@ -229,24 +234,14 @@ export = class Console extends Component {
       return this.insert('warn', [`Timer '${name}' does not exist`])
     }
 
-    return this.info(`${name}: ${perfNow() - startTime}ms`)
+    this.info(`${name}: ${perfNow() - startTime}ms`)
   }
   timeEnd(name = 'default') {
     this.timeLog(name)
 
     delete this.timer[name]
-
-    return this
   }
-  clear() {
-    this.silentClear()
-
-    return this.insert('log', [
-      '%cConsole was cleared',
-      'color:#808080;font-style:italic;',
-    ])
-  }
-  silentClear() {
+  clear(silent = false) {
     this.logs = []
     this.displayLogs = []
     this.lastLog = undefined
@@ -259,32 +254,39 @@ export = class Console extends Component {
       this.asyncTimer = null
     }
 
-    return this.render()
+    if (silent) {
+      this.render()
+    } else {
+      this.insert('log', [
+        '%cConsole was cleared',
+        'color:#808080;font-style:italic;',
+      ])
+    }
   }
   info(...args: any[]) {
     if (isEmpty(args)) return
 
-    return this.insert('info', args)
+    this.insert('info', args)
   }
   error(...args: any[]) {
     if (isEmpty(args)) return
 
-    return this.insert('error', args)
+    this.insert('error', args)
   }
   warn(...args: any[]) {
     if (isEmpty(args)) return
 
-    return this.insert('warn', args)
+    this.insert('warn', args)
   }
   group(...args: any[]) {
-    return this.insert({
+    this.insert({
       type: 'group',
       args,
       ignoreFilter: true,
     })
   }
   groupCollapsed(...args: any[]) {
-    return this.insert({
+    this.insert({
       type: 'groupCollapsed',
       args,
       ignoreFilter: true,
@@ -311,16 +313,22 @@ export = class Console extends Component {
     }
   }
   private output(val: string) {
-    return this.insert({
+    this.insert({
       type: 'output',
       args: [val],
       ignoreFilter: true,
     })
   }
   html(...args: any) {
-    return this.insert('html', args)
+    this.insert('html', args)
   }
-  render() {
+  toggleGroup(log: Log) {
+    const { targetGroup } = log
+    ;(targetGroup as IGroup).collapsed
+      ? this.openGroup(log)
+      : this.collapseGroup(log)
+  }
+  private render() {
     const { logs } = this
 
     this.$el.html('')
@@ -331,31 +339,40 @@ export = class Console extends Component {
     for (let i = 0, len = logs.length; i < len; i++) {
       this.attachLog(logs[i])
     }
-
-    return this
   }
-  insert(type: string | InsertOptions, args?: any[]) {
+  private insert(type: string | InsertOptions, args?: any[]) {
+    const { showHeader, asyncRender } = this.options
+
     let header
-    if (this.showHeader) {
+    if (showHeader) {
       header = {
         time: getCurTime(),
         from: getFrom(),
       }
     }
 
-    if (this.asyncRender) {
+    if (asyncRender) {
       return this.insertAsync(type, args, header)
     }
 
     this.insertSync(type, args, header)
   }
-  insertAsync(type: string | InsertOptions, args?: any[], header?: IHeader) {
+  private insertAsync(
+    type: string | InsertOptions,
+    args?: any[],
+    header?: IHeader
+  ) {
     this.asyncList.push([type, args, header])
 
     this.handleAsyncList()
   }
-  insertSync(type: string | InsertOptions, args?: any[], header?: IHeader) {
+  private insertSync(
+    type: string | InsertOptions,
+    args?: any[],
+    header?: IHeader
+  ) {
     const { logs, groupStack } = this
+    const { maxNum } = this.options
 
     let options: InsertOptions
     if (isStr(type)) {
@@ -373,7 +390,7 @@ export = class Console extends Component {
       const lastLog = this.lastLog as Log
       lastLog.groupEnd()
       this.groupStack.pop()
-      return this
+      return
     }
 
     if (groupStack.size > 0) {
@@ -419,7 +436,7 @@ export = class Console extends Component {
       this.lastLog = log
     }
 
-    if (this.maxNum !== 0 && logs.length > this.maxNum) {
+    if (maxNum !== 0 && logs.length > maxNum) {
       const firstLog = logs[0]
       this.detachLog(firstLog)
       logs.shift()
@@ -428,14 +445,6 @@ export = class Console extends Component {
     this.attachLog(log)
 
     this.emit('insert', log)
-
-    return this
-  }
-  toggleGroup(log: Log) {
-    const { targetGroup } = log
-    ;(targetGroup as IGroup).collapsed
-      ? this.openGroup(log)
-      : this.collapseGroup(log)
   }
   private updateTopSpace(height: number) {
     this.topSpaceHeight = height
@@ -544,7 +553,9 @@ export = class Console extends Component {
         const [type, args, header] = asyncList.shift() as AsyncItem
         this.insertSync(type, args, header)
       }
-      if (!done) raf(() => this.handleAsyncList(timeout))
+      if (!done) {
+        raf(() => this.handleAsyncList(timeout))
+      }
     }, timeout)
   }
   private injectGlobal() {
@@ -575,16 +586,21 @@ export = class Console extends Component {
     return ret
   }
   private filterLog(log: Log) {
-    const filter = this._filter
+    const { filter } = this.options
 
     if (filter === 'all') return true
 
-    const isFilterRegExp = isRegExp(filter)
-    const isFilterFn = isFn(filter)
+    if (log.ignoreFilter) {
+      return true
+    }
 
-    if (log.ignoreFilter) return true
-    if (isFilterFn) return filter(log)
-    if (isFilterRegExp) return filter.test(lowerCase(log.text()))
+    if (isFn(filter)) {
+      return (filter as types.AnyFn)(log)
+    }
+
+    if (isRegExp(filter)) {
+      return (filter as RegExp).test(lowerCase(log.text()))
+    }
 
     return log.type === filter
   }

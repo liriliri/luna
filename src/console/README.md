@@ -42,6 +42,7 @@ console.log('luna')
 * maxNum(number): Max log number, zero means infinite.
 * asyncRender(boolean): Asynchronous rendering.
 * showHeader(boolean): Show time and from.
+* filter(string|function|regexp): Log filter.
 
 ## Api
 
@@ -49,6 +50,3 @@ console.log('luna')
 
 Evaluate JavaScript.
 
-### setMaxNum(num: number): void
-
-Set max log number.

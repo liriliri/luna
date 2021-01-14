@@ -47,7 +47,3 @@ objectViewer.set(window.navigator)
 ### set(data: object): void
 
 Set the JavaScript object to display.
-
-### destroy(): void
-
-Destroy object viewer.

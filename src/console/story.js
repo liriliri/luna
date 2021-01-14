@@ -30,11 +30,17 @@ const def = story(
 
     const asyncRender = boolean('Asynchronous Rendering', true)
     const showHeader = boolean('Show Log Time and From', false)
+    const unenumerable = boolean('Show Unenumerable', true)
+    const accessGetter = boolean('Access Getter', true)
+    const lazyEvaluation = boolean('Lazy Evaluation', true)
 
     const console = new Console(container, {
       maxNum,
       asyncRender,
       showHeader,
+      accessGetter,
+      unenumerable,
+      lazyEvaluation,
     })
 
     function logMessage() {
@@ -46,8 +52,8 @@ const def = story(
       console.dir(document.createElement('div'))
       console.time('test')
       console.timeEnd('test')
-      console.count('eruda')
-      console.count('eruda')
+      console.count('luna')
+      console.count('luna')
       console.assert(true, 'assert msg')
       var site1 = { name: 'Runoob', site: 'www.runoob.com' }
       var site2 = { name: 'Google', site: 'www.google.com' }

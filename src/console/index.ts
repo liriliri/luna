@@ -44,6 +44,9 @@ interface IOptions {
   maxNum?: number
   asyncRender?: boolean
   showHeader?: boolean
+  accessGetter?: boolean
+  unenumerable?: boolean
+  lazyEvaluation?: boolean
   filter?: string | RegExp | types.AnyFn
 }
 
@@ -82,6 +85,9 @@ export = class Console extends Component {
       asyncRender = true,
       showHeader = false,
       filter = 'all',
+      accessGetter = false,
+      unenumerable = true,
+      lazyEvaluation = true,
     }: IOptions = {}
   ) {
     super(container, { compName: 'console' })
@@ -93,6 +99,9 @@ export = class Console extends Component {
       asyncRender,
       showHeader,
       filter,
+      accessGetter,
+      unenumerable,
+      lazyEvaluation,
     }
 
     this.$el = this.find('.logs')
@@ -159,22 +168,11 @@ export = class Console extends Component {
           this.logs = logs.slice(logs.length - (val as number))
           this.render()
         }
+        break
       case 'filter':
         this.render()
         break
     }
-  }
-  displayUnenumerable(flag: boolean) {
-    Log.showUnenumerable = flag
-  }
-  displayGetterVal(flag: boolean) {
-    Log.showGetterVal = flag
-  }
-  lazyEvaluation(flag: boolean) {
-    Log.lazyEvaluation = flag
-  }
-  viewLogInSources(flag: boolean) {
-    Log.showSrcInSources = flag
   }
   destroy() {
     super.destroy()
@@ -312,13 +310,6 @@ export = class Console extends Component {
       })
     }
   }
-  private output(val: string) {
-    this.insert({
-      type: 'output',
-      args: [val],
-      ignoreFilter: true,
-    })
-  }
   html(...args: any) {
     this.insert('html', args)
   }
@@ -327,6 +318,13 @@ export = class Console extends Component {
     ;(targetGroup as IGroup).collapsed
       ? this.openGroup(log)
       : this.collapseGroup(log)
+  }
+  private output(val: string) {
+    this.insert({
+      type: 'output',
+      args: [val],
+      ignoreFilter: true,
+    })
   }
   private render() {
     const { logs } = this
@@ -372,7 +370,7 @@ export = class Console extends Component {
     header?: IHeader
   ) {
     const { logs, groupStack } = this
-    const { maxNum } = this.options
+    const { maxNum, accessGetter, unenumerable, lazyEvaluation } = this.options
 
     let options: InsertOptions
     if (isStr(type)) {
@@ -398,6 +396,9 @@ export = class Console extends Component {
     }
     extend(options, {
       id: ++id,
+      accessGetter,
+      unenumerable,
+      lazyEvaluation,
     })
 
     if (options.type === 'group' || options.type === 'groupCollapsed') {

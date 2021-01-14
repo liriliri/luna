@@ -43,8 +43,14 @@ console.log('luna')
 * asyncRender(boolean): Asynchronous rendering.
 * showHeader(boolean): Show time and from.
 * filter(string|function|regexp): Log filter.
+* accessGetter(boolean): Access getter value.
+* unenumerable(boolean): Show unenumerable properties.
 
 ## Api
+
+### log, error, info, warn, dir, time/timeLog/timeEnd, clear, count/countReset, assert, table, group/groupCollapsed/groupEnd
+
+All these methods can be used in the same way as window.console object.
 
 ### evaluate(code: string): void
 

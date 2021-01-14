@@ -52,6 +52,10 @@ console.log('luna')
 
 All these methods can be used in the same way as window.console object.
 
+### html(html: string): void
+
+Log out html content.
+
 ### evaluate(code: string): void
 
 Evaluate JavaScript.

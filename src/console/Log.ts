@@ -167,7 +167,7 @@ export default class Log extends Emitter {
     const $icon = $container.find(c('.icon-container'))
     const $count = $countContainer.find(c('.count'))
     if (count === 2) {
-      $container.rmClass(c('hidden'))
+      $countContainer.rmClass(c('hidden'))
     }
     $count.text(toStr(count))
     $icon.addClass(c('hidden'))

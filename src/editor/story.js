@@ -2,6 +2,7 @@ import 'luna-editor.css'
 import Editor from 'luna-editor.js'
 import h from 'licia/h'
 import $ from 'licia/$'
+import escape from 'licia/escape'
 import story from '../share/story'
 import readme from './README.md'
 import { text } from '@storybook/addon-knobs'
@@ -22,7 +23,7 @@ const def = story(
 
     const editorContainerA = h('div')
     $(editorContainerA).css('marginTop', 10)
-    editorContainerA.innerHTML = content.replace(/\n/g, '<br/>')
+    editorContainerA.innerHTML = escape(content).replace(/\n/g, '<br/>')
     const editorContainerB = h('div')
     $(editorContainerB).css('marginTop', 10)
     editorContainerB.innerHTML = editorContainerA.innerHTML

@@ -7,7 +7,10 @@ const upperFirst = require('licia/upperFirst')
 const each = require('licia/each')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-module.exports = function (name, { useIcon = false, dependencies = [] } = {}) {
+module.exports = function (
+  name,
+  { useIcon = false, hasStyle = true, dependencies = [] } = {}
+) {
   const postcssLoader = {
     loader: 'postcss-loader',
     options: {
@@ -22,7 +25,10 @@ module.exports = function (name, { useIcon = false, dependencies = [] } = {}) {
     },
   }
 
-  const entry = [`./src/${name}/style.scss`, `./src/${name}/index.ts`]
+  const entry = [`./src/${name}/index.ts`]
+  if (hasStyle) {
+    entry.unshift(`./src/${name}/style.scss`)
+  }
 
   if (useIcon) {
     entry.unshift(`./src/${name}/icon.css`)

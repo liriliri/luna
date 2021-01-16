@@ -1,9 +1,21 @@
-import 'contextmenu.css'
+import 'luna-contextmenu.css'
+import Contextmenu from 'luna-contextmenu.js'
+import readme from './README.md'
+import story from '../share/story'
 
-export default {
-  title: 'Contextmenu'
-}
+const def = story(
+  'contextmenu',
+  (container) => {
+    const contextmenu = new Contextmenu()
 
-export const Basic = () => {
-  return ''
-}
+    return contextmenu
+  },
+  {
+    readme,
+    source: __STORY__,
+  }
+)
+
+export default def
+
+export const { contextmenu } = def

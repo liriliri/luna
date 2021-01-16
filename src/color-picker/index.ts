@@ -1,15 +1,9 @@
 import $ from 'licia/$'
-import './style.scss'
+import Component from '../share/Component'
 
-export = class ColorPicker {
-  private $container: $.$
-  constructor(container: Element) {
+export = class ColorPicker extends Component {
+  constructor(container: HTMLElement) {
+    super(container, { compName: 'color-picker' })
     this.$container = $(container)
-
-    this.initTpl()
-  }
-  private initTpl() {
-    const { $container } = this
-    $container.html('')
   }
 }

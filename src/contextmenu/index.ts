@@ -1,8 +1,9 @@
-import './style.scss'
+import Component from '../share/Component'
 
-export = class Contextmenu {
+export = class Contextmenu extends Component {
   private menuItems: MenuItem[] = []
-  constructor(container: Element) {
+  constructor(container: HTMLElement) {
+    super(container, { compName: 'contextmenu' })
   }
   append(options: IMenuItemOptions) {
     this.menuItems.push(new MenuItem(options))

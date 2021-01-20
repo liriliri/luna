@@ -7,12 +7,12 @@ import $ from 'licia/$'
 import { px } from './util'
 
 const chartColors = {
-  red: 'rgb(255, 99, 132)',
+  primary: '#e73c5e',
+  secondary: '#614d82',
   orange: 'rgb(255, 159, 64)',
   yellow: 'rgb(255, 205, 86)',
   green: 'rgb(75, 192, 192)',
   blue: 'rgb(54, 162, 235)',
-  purple: 'rgb(153, 102, 255)',
   grey: 'rgb(201, 203, 207)',
 }
 
@@ -56,12 +56,12 @@ const def = story(
         datasets: [
           {
             label: 'Dataset 1',
-            bgColor: chartColors.red,
+            bgColor: chartColors.primary,
             data: [128, 146, 56, 84, 222],
           },
           {
             label: 'Dataset 2',
-            bgColor: chartColors.blue,
+            bgColor: chartColors.secondary,
             data: [119, 23, 98, 67, 88],
           },
         ],

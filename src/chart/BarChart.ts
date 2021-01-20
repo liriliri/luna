@@ -11,11 +11,36 @@ export default class BarChart extends BaseChart {
   private ySpace = 0
   private axisColor = '#666'
   private gridColor = '#eee'
+  private legendTextWidth = 0
   draw() {
     this.beforeDraw()
     this.drawXAxis()
     this.drawYAxis()
     this.drawBars()
+    this.drawLegend()
+  }
+  private drawLegend() {
+    const { chart } = this
+    const { ctx, canvas } = chart
+    const { datasets } = chart.getOption('data')
+
+    ctx.beginPath();
+    ctx.font = `${px(12)}px Arial`
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'middle'
+
+    const len = datasets.length
+    let x = (canvas.width - (this.legendTextWidth + (5 * len - 2) * px(10))) / 2
+    let textWidth = 0
+
+    for (let i = 0; i < len; i++) {
+      const { label, bgColor } = datasets[i]
+      ctx.fillStyle = bgColor
+      ctx.fillRect(x + 5 * px(10) * i + textWidth, px(45) - px(6), 2 * px(10), px(10))
+      ctx.fillStyle = this.axisColor
+      ctx.fillText(label, x + (5 * i + 3) * px(10) + textWidth, px(45))
+      textWidth += Math.ceil(ctx.measureText(label).width)
+    }
   }
   private beforeDraw() {
     const { chart } = this
@@ -42,6 +67,13 @@ export default class BarChart extends BaseChart {
     let pow = toStr(len).length - 1
     pow = pow > 2 ? 2 : pow
     return Math.ceil(len / Math.pow(10, pow)) * Math.pow(10, pow)
+  }
+  private drawVal(val: number, x: number, y: number) {
+    const { ctx } = this.chart
+    ctx.fillStyle = this.axisColor
+    ctx.font = `${px(12)}px Arial`
+    ctx.textAlign = 'center'
+    ctx.fillText(toStr(val), x, y)
   }
   private drawXAxis() {
     const { chart } = this
@@ -114,13 +146,15 @@ export default class BarChart extends BaseChart {
     const ratio = this.yLen / this.ySpace
 
     for (let i = 0; i < len; i++) {
-      const { bgColor, data } = datasets[i]
-      ctx.fillStyle = bgColor
+      const { bgColor, data, label } = datasets[i]
+      this.legendTextWidth += Math.ceil(ctx.measureText(label).width)
       for (let j = 0, len = data.length; j < len; j++) {
+        ctx.fillStyle = bgColor
         const x = padding.left + this.xLen * j + space * (i + 1 / 2)
         const height = data[j] * ratio
         const y = canvas.height - padding.bottom - height
         ctx.fillRect(x, y, space, height)
+        this.drawVal(data[j], x + space / 2, y - px(10))
       }
     }
   }

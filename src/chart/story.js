@@ -76,6 +76,21 @@ const def = story(
       type: 'line',
       bgColor,
       title: lineTitle,
+      data: {
+        labels: ['Monday', 'TuesDay', 'Wednesday', 'Thursday', 'Friday'],
+        datasets: [
+          {
+            label: 'Dataset 1',
+            bgColor: chartColors.primary,
+            data: [55, 106, 180, 333, 288],
+          },
+          {
+            label: 'Dataset 2',
+            bgColor: chartColors.secondary,
+            data: [125, 58, 111, 250, 365],
+          },
+        ],
+      },
     })
 
     const pieTitle = object('Pie Title', {

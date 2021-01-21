@@ -5,13 +5,13 @@ import BaseChart from './BaseChart'
 import { px } from './util'
 
 export default class BarChart extends BaseChart {
-  private yEqual = 5
-  private yLen = 0
-  private xLen = 0
-  private ySpace = 0
-  private axisColor = '#666'
-  private gridColor = '#eee'
-  private legendTextWidth = 0
+  protected yEqual = 5
+  protected yLen = 0
+  protected xLen = 0
+  protected ySpace = 0
+  protected axisColor = '#666'
+  protected gridColor = '#eee'
+  protected legendTextWidth = 0
   draw() {
     this.beforeDraw()
     this.drawXAxis()
@@ -19,30 +19,46 @@ export default class BarChart extends BaseChart {
     this.drawBars()
     this.drawLegend()
   }
-  private drawLegend() {
+  protected drawLegend() {
     const { chart } = this
     const { ctx, canvas } = chart
     const { datasets } = chart.getOption('data')
 
-    ctx.beginPath();
+    ctx.beginPath()
     ctx.font = `${px(12)}px Arial`
     ctx.textAlign = 'left'
     ctx.textBaseline = 'middle'
 
     const len = datasets.length
-    let x = (canvas.width - (this.legendTextWidth + (5 * len - 2) * px(10))) / 2
+    const x =
+      (canvas.width - (this.legendTextWidth + (5 * len - 2) * px(10))) / 2
     let textWidth = 0
 
     for (let i = 0; i < len; i++) {
       const { label, bgColor } = datasets[i]
       ctx.fillStyle = bgColor
-      ctx.fillRect(x + 5 * px(10) * i + textWidth, px(45) - px(6), 2 * px(10), px(10))
+      this.drawLegendIcon(
+        x + 5 * px(10) * i + textWidth,
+        px(45) - px(6),
+        2 * px(10),
+        px(10)
+      )
       ctx.fillStyle = this.axisColor
       ctx.fillText(label, x + (5 * i + 3) * px(10) + textWidth, px(45))
       textWidth += Math.ceil(ctx.measureText(label).width)
     }
   }
-  private beforeDraw() {
+  protected drawLegendIcon(
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) {
+    const { ctx } = this.chart
+
+    ctx.fillRect(x, y, width, height)
+  }
+  protected beforeDraw() {
     const { chart } = this
     const { width, height } = chart.canvas
     const padding = chart.getOption('padding')
@@ -68,14 +84,14 @@ export default class BarChart extends BaseChart {
     pow = pow > 2 ? 2 : pow
     return Math.ceil(len / Math.pow(10, pow)) * Math.pow(10, pow)
   }
-  private drawVal(val: number, x: number, y: number) {
+  protected drawVal(val: number, x: number, y: number) {
     const { ctx } = this.chart
     ctx.fillStyle = this.axisColor
     ctx.font = `${px(12)}px Arial`
     ctx.textAlign = 'center'
     ctx.fillText(toStr(val), x, y)
   }
-  private drawXAxis() {
+  protected drawXAxis() {
     const { chart } = this
     const { ctx, canvas } = chart
     const padding = chart.getOption('padding')
@@ -106,7 +122,7 @@ export default class BarChart extends BaseChart {
       ctx.fillText(text, x - this.xLen / 2, y + px(5))
     }
   }
-  private drawYAxis() {
+  protected drawYAxis() {
     const { chart, yEqual } = this
     const { ctx, canvas } = chart
     const padding = chart.getOption('padding')

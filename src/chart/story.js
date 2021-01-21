@@ -9,11 +9,9 @@ import { px } from './util'
 const chartColors = {
   primary: '#e73c5e',
   secondary: '#614d82',
-  orange: 'rgb(255, 159, 64)',
-  yellow: 'rgb(255, 205, 86)',
-  green: 'rgb(75, 192, 192)',
-  blue: 'rgb(54, 162, 235)',
-  grey: 'rgb(201, 203, 207)',
+  orange: '#EB3D21',
+  blue: '#3473FF',
+  green: '#00864B',
 }
 
 const def = story(
@@ -101,6 +99,21 @@ const def = story(
       type: 'pie',
       bgColor,
       title: pieTitle,
+      data: {
+        labels: ['Monday', 'TuesDay', 'Wednesday', 'Thursday', 'Friday'],
+        datasets: [
+          {
+            bgColor: [
+              chartColors.primary,
+              chartColors.secondary,
+              chartColors.orange,
+              chartColors.blue,
+              chartColors.green,
+            ],
+            data: [55, 106, 180, 333, 288],
+          },
+        ],
+      },
     })
 
     const ringTitle = object('Ring Title', {
@@ -111,6 +124,19 @@ const def = story(
       type: 'ring',
       bgColor,
       title: ringTitle,
+      data: {
+        labels: ['Red', 'Purple', 'Blue'],
+        datasets: [
+          {
+            bgColor: [
+              chartColors.primary,
+              chartColors.secondary,
+              chartColors.blue,
+            ],
+            data: [300, 50, 100],
+          },
+        ],
+      },
     })
 
     return [barChart, lineChart, pieChart, ringChart]

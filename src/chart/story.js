@@ -44,99 +44,103 @@ const def = story(
     const barTitle = object('Bar Title', {
       text: 'Bar Chart',
     })
+    const barData = object('Bar Data', {
+      labels: ['Monday', 'TuesDay', 'Wednesday', 'Thursday', 'Friday'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          bgColor: chartColors.primary,
+          data: [128, 146, 56, 84, 222],
+        },
+        {
+          label: 'Dataset 2',
+          bgColor: chartColors.secondary,
+          data: [119, 23, 98, 67, 88],
+        },
+      ],
+    })
 
     const barChart = new Chart(createCanvas(), {
       type: 'bar',
       bgColor,
       title: barTitle,
-      data: {
-        labels: ['Monday', 'TuesDay', 'Wednesday', 'Thursday', 'Friday'],
-        datasets: [
-          {
-            label: 'Dataset 1',
-            bgColor: chartColors.primary,
-            data: [128, 146, 56, 84, 222],
-          },
-          {
-            label: 'Dataset 2',
-            bgColor: chartColors.secondary,
-            data: [119, 23, 98, 67, 88],
-          },
-        ],
-      },
+      data: barData,
     })
 
     const lineTitle = object('Line Title', {
       text: 'Line Chart',
+    })
+    const lineData = object('Line Data', {
+      labels: ['Monday', 'TuesDay', 'Wednesday', 'Thursday', 'Friday'],
+      datasets: [
+        {
+          label: 'Dataset 1',
+          bgColor: chartColors.primary,
+          data: [55, 106, 180, 333, 288],
+        },
+        {
+          label: 'Dataset 2',
+          bgColor: chartColors.secondary,
+          data: [125, 58, 111, 250, 365],
+        },
+      ],
     })
 
     const lineChart = new Chart(createCanvas(), {
       type: 'line',
       bgColor,
       title: lineTitle,
-      data: {
-        labels: ['Monday', 'TuesDay', 'Wednesday', 'Thursday', 'Friday'],
-        datasets: [
-          {
-            label: 'Dataset 1',
-            bgColor: chartColors.primary,
-            data: [55, 106, 180, 333, 288],
-          },
-          {
-            label: 'Dataset 2',
-            bgColor: chartColors.secondary,
-            data: [125, 58, 111, 250, 365],
-          },
-        ],
-      },
+      data: lineData,
     })
 
     const pieTitle = object('Pie Title', {
       text: 'Pie Chart',
+    })
+    const pieData = object('Pie Data', {
+      labels: ['Monday', 'TuesDay', 'Wednesday', 'Thursday', 'Friday'],
+      datasets: [
+        {
+          bgColor: [
+            chartColors.primary,
+            chartColors.secondary,
+            chartColors.orange,
+            chartColors.blue,
+            chartColors.green,
+          ],
+          data: [55, 106, 180, 333, 288],
+        },
+      ],
     })
 
     const pieChart = new Chart(createCanvas(), {
       type: 'pie',
       bgColor,
       title: pieTitle,
-      data: {
-        labels: ['Monday', 'TuesDay', 'Wednesday', 'Thursday', 'Friday'],
-        datasets: [
-          {
-            bgColor: [
-              chartColors.primary,
-              chartColors.secondary,
-              chartColors.orange,
-              chartColors.blue,
-              chartColors.green,
-            ],
-            data: [55, 106, 180, 333, 288],
-          },
-        ],
-      },
+      data: pieData,
     })
 
     const ringTitle = object('Ring Title', {
       text: 'Ring Chart',
+    })
+    const ringData = object('Ring Data', {
+      labels: ['Red', 'Purple', 'Blue'],
+      datasets: [
+        {
+          bgColor: [
+            chartColors.primary,
+            chartColors.secondary,
+            chartColors.blue,
+          ],
+          data: [300, 50, 100],
+        },
+      ],
     })
 
     const ringChart = new Chart(createCanvas(), {
       type: 'ring',
       bgColor,
       title: ringTitle,
-      data: {
-        labels: ['Red', 'Purple', 'Blue'],
-        datasets: [
-          {
-            bgColor: [
-              chartColors.primary,
-              chartColors.secondary,
-              chartColors.blue,
-            ],
-            data: [300, 50, 100],
-          },
-        ],
-      },
+      data: ringData,
     })
 
     return [barChart, lineChart, pieChart, ringChart]

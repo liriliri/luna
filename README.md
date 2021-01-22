@@ -14,6 +14,7 @@ Yet another UI library.
 
 ## Components
 
+* [chart](./src/chart/README.md): HTML5 charts.
 * [console](./src/console/README.md): Console for logging.
 * [editor](./src/editor/README.md): Wysiwyg editor.
 * [json-editor](./src/json-editor/README.md): JSON editor.

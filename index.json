@@ -1,10 +1,13 @@
 {
-  "chart": {},
+  "chart": {
+    "test": true
+  },
   "console": {
     "icon": true,
     "test": true,
     "install": true
   },
+  "cropper": {},
   "editor": {
     "icon": true,
     "test": true

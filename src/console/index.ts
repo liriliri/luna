@@ -264,7 +264,7 @@ export = class Console extends Component {
   info(...args: any[]) {
     if (isEmpty(args)) return
 
-    this.insert('info', args)
+    this.insert('log', args)
   }
   error(...args: any[]) {
     if (isEmpty(args)) return

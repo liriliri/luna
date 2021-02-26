@@ -81,10 +81,7 @@ const def = story(
     logMessage()
 
     const code = text('JavaScript', '1 + 2')
-    button('Evaluate', () => {
-      console.evaluate(code)
-      return false
-    })
+    console.evaluate(code)
 
     button('Log Message', () => {
       logMessage()

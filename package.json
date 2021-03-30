@@ -12,8 +12,8 @@
     "lint": "luna lint",
     "build": "luna build",
     "format": "lsla prettier \"src/share/*.{ts,js,scss}\" \"*.{json,js}\" \"bin/*.js\" \".storybook/*.js\" --write",
-    "storybook": "start-storybook -p 3000",
-    "build-storybook": "build-storybook -o .storybook/out"
+    "storybook": "start-storybook -s ./public -p 3000",
+    "build-storybook": "build-storybook -s public -o .storybook/out"
   },
   "repository": {
     "type": "git",

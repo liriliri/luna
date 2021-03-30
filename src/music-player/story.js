@@ -24,19 +24,19 @@ const def = story(
     const audio = object('Audio', [
       {
         url: 'https://test.surunzi.com/audio/Get_along.mp3',
-        cover: 'https://test.surunzi.com/audio/Get_along.jpg',
+        cover: '/getAlong.jpg',
         title: 'Get Along',
         artist: '林原めぐみ',
       },
       {
         url: 'https://test.surunzi.com/audio/Give_a_reason.mp3',
-        cover: 'https://test.surunzi.com/audio/Give_a_reason.jpg',
+        cover: '/giveAReason.jpg',
         title: 'Give a Reason',
         artist: '林原めぐみ',
       },
       {
         url: 'https://test.surunzi.com/audio/Breeze.mp3',
-        cover: 'https://test.surunzi.com/audio/Breeze.jpg',
+        cover: '/breeze.jpg',
         title: 'Breeze',
         artist: '林原めぐみ',
       },

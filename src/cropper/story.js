@@ -8,10 +8,12 @@ const def = story(
   'cropper',
   (container) => {
     $(container).css({
-      aspectRatio: '1920/1080',
+      aspectRatio: '1',
     })
 
-    const cropper = new Cropper(container)
+    const cropper = new Cropper(container, {
+      url: '/wallpaper.jpg',
+    })
 
     return cropper
   },

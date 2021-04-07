@@ -26,7 +26,13 @@ interface ICanvasData {
 interface IContainerData {
   width: number
   height: number
-  ratio: number
+}
+
+interface ICropBoxData {
+  left: number
+  top: number
+  width: number
+  height: number
 }
 
 export = class Cropper extends Component {
@@ -36,7 +42,6 @@ export = class Cropper extends Component {
   private containerData: IContainerData = {
     width: 0,
     height: 0,
-    ratio: 0,
   }
   private imageData: IImageData = {
     image: new Image(),
@@ -50,7 +55,14 @@ export = class Cropper extends Component {
     width: 0,
     height: 0,
   }
+  private cropBoxData: ICropBoxData = {
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
+  }
   private $canvas: $.$
+  private $cropBox: $.$
   constructor(container: HTMLElement, { url }: IOptions) {
     super(container, { compName: 'cropper' })
 
@@ -63,6 +75,7 @@ export = class Cropper extends Component {
     this.updateContainerData()
     this.initTpl()
     this.$canvas = this.find('.canvas')
+    this.$cropBox = this.find('.crop-box')
 
     this.bindEvent()
 
@@ -88,6 +101,8 @@ export = class Cropper extends Component {
     this.updateContainerData()
     this.resetCanvasData()
     this.updateCanvas()
+    this.resetCropBoxData()
+    this.updateCropBox()
   }
   private load(url: string) {
     const { image } = this.imageData
@@ -99,12 +114,33 @@ export = class Cropper extends Component {
         height: image.height,
         ratio: image.width / image.height,
       })
-      this.resetCanvasData()
+      this.reset()
     }
     image.src = url
   }
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
+  }
+  private resetCropBoxData() {
+    const { canvasData } = this
+
+    const left = canvasData.width / 8 + canvasData.left
+    const top = canvasData.height / 8 + canvasData.top
+
+    extend(this.cropBoxData, {
+      left,
+      top,
+      width: canvasData.width - canvasData.width / 4,
+      height: canvasData.height - canvasData.height / 4,
+    })
+  }
+  private updateCropBox() {
+    const { left, top, width, height } = this.cropBoxData
+    this.$cropBox.css({
+      width: round(width),
+      height: round(height),
+      transform: `translateX(${round(left)}px) translateY(${round(top)}px)`,
+    })
   }
   private resetCanvasData() {
     const { imageData, containerData } = this
@@ -141,7 +177,6 @@ export = class Cropper extends Component {
     extend(this.containerData, {
       width,
       height,
-      ratio: width / height,
     })
   }
   private initTpl() {
@@ -153,7 +188,25 @@ export = class Cropper extends Component {
           </div>
         </div>
         <div class="drag-box"></div>
-        <div class="crop-box"></div>
+        <div class="crop-box" style="width: 554.8px; height: 312.075px; transform: translateX(29.1px) translateY(56.775px);">
+          <span class="view-box"></span>
+          <span class="dashed dashed-h"></span>
+          <span class="dashed dashed-v"></span>
+          <span class="center"></span>
+          <span class="face"></span>
+          <span class="line line-e"></span>
+          <span class="line line-n"></span>
+          <span class="line line-w"></span>
+          <span class="line line-s"></span>
+          <span class="point point-e"></span>
+          <span class="point point-n"></span>
+          <span class="point point-w"></span>
+          <span class="point point-s"></span>
+          <span class="point point-ne"></span>
+          <span class="point point-nw"></span>
+          <span class="point point-sw"></span>
+          <span class="point point-se"></span>
+        </div>
       `)
     )
   }

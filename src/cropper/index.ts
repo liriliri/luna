@@ -193,7 +193,6 @@ export = class Cropper extends Component {
           <span class="dashed dashed-h"></span>
           <span class="dashed dashed-v"></span>
           <span class="center"></span>
-          <span class="face"></span>
           <span class="line line-e"></span>
           <span class="line line-n"></span>
           <span class="line line-w"></span>

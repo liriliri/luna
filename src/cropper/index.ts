@@ -4,7 +4,6 @@ import $ from 'licia/$'
 import extend from 'licia/extend'
 import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
-import clone from 'licia/clone'
 
 interface IOptions {
   url: string
@@ -59,7 +58,7 @@ export = class Cropper extends Component {
       url,
     }
     this.resizeSensor = new ResizeSensor(container)
-    this.onResize = throttle(() => this._onResize(), 16)
+    this.onResize = throttle(() => this.reset(), 16)
 
     this.updateContainerData()
     this.initTpl()
@@ -85,6 +84,11 @@ export = class Cropper extends Component {
     super.destroy()
     this.resizeSensor.destroy()
   }
+  reset() {
+    this.updateContainerData()
+    this.resetCanvasData()
+    this.updateCanvas()
+  }
   private load(url: string) {
     const { image } = this.imageData
     this.$canvas.find('img').attr('src', url)
@@ -95,34 +99,14 @@ export = class Cropper extends Component {
         height: image.height,
         ratio: image.width / image.height,
       })
-      this.initCanvasData()
-      this.updateCanvas()
+      this.resetCanvasData()
     }
     image.src = url
   }
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
   }
-  private _onResize = () => {
-    const { containerData, canvasData, imageData } = this
-    const oldContainerData = clone(containerData)
-    this.updateContainerData()
-
-    if (containerData.width !== oldContainerData.width) {
-      const ratio = containerData.width / oldContainerData.width
-      canvasData.left *= ratio
-      canvasData.width *= ratio
-      canvasData.height = canvasData.width / imageData.ratio
-    }
-
-    if (containerData.height !== oldContainerData.height) {
-      const ratio = containerData.height / oldContainerData.height
-      canvasData.top *= ratio
-    }
-
-    this.updateCanvas()
-  }
-  private initCanvasData() {
+  private resetCanvasData() {
     const { imageData, containerData } = this
 
     let width = imageData.width

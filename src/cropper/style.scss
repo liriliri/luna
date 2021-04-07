@@ -3,15 +3,25 @@
   position: relative;
 }
 
-.wrap-box {
+.wrap-box,
+.drag-box {
   position: absolute;
-  overflow: hidden;
   left: 0;
   top: 0;
   bottom: 0;
   right: 0;
+}
+
+.wrap-box {
+  overflow: hidden;
   img {
     width: 100%;
     height: 100%;
   }
+}
+
+.drag-box {
+  cursor: crosshair;
+  background: #000;
+  opacity: 0.5;
 }

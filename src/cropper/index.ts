@@ -4,6 +4,9 @@ import $ from 'licia/$'
 import extend from 'licia/extend'
 import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
+import { drag } from '../share/util'
+
+const $document = $(document as any)
 
 interface IOptions {
   url: string
@@ -119,8 +122,23 @@ export = class Cropper extends Component {
     }
     image.src = url
   }
+
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
+    this.$container.on(drag('start'), this.onCropStart)
+  }
+  private onCropStart = () => {
+    console.log('crop start')
+    $document.on(drag('move'), this.onCropMove)
+    $document.on(drag('end'), this.onCropEnd)
+  }
+  private onCropMove = () => {
+    console.log('crop move')
+  }
+  private onCropEnd = () => {
+    console.log('crop end')
+    $document.off(drag('move'), this.onCropMove)
+    $document.off(drag('end'), this.onCropEnd)
   }
   private resetCropBoxData() {
     const { canvasData } = this
@@ -199,7 +217,7 @@ export = class Cropper extends Component {
         <div class="drag-box"></div>
         <div class="crop-box" style="width: 554.8px; height: 312.075px; transform: translateX(29.1px) translateY(56.775px);">
           <span class="view-box">
-            <img></img>
+            <img draggable="false"></img>
           </span>
           <span class="dashed dashed-h"></span>
           <span class="dashed dashed-v"></span>

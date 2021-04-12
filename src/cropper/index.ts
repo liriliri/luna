@@ -214,7 +214,7 @@ export = class Cropper extends Component {
             <img></img>
           </div>
         </div>
-        <div class="drag-box"></div>
+        <div class="drag-box" data-action="crop"></div>
         <div class="crop-box" style="width: 554.8px; height: 312.075px; transform: translateX(29.1px) translateY(56.775px);">
           <span class="view-box">
             <img draggable="false"></img>
@@ -222,18 +222,19 @@ export = class Cropper extends Component {
           <span class="dashed dashed-h"></span>
           <span class="dashed dashed-v"></span>
           <span class="center"></span>
-          <span class="line line-e"></span>
-          <span class="line line-n"></span>
-          <span class="line line-w"></span>
-          <span class="line line-s"></span>
-          <span class="point point-e"></span>
-          <span class="point point-n"></span>
-          <span class="point point-w"></span>
-          <span class="point point-s"></span>
-          <span class="point point-ne"></span>
-          <span class="point point-nw"></span>
-          <span class="point point-sw"></span>
-          <span class="point point-se"></span>
+          <span class="face" data-action="all"></span>
+          <span class="line line-e" data-action="e"></span>
+          <span class="line line-n" data-action="n"></span>
+          <span class="line line-w" data-action="w"></span>
+          <span class="line line-s" data-action="s"></span>
+          <span class="point point-e" data-action="e"></span>
+          <span class="point point-n" data-action="n"></span>
+          <span class="point point-w" data-action="w"></span>
+          <span class="point point-s" data-action="s"></span>
+          <span class="point point-ne" data-action="ne"></span>
+          <span class="point point-nw" data-action="nw"></span>
+          <span class="point point-sw" data-action="sw"></span>
+          <span class="point point-se" data-action="se"></span>
         </div>
       `)
     )

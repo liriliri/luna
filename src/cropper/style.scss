@@ -38,6 +38,7 @@
   width: 100%;
 }
 
+.face,
 .line,
 .point {
   display: block;
@@ -96,6 +97,13 @@
     top: 0;
     width: calc(100% / 3);
   }
+}
+
+.face {
+  background-color: #fff;
+  left: 0;
+  top: 0;
+  cursor: move;
 }
 
 .line {

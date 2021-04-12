@@ -3,6 +3,7 @@
 .luna-cropper {
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC');
   position: relative;
+  user-select: none;
 }
 
 .wrap-box,
@@ -27,9 +28,6 @@
   cursor: crosshair;
   background: #000;
   opacity: 0.5;
-}
-
-.crop-box {
 }
 
 .view-box {
@@ -59,7 +57,7 @@
   width: 0;
   &::before,
   &::after {
-    background-color: $secondary-color;
+    background-color: #fff;
     content: ' ';
     display: block;
     position: absolute;
@@ -79,7 +77,7 @@
 }
 
 .dashed {
-  border: 0 dashed $secondary-color;
+  border: 0 dashed #fff;
   display: block;
   position: absolute;
   &.dashed-h {

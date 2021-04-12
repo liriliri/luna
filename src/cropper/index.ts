@@ -107,6 +107,7 @@ export = class Cropper extends Component {
   private load(url: string) {
     const { image } = this.imageData
     this.$canvas.find('img').attr('src', url)
+    this.$cropBox.find('img').attr('src', url)
 
     image.onload = () => {
       extend(this.imageData, {
@@ -135,11 +136,19 @@ export = class Cropper extends Component {
     })
   }
   private updateCropBox() {
-    const { left, top, width, height } = this.cropBoxData
+    const { cropBoxData, canvasData } = this
+    const { left, top, width, height } = cropBoxData
     this.$cropBox.css({
       width: round(width),
       height: round(height),
       transform: `translateX(${round(left)}px) translateY(${round(top)}px)`,
+    })
+    this.$cropBox.find('img').css({
+      width: round(canvasData.width),
+      height: round(canvasData.height),
+      transform: `translateX(${-round(left)}px) translateY(${-round(
+        top - canvasData.top
+      )}px)`,
     })
   }
   private resetCanvasData() {
@@ -189,7 +198,9 @@ export = class Cropper extends Component {
         </div>
         <div class="drag-box"></div>
         <div class="crop-box" style="width: 554.8px; height: 312.075px; transform: translateX(29.1px) translateY(56.775px);">
-          <span class="view-box"></span>
+          <span class="view-box">
+            <img></img>
+          </span>
           <span class="dashed dashed-h"></span>
           <span class="dashed dashed-v"></span>
           <span class="center"></span>

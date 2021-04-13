@@ -136,51 +136,52 @@
 
 .point {
   background-color: $primary-color;
-  height: 5px;
-  opacity: 0.75;
-  width: 5px;
+  border: 2px solid #fff;
+  height: 6px;
+  opacity: 1;
+  width: 6px;
   &.point-e {
     cursor: ew-resize;
-    margin-top: -3px;
-    right: -3px;
+    margin-top: -5px;
+    right: -5px;
     top: 50%;
   }
   &.point-n {
     cursor: ns-resize;
     left: 50%;
-    margin-left: -3px;
-    top: -3px;
+    margin-left: -5px;
+    top: -5px;
   }
   &.point-w {
     cursor: ew-resize;
-    left: -3px;
-    margin-top: -3px;
+    left: -5px;
+    margin-top: -5px;
     top: 50%;
   }
   &.point-s {
-    bottom: -3px;
+    bottom: -5px;
     cursor: s-resize;
     left: 50%;
-    margin-left: -3px;
+    margin-left: -5px;
   }
   &.point-ne {
     cursor: nesw-resize;
-    right: -3px;
-    top: -3px;
+    right: -5px;
+    top: -5px;
   }
   &.point-nw {
     cursor: nwse-resize;
-    left: -3px;
-    top: -3px;
+    left: -5px;
+    top: -5px;
   }
   &.point-sw {
-    bottom: -3px;
+    bottom: -5px;
     cursor: nesw-resize;
-    left: -3px;
+    left: -5px;
   }
   &.point-se {
-    bottom: -3px;
+    bottom: -5px;
     cursor: nwse-resize;
-    right: -3px;
+    right: -5px;
   }
 }

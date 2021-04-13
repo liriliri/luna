@@ -4,7 +4,9 @@ import $ from 'licia/$'
 import extend from 'licia/extend'
 import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
-import { drag } from '../share/util'
+import clone from 'licia/clone'
+import max from 'licia/max'
+import { drag, eventClient } from '../share/util'
 
 const $document = $(document as any)
 
@@ -64,10 +66,16 @@ export = class Cropper extends Component {
     width: 0,
     height: 0,
   }
+  private oldCropBoxData: ICropBoxData
   private $canvas: $.$
   private $cropBox: $.$
+  private action: string = ''
+  private startX: number = 0
+  private startY: number = 0
   constructor(container: HTMLElement, { url }: IOptions) {
     super(container, { compName: 'cropper' })
+
+    this.oldCropBoxData = this.cropBoxData
 
     this.options = {
       url,
@@ -127,13 +135,79 @@ export = class Cropper extends Component {
     this.resizeSensor.addListener(this.onResize)
     this.$container.on(drag('start'), this.onCropStart)
   }
-  private onCropStart = () => {
-    console.log('crop start')
+  private onCropStart = (e: any) => {
+    e = e.origEvent
+    this.action = $(e.target).data('action')
+    this.startX = eventClient('x', e)
+    this.startY = eventClient('y', e)
+    this.oldCropBoxData = clone(this.cropBoxData)
     $document.on(drag('move'), this.onCropMove)
     $document.on(drag('end'), this.onCropEnd)
   }
-  private onCropMove = () => {
-    console.log('crop move')
+  private onCropMove = (e: any) => {
+    e = e.origEvent
+    const { action, canvasData, oldCropBoxData } = this
+    let { left, top, width, height } = oldCropBoxData
+    const deltaX = eventClient('x', e) - this.startX
+    const deltaY = eventClient('y', e) - this.startY
+    const minSize = 10
+    const minLeft = canvasData.left
+    const minTop = canvasData.top
+    const maxLeft = canvasData.left + canvasData.width
+    const maxTop = canvasData.top + canvasData.height
+    let fixedLeft = false
+    let fixedTop = false
+    let fixedWidth = false
+    let fixedHeight = false
+
+    switch (action) {
+      case 'all':
+        left += deltaX
+        top += deltaY
+        fixedWidth = true
+        fixedHeight = true
+        break
+      case 'e':
+        width += deltaX
+        width = max(minSize, width)
+        fixedLeft = true
+        break
+      case 'w':
+        left += deltaX
+        width -= deltaX
+        break
+      case 's':
+        height += deltaY
+        height = max(minSize, height)
+        fixedTop = true
+        break
+    }
+
+    left = max(minLeft, left)
+    top = max(minTop, top)
+    if (left + width > maxLeft) {
+      if (fixedWidth) {
+        left = maxLeft - width
+      } else {
+        width = maxLeft - left
+      }
+    }
+    if (top + height > maxTop) {
+      if (fixedHeight) {
+        top = maxTop - height
+      } else {
+        height = maxTop - top
+      }
+    }
+
+    extend(this.cropBoxData, {
+      left,
+      top,
+      width,
+      height,
+    })
+
+    this.updateCropBox()
   }
   private onCropEnd = () => {
     console.log('crop end')

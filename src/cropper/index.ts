@@ -6,6 +6,7 @@ import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
 import clone from 'licia/clone'
 import max from 'licia/max'
+import contain from 'licia/contain'
 import { drag, eventClient } from '../share/util'
 
 const $document = $(document as any)
@@ -138,6 +139,7 @@ export = class Cropper extends Component {
   private onCropStart = (e: any) => {
     e = e.origEvent
     this.action = $(e.target).data('action')
+    this.$container.addClass(this.c(`cursor-${this.action}`))
     this.startX = eventClient('x', e)
     this.startY = eventClient('y', e)
     this.oldCropBoxData = clone(this.cropBoxData)
@@ -147,7 +149,11 @@ export = class Cropper extends Component {
   private onCropMove = (e: any) => {
     e = e.origEvent
     const { action, canvasData, oldCropBoxData } = this
-    let { left, top, width, height } = oldCropBoxData
+    const { left, top, width, height } = oldCropBoxData
+    let newLeft = left
+    let newTop = top
+    let newWidth = width
+    let newHeight = height
     const deltaX = eventClient('x', e) - this.startX
     const deltaY = eventClient('y', e) - this.startY
     const minSize = 10
@@ -155,62 +161,272 @@ export = class Cropper extends Component {
     const minTop = canvasData.top
     const maxLeft = canvasData.left + canvasData.width
     const maxTop = canvasData.top + canvasData.height
-    let fixedLeft = false
-    let fixedTop = false
-    let fixedWidth = false
-    let fixedHeight = false
 
     switch (action) {
       case 'all':
-        left += deltaX
-        top += deltaY
-        fixedWidth = true
-        fixedHeight = true
+        newLeft += deltaX
+        newTop += deltaY
+        newLeft = max(minLeft, newLeft)
+        newTop = max(minTop, newTop)
+        if (newLeft + width > maxLeft) {
+          newLeft = maxLeft - width
+        }
+        if (newTop + height > maxTop) {
+          newTop = maxTop - height
+        }
         break
       case 'e':
-        width += deltaX
-        width = max(minSize, width)
-        fixedLeft = true
-        break
-      case 'w':
-        left += deltaX
-        width -= deltaX
+        newWidth += deltaX
+        newWidth = max(minSize, newWidth)
+        if (left + newWidth > maxLeft) {
+          newWidth = maxLeft - left
+        }
         break
       case 's':
-        height += deltaY
-        height = max(minSize, height)
-        fixedTop = true
+        newHeight += deltaY
+        newHeight = max(minSize, newHeight)
+        if (top + newHeight > maxTop) {
+          newHeight = maxTop - top
+        }
+        break
+      case 'w':
+        if (left + deltaX < minLeft) {
+          newWidth -= minLeft - left
+          newLeft = minLeft
+        } else if (width - deltaX < minSize) {
+          newLeft = left + width - minSize
+          newWidth = minSize
+        } else {
+          newLeft += deltaX
+          newWidth -= deltaX
+        }
+        break
+      case 'n':
+        if (top + deltaY < minTop) {
+          newHeight -= minTop - top
+          newTop = minTop
+        } else if (height - deltaY < minSize) {
+          newTop = top + height - minSize
+          newHeight = minSize
+        } else {
+          newTop += deltaY
+          newHeight -= deltaY
+        }
         break
     }
 
-    left = max(minLeft, left)
-    top = max(minTop, top)
-    if (left + width > maxLeft) {
-      if (fixedWidth) {
-        left = maxLeft - width
-      } else {
-        width = maxLeft - left
-      }
-    }
-    if (top + height > maxTop) {
-      if (fixedHeight) {
-        top = maxTop - height
-      } else {
-        height = maxTop - top
+    if (contain(['nw', 'ne', 'sw', 'se'], action)) {
+      const useDeltaX = this.isDeltaXUsed(deltaX, deltaY, action)
+      const ratio = width / height
+
+      switch (action) {
+        case 'nw':
+          if (useDeltaX) {
+            newWidth = width - deltaX
+            newHeight = newWidth / ratio
+          } else {
+            newHeight = height - deltaY
+            newWidth = newHeight * ratio
+          }
+          newLeft = left + width - newWidth
+          newTop = top + height - newHeight
+          if (newLeft < minLeft) {
+            newLeft = minLeft
+            newWidth = left - minLeft + width
+            newHeight = newWidth / ratio
+            newTop = top + height - newHeight
+          }
+          if (newTop < minTop) {
+            newTop = minTop
+            newHeight = top - minTop + height
+            newWidth = newHeight * ratio
+            newLeft = left + width - newWidth
+          }
+          if (newWidth < minSize) {
+            newWidth = minSize
+            newHeight = newWidth / ratio
+            newLeft = left + width - newWidth
+            newTop = top + height - newHeight
+          }
+          if (newHeight < minSize) {
+            newHeight = minSize
+            newWidth = newHeight * ratio
+            newLeft = left + width - newWidth
+            newTop = top + height - newHeight
+          }
+          break
+        case 'ne':
+          newLeft = left
+          if (useDeltaX) {
+            newWidth = width + deltaX
+            newHeight = newWidth / ratio
+          } else {
+            newHeight = height - deltaY
+            newWidth = newHeight * ratio
+          }
+          newTop = top + height - newHeight
+          if (newTop < minTop) {
+            newTop = minTop
+            newHeight = top - minTop + height
+            newWidth = newHeight * ratio
+          }
+          if (newWidth < minSize) {
+            newWidth = minSize
+            newHeight = newWidth / ratio
+            newTop = top + height - newHeight
+          }
+          if (newHeight < minSize) {
+            newHeight = minSize
+            newWidth = newHeight * ratio
+            newTop = top + height - newHeight
+          }
+          if (newLeft + newWidth > maxLeft) {
+            newWidth = maxLeft - newLeft
+            newHeight = newWidth / ratio
+            newTop = top + height - newHeight
+          }
+          break
+        case 'sw':
+          newTop = top
+          if (useDeltaX) {
+            newWidth = width - deltaX
+            newHeight = newWidth / ratio
+          } else {
+            newHeight = height + deltaY
+            newWidth = newHeight * ratio
+          }
+          newLeft = left + width - newWidth
+          if (newLeft < minLeft) {
+            newLeft = minLeft
+            newWidth = left - minLeft + width
+            newHeight = newWidth / ratio
+          }
+          if (newWidth < minSize) {
+            newWidth = minSize
+            newHeight = newWidth / ratio
+            newLeft = left + width - newWidth
+          }
+          if (newHeight < minSize) {
+            newHeight = minSize
+            newWidth = newHeight * ratio
+            newLeft = left + width - newWidth
+          }
+          if (newTop + newHeight > maxTop) {
+            newHeight = maxTop - newTop
+            newWidth = newHeight * ratio
+            newLeft = left + width - newWidth
+          }
+          break
+        case 'se':
+          newLeft = left
+          newTop = top
+          if (useDeltaX) {
+            newWidth = width + deltaX
+            newHeight = newWidth / ratio
+          } else {
+            newHeight = height + deltaY
+            newWidth = newHeight * ratio
+          }
+          if (newWidth < minSize) {
+            newWidth = minSize
+            newHeight = newWidth / ratio
+          }
+          if (newHeight < minSize) {
+            newHeight = minSize
+            newWidth = newHeight * ratio
+          }
+          if (newLeft + newWidth > maxLeft) {
+            newWidth = maxLeft - newLeft
+            newHeight = newWidth / ratio
+          }
+          if (newTop + newHeight > maxTop) {
+            newHeight = maxTop - newTop
+            newWidth = newHeight * ratio
+          }
+          break
       }
     }
 
     extend(this.cropBoxData, {
-      left,
-      top,
-      width,
-      height,
+      left: newLeft,
+      top: newTop,
+      width: newWidth,
+      height: newHeight,
     })
 
     this.updateCropBox()
   }
-  private onCropEnd = () => {
-    console.log('crop end')
+  private isDeltaXUsed(deltaX: number, deltaY: number, action: string) {
+    let { width, height } = this.oldCropBoxData
+    const ratio = width / height
+
+    let absDeltaX = abs(deltaX),
+      absDeltaY = abs(deltaY),
+      absDeltaYX = absDeltaY * ratio,
+      absDeltaXY = absDeltaX / ratio
+
+    switch (action) {
+      case 'nw':
+        if (deltaX < 0) {
+          if (deltaY > 0) {
+            return true
+          } else {
+            return absDeltaX > absDeltaYX
+          }
+        } else {
+          if (deltaY > 0) {
+            return absDeltaY > absDeltaXY
+          } else {
+            return false
+          }
+        }
+      case 'ne':
+        if (deltaX < 0) {
+          if (deltaY > 0) {
+            return absDeltaY > absDeltaXY
+          } else {
+            return false
+          }
+        } else {
+          if (deltaY > 0) {
+            return true
+          } else {
+            return absDeltaX > absDeltaYX
+          }
+        }
+      case 'sw':
+        if (deltaX < 0) {
+          if (deltaY > 0) {
+            return absDeltaX > absDeltaYX
+          } else {
+            return true
+          }
+        } else {
+          if (deltaY > 0) {
+            return false
+          } else {
+            return absDeltaY > absDeltaXY
+          }
+        }
+      case 'se':
+        if (deltaX < 0) {
+          if (deltaY > 0) {
+            return false
+          } else {
+            return absDeltaY > absDeltaXY
+          }
+        } else {
+          if (deltaY > 0) {
+            return absDeltaX > absDeltaYX
+          } else {
+            return true
+          }
+        }
+    }
+  }
+  private onCropEnd = (e: any) => {
+    this.onCropMove(e)
+    this.$container.rmClass(this.c(`cursor-${this.action}`))
     $document.off(drag('move'), this.onCropMove)
     $document.off(drag('end'), this.onCropEnd)
   }
@@ -316,3 +532,4 @@ export = class Cropper extends Component {
 }
 
 const round = Math.round
+const abs = Math.abs

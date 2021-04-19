@@ -6,6 +6,26 @@
   user-select: none;
 }
 
+.cursor-all * {
+  cursor: move !important;
+}
+.cursor-e *,
+.cursor-w * {
+  cursor: ew-resize !important;
+}
+.cursor-n *,
+.cursor-s * {
+  cursor: ns-resize !important;
+}
+.cursor-nw *,
+.cursor-se * {
+  cursor: nwse-resize !important;
+}
+.cursor-ne *,
+.cursor-sw * {
+  cursor: nesw-resize !important;
+}
+
 .wrap-box,
 .drag-box,
 .crop-box {

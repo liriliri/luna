@@ -99,6 +99,34 @@ export default class Cropper extends Component {
     super.destroy()
     this.resizeSensor.destroy()
   }
+  getData() {
+    const { cropBoxData, canvasData, imageData } = this
+    const ratio = imageData.width / canvasData.width
+
+    return {
+      image: {
+        width: imageData.width,
+        height: imageData.height,
+      },
+      cropBox: {
+        left: round((cropBoxData.left - canvasData.left) * ratio),
+        top: round((cropBoxData.top - canvasData.top) * ratio),
+        width: round(cropBoxData.width * ratio),
+        height: round(cropBoxData.height * ratio),
+      },
+    }
+  }
+  getCanvas() {
+    const { cropBox } = this.getData()
+    const canvas = document.createElement('canvas')
+    canvas.width = cropBox.width
+    canvas.height = cropBox.height
+
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+    ctx.drawImage(this.imageData.image, -cropBox.left, -cropBox.top)
+
+    return canvas
+  }
   reset() {
     this.updateContainerData()
     this.resetCanvasData()

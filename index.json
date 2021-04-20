@@ -1,6 +1,7 @@
 {
   "chart": {
-    "test": true
+    "test": true,
+    "install": true
   },
   "console": {
     "icon": true,

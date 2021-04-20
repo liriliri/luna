@@ -1,5 +1,8 @@
 {
   "name": "luna-chart",
   "version": "0.1.0",
-  "description": "HTML5 charts"
+  "description": "HTML5 charts",
+  "dependencies": {
+    "ts-toolbelt": "^9.6.0"
+  }
 }

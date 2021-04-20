@@ -13,6 +13,7 @@ const $document = $(document as any)
 
 interface IOptions {
   url: string
+  preview: HTMLElement | null
 }
 
 interface IImageData {
@@ -43,7 +44,6 @@ interface ICropBoxData {
 
 export default class Cropper extends Component {
   private onResize: () => void
-  private options: Required<IOptions>
   private resizeSensor: ResizeSensor
   private containerData: IContainerData = {
     width: 0,
@@ -73,14 +73,12 @@ export default class Cropper extends Component {
   private action = ''
   private startX = 0
   private startY = 0
-  constructor(container: HTMLElement, { url }: IOptions) {
+  private $preview: $.$ | null = null
+  constructor(container: HTMLElement, { url, preview }: IOptions) {
     super(container, { compName: 'cropper' })
 
     this.oldCropBoxData = this.cropBoxData
 
-    this.options = {
-      url,
-    }
     this.resizeSensor = new ResizeSensor(container)
     this.onResize = throttle(() => this.reset(), 16)
 
@@ -91,19 +89,11 @@ export default class Cropper extends Component {
 
     this.bindEvent()
 
-    this.load(url)
-  }
-  setOption(name: string, val: any) {
-    const options: any = this.options
-    const oldVal = options[name]
-    options[name] = val
-    this.emit('optionChange', val, oldVal)
-
-    switch (name) {
-      case 'url':
-        this.load(val)
-        break
+    if (preview) {
+      this.initPreview(preview)
     }
+
+    this.load(url)
   }
   destroy() {
     super.destroy()
@@ -116,10 +106,18 @@ export default class Cropper extends Component {
     this.resetCropBoxData()
     this.updateCropBox()
   }
+  private initPreview(el: HTMLElement) {
+    this.$preview = $(el)
+    this.$preview.addClass(this.c('preview'))
+    this.$preview.html('<img></img>')
+  }
   private load(url: string) {
     const { image } = this.imageData
     this.$canvas.find('img').attr('src', url)
     this.$cropBox.find('img').attr('src', url)
+    if (this.$preview) {
+      this.$preview.find('img').attr('src', url)
+    }
 
     image.onload = () => {
       extend(this.imageData, {
@@ -148,8 +146,7 @@ export default class Cropper extends Component {
   }
   private onCropMove = (e: any) => {
     e = e.origEvent
-    const { canvasData, oldCropBoxData } = this
-    let { action } = this
+    const { action, canvasData, oldCropBoxData } = this
     let { left, top, width, height } = oldCropBoxData
     const minLeft = canvasData.left
     const minTop = canvasData.top
@@ -485,8 +482,30 @@ export default class Cropper extends Component {
     this.$cropBox.find('img').css({
       width: round(canvasData.width),
       height: round(canvasData.height),
-      transform: `translateX(${-round(left)}px) translateY(${-round(
-        top - canvasData.top
+      transform: `translateX(${-round(
+        left - canvasData.left
+      )}px) translateY(${-round(top - canvasData.top)}px)`,
+    })
+    this.updatePreview()
+  }
+  private updatePreview() {
+    const { $preview } = this
+    if (!$preview) {
+      return
+    }
+    const { cropBoxData, canvasData } = this
+    const { width } = $preview.offset()
+    const ratio = width / cropBoxData.width
+    $preview.css({
+      height: round(cropBoxData.height * ratio),
+    })
+    $preview.find('img').css({
+      width: round(canvasData.width * ratio),
+      height: round(canvasData.height * ratio),
+      transform: `translateX(${-round(
+        (cropBoxData.left - canvasData.left) * ratio
+      )}px) translateY(${-round(
+        (cropBoxData.top - canvasData.top) * ratio
       )}px)`,
     })
   }

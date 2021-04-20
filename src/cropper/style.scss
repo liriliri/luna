@@ -6,6 +6,10 @@
   user-select: none;
 }
 
+.preview {
+  overflow: hidden;
+}
+
 .cursor-all * {
   cursor: move !important;
 }

@@ -7,7 +7,9 @@
     "test": true,
     "install": true
   },
-  "cropper": {},
+  "cropper": {
+    "test": true
+  },
   "editor": {
     "icon": true,
     "test": true

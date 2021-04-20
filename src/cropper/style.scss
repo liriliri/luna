@@ -9,6 +9,9 @@
 .cursor-all * {
   cursor: move !important;
 }
+.cursor-crop * {
+  cursor: crosshair !important;
+}
 .cursor-e *,
 .cursor-w * {
   cursor: ew-resize !important;

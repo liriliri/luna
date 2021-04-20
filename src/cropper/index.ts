@@ -148,19 +148,37 @@ export default class Cropper extends Component {
   }
   private onCropMove = (e: any) => {
     e = e.origEvent
-    const { action, canvasData, oldCropBoxData } = this
-    const { left, top, width, height } = oldCropBoxData
+    const { canvasData, oldCropBoxData } = this
+    let { action } = this
+    let { left, top, width, height } = oldCropBoxData
+    const minLeft = canvasData.left
+    const minTop = canvasData.top
+    const maxLeft = canvasData.left + canvasData.width
+    const maxTop = canvasData.top + canvasData.height
+    const minSize = 10
+
+    if (action === 'crop') {
+      const containerOffset = this.$container.offset()
+      left = this.startX - containerOffset.left
+      top = this.startY - containerOffset.top
+      width = minSize
+      height = minSize
+      if (
+        left < minLeft ||
+        top < minTop ||
+        left + width > maxLeft ||
+        top + height > maxTop
+      ) {
+        return
+      }
+    }
+
     let newLeft = left
     let newTop = top
     let newWidth = width
     let newHeight = height
     const deltaX = eventClient('x', e) - this.startX
     const deltaY = eventClient('y', e) - this.startY
-    const minSize = 10
-    const minLeft = canvasData.left
-    const minTop = canvasData.top
-    const maxLeft = canvasData.left + canvasData.width
-    const maxTop = canvasData.top + canvasData.height
 
     switch (action) {
       case 'all':
@@ -173,6 +191,18 @@ export default class Cropper extends Component {
         }
         if (newTop + height > maxTop) {
           newTop = maxTop - height
+        }
+        break
+      case 'crop':
+        newWidth += deltaX - minSize
+        newWidth = max(minSize, newWidth)
+        if (left + newWidth > maxLeft) {
+          newWidth = maxLeft - left
+        }
+        newHeight += deltaY - minSize
+        newHeight = max(minSize, newHeight)
+        if (top + newHeight > maxTop) {
+          newHeight = maxTop - top
         }
         break
       case 'e':
@@ -429,6 +459,7 @@ export default class Cropper extends Component {
     this.$container.rmClass(this.c(`cursor-${this.action}`))
     $document.off(drag('move'), this.onCropMove)
     $document.off(drag('end'), this.onCropEnd)
+    this.action = ''
   }
   private resetCropBoxData() {
     const { canvasData } = this
@@ -531,8 +562,8 @@ export default class Cropper extends Component {
   }
 }
 
-module.exports = Cropper;
-module.exports.default = Cropper;
+module.exports = Cropper
+module.exports.default = Cropper
 
 const round = Math.round
 const abs = Math.abs

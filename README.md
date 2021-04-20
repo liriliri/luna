@@ -4,8 +4,8 @@
 [![Test coverage][codecov-image]][codecov-url]
 ![License][license-image]
 
-[travis-image]: https://img.shields.io/travis/liriliri/luna?style=flat-square
-[travis-url]: https://travis-ci.org/liriliri/luna
+[travis-image]: https://img.shields.io/travis/com/liriliri/luna?style=flat-square
+[travis-url]: https://travis-ci.com/liriliri/luna
 [codecov-image]: https://img.shields.io/codecov/c/github/liriliri/luna?style=flat-square
 [codecov-url]: https://codecov.io/github/liriliri/luna?branch=master
 [license-image]: https://img.shields.io/github/license/liriliri/luna?style=flat-square

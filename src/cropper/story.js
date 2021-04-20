@@ -3,10 +3,14 @@ import Cropper from 'luna-cropper.js'
 import readme from './README.md'
 import story from '../share/story'
 import h from 'licia/h'
+import $ from 'licia/$'
+import { text } from '@storybook/addon-knobs'
 
 const def = story(
   'cropper',
   (wrapper) => {
+    $(wrapper).html('')
+
     const container = h('div', {
       style: {
         aspectRatio: '2',
@@ -21,8 +25,10 @@ const def = story(
     wrapper.appendChild(container)
     wrapper.appendChild(preview)
 
+    const url = text('Url', '/wallpaper.jpg')
+
     const cropper = new Cropper(container, {
-      url: '/wallpaper.jpg',
+      url,
       preview,
     })
 

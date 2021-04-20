@@ -16,6 +16,7 @@ Yet another UI library.
 
 * [chart](./src/chart/README.md): HTML5 charts.
 * [console](./src/console/README.md): Console for logging.
+* [cropper](./src/cropper/README.md): Image cropper.
 * [editor](./src/editor/README.md): Wysiwyg editor.
 * [json-editor](./src/json-editor/README.md): JSON editor.
 * [music-player](./src/music-player/README.md): Music player.

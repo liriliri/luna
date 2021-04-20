@@ -51,6 +51,6 @@ jsonEditor.expand(true)
 
 ## Api
 
-## expand(recursive: boolean): void
+### expand(recursive: boolean): void
 
 Expand object.

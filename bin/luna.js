@@ -7,6 +7,7 @@ const shell = require('shelljs')
 const noop = require('licia/noop')
 const clone = require('licia/clone')
 const extendDeep = require('licia/extendDeep')
+const cloneDeep = require('licia/cloneDeep')
 const extend = require('licia/extend')
 const each = require('licia/each')
 const filter = require('licia/filter')
@@ -72,7 +73,7 @@ const build = wrap(async function (component) {
     '--mode=production',
   ])
 
-  const pkg = require('../package.json')
+  const pkg = cloneDeep(require('../package.json'))
   delete pkg.scripts
   delete pkg.bin
   pkg.main = `cjs/${component}/index.js`

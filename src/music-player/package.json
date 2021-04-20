@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Music player",
   "dependencies": {
-    "jsmediatags": "^3.9.3"
+    "jsmediatags": "3.9.3"
   },
   "devDependencies": {
     "@types/jsmediatags": "^3.9.2"

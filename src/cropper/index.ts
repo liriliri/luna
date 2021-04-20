@@ -70,9 +70,9 @@ export = class Cropper extends Component {
   private oldCropBoxData: ICropBoxData
   private $canvas: $.$
   private $cropBox: $.$
-  private action: string = ''
-  private startX: number = 0
-  private startY: number = 0
+  private action = ''
+  private startX = 0
+  private startY = 0
   constructor(container: HTMLElement, { url }: IOptions) {
     super(container, { compName: 'cropper' })
 
@@ -357,13 +357,13 @@ export = class Cropper extends Component {
     this.updateCropBox()
   }
   private isDeltaXUsed(deltaX: number, deltaY: number, action: string) {
-    let { width, height } = this.oldCropBoxData
+    const { width, height } = this.oldCropBoxData
     const ratio = width / height
 
-    let absDeltaX = abs(deltaX),
-      absDeltaY = abs(deltaY),
-      absDeltaYX = absDeltaY * ratio,
-      absDeltaXY = absDeltaX / ratio
+    const absDeltaX = abs(deltaX)
+    const absDeltaY = abs(deltaY)
+    const absDeltaYX = absDeltaY * ratio
+    const absDeltaXY = absDeltaX / ratio
 
     switch (action) {
       case 'nw':

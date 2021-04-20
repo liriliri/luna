@@ -40,7 +40,7 @@ const videoEvents = [
   'waiting',
 ]
 
-export = class VideoPlayer extends Component {
+export default class VideoPlayer extends Component {
   private $video: $.$
   private $controller: $.$
   private $curTime: $.$
@@ -312,3 +312,6 @@ export = class VideoPlayer extends Component {
     )
   }
 }
+
+module.exports = VideoPlayer;
+module.exports.default = VideoPlayer;

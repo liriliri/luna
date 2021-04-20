@@ -37,7 +37,7 @@ interface IOptions {
   data: IData
 }
 
-export = class Chart extends Component {
+export default class Chart extends Component {
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
   private chart: BaseChart
@@ -145,3 +145,6 @@ export = class Chart extends Component {
     this.canvas = canvas
   }
 }
+
+module.exports = Chart;
+module.exports.default = Chart;

@@ -50,7 +50,7 @@ interface IOptions {
   filter?: string | RegExp | types.AnyFn
 }
 
-export = class Console extends Component {
+export default class Console extends Component {
   renderViewport: (options?: any) => void
   private $el: $.$
   private el: HTMLElement
@@ -777,6 +777,9 @@ export = class Console extends Component {
     )
   }
 }
+
+module.exports = Console;
+module.exports.default = Console;
 
 const getCurTime = () => dateFormat('HH:MM:ss ')
 

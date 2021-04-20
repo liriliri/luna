@@ -173,17 +173,16 @@ describe('console', function () {
       console.setOption('filter', 'all')
     })
 
-    it('all info error warn log', function () {
+    it('all error warn log', function () {
       console.log('log')
-      console.info('info')
       console.error('error')
       console.warn('warn')
       console.debug('debug')
-      expect(logs().length).to.equal(5)
+      expect(logs().length).to.equal(4)
 
-      console.setOption('filter', 'info')
+      console.setOption('filter', 'log')
       expect(logs().length).to.equal(1)
-      expect(log(0).get(0).log.type).to.equal('info')
+      expect(log(0).get(0).log.type).to.equal('log')
 
       console.setOption('filter', 'error')
       expect(logs().length).to.equal(1)

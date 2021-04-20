@@ -41,7 +41,7 @@ interface ICropBoxData {
   height: number
 }
 
-export = class Cropper extends Component {
+export default class Cropper extends Component {
   private onResize: () => void
   private options: Required<IOptions>
   private resizeSensor: ResizeSensor
@@ -530,6 +530,9 @@ export = class Cropper extends Component {
     )
   }
 }
+
+module.exports = Cropper;
+module.exports.default = Cropper;
 
 const round = Math.round
 const abs = Math.abs

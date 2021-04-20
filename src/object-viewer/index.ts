@@ -22,7 +22,7 @@ import { encode, getFnAbstract, sortObjName } from './util'
 import Static from './Static'
 import Component from '../share/Component'
 
-export = class ObjectViewer extends Component {
+export default class ObjectViewer extends Component {
   private data: any[]
   private visitor: Visitor
   private map: any
@@ -306,6 +306,9 @@ export = class ObjectViewer extends Component {
   }
   static Static = Static
 }
+
+module.exports = ObjectViewer;
+module.exports.default = ObjectViewer;
 
 function getObjAbstract(data: any, type: string) {
   if (!type) return

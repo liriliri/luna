@@ -57,7 +57,7 @@ interface IOptions {
   audio?: IAudio | IAudio[]
 }
 
-export = class MusicPlayer extends Component {
+export default class MusicPlayer extends Component {
   private $body: $.$
   private $title: $.$
   private $artist: $.$
@@ -498,3 +498,6 @@ export = class MusicPlayer extends Component {
     )
   }
 }
+
+module.exports = MusicPlayer;
+module.exports.default = MusicPlayer;

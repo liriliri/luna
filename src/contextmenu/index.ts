@@ -1,6 +1,6 @@
 import Component from '../share/Component'
 
-export = class Contextmenu extends Component {
+export default class Contextmenu extends Component {
   private menuItems: MenuItem[] = []
   constructor(container: HTMLElement) {
     super(container, { compName: 'contextmenu' })
@@ -13,6 +13,9 @@ export = class Contextmenu extends Component {
   }
   private popupMenuItems(menuItems: MenuItem[], x: number, y: number) {}
 }
+
+module.exports = Contextmenu;
+module.exports.default = Contextmenu;
 
 interface IMenuItemOptions {
   label: string

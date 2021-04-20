@@ -12,7 +12,7 @@ import toStr from 'licia/toStr'
 import Component from '../share/Component'
 
 // https://github.com/richard-livingston/json-view
-export = class JsonEditor extends Component {
+export default class JsonEditor extends Component {
   private name: any
   private value: any
   private $name: $.$
@@ -477,6 +477,9 @@ export = class JsonEditor extends Component {
     }
   }
 }
+
+module.exports = JsonEditor;
+module.exports.default = JsonEditor;
 
 function getType(value: any) {
   if (isNull(value)) {

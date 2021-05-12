@@ -313,5 +313,5 @@ export default class VideoPlayer extends Component {
   }
 }
 
-module.exports = VideoPlayer;
-module.exports.default = VideoPlayer;
+module.exports = VideoPlayer
+module.exports.default = VideoPlayer

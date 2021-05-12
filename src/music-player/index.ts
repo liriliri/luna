@@ -499,5 +499,5 @@ export default class MusicPlayer extends Component {
   }
 }
 
-module.exports = MusicPlayer;
-module.exports.default = MusicPlayer;
+module.exports = MusicPlayer
+module.exports.default = MusicPlayer

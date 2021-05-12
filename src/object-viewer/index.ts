@@ -307,8 +307,8 @@ export default class ObjectViewer extends Component {
   static Static = Static
 }
 
-module.exports = ObjectViewer;
-module.exports.default = ObjectViewer;
+module.exports = ObjectViewer
+module.exports.default = ObjectViewer
 
 function getObjAbstract(data: any, type: string) {
   if (!type) return

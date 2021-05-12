@@ -778,8 +778,8 @@ export default class Console extends Component {
   }
 }
 
-module.exports = Console;
-module.exports.default = Console;
+module.exports = Console
+module.exports.default = Console
 
 const getCurTime = () => dateFormat('HH:MM:ss ')
 

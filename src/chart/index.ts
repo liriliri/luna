@@ -146,5 +146,5 @@ export default class Chart extends Component {
   }
 }
 
-module.exports = Chart;
-module.exports.default = Chart;
+module.exports = Chart
+module.exports.default = Chart

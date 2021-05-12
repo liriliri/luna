@@ -478,8 +478,8 @@ export default class JsonEditor extends Component {
   }
 }
 
-module.exports = JsonEditor;
-module.exports.default = JsonEditor;
+module.exports = JsonEditor
+module.exports.default = JsonEditor
 
 function getType(value: any) {
   if (isNull(value)) {

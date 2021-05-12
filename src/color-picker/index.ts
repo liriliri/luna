@@ -8,5 +8,5 @@ export default class ColorPicker extends Component {
   }
 }
 
-module.exports = ColorPicker;
-module.exports.default = ColorPicker;
+module.exports = ColorPicker
+module.exports.default = ColorPicker

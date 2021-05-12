@@ -14,8 +14,8 @@ export default class Contextmenu extends Component {
   private popupMenuItems(menuItems: MenuItem[], x: number, y: number) {}
 }
 
-module.exports = Contextmenu;
-module.exports.default = Contextmenu;
+module.exports = Contextmenu
+module.exports.default = Contextmenu
 
 interface IMenuItemOptions {
   label: string

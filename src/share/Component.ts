@@ -23,6 +23,7 @@ export default class Component extends Emitter {
   destroy() {
     this.$container.rmClass(`luna-${this.compName}`)
     this.$container.html('')
+    this.emit('destroy')
     this.removeAllListeners()
   }
   protected find(selector: string) {

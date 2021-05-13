@@ -2,39 +2,75 @@ import 'luna-menu.css'
 import Menu from 'luna-menu.js'
 import readme from './README.md'
 import story from '../share/story'
+import { eventClient } from '../share/util'
 
 const def = story(
   'menu',
   () => {
     const menu = new Menu()
 
-    menu.append('New File', () => {
-      console.log('New File clicked')
+    menu.append({
+      label: 'New File',
+      click() {
+        console.log('New File clicked')
+      },
     })
 
-    const openSubMenu = menu.appendSubMenu('Open')
-    openSubMenu.append('index.html', () => {
-      console.log('index.html clicked')
+    const openSubMenu = new Menu()
+    openSubMenu.append({
+      label: 'index.html',
+      click() {
+        console.log('index.html clicked')
+      },
     })
-    openSubMenu.append('example.js', () => {
-      console.log('example.js clicked')
+    openSubMenu.append({
+      label: 'example.js',
+      click() {
+        console.log('example.js clicked')
+      },
     })
-
-    const stylesSubMenu = openSubMenu.appendSubMenu('Styles')
-    stylesSubMenu.append('about.css', () => {
-      console.log('about.css clicked')
-    })
-    stylesSubMenu.append('index.css', () => {
-      console.log('index.css clicked')
-    })
-
-    menu.appendSeparator()
-    menu.append('Quit', () => {
-      console.log('Quit clicked')
+    menu.append({
+      type: 'submenu',
+      label: 'Open',
+      submenu: openSubMenu,
     })
 
-    document.addEventListener('contextmenu', () => {
-      menu.show(0, 0)
+    const stylesSubMenu = new Menu()
+    stylesSubMenu.append({
+      label: 'about.css',
+      click() {
+        console.log('about.css clicked')
+      },
+    })
+    stylesSubMenu.append({
+      label: 'index.css',
+      click() {
+        console.log('index.css clicked')
+      },
+    })
+    openSubMenu.append({
+      type: 'submenu',
+      label: 'Styles',
+      submenu: stylesSubMenu,
+    })
+
+    menu.append({
+      type: 'separator',
+    })
+    menu.append({
+      label: 'Quit',
+      click() {
+        console.log('Quit clicked')
+      },
+    })
+
+    function showMenu(e) {
+      event.preventDefault()
+      menu.show(eventClient('x', e), eventClient('y', e))
+    }
+    document.addEventListener('contextmenu', showMenu)
+    menu.on('destroy', () => {
+      document.removeEventListener('contextmenu', showMenu)
     })
 
     return menu

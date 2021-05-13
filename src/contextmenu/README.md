@@ -1,3 +1,0 @@
-# Luna Contextmenu
-
-JavaScript contextmenu.

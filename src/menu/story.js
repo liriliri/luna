@@ -1,18 +1,18 @@
-import 'luna-contextmenu.css'
-import Contextmenu from 'luna-contextmenu.js'
+import 'luna-menu.css'
+import Menu from 'luna-menu.js'
 import readme from './README.md'
 import story from '../share/story'
 
 const def = story(
-  'contextmenu',
+  'menu',
   () => {
-    const contextmenu = new Contextmenu()
+    const menu = new Menu()
 
-    contextmenu.append('New File', () => {
+    menu.append('New File', () => {
       console.log('New File clicked')
     })
 
-    const openSubMenu = contextmenu.appendSubMenu('Open')
+    const openSubMenu = menu.appendSubMenu('Open')
     openSubMenu.append('index.html', () => {
       console.log('index.html clicked')
     })
@@ -28,16 +28,16 @@ const def = story(
       console.log('index.css clicked')
     })
 
-    contextmenu.appendSeparator()
-    contextmenu.append('Quit', () => {
+    menu.appendSeparator()
+    menu.append('Quit', () => {
       console.log('Quit clicked')
     })
 
     document.addEventListener('contextmenu', () => {
-      contextmenu.show(0, 0)
+      menu.show(0, 0)
     })
 
-    return contextmenu
+    return menu
   },
   {
     readme,
@@ -47,4 +47,4 @@ const def = story(
 
 export default def
 
-export const { contextmenu } = def
+export const { menu } = def

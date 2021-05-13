@@ -8,7 +8,6 @@
     "test": true,
     "install": true
   },
-  "contextmenu": {},
   "cropper": {
     "test": true
   },
@@ -20,6 +19,7 @@
     "icon": true,
     "test": true
   },
+  "menu": {},
   "music-player": {
     "test": true,
     "icon": true,

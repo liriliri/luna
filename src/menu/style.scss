@@ -4,7 +4,6 @@
   font-family: $font-family;
   position: absolute;
   padding: 4px 0;
-  font-size: 12px;
   background: rgb(240, 240, 240);
   user-select: none;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
@@ -12,6 +11,11 @@
   border-radius: 4px;
   border: 1px solid rgba(196, 196, 196, 0.9);
   padding: 4px 0;
+  box-sizing: border-box;
+  z-index: 4000;
+  * {
+    box-sizing: border-box;
+  }
 }
 
 .grass-pane {
@@ -21,4 +25,34 @@
   bottom: 0;
   right: 0;
   z-index: 3000;
+}
+
+.item {
+  display: flex;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  padding: 2px 7px 2px 8px;
+  white-space: nowrap;
+  width: 100%;
+  font-size: 12px;
+  &.active {
+    color: #fff;
+    background-image: linear-gradient(
+      to right,
+      hsl(214deg, 81%, 60%),
+      hsl(214deg, 100%, 56%)
+    );
+  }
+  .icon-arrow-right {
+    margin-left: auto;
+    font-size: 12px;
+    position: relative;
+    top: 1px;
+  }
+}
+
+.separator {
+  height: 1px;
+  background-color: #dedede;
+  margin: 5px 1px;
 }

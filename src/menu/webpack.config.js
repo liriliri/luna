@@ -1,1 +1,3 @@
-module.exports = require('../share/webpack.config')('menu')
+module.exports = require('../share/webpack.config')('menu', {
+  useIcon: true,
+})

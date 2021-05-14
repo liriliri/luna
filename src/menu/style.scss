@@ -37,11 +37,7 @@
   font-size: 12px;
   &.active {
     color: #fff;
-    background-image: linear-gradient(
-      to right,
-      hsl(214deg, 81%, 60%),
-      hsl(214deg, 100%, 56%)
-    );
+    background: $primary-color;
   }
   .icon-arrow-right {
     margin-left: auto;

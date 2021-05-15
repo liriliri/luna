@@ -1,3 +1,3 @@
-# Luna Contextmenu
+# Luna Menu
 
 JavaScript menu.

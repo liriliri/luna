@@ -2,6 +2,7 @@ import map from 'licia/map'
 import trim from 'licia/trim'
 import root from 'licia/root'
 import html from 'licia/html'
+import isNum from 'licia/isNum'
 import contain from 'licia/contain'
 
 export function classPrefix(name: string) {
@@ -73,4 +74,29 @@ export function eventClient(type: string, e: any) {
   }
 
   return 0
+}
+
+let scrollbarWidth: number
+
+export function measuredScrollbarWidth() {
+  if (isNum(scrollbarWidth)) {
+    return scrollbarWidth;
+  }
+  if (!document) {
+    return 16;
+  }
+
+  const scrollDiv = document.createElement('div');
+  const innerDiv = document.createElement('div');
+  scrollDiv.setAttribute('style', 'display: block; width: 100px; height: 100px; overflow: scroll;');
+  innerDiv.setAttribute('style', 'height: 200px');
+  scrollDiv.appendChild(innerDiv);
+  document.body.appendChild(scrollDiv);
+  scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+  document.body.removeChild(scrollDiv);
+  return scrollbarWidth;
+}
+
+export function hasVerticalScrollbar(el: HTMLElement) {
+  return el.scrollHeight > el.offsetHeight
 }

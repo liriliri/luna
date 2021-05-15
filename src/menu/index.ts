@@ -1,6 +1,7 @@
 import Component from '../share/Component'
 import $ from 'licia/$'
 import h from 'licia/h'
+import { measuredScrollbarWidth, hasVerticalScrollbar } from '../share/util'
 
 export default class Menu extends Component {
   private menuItems: IMenuItemOptions[] = []
@@ -14,15 +15,10 @@ export default class Menu extends Component {
   append(options: IMenuItemOptions) {
     this.menuItems.push(options)
   }
-  show(x: number, y: number) {
+  show(x: number, y: number, parent?: Menu) {
     this.hide()
     const { $container, menuItems } = this
-    $container
-      .css({
-        left: x,
-        top: y,
-      })
-      .html('')
+    $container.html('')
 
     for (let i = 0, len = menuItems.length; i < len; i++) {
       this.$container.append(this.createMenuItem(menuItems[i]))
@@ -30,6 +26,8 @@ export default class Menu extends Component {
 
     const $glassPane = this.createGlassPane()
     $glassPane.append(this.container)
+
+    this.positionContent(x, y, parent)
   }
   destroy() {
     this.hide()
@@ -42,9 +40,58 @@ export default class Menu extends Component {
   hideAll = () => {
     $(this.c('.grass-pane')).html('').remove()
   }
+  private positionContent(x: number, y: number, parent?: Menu) {
+    const { $container } = this
+    const winWidth = window.innerWidth
+    const winHeight = window.innerHeight
+    const scrollbarSize = measuredScrollbarWidth()
+
+    let width = winWidth
+    let height = winHeight
+    let parentWidth = 0
+    if (parent) {
+      parentWidth = parent.$container.offset().width
+    }
+
+    const offset = $container.offset()
+    const widthOverflow = height < offset.height ? scrollbarSize : 0
+    const heightOverflow = width < offset.width ? scrollbarSize : 0
+    width = Math.min(width, offset.width + widthOverflow)
+    height = Math.min(height, offset.height + heightOverflow)
+
+    let left = x
+    let top = y
+    const right = winWidth - x
+    const bottom = winHeight - y
+    if (right < width && x - parentWidth > right) {
+      left = x - width - parentWidth
+    }
+    if (bottom < height) {
+      if (y > height) {
+        top = y - height
+        if (parent) {
+          top += 30
+        }
+      } else {
+        top -= height - bottom
+      }
+    }
+
+    $container.css({
+      width,
+      height,
+      left,
+      top,
+    })
+  }
   private showSubMenu(subMenu: Menu, $el: $.$) {
     const { left, width, top } = $el.offset()
-    subMenu.show(left + width, top - 5)
+
+    let x = left + width
+    if (hasVerticalScrollbar(this.container)) {
+      x += measuredScrollbarWidth()
+    }
+    subMenu.show(x, top - 5, this)
     this.subMenu = subMenu
   }
   private hideSubMenu() {

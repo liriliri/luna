@@ -1,77 +1,62 @@
 import 'luna-menu.css'
 import Menu from 'luna-menu.js'
+import cloneDeep from 'licia/cloneDeep'
 import readme from './README.md'
 import story from '../share/story'
 import { eventClient } from '../share/util'
+import { object } from '@storybook/addon-knobs'
 
 const def = story(
   'menu',
   () => {
-    const menu = new Menu()
+    const template = object('Template', [
+      {
+        label: 'New File',
+      },
+      {
+        type: 'submenu',
+        label: 'Open',
+        submenu: [
+          {
+            label: 'index.html',
+          },
+          {
+            label: 'example.js',
+          },
+          {
+            type: 'submenu',
+            label: 'Styles',
+            submenu: [
+              {
+                label: 'about.css',
+              },
+              {
+                label: 'index.css',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: 'separator',
+      },
+      {
+        label: 'Quit',
+      },
+    ])
 
-    menu.append({
-      label: 'New File',
-      click() {
-        console.log('New File clicked')
-      },
-    })
-
-    const openSubMenu = new Menu()
-    openSubMenu.append({
-      label: 'index.html',
-      click() {
-        console.log('index.html clicked')
-      },
-    })
-    openSubMenu.append({
-      label: 'example.js',
-      click() {
-        console.log('example.js clicked')
-      },
-    })
-    menu.append({
-      type: 'submenu',
-      label: 'Open',
-      submenu: openSubMenu,
-    })
-
-    const stylesSubMenu = new Menu()
-    stylesSubMenu.append({
-      label: 'about.css',
-      click() {
-        console.log('about.css clicked')
-      },
-    })
-    stylesSubMenu.append({
-      label: 'index.css',
-      click() {
-        console.log('index.css clicked')
-      },
-    })
-    openSubMenu.append({
-      type: 'submenu',
-      label: 'Styles',
-      submenu: stylesSubMenu,
-    })
-
-    menu.append({
-      type: 'separator',
-    })
-    menu.append({
-      label: 'Quit',
-      click() {
-        console.log('Quit clicked')
-      },
-    })
+    const menu = Menu.build(cloneDeep(template))
 
     function showMenu(e) {
-      event.preventDefault()
+      e.preventDefault()
       menu.show(eventClient('x', e), eventClient('y', e))
     }
     document.addEventListener('contextmenu', showMenu)
     menu.on('destroy', () => {
       document.removeEventListener('contextmenu', showMenu)
     })
+
+    menu.show(16, 16)
 
     return menu
   },

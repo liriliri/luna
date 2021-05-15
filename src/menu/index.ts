@@ -1,6 +1,8 @@
 import Component from '../share/Component'
 import $ from 'licia/$'
 import h from 'licia/h'
+import defaults from 'licia/defaults'
+import each from 'licia/each'
 import { measuredScrollbarWidth, hasVerticalScrollbar } from '../share/util'
 
 export default class Menu extends Component {
@@ -12,11 +14,31 @@ export default class Menu extends Component {
 
     this.bindEvent()
   }
+  static build(template: any[]) {
+    const menu = new Menu()
+    each(template, (item) => {
+      if (item.type === 'submenu') {
+        item.submenu = Menu.build(item.submenu)
+      }
+      menu.append(item)
+    })
+    return menu
+  }
   append(options: IMenuItemOptions) {
-    this.menuItems.push(options)
+    this.insert(this.menuItems.length, options)
+  }
+  insert(pos: number, options: IMenuItemOptions) {
+    defaults(options, {
+      type: 'normal',
+    })
+    this.menuItems.splice(pos, 0, options)
   }
   show(x: number, y: number, parent?: Menu) {
-    this.hide()
+    if (parent) {
+      this.hide()
+    } else {
+      this.hideAll()
+    }
     const { $container, menuItems } = this
     $container.html('')
 
@@ -36,6 +58,9 @@ export default class Menu extends Component {
   hide = () => {
     this.$container.remove()
     this.hideSubMenu()
+    if (($('.luna-menu') as any).length === 0) {
+      this.hideAll()
+    }
   }
   hideAll = () => {
     $(this.c('.grass-pane')).html('').remove()
@@ -144,6 +169,8 @@ export default class Menu extends Component {
     $el.on('click', () => {
       if (item.click) {
         item.click()
+      }
+      if (item.type === 'normal') {
         this.hideAll()
       }
     })

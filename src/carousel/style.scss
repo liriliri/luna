@@ -1,0 +1,46 @@
+.luna-carousel {
+  background: #08c;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  position: relative;
+}
+
+.arrow-left,
+.arrow-right {
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  width: 36px;
+  height: 36px;
+  margin-top: -18px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s background;
+  &:hover {
+    background: rgba(0, 0, 0, 0.35);
+  }
+  .icon {
+    line-height: 36px;
+    font-size: 30px;
+  }
+}
+
+.arrow-left {
+  left: 20px;
+}
+
+.icon-arrow-left {
+  position: relative;
+  left: 2px;
+}
+
+.arrow-right {
+  right: 20px;
+}
+
+.icon-arrow-right {
+  position: relative;
+  left: 5px;
+}

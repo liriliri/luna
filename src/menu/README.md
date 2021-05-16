@@ -1,6 +1,6 @@
 # Luna Menu
 
-JavaScript menu.
+Simple menu.
 
 ## Demo
 

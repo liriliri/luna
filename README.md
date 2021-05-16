@@ -19,6 +19,7 @@ Yet another UI library.
 * [cropper](./src/cropper/README.md): Image cropper.
 * [editor](./src/editor/README.md): Wysiwyg editor.
 * [json-editor](./src/json-editor/README.md): JSON editor.
+* [menu](./src/menu/README.md): JavaScript menu.
 * [music-player](./src/music-player/README.md): Music player.
 * [notification](./src/notification/README.md): Show notifications.
 * [object-viewer](./src/object-viewer/README.md): JavaScript object viewer.

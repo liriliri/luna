@@ -19,7 +19,10 @@
     "icon": true,
     "test": true
   },
-  "menu": {},
+  "menu": {
+    "icon": true,
+    "test": true
+  },
   "music-player": {
     "test": true,
     "icon": true,

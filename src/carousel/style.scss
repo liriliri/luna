@@ -1,7 +1,10 @@
+@import '../share/variable';
+
 .luna-carousel {
-  background: #08c;
+  background: #000;
   width: 100%;
   height: 100%;
+  font-family: $font-family;
   user-select: none;
   position: relative;
 }
@@ -43,4 +46,36 @@
 .icon-arrow-right {
   position: relative;
   left: 5px;
+}
+
+.body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.item {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  float: left;
+  margin-right: -100%;
+  display: none;
+  transition: transform 0.6s ease-in-out;
+}
+
+.item.active,
+.item-next,
+.item-prev {
+  display: block;
+}
+
+.item-prev:not(.item-end),
+.active.item-start {
+  transform: translateX(-100%);
+}
+
+.item-next:not(.item-start),
+.active.item-end {
+  transform: translateX(100%);
 }

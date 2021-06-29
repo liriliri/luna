@@ -15,9 +15,19 @@ const def = story(
     })
     const carousel = new Carousel(container)
 
-    carousel.append('<div style="background:#e73c5e">item 1</div>')
-    carousel.append('<div style="background:#614d82">item 2</div>')
-    carousel.append('<div style="background:#614d82">item 3</div>')
+    const commonWrapperStyle = 'position:relative;height:100%;width:100%;'
+    const commonTextStyle =
+      'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:25px;color:#fff;'
+
+    carousel.append(
+      `<div style="background:#e73c5e;${commonWrapperStyle}"><span style="${commonTextStyle}">ITEM 1</span></div>`
+    )
+    carousel.append(
+      `<div style="background:#614d82;${commonWrapperStyle}"><span style="${commonTextStyle}">ITEM 2</div>`
+    )
+    carousel.append(
+      `<div style="background:#EB3D21;${commonWrapperStyle}"><span style="${commonTextStyle}">ITEM 3</div>`
+    )
 
     return carousel
   },

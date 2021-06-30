@@ -7,6 +7,9 @@
   font-family: $font-family;
   user-select: none;
   position: relative;
+  * {
+    box-sizing: border-box;
+  }
 }
 
 .arrow-left,
@@ -46,6 +49,35 @@
 .icon-arrow-right {
   position: relative;
   left: 5px;
+}
+
+.indicators {
+  position: absolute;
+  width: 100%;
+  bottom: 20px;
+  text-align: center;
+  ul {
+    background: rgba(0, 0, 0, 0.2);
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+    display: inline-block;
+    border-radius: 10px;
+    font-size: 0;
+  }
+}
+
+.indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  margin: 0 3px;
+  border-radius: 50%;
+  cursor: pointer;
+  &.active {
+    background: #fff;
+  }
 }
 
 .body {

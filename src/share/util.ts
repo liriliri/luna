@@ -102,13 +102,11 @@ export function hasVerticalScrollbar(el: HTMLElement) {
 }
 
 export function executeAfterTransition(el: HTMLElement, callback: () => any) {
-  let called = false
   const handler = (e: any) => {
     const target = e.target;
     if (target !== el) {
       return
     }
-    called = true
     el.removeEventListener('transitionend', handler)
     callback()
   } 

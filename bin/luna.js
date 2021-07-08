@@ -21,7 +21,7 @@ const fs = require('licia/fs')
 const format = wrap(async function (component) {
   await runScript('lsla', [
     'prettier',
-    `src/${component}/*.{ts,js,html,json,css,scss}`,
+    `src/${component}/**/*.{ts,js,html,json,css,scss}`,
     '--write',
   ])
 })
@@ -46,7 +46,7 @@ const install = wrap(async function (component) {
 }, 'install')
 
 const lint = wrap(async function (component) {
-  await runScript('eslint', [`src/${component}/*.ts`])
+  await runScript('eslint', [`src/${component}/**/*.ts`])
 })
 
 const genIcon = wrap(async function (component) {

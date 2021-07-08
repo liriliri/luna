@@ -7,7 +7,11 @@
     "removeComments": true,
     "noUnusedLocals": true,
     "target": "ES5",
+    "lib": [
+      "dom", "es2019"
+    ],
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "downlevelIteration": true
   }
 }

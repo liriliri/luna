@@ -3,6 +3,7 @@ import Carousel from 'luna-carousel.js'
 import $ from 'licia/$'
 import story from '../share/story'
 import readme from './README.md'
+import { number } from '@storybook/addon-knobs'
 
 const def = story(
   'carousel',
@@ -13,7 +14,15 @@ const def = story(
       minHeight: 150,
       aspectRatio: '1280/720',
     })
-    const carousel = new Carousel(container, { interval: 5000 })
+
+    const interval = number('Interval', 5000, {
+      range: true,
+      min: 0,
+      max: 100000,
+      step: 1000,
+    })
+
+    const carousel = new Carousel(container, { interval })
 
     const commonWrapperStyle = 'position:relative;height:100%;width:100%;'
     const commonTextStyle =

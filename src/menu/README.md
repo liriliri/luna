@@ -42,7 +42,7 @@ menu.show(0, 0)
 
 ## Api
 
-### append(options: object)
+### append(options: object): void
 
 Append menu item.
 
@@ -52,10 +52,10 @@ Options:
   * click(function): Click event handler.
   * submenu(Menu): SubMenu.
 
-### insert(pos: number, options: object)
+### insert(pos: number, options: object): void
 
 Inert menu item to given position.
 
-### show(x: number, y: number)
+### show(x: number, y: number): void
 
 Show menu at target position.

@@ -13,7 +13,7 @@ const def = story(
       minHeight: 150,
       aspectRatio: '1280/720',
     })
-    const carousel = new Carousel(container)
+    const carousel = new Carousel(container, { interval: 5000 })
 
     const commonWrapperStyle = 'position:relative;height:100%;width:100%;'
     const commonTextStyle =
@@ -27,6 +27,9 @@ const def = story(
     )
     carousel.append(
       `<div style="background:#EB3D21;${commonWrapperStyle}"><span style="${commonTextStyle}">ITEM 3</div>`
+    )
+    carousel.append(
+      `<div style="background:#3473FF;${commonWrapperStyle}"><span style="${commonTextStyle}">ITEM 4</div>`
     )
 
     return carousel

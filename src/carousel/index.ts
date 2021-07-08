@@ -8,6 +8,12 @@ import h from 'licia/h'
 import idxOf from 'licia/idxOf'
 import toNum from 'licia/toNum'
 import { executeAfterTransition } from '../share/util'
+import isUndef from 'licia/isUndef'
+import toBool from 'licia/toBool'
+
+interface IOptions {
+  interval?: number
+}
 
 export default class Carousel extends Component {
   private $body: $.$
@@ -16,10 +22,17 @@ export default class Carousel extends Component {
   private $indicators: $.$
   private body: HTMLElement
   private activeIdx = 0
-  constructor(container: HTMLElement) {
+  private interval: ReturnType<typeof setInterval> | null = null
+  private options: Required<IOptions>
+  private isSliding = false
+  constructor(container: HTMLElement, { interval = 0 }: IOptions = {}) {
     super(container, { compName: 'carousel' })
 
     this.initTpl()
+
+    this.options = {
+      interval,
+    }
 
     this.$body = this.find('.body')
     this.body = this.$body.get(0) as HTMLElement
@@ -28,20 +41,26 @@ export default class Carousel extends Component {
     this.$indicators = this.find('.indicators').find('ul')
 
     this.bindEvent()
+
+    this.cycle()
+  }
+  cycle() {
+    if (this.options.interval <= 0) {
+      return
+    }
+
+    this.pause()
+
+    this.interval = setInterval(this.next, this.options.interval)
+  }
+  pause() {
+    if (this.interval) {
+      clearInterval(this.interval)
+      this.interval = null
+    }
   }
   slideTo(idx: number) {
-    const slides = this.getSlides()
-    const { activeIdx } = this
-
-    if (idx >= slides.length || idx < 0) {
-      return
-    }
-
-    if (activeIdx === idx) {
-      return
-    }
-
-    this.slide(idx > activeIdx ? 'next' : 'prev', slides[idx])
+    this.slide(idx > this.activeIdx ? 'next' : 'prev', idx)
   }
   append(content: string | HTMLElement) {
     const slides = this.getSlides()
@@ -72,7 +91,11 @@ export default class Carousel extends Component {
   prev = () => {
     this.slide('prev')
   }
-  private slide(order: string, el?: HTMLElement) {
+  private slide(order: string, nextIdx?: number) {
+    if (this.isSliding) {
+      return
+    }
+
     const isNext = order === 'next'
     const slides = this.getSlides()
     const len = slides.length
@@ -82,11 +105,9 @@ export default class Carousel extends Component {
     const activeIdx = idxOf(slides, activeEl)
 
     let nextEl: HTMLElement
-    let nextIdx = 0
 
-    if (el) {
-      nextEl = el
-      nextIdx = idxOf(slides, nextEl)
+    if (!isUndef(nextIdx)) {
+      nextEl = slides[nextIdx as number]
     } else {
       nextIdx = isNext ? activeIdx + 1 : activeIdx - 1
       if (nextIdx >= len) {
@@ -96,6 +117,19 @@ export default class Carousel extends Component {
       }
       nextEl = slides[nextIdx]
     }
+
+    if (nextIdx! >= len || nextIdx! < 0) {
+      return
+    }
+    if (activeIdx === nextIdx) {
+      return
+    }
+
+    const isCycling = toBool(this.interval)
+    if (isCycling) {
+      this.pause()
+    }
+    this.isSliding = true
 
     const $nextEl = $(nextEl)
 
@@ -115,9 +149,14 @@ export default class Carousel extends Component {
 
       $activeEl.rmClass(directionClass)
       $activeEl.rmClass(activeClass)
+
+      this.isSliding = false
+      if (isCycling) {
+        this.cycle()
+      }
     })
 
-    this.activeIdx = nextIdx
+    this.activeIdx = nextIdx!
     this.updateIndicators()
   }
   private updateIndicators() {

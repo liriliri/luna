@@ -80,21 +80,24 @@ let scrollbarWidth: number
 
 export function measuredScrollbarWidth() {
   if (isNum(scrollbarWidth)) {
-    return scrollbarWidth;
+    return scrollbarWidth
   }
   if (!document) {
-    return 16;
+    return 16
   }
 
-  const scrollDiv = document.createElement('div');
-  const innerDiv = document.createElement('div');
-  scrollDiv.setAttribute('style', 'display: block; width: 100px; height: 100px; overflow: scroll;');
-  innerDiv.setAttribute('style', 'height: 200px');
-  scrollDiv.appendChild(innerDiv);
-  document.body.appendChild(scrollDiv);
-  scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-  document.body.removeChild(scrollDiv);
-  return scrollbarWidth;
+  const scrollDiv = document.createElement('div')
+  const innerDiv = document.createElement('div')
+  scrollDiv.setAttribute(
+    'style',
+    'display: block; width: 100px; height: 100px; overflow: scroll;'
+  )
+  innerDiv.setAttribute('style', 'height: 200px')
+  scrollDiv.appendChild(innerDiv)
+  document.body.appendChild(scrollDiv)
+  scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
+  document.body.removeChild(scrollDiv)
+  return scrollbarWidth
 }
 
 export function hasVerticalScrollbar(el: HTMLElement) {
@@ -103,12 +106,12 @@ export function hasVerticalScrollbar(el: HTMLElement) {
 
 export function executeAfterTransition(el: HTMLElement, callback: () => any) {
   const handler = (e: any) => {
-    const target = e.target;
+    const target = e.target
     if (target !== el) {
       return
     }
     el.removeEventListener('transitionend', handler)
     callback()
-  } 
+  }
   el.addEventListener('transitionend', handler)
 }

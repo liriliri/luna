@@ -10,6 +10,12 @@
   * {
     box-sizing: border-box;
   }
+  &:hover {
+    .arrow-left,
+    .arrow-right {
+      opacity: 1;
+    }
+  }
 }
 
 .arrow-left,
@@ -23,7 +29,8 @@
   background: rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   cursor: pointer;
-  transition: 0.3s background;
+  transition: background 0.3s, opacity 0.3s;
+  opacity: 0;
   &:hover {
     background: rgba(0, 0, 0, 0.35);
   }

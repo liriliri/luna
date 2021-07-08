@@ -91,6 +91,10 @@ export default class Carousel extends Component {
   prev = () => {
     this.slide('prev')
   }
+  destroy() {
+    this.pause()
+    super.destroy()
+  }
   private slide(order: string, nextIdx?: number) {
     if (this.isSliding) {
       return
@@ -99,6 +103,10 @@ export default class Carousel extends Component {
     const isNext = order === 'next'
     const slides = this.getSlides()
     const len = slides.length
+
+    if (len === 0) {
+      return
+    }
 
     const $activeEl = this.find('.active')
     const activeEl = $activeEl.get(0) as HTMLElement

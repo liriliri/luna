@@ -1,5 +1,7 @@
 {
-  "carousel": {},
+  "carousel": {
+    "test": true
+  },
   "chart": {
     "test": true,
     "install": true

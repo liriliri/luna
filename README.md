@@ -14,6 +14,7 @@ Yet another UI library.
 
 ## Components
 
+* [carousel](./src/carousel/README.md): Lightweight carousel.
 * [chart](./src/chart/README.md): HTML5 charts.
 * [console](./src/console/README.md): Console for logging.
 * [cropper](./src/cropper/README.md): Image cropper.

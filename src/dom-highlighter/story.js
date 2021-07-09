@@ -4,7 +4,7 @@ import story from '../share/story'
 import readme from './README.md'
 import $ from 'licia/$'
 import h from 'licia/h'
-import { button, boolean, object } from '@storybook/addon-knobs'
+import { button, boolean, object, text } from '@storybook/addon-knobs'
 
 const def = story(
   'dom-highlighter',
@@ -27,8 +27,10 @@ const def = story(
       marginLeft: 100,
     })
 
+    const element = text('Element', 'div#test.class1.class2')
+
     const target = h(
-      'div',
+      element,
       {
         style: targetStyle,
       },
@@ -41,6 +43,7 @@ const def = story(
 
     const showRulers = boolean('Show Rulers', true)
     const showExtensionLines = boolean('Show Extension Lines', true)
+    const showInfo = boolean('Show Info', true)
     button('Highlight', () => {
       domHighlighter.highlight(target)
       return false
@@ -53,6 +56,7 @@ const def = story(
     const domHighlighter = new DomHighlighter(container, {
       showRulers,
       showExtensionLines,
+      showInfo,
     })
     domHighlighter.highlight(target)
 

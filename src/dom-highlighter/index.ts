@@ -3,6 +3,7 @@ import { HighlightOverlay } from './overlay/tool_highlight'
 import { pxToNum } from '../share/util'
 import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
+import lowerCase from 'licia/lowerCase'
 
 interface IRect {
   left: number
@@ -14,6 +15,7 @@ interface IRect {
 interface IOptions {
   showRulers?: boolean
   showExtensionLines?: boolean
+  showInfo?: boolean
 }
 
 export default class DomHighlighter extends Component {
@@ -24,13 +26,18 @@ export default class DomHighlighter extends Component {
   private options: Required<IOptions>
   constructor(
     container: HTMLElement,
-    { showRulers = false, showExtensionLines = false }: IOptions = {}
+    {
+      showRulers = false,
+      showExtensionLines = false,
+      showInfo = true,
+    }: IOptions = {}
   ) {
     super(container, { compName: 'dom-highlighter' })
 
     this.options = {
       showRulers,
       showExtensionLines,
+      showInfo,
     }
 
     this.overlay.setContainer(container)
@@ -66,12 +73,13 @@ export default class DomHighlighter extends Component {
     super.destroy()
   }
   private draw() {
-    if (!this.target) {
+    const { target } = this
+    if (!target) {
       return
     }
 
-    const { left, top, width, height } = this.target.getBoundingClientRect()
-    const computedStyle = window.getComputedStyle(this.target)
+    const { left, top, width, height } = target.getBoundingClientRect()
+    const computedStyle = window.getComputedStyle(target)
     const getNumStyle = (name: string) =>
       pxToNum(computedStyle.getPropertyValue(name))
 
@@ -136,12 +144,23 @@ export default class DomHighlighter extends Component {
 
     const highlight: any = {
       paths: [contentPath, paddingPath, borderPath, marginPath],
-      elementInfo: {
-        tagName: 'button',
-        className: 'class.name',
-        idValue: 'download-hero',
-        nodeWidth: '700',
-        nodeHeight: '75',
+      showExtensionLines: this.options.showExtensionLines,
+      showRulers: this.options.showRulers,
+      colorFormat: 'hsl',
+    }
+
+    if (this.options.showInfo) {
+      const className = target.className
+        .split(/\s+/)
+        .map((c) => '.' + c)
+        .join('')
+
+      highlight.elementInfo = {
+        tagName: lowerCase(target.tagName),
+        className,
+        idValue: target.id,
+        nodeWidth: width,
+        nodeHeight: height,
         style: {
           color: '#000000FF',
           'font-family':
@@ -163,11 +182,9 @@ export default class DomHighlighter extends Component {
         accessibleName: 'name',
         accessibleRole: 'role',
         showAccessibilityInfo: true,
-      },
-      showExtensionLines: this.options.showExtensionLines,
-      showRulers: this.options.showRulers,
-      colorFormat: 'hsl',
+      }
     }
+
     this.overlay.drawHighlight(highlight)
   }
   private bindEvent() {

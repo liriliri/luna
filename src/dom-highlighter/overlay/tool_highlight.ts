@@ -88,6 +88,23 @@ export class HighlightOverlay extends Overlay {
   private tooltip!: HTMLElement;
   private persistentOverlay?: PersistentOverlay;
   private gridLabelState = {gridLayerCounter: 0};
+  private _container: HTMLElement;
+
+  setContainer(container: HTMLElement) {
+    this._container = container
+  }
+
+  setPlatform(platform: string) {
+    if (this.container) {
+      this.container.classList.add('luna-dom-highlighter-platform-' + platform);
+    }
+
+    super.setPlatform(platform)
+  }
+
+  get container(): HTMLElement {
+    return this._container
+  }
 
   reset(resetData: ResetData) {
     super.reset(resetData);
@@ -99,16 +116,13 @@ export class HighlightOverlay extends Overlay {
   }
 
   install() {
-    this.document.body.classList.add('fill');
-
     const canvas = this.document.createElement('canvas');
     canvas.id = 'canvas';
-    canvas.classList.add('fill');
-    this.document.body.append(canvas);
+    canvas.classList.add('luna-dom-highlighter-fill');
+    this.container.append(canvas);
 
     const tooltip = this.document.createElement('div');
-    tooltip.id = 'tooltip-container';
-    this.document.body.append(tooltip);
+    this.container.append(tooltip);
     this.tooltip = tooltip;
 
     this.persistentOverlay = new PersistentOverlay(this.window);
@@ -176,7 +190,7 @@ export class HighlightOverlay extends Overlay {
       }
 
       if (highlight.elementInfo) {
-        drawElementTitle(highlight.elementInfo, highlight.colorFormat, bounds, this.canvasWidth, this.canvasHeight);
+        drawElementTitle(this.tooltip, highlight.elementInfo, highlight.colorFormat, bounds, this.canvasWidth, this.canvasHeight);
       }
     }
     if (highlight.gridInfo) {
@@ -399,7 +413,7 @@ function createElementDescription(elementInfo: ElementInfo, colorFormat: string)
   if (layoutType) {
     createChild(elementInfoHeaderElement, 'div', `element-layout-type ${layoutType}`);
   }
-  const descriptionElement = createChild(elementInfoHeaderElement, 'div', 'element-description monospace');
+  const descriptionElement = createChild(elementInfoHeaderElement, 'div', 'element-description');
   const tagNameElement = createChild(descriptionElement, 'span', 'material-tag-name');
   tagNameElement.textContent = elementInfo.tagName;
   const nodeIdElement = createChild(descriptionElement, 'span', 'material-node-id');
@@ -553,13 +567,8 @@ function createElementDescription(elementInfo: ElementInfo, colorFormat: string)
  * @param {number} canvasHeight
  */
 function drawElementTitle(
-    elementInfo: ElementInfo, colorFormat: string, bounds: Bounds, canvasWidth: number, canvasHeight: number) {
+    tooltipContainer: HTMLElement, elementInfo: ElementInfo, colorFormat: string, bounds: Bounds, canvasWidth: number, canvasHeight: number) {
   // Get the tooltip container and empty it, there can only be one tooltip displayed at the same time.
-  const tooltipContainer = document.getElementById('tooltip-container');
-  if (!tooltipContainer) {
-    throw new Error('#tooltip-container is not found');
-  }
-
   tooltipContainer.innerHTML = '';
 
   // Create the necessary wrappers.

@@ -1,3 +1,36 @@
+.luna-dom-highlighter {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100000;
+  pointer-events: none;
+  font-size: 13px;
+}
+
+.fill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.platform-linux {
+  font-family: Roboto, Ubuntu, Arial, sans-serif;
+}
+
+.platform-mac {
+  color: rgb(48, 57, 66);
+  font-family: '.SFNSDisplay-Regular', 'Helvetica Neue', 'Lucida Grande',
+    sans-serif;
+}
+
+.platform-windows {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
 body {
   --arrow-width: 15px;
   --arrow-height: 8px;
@@ -27,25 +60,24 @@ body {
   border-radius: 3px;
   box-sizing: border-box;
   min-width: 100px;
-  max-width: unquote("min(300px, 100% - 4px)");
+  max-width: unquote('min(300px, 100% - 4px)');
   z-index: 2;
   background-clip: padding-box;
   will-change: transform;
   text-rendering: optimizeLegibility;
   pointer-events: none;
-  // filter: drop-shadow(0, 2px, 4px, rgb(0, 0, 0 / 35%));
-}
-
-.tooltip-content::after {
-  content: '';
-  background: #fff;
-  width: var(--arrow-width);
-  height: var(--arrow-height);
-  clip-path: var(--arrow);
-  position: absolute;
-  top: var(--arrow-top);
-  left: var(--arrow-left);
-  visibility: var(--arrow-visibility);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  &::after {
+    content: '';
+    background: #fff;
+    width: var(--arrow-width);
+    height: var(--arrow-height);
+    clip-path: var(--arrow);
+    position: absolute;
+    top: var(--arrow-top);
+    left: var(--arrow-left);
+    visibility: var(--arrow-visibility);
+  }
 }
 
 .element-info-section {
@@ -107,7 +139,7 @@ body {
 
 .element-info-value-color {
   display: flex;
-  // color: rgb(48 57 66);
+  color: rgb(48, 57, 66);
   margin-left: 10px;
   align-items: baseline;
 }
@@ -123,7 +155,7 @@ body {
   display: flex;
   align-items: center;
   text-align: right;
-  // color: rgb(48 57 66);
+  color: rgb(48, 57, 66);
   margin-left: 10px;
 }
 
@@ -138,7 +170,7 @@ body {
 
 .element-info-value-text {
   text-align: right;
-  // color: rgb(48 57 66);
+  color: rgb(48, 57, 66);
   margin-left: 10px;
   align-items: baseline;
   overflow: hidden;
@@ -157,7 +189,7 @@ body {
 
 .color-swatch-inner {
   flex: auto;
-  // border: 1px solid rgb(128 128 128 / 60%);
+  border: 1px solid rgb(128, 128, 128 / 60%);
 }
 
 .element-layout-type {
@@ -182,7 +214,7 @@ body {
 }
 
 .dimensions {
-  // color: hsl(0deg 0% 45%);
+  color: hsl(0deg, 0%, 45%);
   text-align: right;
   margin-left: 10px;
 }
@@ -197,13 +229,13 @@ body {
 
 .material-tag-name {
   /* Keep this in sync with inspectorSyntaxHighlight.css (--dom-tag-name-color) */
-  // color: rgb(136 18 128);
+  color: rgb(136, 18, 128);
 }
 
 .material-class-name,
 .material-node-id {
   /* Keep this in sync with inspectorSyntaxHighlight.css (.webkit-html-attribute-value) */
-  // color: rgb(26 26 166);
+  color: rgb(26, 26, 166);
 }
 
 .contrast-text {
@@ -212,7 +244,7 @@ body {
   text-align: center;
   line-height: 16px;
   margin-right: 8px;
-  // border: 1px solid rgb(0 0 0 / 10%);
+  border: 1px solid rgb(0, 0, 0 / 10%);
   padding: 0 1px;
 }
 

@@ -133,7 +133,6 @@ export class Overlay {
 
   setPlatform(platform: string) {
     this.platform = platform;
-    this.document.body.classList.add('platform-' + platform);
     if (!this._installed) {
       this.install();
     }
@@ -202,7 +201,9 @@ export function createTextChild(parent: HTMLElement, text: string): Text {
 export function createElement(tagName: string, className?: string) {
   const element = document.createElement(tagName);
   if (className) {
-    element.className = className;
+    let classNames = className.split(/\s+/);
+    classNames = classNames.map(className => 'luna-dom-highlighter-' + className);
+    element.className = classNames.join(' ');
   }
   return element;
 }

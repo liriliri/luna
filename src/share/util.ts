@@ -4,6 +4,7 @@ import root from 'licia/root'
 import html from 'licia/html'
 import isNum from 'licia/isNum'
 import contain from 'licia/contain'
+import toNum from 'licia/toNum'
 
 export function classPrefix(name: string) {
   const prefix = `luna-${name}-`
@@ -114,4 +115,8 @@ export function executeAfterTransition(el: HTMLElement, callback: () => any) {
     callback()
   }
   el.addEventListener('transitionend', handler)
+}
+
+export function pxToNum(str: string) {
+  return toNum(str.replace('px', ''));
 }

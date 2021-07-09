@@ -1,113 +1,207 @@
 import Component from '../share/Component'
 import { HighlightOverlay } from './overlay/tool_highlight'
+import { pxToNum } from '../share/util'
+import ResizeSensor from 'licia/ResizeSensor'
+import throttle from 'licia/throttle'
+
+interface IRect {
+  left: number
+  top: number
+  width: number
+  height: number
+}
+
+interface IOptions {
+  showRulers?: boolean
+  showExtensionLines?: boolean
+}
 
 export default class DomHighlighter extends Component {
   private overlay: HighlightOverlay = new HighlightOverlay(window)
-  constructor(container: HTMLElement) {
+  private target: HTMLElement | null
+  private resizeSensor: ResizeSensor
+  private reset: () => void
+  private options: Required<IOptions>
+  constructor(
+    container: HTMLElement,
+    { showRulers = false, showExtensionLines = false }: IOptions = {}
+  ) {
     super(container, { compName: 'dom-highlighter' })
-    this.overlay.setPlatform('mac')
-  }
-  highlight() {
-    const highlight: any = {
-      paths: [
-        {
-          path: [
-            'M',
-            321.5,
-            164,
-            'L',
-            593.5,
-            164,
-            'L',
-            593.5,
-            256,
-            'L',
-            321.5,
-            256,
-            'Z',
-          ],
-          fillColor: 'rgba(111, 168, 220, 0.658823529411765)',
-          name: 'content',
-        },
-        {
-          path: [
-            'M',
-            321.5,
-            164,
-            'L',
-            593.5,
-            164,
-            'L',
-            593.5,
-            256,
-            'L',
-            321.5,
-            256,
-            'Z',
-          ],
-          fillColor: 'rgba(147, 196, 125, 0.549019607843137)',
-          name: 'padding',
-        },
-        {
-          path: [
-            'M',
-            321.5,
-            164,
-            'L',
-            593.5,
-            164,
-            'L',
-            593.5,
-            256,
-            'L',
-            321.5,
-            256,
-            'Z',
-          ],
-          fillColor: 'rgba(255, 229, 153, 0.658823529411765)',
-          name: 'border',
-        },
-        {
-          path: [
-            'M',
-            321.5,
-            164,
-            'L',
-            593.5,
-            164,
-            'L',
-            593.5,
-            256,
-            'L',
-            321.5,
-            256,
-            'Z',
-          ],
-          fillColor: 'rgba(246, 178, 107, 0.658823529411765)',
-          name: 'margin',
-        },
-      ],
-      showRulers: false,
-      showExtensionLines: false,
-      colorFormat: 'hex',
-      elementInfo: {
-        tagName: 'div',
-        idValue: 'logo-default',
-        className: '.show-logo',
-        nodeWidth: 272,
-        nodeHeight: 92,
-        showAccessibilityInfo: true,
-        isKeyboardFocusable: false,
-        accessibleName: 'Google',
-        accessibleRole: 'generic',
-        style: {
-          padding: '0px',
-          margin: '0px',
-          'background-color': '#00000000',
-        },
-      },
+
+    this.options = {
+      showRulers,
+      showExtensionLines,
     }
 
+    this.overlay.setContainer(container)
+    this.overlay.setPlatform('mac')
+
+    this.reset = throttle(() => this._reset(), 16)
+
+    this.reset()
+    this.bindEvent()
+  }
+  highlight(target: HTMLElement) {
+    this.target = target
+
+    if (this.resizeSensor) {
+      this.resizeSensor.destroy()
+    }
+    this.resizeSensor = new ResizeSensor(target)
+    this.resizeSensor.addListener(this.reset)
+
+    this.draw()
+  }
+  hide() {
+    this.target = null
+    this.reset()
+  }
+  destroy() {
+    window.removeEventListener('resize', this.reset)
+    window.removeEventListener('scroll', this.reset)
+    if (this.resizeSensor) {
+      this.resizeSensor.destroy()
+    }
+
+    super.destroy()
+  }
+  private draw() {
+    if (!this.target) {
+      return
+    }
+
+    const { left, top, width, height } = this.target.getBoundingClientRect()
+    const computedStyle = window.getComputedStyle(this.target)
+    const getNumStyle = (name: string) =>
+      pxToNum(computedStyle.getPropertyValue(name))
+
+    const ml = getNumStyle('margin-left')
+    const mr = getNumStyle('margin-right')
+    const mt = getNumStyle('margin-top')
+    const mb = getNumStyle('margin-bottom')
+
+    const bl = getNumStyle('border-left-width')
+    const br = getNumStyle('border-right-width')
+    const bt = getNumStyle('border-top-width')
+    const bb = getNumStyle('border-bottom-width')
+
+    const pl = getNumStyle('padding-left')
+    const pr = getNumStyle('padding-right')
+    const pt = getNumStyle('padding-top')
+    const pb = getNumStyle('padding-bottom')
+
+    const contentPath = {
+      path: this.rectToPath({
+        left: left + bl + pl,
+        top: top + bt + pt,
+        width: width - bl - pl - br - pr,
+        height: height - bt - pt - bb - pb,
+      }),
+      fillColor: 'rgba(111, 168, 220, .66)',
+      name: 'content',
+    }
+
+    const paddingPath = {
+      path: this.rectToPath({
+        left: left + bl,
+        top: top + bt,
+        width: width - bl - br,
+        height: height - bt - bb,
+      }),
+      fillColor: 'rgba(147, 196, 125, .55)',
+      name: 'padding',
+    }
+
+    const borderPath = {
+      path: this.rectToPath({
+        left,
+        top,
+        width,
+        height,
+      }),
+      fillColor: 'rgba(255, 229, 153, .66)',
+      name: 'border',
+    }
+
+    const marginPath = {
+      path: this.rectToPath({
+        left: left - ml,
+        top: top - mt,
+        width: width + ml + mr,
+        height: height + mt + mb,
+      }),
+      fillColor: 'rgba(246, 178, 107, .66)',
+      name: 'margin',
+    }
+
+    const highlight: any = {
+      paths: [contentPath, paddingPath, borderPath, marginPath],
+      elementInfo: {
+        tagName: 'button',
+        className: 'class.name',
+        idValue: 'download-hero',
+        nodeWidth: '700',
+        nodeHeight: '75',
+        style: {
+          color: '#000000FF',
+          'font-family':
+            '"Product Sans", "Open Sans", Roboto, Arial, "Product Sans", "Open Sans", Roboto, Arial',
+          'font-size': '20px',
+          'line-height': '25px',
+          padding: '0px',
+          margin: '20px 0px',
+          'background-color': '#FFFFFFFF',
+        },
+        contrast: {
+          fontSize: '20px',
+          fontWeight: '400',
+          backgroundColor: '#FFFFFFFF',
+          textOpacity: 0.1,
+          contrastAlgorithm: 'aa',
+        },
+        isKeyboardFocusable: false,
+        accessibleName: 'name',
+        accessibleRole: 'role',
+        showAccessibilityInfo: true,
+      },
+      showExtensionLines: this.options.showExtensionLines,
+      showRulers: this.options.showRulers,
+      colorFormat: 'hsl',
+    }
     this.overlay.drawHighlight(highlight)
+  }
+  private bindEvent() {
+    window.addEventListener('resize', this.reset)
+    window.addEventListener('scroll', this.reset)
+  }
+  private _reset = () => {
+    const viewportWidth = document.documentElement.clientWidth
+    const viewportHeight = document.documentElement.clientHeight
+
+    this.overlay.reset({
+      viewportSize: {
+        width: viewportWidth,
+        height: viewportHeight,
+      },
+      deviceScaleFactor: 1,
+      pageScaleFactor: 1,
+      pageZoomFactor: 1,
+      emulationScaleFactor: 1,
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
+    })
+
+    this.draw()
+  }
+  private rectToPath({ left, top, width, height }: IRect) {
+    const path: Array<number | string> = []
+
+    path.push('M', left, top)
+    path.push('L', left + width, top)
+    path.push('L', left + width, top + height)
+    path.push('L', left, top + height)
+
+    path.push('Z')
+    return path
   }
 }

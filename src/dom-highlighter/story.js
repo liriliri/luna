@@ -4,7 +4,7 @@ import story from '../share/story'
 import readme from './README.md'
 import $ from 'licia/$'
 import h from 'licia/h'
-import { button, boolean, object, text } from '@storybook/addon-knobs'
+import { button, boolean, object, text, select } from '@storybook/addon-knobs'
 
 const def = story(
   'dom-highlighter',
@@ -28,19 +28,21 @@ const def = story(
     })
 
     const element = text('Element', 'div#test.class1.class2')
+    const innerText = text('Text', 'TARGET')
 
     const target = h(
       element,
       {
         style: targetStyle,
       },
-      'TARGET'
+      innerText
     )
     wrapper.appendChild(target)
 
     const container = h('div')
     wrapper.appendChild(container)
 
+    const colorFormat = select('Color Format', ['rgb', 'hsl', 'hex'], 'hex')
     const showRulers = boolean('Show Rulers', true)
     const showExtensionLines = boolean('Show Extension Lines', true)
     const showInfo = boolean('Show Info', true)
@@ -61,6 +63,7 @@ const def = story(
       showInfo,
       showStyles,
       showAccessibilityInfo,
+      colorFormat,
     })
     domHighlighter.highlight(target)
 

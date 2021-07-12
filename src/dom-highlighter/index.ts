@@ -4,6 +4,10 @@ import { pxToNum } from '../share/util'
 import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
 import lowerCase from 'licia/lowerCase'
+import each from 'licia/each'
+import Color from 'licia/Color'
+import hex from 'licia/hex'
+import upperCase from 'licia/upperCase'
 
 interface IRect {
   left: number
@@ -18,6 +22,7 @@ interface IOptions {
   showInfo?: boolean
   showStyles?: boolean
   showAccessibilityInfo?: boolean
+  colorFormat?: 'rgb' | 'hsl' | 'hex'
 }
 
 export default class DomHighlighter extends Component {
@@ -34,6 +39,7 @@ export default class DomHighlighter extends Component {
       showInfo = true,
       showStyles = true,
       showAccessibilityInfo = true,
+      colorFormat = 'hex',
     }: IOptions = {}
   ) {
     super(container, { compName: 'dom-highlighter' })
@@ -44,6 +50,7 @@ export default class DomHighlighter extends Component {
       showInfo,
       showStyles,
       showAccessibilityInfo,
+      colorFormat,
     }
 
     this.overlay.setContainer(container)
@@ -84,10 +91,27 @@ export default class DomHighlighter extends Component {
       return
     }
 
-    const { left, top, width, height } = target.getBoundingClientRect()
+    const highlight: any = {
+      paths: this.getPaths(target),
+      showExtensionLines: this.options.showExtensionLines,
+      showRulers: this.options.showRulers,
+      colorFormat: this.options.colorFormat,
+    }
+
+    if (this.options.showInfo) {
+      highlight.elementInfo = this.getElementInfo(target)
+    }
+
+    this.overlay.drawHighlight(highlight)
+  }
+  private getPaths(target: HTMLElement) {
     const computedStyle = window.getComputedStyle(target)
-    const getNumStyle = (name: string) =>
-      pxToNum(computedStyle.getPropertyValue(name))
+
+    const { left, top, width, height } = target.getBoundingClientRect()
+
+    const getNumStyle = (name: string) => {
+      return pxToNum(computedStyle.getPropertyValue(name))
+    }
 
     const ml = getNumStyle('margin-left')
     const mr = getNumStyle('margin-right')
@@ -148,58 +172,77 @@ export default class DomHighlighter extends Component {
       name: 'margin',
     }
 
-    const highlight: any = {
-      paths: [contentPath, paddingPath, borderPath, marginPath],
-      showExtensionLines: this.options.showExtensionLines,
-      showRulers: this.options.showRulers,
-      colorFormat: 'hsl',
+    return [contentPath, paddingPath, borderPath, marginPath]
+  }
+  private getElementInfo(target: HTMLElement) {
+    const { width, height } = target.getBoundingClientRect()
+    const className = target.className
+      .split(/\s+/)
+      .map((c) => '.' + c)
+      .join('')
+
+    const elementInfo: any = {
+      tagName: lowerCase(target.tagName),
+      className,
+      idValue: target.id,
+      nodeWidth: width,
+      nodeHeight: height,
     }
 
-    if (this.options.showInfo) {
-      const className = target.className
-        .split(/\s+/)
-        .map((c) => '.' + c)
-        .join('')
-
-      const elementInfo: any = {
-        tagName: lowerCase(target.tagName),
-        className,
-        idValue: target.id,
-        nodeWidth: width,
-        nodeHeight: height,
-      }
-
-      if (this.options.showStyles) {
-        elementInfo.style = {
-          color: '#000000FF',
-          'font-family':
-            '"Product Sans", "Open Sans", Roboto, Arial, "Product Sans", "Open Sans", Roboto, Arial',
-          'font-size': '20px',
-          'line-height': '25px',
-          padding: '0px',
-          margin: '20px 0px',
-          'background-color': '#FFFFFFFF',
-        }
-      }
-
-      if (this.options.showAccessibilityInfo) {
-        elementInfo.showAccessibilityInfo = true
-        ;(elementInfo.contrast = {
-          fontSize: '20px',
-          fontWeight: '400',
-          backgroundColor: '#FFFFFFFF',
-          textOpacity: 0.1,
-          contrastAlgorithm: 'aa',
-        }),
-          (elementInfo.isKeyboardFocusable = false)
-        elementInfo.accessibleName = 'name'
-        elementInfo.accessibleRole = 'role'
-      }
-
-      highlight.elementInfo = elementInfo
+    if (this.options.showStyles) {
+      elementInfo.style = this.getStyles(target)
     }
 
-    this.overlay.drawHighlight(highlight)
+    if (this.options.showAccessibilityInfo) {
+      elementInfo.showAccessibilityInfo = true
+      elementInfo.contrast = {
+        fontSize: '20px',
+        fontWeight: '400',
+        backgroundColor: '#FFFFFFFF',
+        textOpacity: 0.1,
+        contrastAlgorithm: 'aa',
+      }
+      elementInfo.isKeyboardFocusable = false
+      elementInfo.accessibleName = 'name'
+      elementInfo.accessibleRole = 'role'
+    }
+
+    return elementInfo
+  }
+  // third_party/blink/renderer/core/inspector/inspector_highlight.cc
+  private getStyles(target: HTMLElement) {
+    const computedStyle = window.getComputedStyle(target)
+    let hasTextChildren = false
+    const childNodes = target.childNodes
+    for (let i = 0, len = childNodes.length; i < len; i++) {
+      if (childNodes[i].nodeType === 3) {
+        hasTextChildren = true
+      }
+    }
+
+    const properties = []
+    if (hasTextChildren) {
+      properties.push('color', 'font-family', 'font-size', 'line-height')
+    }
+    properties.push('padding', 'margin', 'background-color')
+
+    const ret: any = {}
+    each(properties, (property) => {
+      let value = computedStyle[property as any]
+      if (!value) {
+        return
+      }
+      if (isColor(value)) {
+        const color = Color.parse(value)
+        const opacity = color.val[3] || 1
+        color.val = color.val.slice(0, 3)
+        color.val.push(Math.round(255 * opacity))
+        value = '#' + upperCase(hex.encode(color.val))
+      }
+      ret[property] = value
+    })
+
+    return ret
   }
   private bindEvent() {
     window.addEventListener('resize', this.reset)
@@ -235,4 +278,11 @@ export default class DomHighlighter extends Component {
     path.push('Z')
     return path
   }
+}
+
+const regRgb = /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/
+const regRgba = /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d*(?:\.\d+)?)\)$/
+
+export function isColor(color: string) {
+  return regRgb.test(color) || regRgba.test(color)
 }

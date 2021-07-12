@@ -34,12 +34,6 @@ import type {Bounds, PathCommands, ResetData} from './common';
 import {constrainNumber, createChild, createElement, createTextChild, ellipsify, Overlay} from './common';
 import type {PathBounds} from './highlight_common';
 import {drawPath, emptyBounds, formatColor, formatRgba, parseHexa} from './highlight_common';
-import type {FlexContainerHighlight, FlexItemHighlight} from './highlight_flex_common';
-import {drawLayoutFlexContainerHighlight, drawLayoutFlexItemHighlight} from './highlight_flex_common';
-import type {GridHighlight} from './highlight_grid_common';
-import {drawLayoutGridHighlight} from './highlight_grid_common';
-import type {ScrollSnapHighlight} from './highlight_scroll_snap';
-import {PersistentOverlay} from './tool_persistent';
 
 interface Path {
   path: PathCommands;
@@ -79,14 +73,10 @@ interface Highlight {
   showExtensionLines: boolean;
   elementInfo: ElementInfo;
   colorFormat: string;
-  gridInfo: GridHighlight[];
-  flexInfo: FlexContainerHighlight[];
-  flexItemInfo: FlexItemHighlight[];
 }
 
 export class HighlightOverlay extends Overlay {
   private tooltip!: HTMLElement;
-  private persistentOverlay?: PersistentOverlay;
   private gridLabelState = {gridLayerCounter: 0};
   private _container: HTMLElement;
 
@@ -110,9 +100,6 @@ export class HighlightOverlay extends Overlay {
     super.reset(resetData);
     this.tooltip.innerHTML = '';
     this.gridLabelState.gridLayerCounter = 0;
-    if (this.persistentOverlay) {
-      this.persistentOverlay.reset(resetData);
-    }
   }
 
   install() {
@@ -124,10 +111,6 @@ export class HighlightOverlay extends Overlay {
     const tooltip = this.document.createElement('div');
     this.container.append(tooltip);
     this.tooltip = tooltip;
-
-    this.persistentOverlay = new PersistentOverlay(this.window);
-    this.persistentOverlay.renderGridMarkup();
-    this.persistentOverlay.setCanvas(canvas);
 
     this.setCanvas(canvas);
 
@@ -145,8 +128,6 @@ export class HighlightOverlay extends Overlay {
     this.context.save();
 
     const bounds = emptyBounds();
-    let contentPath: PathCommands|null = null;
-    let borderPath: PathCommands|null = null;
 
     for (let paths = highlight.paths.slice(); paths.length;) {
       const path = paths.pop();
@@ -162,13 +143,6 @@ export class HighlightOverlay extends Overlay {
             this.context, paths[paths.length - 1].path, 'red', undefined, undefined, bounds, this.emulationScaleFactor);
       }
       this.context.restore();
-
-      if (path.name === 'content') {
-        contentPath = path.path;
-      }
-      if (path.name === 'border') {
-        borderPath = path.path;
-      }
     }
     this.context.restore();
 
@@ -193,57 +167,10 @@ export class HighlightOverlay extends Overlay {
         drawElementTitle(this.tooltip, highlight.elementInfo, highlight.colorFormat, bounds, this.canvasWidth, this.canvasHeight);
       }
     }
-    if (highlight.gridInfo) {
-      for (const grid of highlight.gridInfo) {
-        drawLayoutGridHighlight(
-            grid, this.context, this.deviceScaleFactor, this.canvasWidth, this.canvasHeight, this.emulationScaleFactor,
-            this.gridLabelState);
-      }
-    }
 
-    if (highlight.flexInfo) {
-      for (const flex of highlight.flexInfo) {
-        drawLayoutFlexContainerHighlight(
-            flex, this.context, this.deviceScaleFactor, this.canvasWidth, this.canvasHeight, this.emulationScaleFactor);
-      }
-    }
-
-    // Draw the highlight for flex item only if the element isn't also a flex container that already has some highlight
-    // config.
-    const isVisibleFlexContainer = highlight.flexInfo?.length && highlight.flexInfo.some(config => {
-      return Object.keys(config.flexContainerHighlightConfig).length > 0;
-    });
-
-    if (highlight.flexItemInfo && !isVisibleFlexContainer) {
-      for (const flexItem of highlight.flexItemInfo) {
-        const path = flexItem.boxSizing === 'content' ? contentPath : borderPath;
-        if (!path) {
-          continue;
-        }
-        drawLayoutFlexItemHighlight(
-            flexItem, path, this.context, this.deviceScaleFactor, this.canvasWidth, this.canvasHeight,
-            this.emulationScaleFactor);
-      }
-    }
     this.context.restore();
 
     return {bounds: bounds};
-  }
-
-  drawGridHighlight(highlight: GridHighlight) {
-    if (this.persistentOverlay) {
-      this.persistentOverlay.drawGridHighlight(highlight);
-    }
-  }
-
-  drawFlexContainerHighlight(highlight: FlexContainerHighlight) {
-    if (this.persistentOverlay) {
-      this.persistentOverlay.drawFlexContainerHighlight(highlight);
-    }
-  }
-
-  drawScrollSnapHighlight(highlight: ScrollSnapHighlight) {
-    this.persistentOverlay?.drawScrollSnapHighlight(highlight);
   }
 
   private drawAxis(context: CanvasRenderingContext2D, rulerAtRight: boolean, rulerAtBottom: boolean) {

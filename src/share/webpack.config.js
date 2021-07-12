@@ -6,10 +6,12 @@ const camelCase = require('licia/camelCase')
 const upperFirst = require('licia/upperFirst')
 const each = require('licia/each')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 
 module.exports = function (
   name,
-  { useIcon = false, hasStyle = true, dependencies = [] } = {}
+  { useIcon = false, hasStyle = true, dependencies = [], analyzer = false } = {}
 ) {
   const postcssLoader = {
     loader: 'postcss-loader',
@@ -46,6 +48,16 @@ module.exports = function (
   })
 
   return function (env, options) {
+    const plugins = [
+      new MiniCssExtractPlugin({
+        filename: `luna-${name}.css`,
+      }),
+    ]
+
+    if (analyzer) {
+      plugins.push(new BundleAnalyzerPlugin())
+    }
+
     return {
       mode: options.mode,
       entry,
@@ -60,11 +72,7 @@ module.exports = function (
       resolve: {
         extensions: ['.ts', '.js'],
       },
-      plugins: [
-        new MiniCssExtractPlugin({
-          filename: `luna-${name}.css`,
-        }),
-      ],
+      plugins,
       module: {
         rules: [
           {

@@ -12,7 +12,7 @@ import extend from 'licia/extend'
 import camelCase from 'licia/camelCase'
 import contain from 'licia/contain'
 import toNum from 'licia/toNum'
-import { elementRoles } from 'aria-query'
+import elementRoles from './elementRoles'
 
 interface IRect {
   left: number
@@ -334,27 +334,27 @@ export default class DomHighlighter extends Component {
     let role = target.getAttribute('role')
 
     const tagName = lowerCase(target.tagName)
-    elementRoles.forEach((value, key) => {
+    elementRoles.forEach((value: any) => {
       if (role) {
         return
       }
 
-      const { name, attributes } = key
+      const name: string = value[0]
+      const attributes: any = value[2]
+
       if (name !== tagName) {
         return
       }
 
       if (attributes) {
         for (const attribute of attributes) {
-          if (attribute.name && attribute.value) {
-            if (target.getAttribute(attribute.name) !== attribute.value) {
-              return
-            }
+          if (target.getAttribute(attribute[0]) !== attribute[1]) {
+            return
           }
         }
       }
 
-      role = value.values().next().value
+      role = value[1]
     })
 
     return {

@@ -1,11 +1,5 @@
 {
   "name": "luna-dom-highlighter",
   "version": "0.1.0",
-  "description": "Highlighter for html elements",
-  "dependencies": {
-    "aria-query": "^4.2.2"
-  },
-  "devDependencies": {
-    "@types/aria-query": "^4.2.2"
-  }
+  "description": "Highlighter for html elements"
 }

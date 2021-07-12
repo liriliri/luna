@@ -8,6 +8,11 @@ import each from 'licia/each'
 import Color from 'licia/Color'
 import hex from 'licia/hex'
 import upperCase from 'licia/upperCase'
+import extend from 'licia/extend'
+import camelCase from 'licia/camelCase'
+import contain from 'licia/contain'
+import toNum from 'licia/toNum'
+import { elementRoles } from 'aria-query'
 
 interface IRect {
   left: number
@@ -204,17 +209,7 @@ export default class DomHighlighter extends Component {
     }
 
     if (this.options.showAccessibilityInfo) {
-      elementInfo.showAccessibilityInfo = true
-      elementInfo.contrast = {
-        fontSize: '20px',
-        fontWeight: '400',
-        backgroundColor: '#FFFFFFFF',
-        textOpacity: 0.1,
-        contrastAlgorithm: 'aa',
-      }
-      elementInfo.isKeyboardFocusable = false
-      elementInfo.accessibleName = 'name'
-      elementInfo.accessibleRole = 'role'
+      extend(elementInfo, this.getAccessibilityInfo(target))
     }
 
     return elementInfo
@@ -236,23 +231,79 @@ export default class DomHighlighter extends Component {
     }
     properties.push('padding', 'margin', 'background-color')
 
-    const ret: any = {}
-    each(properties, (property) => {
-      let value = computedStyle[property as any]
-      if (!value) {
+    return propertiesToValues(computedStyle, properties)
+  }
+  private getAccessibilityInfo(target: HTMLElement) {
+    const computedStyle: any = window.getComputedStyle(target)
+
+    return {
+      showAccessibilityInfo: true,
+      contrast: {
+        contrastAlgorithm: 'aa',
+        textOpacity: 0.1,
+        ...propertiesToValues(
+          computedStyle,
+          ['font-size', 'font-weight', 'background-color', 'text-opacity'],
+          true
+        ),
+      },
+      isKeyboardFocusable: this.isFocusable(target),
+      ...this.getAccessibleNameAndRole(target),
+    }
+  }
+  private isFocusable(target: HTMLElement) {
+    const tagName = lowerCase(target.tagName)
+
+    if (
+      contain(
+        ['a', 'button', 'input', 'textarea', 'select', 'details'],
+        tagName
+      )
+    ) {
+      return true
+    }
+
+    const tabIdx = target.getAttribute('tabindex')
+    if (tabIdx && toNum(tabIdx) > -1) {
+      return true
+    }
+
+    return false
+  }
+  private getAccessibleNameAndRole(target: HTMLElement) {
+    const name =
+      target.getAttribute('labelledby') || target.getAttribute('aria-label')
+
+    let role = target.getAttribute('role')
+
+    const tagName = lowerCase(target.tagName)
+    elementRoles.forEach((value, key) => {
+      if (role) {
         return
       }
-      if (isColor(value)) {
-        const color = Color.parse(value)
-        const opacity = color.val[3] || 1
-        color.val = color.val.slice(0, 3)
-        color.val.push(Math.round(255 * opacity))
-        value = '#' + upperCase(hex.encode(color.val))
+
+      const { name, attributes } = key
+      if (name !== tagName) {
+        return
       }
-      ret[property] = value
+
+      if (attributes) {
+        for (const attribute of attributes) {
+          if (attribute.name && attribute.value) {
+            if (target.getAttribute(attribute.name) !== attribute.value) {
+              return
+            }
+          }
+        }
+      }
+
+      role = value.values().next().value
     })
 
-    return ret
+    return {
+      accessibleName: name || target.getAttribute('title') || '',
+      accessibleRole: role || 'generic',
+    }
   }
   private bindEvent() {
     window.addEventListener('resize', this.reset)
@@ -293,6 +344,42 @@ export default class DomHighlighter extends Component {
 const regRgb = /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/
 const regRgba = /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d*(?:\.\d+)?)\)$/
 
-export function isColor(color: string) {
+function isColor(color: string) {
   return regRgb.test(color) || regRgba.test(color)
+}
+
+function rgbToHex(rgb: string) {
+  const color = Color.parse(rgb)
+  const opacity = color.val[3] || 1
+  color.val = color.val.slice(0, 3)
+  color.val.push(Math.round(255 * opacity))
+  return '#' + upperCase(hex.encode(color.val))
+}
+
+function propertiesToValues(
+  computedStyle: CSSStyleDeclaration,
+  properties: string[],
+  useCamelCase = false
+) {
+  const ret: any = {}
+  each(properties, (property) => {
+    let value = (computedStyle as any)[
+      property === 'text-opacity' ? 'color' : property
+    ]
+    if (!value) {
+      return
+    }
+    if (isColor(value)) {
+      value = rgbToHex(value)
+      if (property === 'text-opacity') {
+        value = value.slice(7)
+        value = hex.decode(value)[0] / 255
+      }
+    }
+    if (useCamelCase) {
+      property = camelCase(property)
+    }
+    ret[property] = value
+  })
+  return ret
 }

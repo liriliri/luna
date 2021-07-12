@@ -27,6 +27,11 @@ const def = story(
       marginLeft: 100,
     })
 
+    const targetAttributes = object('Target Attributes', {
+      title: 'target',
+      tabindex: '1',
+    })
+
     const element = text('Element', 'div#test.class1.class2')
     const innerText = text('Text', 'TARGET')
 
@@ -34,6 +39,7 @@ const def = story(
       element,
       {
         style: targetStyle,
+        ...targetAttributes,
       },
       innerText
     )

@@ -65,6 +65,7 @@ const def = story(
       showAccessibilityInfo,
       colorFormat,
     })
+    domHighlighter.intercept((highlight) => console.log('intercept', highlight))
     domHighlighter.highlight(target)
 
     return domHighlighter

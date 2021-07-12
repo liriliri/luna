@@ -31,6 +31,7 @@ export default class DomHighlighter extends Component {
   private resizeSensor: ResizeSensor
   private reset: () => void
   private options: Required<IOptions>
+  private interceptor: (...args: any[]) => any | null
   constructor(
     container: HTMLElement,
     {
@@ -76,6 +77,9 @@ export default class DomHighlighter extends Component {
     this.target = null
     this.reset()
   }
+  intercept(interceptor: (...args: any[]) => any | null) {
+    this.interceptor = interceptor
+  }
   destroy() {
     window.removeEventListener('resize', this.reset)
     window.removeEventListener('scroll', this.reset)
@@ -91,7 +95,7 @@ export default class DomHighlighter extends Component {
       return
     }
 
-    const highlight: any = {
+    let highlight: any = {
       paths: this.getPaths(target),
       showExtensionLines: this.options.showExtensionLines,
       showRulers: this.options.showRulers,
@@ -102,6 +106,12 @@ export default class DomHighlighter extends Component {
       highlight.elementInfo = this.getElementInfo(target)
     }
 
+    if (this.interceptor) {
+      const result = this.interceptor(highlight)
+      if (result) {
+        highlight = result
+      }
+    }
     this.overlay.drawHighlight(highlight)
   }
   private getPaths(target: HTMLElement) {

@@ -65,8 +65,12 @@ const def = story(
     const showInfo = boolean('Show Info', true)
     const showStyles = boolean('Show Styles', true)
     const showAccessibilityInfo = boolean('Show AccessibilityInfo', true)
-    button('Highlight', () => {
+    button('Highlight Element', () => {
       domHighlighter.highlight(target)
+      return false
+    })
+    button('Highlight Text', () => {
+      domHighlighter.highlight(target.childNodes[0])
       return false
     })
     button('Hide', () => {

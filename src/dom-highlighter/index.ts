@@ -36,9 +36,9 @@ interface IOptions {
 
 export default class DomHighlighter extends Component {
   private overlay: HighlightOverlay = new HighlightOverlay(window)
-  private target: HTMLElement | null
+  private target: HTMLElement | Text | null
   private resizeSensor: ResizeSensor
-  private reset: () => void
+  private redraw: () => void
   private options: Required<IOptions>
   private interceptor: (...args: any[]) => any | null
   constructor(
@@ -74,32 +74,37 @@ export default class DomHighlighter extends Component {
     this.overlay.setContainer(container)
     this.overlay.setPlatform('mac')
 
-    this.reset = throttle(() => this._reset(), 16)
+    this.redraw = throttle(() => {
+      this.reset()
+      this.draw()
+    }, 16)
 
-    this.reset()
+    this.redraw()
     this.bindEvent()
   }
-  highlight(target: HTMLElement) {
+  highlight(target: HTMLElement | Text) {
     this.target = target
 
-    if (this.resizeSensor) {
-      this.resizeSensor.destroy()
+    if (target instanceof HTMLElement) {
+      if (this.resizeSensor) {
+        this.resizeSensor.destroy()
+      }
+      this.resizeSensor = new ResizeSensor(target)
+      this.resizeSensor.addListener(this.redraw)
     }
-    this.resizeSensor = new ResizeSensor(target)
-    this.resizeSensor.addListener(this.reset)
 
-    this.draw()
+    this.redraw()
   }
   hide() {
     this.target = null
-    this.reset()
+    this.redraw()
   }
   intercept(interceptor: (...args: any[]) => any | null) {
     this.interceptor = interceptor
   }
   destroy() {
-    window.removeEventListener('resize', this.reset)
-    window.removeEventListener('scroll', this.reset)
+    window.removeEventListener('resize', this.redraw)
+    window.removeEventListener('scroll', this.redraw)
     if (this.resizeSensor) {
       this.resizeSensor.destroy()
     }
@@ -112,6 +117,46 @@ export default class DomHighlighter extends Component {
       return
     }
 
+    if (target instanceof Text) {
+      this.drawText(target)
+    } else {
+      this.drawElement(target)
+    }
+  }
+  private drawText(target: Text) {
+    const range = document.createRange()
+    range.selectNode(target)
+    const { left, top, width, height } = range.getBoundingClientRect()
+    range.detach()
+
+    let highlight: any = {
+      paths: [
+        {
+          path: this.rectToPath({
+            left,
+            top,
+            width,
+            height,
+          }),
+          fillColor: this.options.contentColor,
+          name: 'content',
+        },
+      ],
+      showExtensionLines: this.options.showExtensionLines,
+      showRulers: this.options.showRulers,
+    }
+
+    if (this.options.showInfo) {
+      highlight.elementInfo = {
+        tagName: '#text',
+        nodeWidth: width,
+        nodeHeight: height,
+      }
+    }
+
+    this.overlay.drawHighlight(highlight)
+  }
+  private drawElement(target: HTMLElement) {
     let highlight: any = {
       paths: this.getPaths(target),
       showExtensionLines: this.options.showExtensionLines,
@@ -318,10 +363,10 @@ export default class DomHighlighter extends Component {
     }
   }
   private bindEvent() {
-    window.addEventListener('resize', this.reset)
-    window.addEventListener('scroll', this.reset)
+    window.addEventListener('resize', this.redraw)
+    window.addEventListener('scroll', this.redraw)
   }
-  private _reset = () => {
+  private reset = () => {
     const viewportWidth = document.documentElement.clientWidth
     const viewportHeight = document.documentElement.clientHeight
 
@@ -337,8 +382,6 @@ export default class DomHighlighter extends Component {
       scrollX: window.scrollX,
       scrollY: window.scrollY,
     })
-
-    this.draw()
   }
   private rectToPath({ left, top, width, height }: IRect) {
     const path: Array<number | string> = []

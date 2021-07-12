@@ -16,6 +16,8 @@ interface IOptions {
   showRulers?: boolean
   showExtensionLines?: boolean
   showInfo?: boolean
+  showStyles?: boolean
+  showAccessibilityInfo?: boolean
 }
 
 export default class DomHighlighter extends Component {
@@ -30,6 +32,8 @@ export default class DomHighlighter extends Component {
       showRulers = false,
       showExtensionLines = false,
       showInfo = true,
+      showStyles = true,
+      showAccessibilityInfo = true,
     }: IOptions = {}
   ) {
     super(container, { compName: 'dom-highlighter' })
@@ -38,6 +42,8 @@ export default class DomHighlighter extends Component {
       showRulers,
       showExtensionLines,
       showInfo,
+      showStyles,
+      showAccessibilityInfo,
     }
 
     this.overlay.setContainer(container)
@@ -155,13 +161,16 @@ export default class DomHighlighter extends Component {
         .map((c) => '.' + c)
         .join('')
 
-      highlight.elementInfo = {
+      const elementInfo: any = {
         tagName: lowerCase(target.tagName),
         className,
         idValue: target.id,
         nodeWidth: width,
         nodeHeight: height,
-        style: {
+      }
+
+      if (this.options.showStyles) {
+        elementInfo.style = {
           color: '#000000FF',
           'font-family':
             '"Product Sans", "Open Sans", Roboto, Arial, "Product Sans", "Open Sans", Roboto, Arial',
@@ -170,19 +179,24 @@ export default class DomHighlighter extends Component {
           padding: '0px',
           margin: '20px 0px',
           'background-color': '#FFFFFFFF',
-        },
-        contrast: {
+        }
+      }
+
+      if (this.options.showAccessibilityInfo) {
+        elementInfo.showAccessibilityInfo = true
+        ;(elementInfo.contrast = {
           fontSize: '20px',
           fontWeight: '400',
           backgroundColor: '#FFFFFFFF',
           textOpacity: 0.1,
           contrastAlgorithm: 'aa',
-        },
-        isKeyboardFocusable: false,
-        accessibleName: 'name',
-        accessibleRole: 'role',
-        showAccessibilityInfo: true,
+        }),
+          (elementInfo.isKeyboardFocusable = false)
+        elementInfo.accessibleName = 'name'
+        elementInfo.accessibleRole = 'role'
       }
+
+      highlight.elementInfo = elementInfo
     }
 
     this.overlay.drawHighlight(highlight)

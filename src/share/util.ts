@@ -118,5 +118,5 @@ export function executeAfterTransition(el: HTMLElement, callback: () => any) {
 }
 
 export function pxToNum(str: string) {
-  return toNum(str.replace('px', ''));
+  return toNum(str.replace('px', ''))
 }

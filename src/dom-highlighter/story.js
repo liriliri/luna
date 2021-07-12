@@ -44,6 +44,8 @@ const def = story(
     const showRulers = boolean('Show Rulers', true)
     const showExtensionLines = boolean('Show Extension Lines', true)
     const showInfo = boolean('Show Info', true)
+    const showStyles = boolean('Show Styles', true)
+    const showAccessibilityInfo = boolean('Show AccessibilityInfo', true)
     button('Highlight', () => {
       domHighlighter.highlight(target)
       return false
@@ -57,6 +59,8 @@ const def = story(
       showRulers,
       showExtensionLines,
       showInfo,
+      showStyles,
+      showAccessibilityInfo,
     })
     domHighlighter.highlight(target)
 

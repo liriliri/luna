@@ -14,7 +14,9 @@
   "cropper": {
     "test": true
   },
-  "dom-highlighter": {},
+  "dom-highlighter": {
+    "test": true
+  },
   "editor": {
     "icon": true,
     "test": true

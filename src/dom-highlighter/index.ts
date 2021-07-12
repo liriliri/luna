@@ -129,7 +129,7 @@ export default class DomHighlighter extends Component {
     const { left, top, width, height } = range.getBoundingClientRect()
     range.detach()
 
-    let highlight: any = {
+    const highlight: any = {
       paths: [
         {
           path: this.rectToPath({
@@ -395,6 +395,9 @@ export default class DomHighlighter extends Component {
     return path
   }
 }
+
+module.exports = DomHighlighter
+module.exports.default = DomHighlighter
 
 const regRgb = /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/
 const regRgba = /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d*(?:\.\d+)?)\)$/

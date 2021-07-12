@@ -28,6 +28,10 @@ interface IOptions {
   showStyles?: boolean
   showAccessibilityInfo?: boolean
   colorFormat?: 'rgb' | 'hsl' | 'hex'
+  contentColor?: string
+  paddingColor?: string
+  borderColor?: string
+  marginColor?: string
 }
 
 export default class DomHighlighter extends Component {
@@ -46,6 +50,10 @@ export default class DomHighlighter extends Component {
       showStyles = true,
       showAccessibilityInfo = true,
       colorFormat = 'hex',
+      contentColor = 'rgba(111, 168, 220, .66)',
+      paddingColor = 'rgba(147, 196, 125, .55)',
+      borderColor = 'rgba(255, 229, 153, .66)',
+      marginColor = 'rgba(246, 178, 107, .66)',
     }: IOptions = {}
   ) {
     super(container, { compName: 'dom-highlighter' })
@@ -57,6 +65,10 @@ export default class DomHighlighter extends Component {
       showStyles,
       showAccessibilityInfo,
       colorFormat,
+      contentColor,
+      paddingColor,
+      borderColor,
+      marginColor,
     }
 
     this.overlay.setContainer(container)
@@ -150,7 +162,7 @@ export default class DomHighlighter extends Component {
         width: width - bl - pl - br - pr,
         height: height - bt - pt - bb - pb,
       }),
-      fillColor: 'rgba(111, 168, 220, .66)',
+      fillColor: this.options.contentColor,
       name: 'content',
     }
 
@@ -161,7 +173,7 @@ export default class DomHighlighter extends Component {
         width: width - bl - br,
         height: height - bt - bb,
       }),
-      fillColor: 'rgba(147, 196, 125, .55)',
+      fillColor: this.options.paddingColor,
       name: 'padding',
     }
 
@@ -172,7 +184,7 @@ export default class DomHighlighter extends Component {
         width,
         height,
       }),
-      fillColor: 'rgba(255, 229, 153, .66)',
+      fillColor: this.options.borderColor,
       name: 'border',
     }
 
@@ -183,7 +195,7 @@ export default class DomHighlighter extends Component {
         width: width + ml + mr,
         height: height + mt + mb,
       }),
-      fillColor: 'rgba(246, 178, 107, .66)',
+      fillColor: this.options.marginColor,
       name: 'margin',
     }
 

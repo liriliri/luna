@@ -11,7 +11,7 @@ module.exports = {
   stories,
   addons: [
     'storybook-readme/register',
-    '@storybook/addon-knobs/register',
+    '@storybook/addon-knobs',
     {
       name: '@storybook/addon-storysource',
       options: {

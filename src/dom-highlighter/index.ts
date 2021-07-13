@@ -32,6 +32,7 @@ interface IOptions {
   paddingColor?: string
   borderColor?: string
   marginColor?: string
+  monitorResize?: boolean
 }
 
 export default class DomHighlighter extends Component {
@@ -54,6 +55,7 @@ export default class DomHighlighter extends Component {
       paddingColor = 'rgba(147, 196, 125, .55)',
       borderColor = 'rgba(255, 229, 153, .66)',
       marginColor = 'rgba(246, 178, 107, .66)',
+      monitorResize = true,
     }: IOptions = {}
   ) {
     super(container, { compName: 'dom-highlighter' })
@@ -69,6 +71,7 @@ export default class DomHighlighter extends Component {
       paddingColor,
       borderColor,
       marginColor,
+      monitorResize,
     }
 
     this.overlay.setContainer(container)
@@ -85,7 +88,7 @@ export default class DomHighlighter extends Component {
   highlight(target: HTMLElement | Text) {
     this.target = target
 
-    if (target instanceof HTMLElement) {
+    if (target instanceof HTMLElement && this.options.monitorResize) {
       if (this.resizeSensor) {
         this.resizeSensor.destroy()
       }

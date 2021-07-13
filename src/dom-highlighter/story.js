@@ -65,6 +65,7 @@ const def = story(
     const showInfo = boolean('Show Info', true)
     const showStyles = boolean('Show Styles', true)
     const showAccessibilityInfo = boolean('Show AccessibilityInfo', true)
+    const monitorResize = boolean('Monitor Resize', true)
     button('Highlight Element', () => {
       domHighlighter.highlight(target)
       return false
@@ -89,6 +90,7 @@ const def = story(
       paddingColor,
       borderColor,
       marginColor,
+      monitorResize,
     })
     domHighlighter.intercept((highlight) => console.log('intercept', highlight))
     domHighlighter.highlight(target)

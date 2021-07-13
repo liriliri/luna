@@ -50,6 +50,7 @@ domHighlighter.hide()
 * paddingColor(string): The padding highlight fill color.
 * borderColor(string): The border highlight fill color.
 * marginColor(string): The margin highlight fill color.
+* monitorResize(boolean): Auto redraw if target element is resized.
 
 ## Api
 

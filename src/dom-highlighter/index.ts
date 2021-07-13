@@ -13,12 +13,20 @@ import camelCase from 'licia/camelCase'
 import contain from 'licia/contain'
 import toNum from 'licia/toNum'
 import elementRoles from './elementRoles'
+import isStr from 'licia/isStr'
 
 interface IRect {
   left: number
   top: number
   width: number
   height: number
+}
+
+interface IRgb {
+  r: number
+  g: number
+  b: number
+  a?: number
 }
 
 interface IOptions {
@@ -28,11 +36,11 @@ interface IOptions {
   showStyles?: boolean
   showAccessibilityInfo?: boolean
   colorFormat?: 'rgb' | 'hsl' | 'hex'
-  contentColor?: string
-  paddingColor?: string
-  borderColor?: string
-  marginColor?: string
-  monitorResize?: boolean
+  contentColor?: string | IRgb
+  paddingColor?: string | IRgb
+  borderColor?: string | IRgb
+  marginColor?: string | IRgb
+  monitorResize?: boolean | IRgb
 }
 
 export default class DomHighlighter extends Component {
@@ -138,6 +146,7 @@ export default class DomHighlighter extends Component {
     }
   }
   private drawText(target: Text) {
+    const { options } = this
     const range = document.createRange()
     range.selectNode(target)
     const { left, top, width, height } = range.getBoundingClientRect()
@@ -152,15 +161,15 @@ export default class DomHighlighter extends Component {
             width,
             height,
           }),
-          fillColor: this.options.contentColor,
+          fillColor: normalizeColor(options.contentColor),
           name: 'content',
         },
       ],
-      showExtensionLines: this.options.showExtensionLines,
-      showRulers: this.options.showRulers,
+      showExtensionLines: options.showExtensionLines,
+      showRulers: options.showRulers,
     }
 
-    if (this.options.showInfo) {
+    if (options.showInfo) {
       highlight.elementInfo = {
         tagName: '#text',
         nodeWidth: width,
@@ -191,6 +200,7 @@ export default class DomHighlighter extends Component {
     this.overlay.drawHighlight(highlight)
   }
   private getPaths(target: HTMLElement) {
+    const { options } = this
     const computedStyle = window.getComputedStyle(target)
 
     const { left, top, width, height } = target.getBoundingClientRect()
@@ -221,7 +231,7 @@ export default class DomHighlighter extends Component {
         width: width - bl - pl - br - pr,
         height: height - bt - pt - bb - pb,
       }),
-      fillColor: this.options.contentColor,
+      fillColor: normalizeColor(options.contentColor),
       name: 'content',
     }
 
@@ -232,7 +242,7 @@ export default class DomHighlighter extends Component {
         width: width - bl - br,
         height: height - bt - bb,
       }),
-      fillColor: this.options.paddingColor,
+      fillColor: normalizeColor(options.paddingColor),
       name: 'padding',
     }
 
@@ -243,7 +253,7 @@ export default class DomHighlighter extends Component {
         width,
         height,
       }),
-      fillColor: this.options.borderColor,
+      fillColor: normalizeColor(options.borderColor),
       name: 'border',
     }
 
@@ -254,7 +264,7 @@ export default class DomHighlighter extends Component {
         width: width + ml + mr,
         height: height + mt + mb,
       }),
-      fillColor: this.options.marginColor,
+      fillColor: normalizeColor(options.marginColor),
       name: 'margin',
     }
 
@@ -426,6 +436,20 @@ function rgbToHex(rgb: string) {
   color.val = color.val.slice(0, 3)
   color.val.push(Math.round(255 * opacity))
   return '#' + upperCase(hex.encode(color.val))
+}
+
+function normalizeColor(color: string | IRgb) {
+  if (isStr(color)) {
+    return color
+  }
+
+  color = color as IRgb
+
+  if (color.a) {
+    return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
+  }
+
+  return `rgb(${color.r}, ${color.g}, ${color.b})`
 }
 
 function propertiesToValues(

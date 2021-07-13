@@ -46,10 +46,10 @@ domHighlighter.hide()
 * showStyles(boolean): Whether the node styles in the tooltip.
 * showAccessibilityInfo(boolean): Whether the a11y info should be shown.
 * colorFormat(string): The color format used to format color styles.
-* contentColor(string): The content box highlight fill color.
-* paddingColor(string): The padding highlight fill color.
-* borderColor(string): The border highlight fill color.
-* marginColor(string): The margin highlight fill color.
+* contentColor(string | object): The content box highlight fill color.
+* paddingColor(string | object): The padding highlight fill color.
+* borderColor(string | object): The border highlight fill color.
+* marginColor(string | object): The margin highlight fill color.
 * monitorResize(boolean): Auto redraw if target element is resized.
 
 ## Api

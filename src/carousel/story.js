@@ -9,10 +9,10 @@ const def = story(
   'carousel',
   (container) => {
     $(container).css({
+      width: '100%',
       maxWidth: 640,
+      height: 400,
       margin: '0 auto',
-      minHeight: 150,
-      aspectRatio: '1280/720',
     })
 
     const interval = number('Interval', 5000, {

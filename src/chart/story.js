@@ -28,8 +28,8 @@ const def = story(
           height: px(400),
         })
         .css({
-          width: 600,
-          height: 400,
+          maxWidth: 600,
+          width: '100%',
           display: 'block',
           margin: '0 auto 10px',
         })

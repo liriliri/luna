@@ -54,7 +54,7 @@ domHighlighter.hide()
 
 ## Api
 
-### highlight(target: HTMLElement | Text): void
+### highlight(target: HTMLElement | Text, options?: object): void
 
 Highlight element or text node.
 

@@ -85,7 +85,10 @@ export default class DomHighlighter extends Component {
     this.redraw()
     this.bindEvent()
   }
-  highlight(target: HTMLElement | Text) {
+  highlight(target: HTMLElement | Text, options?: IOptions) {
+    if (options) {
+      extend(this.options, options)
+    }
     this.target = target
 
     if (target instanceof HTMLElement && this.options.monitorResize) {

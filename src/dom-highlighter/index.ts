@@ -102,6 +102,14 @@ export default class DomHighlighter extends Component {
     this.target = null
     this.redraw()
   }
+  setOption(name: string, val: any) {
+    const options: any = this.options
+    const oldVal = options[name]
+    options[name] = val
+    this.emit('optionChange', val, oldVal)
+
+    this.redraw()
+  }
   intercept(interceptor: (...args: any[]) => any | null) {
     this.interceptor = interceptor
   }

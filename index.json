@@ -44,5 +44,6 @@
   "video-player": {
     "test": true,
     "icon": true
-  }
+  },
+  "window": {}
 }

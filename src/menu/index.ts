@@ -63,7 +63,7 @@ export default class Menu extends Component {
     }
   }
   hideAll = () => {
-    $(this.c('.grass-pane')).html('').remove()
+    $(this.c('.glass-pane')).html('').remove()
   }
   private positionContent(x: number, y: number, parent?: Menu) {
     const { $container } = this
@@ -126,13 +126,13 @@ export default class Menu extends Component {
     }
   }
   private createGlassPane() {
-    const $grassPane = $(this.c('.grass-pane'))
-    if (($grassPane as any).length > 0) {
-      return $grassPane
+    let $glassPane = $(this.c('.glass-pane'))
+    if (($glassPane as any).length > 0) {
+      return $glassPane
     }
 
-    const glassPane = h(this.c('.grass-pane'))
-    const $glassPane = $(glassPane)
+    const glassPane = h(this.c('.glass-pane'))
+    $glassPane = $(glassPane)
     document.body.appendChild(glassPane)
     $glassPane.on('click', this.hideAll)
     return $glassPane

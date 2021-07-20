@@ -7,8 +7,10 @@ const def = story(
   'window',
   () => {
     const winA = new Window()
+    winA.show(5, 5)
 
     const winB = new Window()
+    winB.show(100, 100)
 
     return [winA, winB]
   },

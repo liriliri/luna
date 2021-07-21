@@ -1,6 +1,15 @@
+@import '../share/variable.scss';
+
 .luna-window {
   position: absolute;
   pointer-events: all;
+  display: flex;
+  flex-flow: column;
+  background: #fff;
+  border: 1px solid $primary-color;
+  border-radius: 4px;
+  box-shadow: $box-shadow;
+  overflow: hidden;
 }
 
 .desktop {
@@ -11,4 +20,9 @@
   right: 0;
   z-index: 3000;
   pointer-events: none;
+}
+
+.title-bar {
+  height: 30px;
+  background: #f5f5f5;
 }

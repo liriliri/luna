@@ -6,19 +6,23 @@ import $ from 'licia/$'
 interface IOptions {
   width?: number
   height?: number
+  x?: number
+  y?: number
   title: string
 }
 
 export default class Window extends Component {
   private $title: $.$
   private options: Required<IOptions>
-  constructor({ width = 800, height = 600, title }: IOptions) {
+  constructor({ width = 800, height = 600, x = 0, y = 0, title }: IOptions) {
     super(h('div'), { compName: 'window' })
 
     this.options = {
       width,
       height,
       title,
+      x,
+      y,
     }
 
     this.initTpl()
@@ -31,7 +35,14 @@ export default class Window extends Component {
     const $desktop = this.createDesktop()
     $desktop.append(this.container)
   }
-  moveTo(x: number, y: number) {
+  hide() {
+    this.$container.hide()
+  }
+  destroy() {
+    this.hide()
+    super.destroy()
+  }
+  private moveTo(x: number, y: number) {
     this.$container.css({
       left: x,
       top: y,
@@ -57,6 +68,8 @@ export default class Window extends Component {
     })
 
     this.$title.text(options.title)
+
+    this.moveTo(options.x, options.y)
   }
   private initTpl() {
     this.$container.html(
@@ -65,6 +78,8 @@ export default class Window extends Component {
         <div class="title-bar-left">
           <div class="title"></div>
         </div>
+        <div class="title-bar-center"></div>
+        <div class="title-bar-right"></div>
       </div>
       <div class="body"></div>
       `)

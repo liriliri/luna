@@ -6,12 +6,10 @@ import readme from './README.md'
 const def = story(
   'window',
   () => {
-    const winA = new Window({ title: 'Window A' })
-    winA.moveTo(50, 50)
+    const winA = new Window({ title: 'Window A', x: 50, y: 50 })
     winA.show()
 
-    const winB = new Window({ title: 'Window B' })
-    winB.moveTo(100, 100)
+    const winB = new Window({ title: 'Window B', x: 100, y: 100 })
     winB.show()
 
     return [winA, winB]

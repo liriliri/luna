@@ -15,7 +15,7 @@ interface IOptions {
   interval?: number
 }
 
-export default class Carousel extends Component {
+export default class Carousel extends Component<Required<IOptions>> {
   private $body: $.$
   private $arrowLeft: $.$
   private $arrowRight: $.$
@@ -23,7 +23,6 @@ export default class Carousel extends Component {
   private body: HTMLElement
   private activeIdx = 0
   private interval: ReturnType<typeof setInterval> | null = null
-  private options: Required<IOptions>
   private isSliding = false
   constructor(container: HTMLElement, { interval = 0 }: IOptions = {}) {
     super(container, { compName: 'carousel' })

@@ -37,11 +37,12 @@ interface IOptions {
   data: IData
 }
 
-export default class Chart extends Component {
+export default class Chart extends Component<
+  Object.Required<IOptions, Any.Key, 'deep'>
+> {
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
   private chart: BaseChart
-  private options: Object.Required<IOptions, Any.Key, 'deep'>
   constructor(
     container: HTMLElement,
     { type = 'bar', bgColor = '#fff', title, data, padding }: IOptions

@@ -11,9 +11,8 @@ interface IOptions {
   title: string
 }
 
-export default class Window extends Component {
+export default class Window extends Component<Required<IOptions>> {
   private $title: $.$
-  private options: Required<IOptions>
   constructor({ width = 800, height = 600, x = 0, y = 0, title }: IOptions) {
     super(h('div'), { compName: 'window' })
 

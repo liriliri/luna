@@ -50,7 +50,7 @@ interface IOptions {
   filter?: string | RegExp | types.AnyFn
 }
 
-export default class Console extends Component {
+export default class Console extends Component<Required<IOptions>> {
   renderViewport: (options?: any) => void
   private $el: $.$
   private el: HTMLElement
@@ -77,7 +77,6 @@ export default class Console extends Component {
   private isAtBottom = true
   private groupStack = new Stack()
   private global: any
-  private options: Required<IOptions>
   constructor(
     container: HTMLElement,
     {
@@ -153,26 +152,6 @@ export default class Console extends Component {
   }
   setGlobal(name: string, val: any) {
     this.global[name] = val
-  }
-  setOption(name: string, val: any) {
-    const { logs } = this
-    const options: any = this.options
-
-    const oldVal = options[name]
-    options[name] = val
-    this.emit('optionChange', val, oldVal)
-
-    switch (name) {
-      case 'maxNum':
-        if (val > 0 && logs.length > val) {
-          this.logs = logs.slice(logs.length - (val as number))
-          this.render()
-        }
-        break
-      case 'filter':
-        this.render()
-        break
-    }
   }
   destroy() {
     super.destroy()
@@ -638,6 +617,21 @@ export default class Console extends Component {
 
     $el.on('click', c('.log-container'), function (this: any) {
       this.log.click()
+    })
+
+    this.on('optionChange', (name, val) => {
+      const { logs } = this
+      switch (name) {
+        case 'maxNum':
+          if (val > 0 && logs.length > val) {
+            this.logs = logs.slice(logs.length - (val as number))
+            this.render()
+          }
+          break
+        case 'filter':
+          this.render()
+          break
+      }
     })
 
     this.$container.on('scroll', this.onScroll)

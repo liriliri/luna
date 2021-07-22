@@ -43,12 +43,11 @@ interface IOptions {
   monitorResize?: boolean | IRgb
 }
 
-export default class DomHighlighter extends Component {
+export default class DomHighlighter extends Component<Required<IOptions>> {
   private overlay: HighlightOverlay = new HighlightOverlay(window)
   private target: HTMLElement | Text | null
   private resizeSensor: ResizeSensor
   private redraw: () => void
-  private options: Required<IOptions>
   private interceptor: (...args: any[]) => any | null
   constructor(
     container: HTMLElement,
@@ -111,14 +110,6 @@ export default class DomHighlighter extends Component {
   }
   hide() {
     this.target = null
-    this.redraw()
-  }
-  setOption(name: string, val: any) {
-    const options: any = this.options
-    const oldVal = options[name]
-    options[name] = val
-    this.emit('optionChange', val, oldVal)
-
     this.redraw()
   }
   intercept(interceptor: (...args: any[]) => any | null) {
@@ -389,6 +380,8 @@ export default class DomHighlighter extends Component {
   private bindEvent() {
     window.addEventListener('resize', this.redraw)
     window.addEventListener('scroll', this.redraw)
+
+    this.on('optionChange', () => this.redraw())
   }
   private reset = () => {
     const viewportWidth = document.documentElement.clientWidth

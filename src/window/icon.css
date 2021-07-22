@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'window-icon';
+  src: url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAUEAAsAAAAACBwAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAAGYAAACWIV0mEE9TLzIAAAFwAAAAPQAAAFZL+UkmY21hcAAAAbAAAADFAAACZsDVCzJnbHlmAAACeAAAAIEAAACkKeh2smhlYWQAAAL8AAAALgAAADZzrb5BaGhlYQAAAywAAAAWAAAAJAGRANhobXR4AAADRAAAABAAAAA8AlgAAGxvY2EAAANUAAAAEgAAACACBgIobWF4cAAAA2gAAAAeAAAAIAEbACJuYW1lAAADiAAAASkAAAIWm5e+CnBvc3QAAAS0AAAATwAAAHFmeQV3eJxNjDsOgDAMQ19LgfLrjDgFJ2BCTIxcgAkhISbuLwwIqYkcx3YUDFDSM2DHaV4Ix3qddDi+evJ4N8e+rfhfKXMve2HE6lf3uoZUnZErseJW0yutqCmERioRakLkGF05ihu9WgawAAB4nGNgZNBgnMDAysDAUMfQAyRloHQCAyeDMQMDEwMrMwNWEJDmmsJwgCHxIzPDCSBXCEwyMDCCCABjtwitAAAAeJzNkj0OgkAQhb91QcQfYmHlGbyUMRYmKgUNMR7IytprcQJ8ww6NsbRwNh+bfcDs25kFciCKncggPAlYPKSGQY/MBz3jrvWGtZSMPQeOnKhpaLl1se/1dlTProZB/YygLOPY+kC7ZMxYylFJxZSCBSt9OzF/Yfolz68jOUAeyMvKdixMNht/Ecvh+fJVhdU7oQ6p8gl1UT1I2GlOjv19dqzrF6cUV8dy1o6dv3GsDq2zEDdHhelCwm5LN0lgc0wQ3yKUIboAAAB4nGNgZACB+UDIzcBgrs6uzi7OLm4ubq4+j1tfn1tPD0xOhjGAJFA1E1jPCSBkZhAF6hJVNjVXVmKTZRQRs2Y0MrNlNFFTNtixYuUqNk5ONjCxY8UKASgTSIB0Q+zdz5ALtldZSc3EDKhXTIRtyyxWIJjFwsYWwcbBBkQMAJiBGCkAAAB4nGNgZGBgAOIt3WZs8fw2Xxm4GU4ABaI4H+9rQNBAcAIkzsDBwATiAAAwWwqUAAB4nGNgZGBgOMHAgEQyMqACfgA6/wJqAAB4nGNgAIITSJgEAAB3xAJZeJxjYAACKQYbhiDsEAA22gQvAAB4nGNgZGBg4GcQY2BiAAEQyQWEDAz/wXwGAAwzAT4AAHicZZA9bsJAFITHYEgCUoIUKSmzVQoimZ+SA0BPQZfCmLUxsr3WekGiywlyhBwhp4hyghwoY/NoYC0/fzNv3u7KAAb4hYd6ebhtar1auKE6cZv0IOyTn4U76ONFuEt/KNzDG6bCfTzinTt4/h2dAUrhFu7xIdym/ynsk7+EO3jCt3CX/o9wDyv8Cffx6g3TyBSxKdxSJ/sstGd5/q60rVJTqEkwPlsLXWgbOr1R66OqDsnUuVjF1uRqzq7OMqNKa3Y6csHWuXI2GsXiB5HJkSKCQYG4qQ5LaCTYI0MIe9W91CumLSr6tVaYIMD4KrVgqmiSIZXGhsk1jqwVDjxtStcxrfhazuSkucxq3iQjK/7vurejE9EPsG2mSsww4hNf5IPmDvk/PRFeqAAAAHicXcY5DoAgFADRP7jhilckhIKEpbAxnF6jsfE1M6Lk9fXPoGho6egZ0IxMzCysbBh26Vwsh9fJniGFek/Iz+CIFA48CctJoJJFLqdvDlMA')
+    format('woff');
+}
+
+[class^='icon-'],
+[class*=' icon-'] {
+  font-family: 'window-icon' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-close:before {
+  content: '\f101';
+}
+.icon-maximize:before {
+  content: '\f102';
+}
+.icon-minimize:before {
+  content: '\f103';
+}

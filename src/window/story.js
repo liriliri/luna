@@ -6,15 +6,15 @@ import readme from './README.md'
 const def = story(
   'window',
   () => {
-    const winA = new Window({ title: 'Window A', x: 50, y: 50 })
+    const winA = new Window({ title: 'Window A - Iframe', x: 50, y: 50 })
     winA.show()
 
-    const winB = new Window({ title: 'Window B', x: 100, y: 100 })
+    const winB = new Window({ title: 'Window B - Element', x: 100, y: 100 })
     winB.show()
 
     function updateSize() {
       const width = global.innerWidth - 150
-      const height = global.innerHeight - 150
+      const height = (width / 4) * 3
       winA.setOption({
         width,
         height,

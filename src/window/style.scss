@@ -6,10 +6,11 @@
   display: flex;
   flex-flow: column;
   background: #fff;
-  border: 1px solid $primary-color;
+  border: 1px solid rgba(196, 196, 196, 0.9);
   overflow: hidden;
   box-shadow: $box-shadow;
   box-sizing: border-box;
+  display: none;
 }
 
 .desktop {
@@ -26,17 +27,46 @@
   height: 30px;
   cursor: default;
   user-select: none;
-  background: #f5f5f5;
+  background: rgb(245, 245, 245);
   display: flex;
   flex-flow: row;
   font-family: $font-family;
 }
 
 .title-bar-left {
+  display: flex;
   padding: 0 5px;
+  min-width: 0;
 }
 
 .title {
   font-size: 14px;
   line-height: 30px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.title-bar-center {
+  flex: 1;
+}
+
+.title-bar-right {
+  text-align: center;
+  display: flex;
+  .icon {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    line-height: 30px;
+    &.icon-maximize {
+      font-size: 14px;
+    }
+    &.icon-minimize {
+      font-size: 16px;
+    }
+    &:hover {
+      background: rgba(196, 196, 196, 0.9);
+    }
+  }
 }

@@ -13,6 +13,7 @@ interface IOptions {
 
 export default class Window extends Component<Required<IOptions>> {
   private $title: $.$
+  private $titleBar: $.$
   constructor({ width = 800, height = 600, x = 0, y = 0, title }: IOptions) {
     super(h('div'), { compName: 'window' })
 
@@ -27,20 +28,23 @@ export default class Window extends Component<Required<IOptions>> {
     this.initTpl()
 
     this.$title = this.find('.title')
+    this.$titleBar = this.find('.title-bar')
 
     this.render()
+
+    const $desktop = this.createDesktop()
+    $desktop.append(this.container)
 
     this.bindEvent()
   }
   show() {
-    const $desktop = this.createDesktop()
-    $desktop.append(this.container)
+    this.$container.show()
   }
-  minimize() {
+  minimize = () => {
     this.$container.hide()
   }
-  destroy() {
-    this.minimize()
+  destroy = () => {
+    this.$container.remove()
     super.destroy()
   }
   private moveTo(x: number, y: number) {
@@ -49,8 +53,27 @@ export default class Window extends Component<Required<IOptions>> {
       top: y,
     })
   }
+  private resizeTo(width: number, height: number) {
+    if (width < 200) {
+      width = 200
+    }
+    if (height < 150) {
+      height = 150
+    }
+
+    this.$container.css({
+      width,
+      height,
+    })
+  }
   private bindEvent() {
+    const { c } = this
+
     this.on('optionChange', () => this.render())
+
+    this.$titleBar
+      .on('click', c('.icon-close'), this.destroy)
+      .on('click', c('.icon-minimize'), this.minimize)
   }
   private createDesktop() {
     let $desktop = $(this.c('.desktop'))
@@ -66,13 +89,9 @@ export default class Window extends Component<Required<IOptions>> {
   private render() {
     const { options } = this
 
-    this.$container.css({
-      width: options.width,
-      height: options.height,
-    })
-
     this.$title.text(options.title)
 
+    this.resizeTo(options.width, options.height)
     this.moveTo(options.x, options.y)
   }
   private initTpl() {
@@ -83,7 +102,11 @@ export default class Window extends Component<Required<IOptions>> {
           <div class="title"></div>
         </div>
         <div class="title-bar-center"></div>
-        <div class="title-bar-right"></div>
+        <div class="title-bar-right">
+          <span class="icon icon-minimize"></span>
+          <span class="icon icon-maximize"></span>
+          <span class="icon icon-close"></span>
+        </div>
       </div>
       <div class="body"></div>
       `)

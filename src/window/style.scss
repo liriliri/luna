@@ -7,9 +7,9 @@
   flex-flow: column;
   background: #fff;
   border: 1px solid $primary-color;
-  border-radius: 4px;
-  box-shadow: $box-shadow;
   overflow: hidden;
+  box-shadow: $box-shadow;
+  box-sizing: border-box;
 }
 
 .desktop {
@@ -37,5 +37,6 @@
 }
 
 .title {
+  font-size: 14px;
   line-height: 30px;
 }

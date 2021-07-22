@@ -29,16 +29,18 @@ export default class Window extends Component<Required<IOptions>> {
     this.$title = this.find('.title')
 
     this.render()
+
+    this.bindEvent()
   }
   show() {
     const $desktop = this.createDesktop()
     $desktop.append(this.container)
   }
-  hide() {
+  minimize() {
     this.$container.hide()
   }
   destroy() {
-    this.hide()
+    this.minimize()
     super.destroy()
   }
   private moveTo(x: number, y: number) {
@@ -46,6 +48,9 @@ export default class Window extends Component<Required<IOptions>> {
       left: x,
       top: y,
     })
+  }
+  private bindEvent() {
+    this.on('optionChange', () => this.render())
   }
   private createDesktop() {
     let $desktop = $(this.c('.desktop'))

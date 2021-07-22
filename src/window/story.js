@@ -12,6 +12,25 @@ const def = story(
     const winB = new Window({ title: 'Window B', x: 100, y: 100 })
     winB.show()
 
+    function updateSize() {
+      const width = global.innerWidth - 150
+      const height = global.innerHeight - 150
+      winA.setOption({
+        width,
+        height,
+      })
+      winB.setOption({
+        width,
+        height,
+      })
+    }
+    updateSize()
+
+    global.addEventListener('resize', updateSize)
+    winA.on('destroy', () => {
+      global.removeEventListener('resize', updateSize)
+    })
+
     return [winA, winB]
   },
   {

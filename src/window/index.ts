@@ -151,7 +151,18 @@ export default class Window extends Component<Required<IOptions>> {
     if (newY < 0) {
       newY = 0
     }
-    this.moveTo(newX, newY)
+    if (this.isMaximized) {
+      if (deltaX > 10 || deltaY > 10) {
+        const { x, width } = this.options
+        if (this.startX < x || this.startX > x + width) {
+          this.options.x = this.startX - width / 2
+        }
+        this.options.y = 0
+        this.restore()
+      }
+    } else {
+      this.moveTo(newX, newY)
+    }
     if (updateOptions) {
       options.x = newX
       options.y = newY

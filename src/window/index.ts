@@ -3,6 +3,9 @@ import h from 'licia/h'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import isUrl from 'licia/isUrl'
+import uuid from 'licia/uuid'
+import types from 'licia/types'
+import each from 'licia/each'
 import { drag, eventClient } from '../share/util'
 
 const $document = $(document as any)
@@ -16,12 +19,17 @@ interface IOptions {
   content: string | HTMLElement
 }
 
+let index = 0
+let windows: types.PlainObj<Window> = {}
+
 export default class Window extends Component<Required<IOptions>> {
   private $title: $.$
   private $titleBar: $.$
   private $body: $.$
   private startX = 0
   private startY = 0
+  private id = uuid()
+  private isFocus = false
   constructor({
     width = 800,
     height = 600,
@@ -54,15 +62,35 @@ export default class Window extends Component<Required<IOptions>> {
     $desktop.append(this.container)
 
     this.bindEvent()
+
+    windows[this.id] = this
+  }
+  focus = () => {
+    if (this.isFocus) {
+      return
+    }
+    this.isFocus = true
+    this.$container.addClass(this.c('active')).css({ zIndex: index++ })
+    each(windows, (window, id) => {
+      if (id !== this.id) {
+        window.blur()
+      }
+    })
+  }
+  blur() {
+    this.isFocus = false
+    this.$container.rmClass(this.c('active'))
   }
   show() {
     this.$container.rmClass(this.c('hidden'))
+    this.focus()
   }
   minimize = () => {
     this.$container.addClass(this.c('hidden'))
   }
   destroy = () => {
     this.$container.remove()
+    delete windows[this.id]
     super.destroy()
   }
   private moveTo(x: number, y: number) {
@@ -85,6 +113,7 @@ export default class Window extends Component<Required<IOptions>> {
     })
   }
   private onMoveStart = (e: any) => {
+    this.focus()
     e = e.origEvent
     this.startX = eventClient('x', e)
     this.startY = eventClient('y', e)
@@ -130,6 +159,8 @@ export default class Window extends Component<Required<IOptions>> {
       .on('click', c('.icon-close'), this.destroy)
       .on('click', c('.icon-minimize'), this.minimize)
       .on(drag('start'), this.onMoveStart)
+
+    this.$container.on('click', this.focus)
   }
   private createDesktop() {
     let $desktop = $(this.c('.desktop'))

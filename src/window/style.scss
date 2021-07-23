@@ -10,6 +10,11 @@
   overflow: hidden;
   box-shadow: $box-shadow;
   box-sizing: border-box;
+  &.active {
+    .title-bar {
+      background: rgb(240, 240, 240);
+    }
+  }
 }
 
 .hidden {
@@ -30,7 +35,7 @@
   height: 30px;
   cursor: default;
   user-select: none;
-  background: rgb(245, 245, 245);
+  background: rgb(250, 250, 250);
   display: flex;
   flex-flow: row;
   font-family: $font-family;

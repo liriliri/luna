@@ -6,7 +6,9 @@ import isUrl from 'licia/isUrl'
 import uuid from 'licia/uuid'
 import types from 'licia/types'
 import each from 'licia/each'
+import max from 'licia/max'
 import { drag, eventClient } from '../share/util'
+import extend from 'licia/extend'
 
 const $document = $(document as any)
 
@@ -21,6 +23,8 @@ interface IOptions {
 
 let index = 0
 const windows: types.PlainObj<Window> = {}
+const minWidth = 200
+const minHeight = 150
 
 export default class Window extends Component<Required<IOptions>> {
   private $title: $.$
@@ -28,11 +32,13 @@ export default class Window extends Component<Required<IOptions>> {
   private $body: $.$
   private $titleBarRight: $.$
   private $maximizeBtn: $.$
+  private $resizer: $.$
   private startX = 0
   private startY = 0
   private id = uuid()
   private isFocus = false
   private isMaximized = false
+  private action = ''
   constructor({
     width = 800,
     height = 600,
@@ -60,6 +66,7 @@ export default class Window extends Component<Required<IOptions>> {
     this.$titleBarRight = this.find('.title-bar-right')
     this.$maximizeBtn = this.find('.icon-maximize')
     this.$body = this.find('.body')
+    this.$resizer = this.find('.resizer')
 
     this.render()
 
@@ -93,6 +100,7 @@ export default class Window extends Component<Required<IOptions>> {
     const { c } = this
 
     this.isMaximized = true
+    this.$resizer.hide()
     this.$maximizeBtn.rmClass(c('icon-maximize'))
     this.$maximizeBtn.addClass(c('icon-maximized'))
     this.renderWindow()
@@ -106,6 +114,7 @@ export default class Window extends Component<Required<IOptions>> {
     const { c } = this
 
     this.isMaximized = false
+    this.$resizer.show()
     this.$maximizeBtn.rmClass(c('icon-maximized'))
     this.$maximizeBtn.addClass(c('icon-maximize'))
     this.renderWindow()
@@ -121,11 +130,11 @@ export default class Window extends Component<Required<IOptions>> {
     })
   }
   private resizeTo(width: number | string, height: number | string) {
-    if (typeof width === 'number' && width < 200) {
-      width = 200
+    if (typeof width === 'number' && width < minWidth) {
+      width = minWidth
     }
-    if (typeof height === 'number' && height < 150) {
-      height = 150
+    if (typeof height === 'number' && height < minHeight) {
+      height = minHeight
     }
 
     this.$container.css({
@@ -173,6 +182,58 @@ export default class Window extends Component<Required<IOptions>> {
     $document.off(drag('move'), this.onMove)
     $document.off(drag('end'), this.onMoveEnd)
   }
+  private onResizeStart = (e: any) => {
+    e.stopPropagation()
+    e.preventDefault()
+    e = e.origEvent
+    this.action = $(e.target).data('action')
+    const $desktop = this.createDesktop()
+    $desktop.addClass(this.c(`cursor-${this.action}`))
+    this.startX = eventClient('x', e)
+    this.startY = eventClient('y', e)
+    $document.on(drag('move'), this.onResizeMove)
+    $document.on(drag('end'), this.onResizeEnd)
+  }
+  private onResizeMove = (e: any, updateOptions = false) => {
+    e = e.origEvent
+    const { action, options } = this
+    const { x, y, width, height } = options
+
+    const deltaX = eventClient('x', e) - this.startX
+    const deltaY = eventClient('y', e) - this.startY
+
+    let newX = x
+    let newY = y
+    let newWidth = width
+    let newHeight = height
+
+    switch (action) {
+      case 'e':
+        newWidth += deltaX
+        newWidth = max(minWidth, newWidth)
+        break
+      case 's':
+        break
+      case 'w':
+        break
+      case 'n':
+        break
+    }
+
+    if (updateOptions) {
+    } else {
+      this.moveTo(newX, newY)
+      this.resizeTo(newWidth, newHeight)
+    }
+  }
+  private onResizeEnd = (e: any) => {
+    this.onResizeMove(e, true)
+    const $desktop = this.createDesktop()
+    $desktop.rmClass(this.c(`cursor-${this.action}`))
+    $document.off(drag('move'), this.onResizeMove)
+    $document.off(drag('end'), this.onResizeEnd)
+    this.action = ''
+  }
   private bindEvent() {
     const { c } = this
 
@@ -191,6 +252,8 @@ export default class Window extends Component<Required<IOptions>> {
       e.stopPropagation()
       this.focus()
     })
+
+    this.$resizer.on(drag('start'), this.onResizeStart)
 
     this.$titleBar
       .on('click', c('.icon-close'), this.destroy)
@@ -264,6 +327,16 @@ export default class Window extends Component<Required<IOptions>> {
         </div>
       </div>
       <div class="body"></div>
+      <div class="resizer">
+        <span class="line line-e" data-action="e"></span>
+        <span class="line line-n" data-action="n"></span>
+        <span class="line line-w" data-action="w"></span>
+        <span class="line line-s" data-action="s"></span>
+        <span class="point point-ne" data-action="ne"></span>
+        <span class="point point-nw" data-action="nw"></span>
+        <span class="point point-sw" data-action="sw"></span>
+        <span class="point point-se" data-action="se"></span>
+      </div>
       `)
     )
   }

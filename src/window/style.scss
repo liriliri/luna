@@ -91,3 +91,92 @@
     height: 100%;
   }
 }
+
+.line,
+.point {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.line {
+  &.line-e {
+    cursor: ew-resize;
+    right: -3px;
+    top: 0;
+    width: 5px;
+  }
+  &.line-n {
+    cursor: ns-resize;
+    height: 5px;
+    left: 0;
+    top: -3px;
+  }
+  &.line-w {
+    cursor: ew-resize;
+    left: -3px;
+    top: 0;
+    width: 5px;
+  }
+  &.line-s {
+    bottom: -3px;
+    cursor: ns-resize;
+    height: 5px;
+    left: 0;
+  }
+}
+
+.cursor-e,
+.cursor-e *,
+.cursor-w,
+.cursor-w * {
+  pointer-events: all;
+  cursor: ew-resize !important;
+}
+.cursor-n,
+.cursor-n *,
+.cursor-s,
+.cursor-s * {
+  pointer-events: all;
+  cursor: ns-resize !important;
+}
+.cursor-nw,
+.cursor-nw *,
+.cursor-se,
+.cursor-se * {
+  pointer-events: all;
+  cursor: nwse-resize !important;
+}
+.cursor-ne,
+.cursor-ne *,
+.cursor-sw,
+.cursor-sw * {
+  pointer-events: all;
+  cursor: nesw-resize !important;
+}
+
+.point {
+  height: 6px;
+  width: 6px;
+  &.point-ne {
+    cursor: nesw-resize;
+    right: -5px;
+    top: -5px;
+  }
+  &.point-nw {
+    cursor: nwse-resize;
+    left: -5px;
+    top: -5px;
+  }
+  &.point-sw {
+    bottom: -5px;
+    cursor: nesw-resize;
+    left: -5px;
+  }
+  &.point-se {
+    bottom: -5px;
+    cursor: nwse-resize;
+    right: -5px;
+  }
+}

@@ -20,8 +20,8 @@ export default class Window extends Component<Required<IOptions>> {
   private $title: $.$
   private $titleBar: $.$
   private $body: $.$
-  private startX: number = 0
-  private startY: number = 0
+  private startX = 0
+  private startY = 0
   constructor({
     width = 800,
     height = 600,

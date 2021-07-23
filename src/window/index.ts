@@ -20,7 +20,7 @@ interface IOptions {
 }
 
 let index = 0
-let windows: types.PlainObj<Window> = {}
+const windows: types.PlainObj<Window> = {}
 
 export default class Window extends Component<Required<IOptions>> {
   private $title: $.$

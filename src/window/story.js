@@ -1,15 +1,29 @@
 import 'luna-window.css'
 import Window from 'luna-window.js'
 import story from '../share/story'
+import escape from 'licia/escape'
 import readme from './README.md'
 
 const def = story(
   'window',
   () => {
-    const winA = new Window({ title: 'Window A - Iframe', x: 50, y: 50 })
+    const winA = new Window({
+      title: 'Window A - Iframe',
+      x: 50,
+      y: 50,
+      content: 'https://eruda.liriliri.io',
+    })
     winA.show()
 
-    const winB = new Window({ title: 'Window B - Element', x: 100, y: 100 })
+    const winB = new Window({
+      title: 'Window B - Html',
+      x: 100,
+      y: 100,
+      content: `<div style="padding:10px">${escape(readme).replace(
+        /\n/g,
+        '<br/>'
+      )}</div>`,
+    })
     winB.show()
 
     function updateSize() {

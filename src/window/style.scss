@@ -10,6 +10,9 @@
   overflow: hidden;
   box-shadow: $box-shadow;
   box-sizing: border-box;
+}
+
+.hidden {
   display: none;
 }
 
@@ -68,5 +71,18 @@
     &:hover {
       background: rgba(196, 196, 196, 0.9);
     }
+  }
+}
+
+.body {
+  position: relative;
+  flex: 1;
+  overflow: auto;
+  iframe {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
   }
 }

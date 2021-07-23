@@ -2,6 +2,7 @@ import Component from '../share/Component'
 import h from 'licia/h'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
+import isUrl from 'licia/isUrl'
 
 interface IOptions {
   width?: number
@@ -9,13 +10,23 @@ interface IOptions {
   x?: number
   y?: number
   title: string
+  content: string | HTMLElement
 }
 
 export default class Window extends Component<Required<IOptions>> {
   private $title: $.$
   private $titleBar: $.$
-  constructor({ width = 800, height = 600, x = 0, y = 0, title }: IOptions) {
+  private $body: $.$
+  constructor({
+    width = 800,
+    height = 600,
+    x = 0,
+    y = 0,
+    title,
+    content,
+  }: IOptions) {
     super(h('div'), { compName: 'window' })
+    this.$container.addClass(this.c('hidden'))
 
     this.options = {
       width,
@@ -23,12 +34,14 @@ export default class Window extends Component<Required<IOptions>> {
       title,
       x,
       y,
+      content,
     }
 
     this.initTpl()
 
     this.$title = this.find('.title')
     this.$titleBar = this.find('.title-bar')
+    this.$body = this.find('.body')
 
     this.render()
 
@@ -38,10 +51,10 @@ export default class Window extends Component<Required<IOptions>> {
     this.bindEvent()
   }
   show() {
-    this.$container.show()
+    this.$container.rmClass(this.c('hidden'))
   }
   minimize = () => {
-    this.$container.hide()
+    this.$container.addClass(this.c('hidden'))
   }
   destroy = () => {
     this.$container.remove()
@@ -69,7 +82,16 @@ export default class Window extends Component<Required<IOptions>> {
   private bindEvent() {
     const { c } = this
 
-    this.on('optionChange', () => this.render())
+    this.on('optionChange', (name: string) => {
+      switch (name) {
+        case 'content':
+          this.renderContent()
+          break
+        default:
+          this.renderWindow()
+          break
+      }
+    })
 
     this.$titleBar
       .on('click', c('.icon-close'), this.destroy)
@@ -87,12 +109,30 @@ export default class Window extends Component<Required<IOptions>> {
     return $desktop
   }
   private render() {
+    this.renderWindow()
+    this.renderContent()
+  }
+  private renderWindow() {
     const { options } = this
 
     this.$title.text(options.title)
 
     this.resizeTo(options.width, options.height)
     this.moveTo(options.x, options.y)
+  }
+  private renderContent() {
+    const { $body, options } = this
+    let { content } = options
+
+    if (typeof content === 'string') {
+      if (isUrl(content)) {
+        content = `<iframe src="${content}" frameborder="0"></iframe>`
+      }
+      $body.html(content)
+    } else {
+      $body.html('')
+      $body.append(content)
+    }
   }
   private initTpl() {
     this.$container.html(

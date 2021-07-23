@@ -8,7 +8,6 @@ import types from 'licia/types'
 import each from 'licia/each'
 import max from 'licia/max'
 import { drag, eventClient } from '../share/util'
-import extend from 'licia/extend'
 
 const $document = $(document as any)
 
@@ -17,8 +16,8 @@ interface IOptions {
   height?: number
   x?: number
   y?: number
-  title: string
-  content: string | HTMLElement
+  title?: string
+  content?: string | HTMLElement
 }
 
 let index = 0
@@ -26,7 +25,7 @@ const windows: types.PlainObj<Window> = {}
 const minWidth = 200
 const minHeight = 150
 
-export default class Window extends Component<Required<IOptions>> {
+export default class Window extends Component<IOptions> {
   private $title: $.$
   private $titleBar: $.$
   private $body: $.$
@@ -44,8 +43,8 @@ export default class Window extends Component<Required<IOptions>> {
     height = 600,
     x = 0,
     y = 0,
-    title,
-    content,
+    title = '',
+    content = '',
   }: IOptions) {
     super(h('div'), { compName: 'window' })
     this.$container.addClass(this.c('hidden'))
@@ -170,11 +169,14 @@ export default class Window extends Component<Required<IOptions>> {
         this.restore()
       }
     } else {
-      this.moveTo(newX, newY)
-    }
-    if (updateOptions) {
-      options.x = newX
-      options.y = newY
+      if (updateOptions) {
+        this.setOption({
+          x: newX,
+          y: newY,
+        })
+      } else {
+        this.moveTo(newX, newY)
+      }
     }
   }
   private onMoveEnd = (e: any) => {
@@ -202,8 +204,8 @@ export default class Window extends Component<Required<IOptions>> {
     const deltaX = eventClient('x', e) - this.startX
     const deltaY = eventClient('y', e) - this.startY
 
-    let newX = x
-    let newY = y
+    const newX = x
+    const newY = y
     let newWidth = width
     let newHeight = height
 
@@ -213,6 +215,8 @@ export default class Window extends Component<Required<IOptions>> {
         newWidth = max(minWidth, newWidth)
         break
       case 's':
+        newHeight += deltaY
+        newHeight = max(minHeight, newHeight)
         break
       case 'w':
         break
@@ -221,6 +225,12 @@ export default class Window extends Component<Required<IOptions>> {
     }
 
     if (updateOptions) {
+      this.setOption({
+        x: newX,
+        y: newY,
+        width: newWidth,
+        height: newHeight,
+      })
     } else {
       this.moveTo(newX, newY)
       this.resizeTo(newWidth, newHeight)

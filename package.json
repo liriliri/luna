@@ -9,9 +9,9 @@
   "scripts": {
     "ci": "luna install && npm run lint && npm test",
     "test": "npm run build && luna test",
-    "lint": "luna lint",
+    "lint": "eslint src/share/*.{ts,js} *.js bin/*.js && luna lint",
     "build": "luna build",
-    "format": "lsla prettier \"src/share/*.{ts,js,scss}\" \"*.{json,js}\" \"bin/*.js\" \".storybook/*.js\" --write",
+    "format": "lsla prettier \"src/share/*.{ts,js,scss}\" \"*.{json,js}\" \"bin/*.js\" \".storybook/*.js\" --write && luna format",
     "storybook": "start-storybook -s ./public -p 8080",
     "build-storybook": "build-storybook -s public -o .storybook/out"
   },

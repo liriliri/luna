@@ -65,7 +65,9 @@ const genIcon = wrap(async function (component) {
 const build = wrap(async function (component) {
   try {
     await rmdir(resolve(`../dist/${component}`))
-  } catch (e) {}
+  } catch (e) {
+    /* eslint-disable no-empty */
+  }
 
   await runScript('webpack', [
     '--config',

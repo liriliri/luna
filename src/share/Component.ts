@@ -12,12 +12,12 @@ export default class Component<Options = any> extends Emitter {
   container: HTMLElement
   $container: $.$
   private compName: string
-  protected options: Options
+  protected options: Required<Options>
   constructor(container: Element, { compName }: IOptions) {
     super()
     this.compName = compName
     this.c = classPrefix(compName)
-    this.options = {} as Options
+    this.options = {} as Required<Options>
 
     this.container = container as HTMLElement
     this.$container = $(container)

@@ -43,7 +43,7 @@ interface IOptions {
   monitorResize?: boolean | IRgb
 }
 
-export default class DomHighlighter extends Component<Required<IOptions>> {
+export default class DomHighlighter extends Component<IOptions> {
   private overlay: HighlightOverlay = new HighlightOverlay(window)
   private target: HTMLElement | Text | null
   private resizeSensor: ResizeSensor

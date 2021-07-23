@@ -15,7 +15,7 @@ interface IOptions {
   interval?: number
 }
 
-export default class Carousel extends Component<Required<IOptions>> {
+export default class Carousel extends Component<IOptions> {
   private $body: $.$
   private $arrowLeft: $.$
   private $arrowRight: $.$

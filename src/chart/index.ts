@@ -5,7 +5,7 @@ import LineChart from './LineChart'
 import PieChart from './PieChart'
 import RingChart from './RingChart'
 import defaults from 'licia/defaults'
-import { Object, Any } from 'ts-toolbelt'
+import { DeepRequired } from '../share/types'
 import { px } from './util'
 
 interface ITitle {
@@ -38,7 +38,13 @@ interface IOptions {
 }
 
 export default class Chart extends Component<
-  Object.Required<IOptions, Any.Key, 'deep'>
+  DeepRequired<
+    IOptions,
+    | ['title', 'font']
+    | ['title', 'color']
+    | ['title', 'top']
+    | ['title', 'bottom']
+  >
 > {
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D

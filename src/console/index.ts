@@ -50,7 +50,7 @@ interface IOptions {
   filter?: string | RegExp | types.AnyFn
 }
 
-export default class Console extends Component<Required<IOptions>> {
+export default class Console extends Component<IOptions> {
   renderViewport: (options?: any) => void
   private $el: $.$
   private el: HTMLElement

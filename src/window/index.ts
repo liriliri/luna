@@ -204,24 +204,47 @@ export default class Window extends Component<IOptions> {
     const deltaX = eventClient('x', e) - this.startX
     const deltaY = eventClient('y', e) - this.startY
 
-    const newX = x
-    const newY = y
+    let newX = x
+    let newY = y
     let newWidth = width
     let newHeight = height
 
-    switch (action) {
-      case 'e':
-        newWidth += deltaX
-        newWidth = max(minWidth, newWidth)
-        break
-      case 's':
-        newHeight += deltaY
-        newHeight = max(minHeight, newHeight)
-        break
-      case 'w':
-        break
-      case 'n':
-        break
+    function checkDirection(direction: string) {
+      switch (direction) {
+        case 'e':
+          newWidth += deltaX
+          newWidth = max(minWidth, newWidth)
+          break
+        case 's':
+          newHeight += deltaY
+          newHeight = max(minHeight, newHeight)
+          break
+        case 'w':
+          if (width - deltaX < minWidth) {
+            newX = x + width - minWidth
+            newWidth = minWidth
+          } else {
+            newX += deltaX
+            newWidth -= deltaX
+          }
+          break
+        case 'n':
+          if (y + deltaY < 0) {
+            newHeight += y
+            newY = 0
+          } else if (height - deltaY < minHeight) {
+            newY = y + height - minHeight
+            newHeight = minHeight
+          } else {
+            newY += deltaY
+            newHeight -= deltaY
+          }
+          break
+      }
+    }
+
+    for (let i = 0, len = action.length; i < len; i++) {
+      checkDirection(action[i])
     }
 
     if (updateOptions) {

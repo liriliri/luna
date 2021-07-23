@@ -26,10 +26,13 @@ export default class Window extends Component<Required<IOptions>> {
   private $title: $.$
   private $titleBar: $.$
   private $body: $.$
+  private $titleBarRight: $.$
+  private $maximizeBtn: $.$
   private startX = 0
   private startY = 0
   private id = uuid()
   private isFocus = false
+  private isMaximized = false
   constructor({
     width = 800,
     height = 600,
@@ -54,6 +57,8 @@ export default class Window extends Component<Required<IOptions>> {
 
     this.$title = this.find('.title')
     this.$titleBar = this.find('.title-bar')
+    this.$titleBarRight = this.find('.title-bar-right')
+    this.$maximizeBtn = this.find('.icon-maximize')
     this.$body = this.find('.body')
 
     this.render()
@@ -84,10 +89,26 @@ export default class Window extends Component<Required<IOptions>> {
   minimize = () => {
     this.$container.addClass(this.c('hidden'))
   }
+  maximize() {
+    const { c } = this
+
+    this.isMaximized = true
+    this.$maximizeBtn.rmClass(c('icon-maximize'))
+    this.$maximizeBtn.addClass(c('icon-maximized'))
+    this.renderWindow()
+  }
   destroy = () => {
     this.$container.remove()
     delete windows[this.id]
     super.destroy()
+  }
+  private restore() {
+    const { c } = this
+
+    this.isMaximized = false
+    this.$maximizeBtn.rmClass(c('icon-maximized'))
+    this.$maximizeBtn.addClass(c('icon-maximize'))
+    this.renderWindow()
   }
   private blur() {
     this.isFocus = false
@@ -99,11 +120,11 @@ export default class Window extends Component<Required<IOptions>> {
       top: y,
     })
   }
-  private resizeTo(width: number, height: number) {
-    if (width < 200) {
+  private resizeTo(width: number | string, height: number | string) {
+    if (typeof width === 'number' && width < 200) {
       width = 200
     }
-    if (height < 150) {
+    if (typeof height === 'number' && height < 150) {
       height = 150
     }
 
@@ -155,10 +176,23 @@ export default class Window extends Component<Required<IOptions>> {
       }
     })
 
+    this.$titleBarRight.on(drag('start'), (e) => {
+      e.stopPropagation()
+      this.focus()
+    })
+
     this.$titleBar
       .on('click', c('.icon-close'), this.destroy)
       .on('click', c('.icon-minimize'), this.minimize)
       .on(drag('start'), this.onMoveStart)
+
+    this.$maximizeBtn.on('click', () => {
+      if (this.isMaximized) {
+        this.restore()
+      } else {
+        this.maximize()
+      }
+    })
 
     this.$container.on('click', this.focus)
   }
@@ -182,8 +216,13 @@ export default class Window extends Component<Required<IOptions>> {
 
     this.$title.text(options.title)
 
-    this.resizeTo(options.width, options.height)
-    this.moveTo(options.x, options.y)
+    if (this.isMaximized) {
+      this.moveTo(0, 0)
+      this.resizeTo('100%', '100%')
+    } else {
+      this.resizeTo(options.width, options.height)
+      this.moveTo(options.x, options.y)
+    }
   }
   private renderContent() {
     const { $body, options } = this

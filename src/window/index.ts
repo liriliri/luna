@@ -3,6 +3,9 @@ import h from 'licia/h'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import isUrl from 'licia/isUrl'
+import { drag, eventClient } from '../share/util'
+
+const $document = $(document as any)
 
 interface IOptions {
   width?: number
@@ -17,6 +20,8 @@ export default class Window extends Component<Required<IOptions>> {
   private $title: $.$
   private $titleBar: $.$
   private $body: $.$
+  private startX: number = 0
+  private startY: number = 0
   constructor({
     width = 800,
     height = 600,
@@ -79,6 +84,34 @@ export default class Window extends Component<Required<IOptions>> {
       height,
     })
   }
+  private onMoveStart = (e: any) => {
+    e = e.origEvent
+    this.startX = eventClient('x', e)
+    this.startY = eventClient('y', e)
+    $document.on(drag('move'), this.onMove)
+    $document.on(drag('end'), this.onMoveEnd)
+  }
+  private onMove = (e: any, updateOptions = false) => {
+    const { options } = this
+    e = e.origEvent
+    const deltaX = eventClient('x', e) - this.startX
+    const deltaY = eventClient('y', e) - this.startY
+    const newX = options.x + deltaX
+    let newY = options.y + deltaY
+    if (newY < 0) {
+      newY = 0
+    }
+    this.moveTo(newX, newY)
+    if (updateOptions) {
+      options.x = newX
+      options.y = newY
+    }
+  }
+  private onMoveEnd = (e: any) => {
+    this.onMove(e, true)
+    $document.off(drag('move'), this.onMove)
+    $document.off(drag('end'), this.onMoveEnd)
+  }
   private bindEvent() {
     const { c } = this
 
@@ -96,6 +129,7 @@ export default class Window extends Component<Required<IOptions>> {
     this.$titleBar
       .on('click', c('.icon-close'), this.destroy)
       .on('click', c('.icon-minimize'), this.minimize)
+      .on(drag('start'), this.onMoveStart)
   }
   private createDesktop() {
     let $desktop = $(this.c('.desktop'))

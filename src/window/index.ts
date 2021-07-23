@@ -77,10 +77,6 @@ export default class Window extends Component<Required<IOptions>> {
       }
     })
   }
-  blur() {
-    this.isFocus = false
-    this.$container.rmClass(this.c('active'))
-  }
   show() {
     this.$container.rmClass(this.c('hidden'))
     this.focus()
@@ -92,6 +88,10 @@ export default class Window extends Component<Required<IOptions>> {
     this.$container.remove()
     delete windows[this.id]
     super.destroy()
+  }
+  private blur() {
+    this.isFocus = false
+    this.$container.rmClass(this.c('active'))
   }
   private moveTo(x: number, y: number) {
     this.$container.css({

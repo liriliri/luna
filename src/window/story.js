@@ -3,26 +3,36 @@ import Window from 'luna-window.js'
 import story from '../share/story'
 import escape from 'licia/escape'
 import readme from './README.md'
+import { text } from '@storybook/addon-knobs'
 
 const def = story(
   'window',
   () => {
+    const titleA = text('Title A', 'Window A - Iframe')
+    const contentA = text('Content A', 'https://eruda.liriliri.io')
+
     const winA = new Window({
-      title: 'Window A - Iframe',
+      title: titleA,
       x: 50,
       y: 50,
-      content: 'https://eruda.liriliri.io',
+      content: contentA,
     })
     winA.show()
 
-    const winB = new Window({
-      title: 'Window B - Html',
-      x: 100,
-      y: 100,
-      content: `<div style="padding:10px">${escape(readme).replace(
+    const titleB = text('Title B', 'Window B - Html')
+    const contentB = text(
+      'Content B',
+      `<div style="padding:10px">${escape(readme).replace(
         /\n/g,
         '<br/>'
-      )}</div>`,
+      )}</div>`
+    )
+
+    const winB = new Window({
+      title: titleB,
+      x: 100,
+      y: 100,
+      content: contentB,
     })
     winB.show()
 

@@ -188,9 +188,13 @@ export default class Window extends Component<IOptions> {
     e.stopPropagation()
     e.preventDefault()
     e = e.origEvent
-    this.action = $(e.target).data('action')
+    this.action = $(e.target).data('action') || ''
+    if (!this.action) {
+      return
+    }
     const $desktop = this.createDesktop()
     $desktop.addClass(this.c(`cursor-${this.action}`))
+    $desktop.addClass(this.c('resizing'))
     this.startX = eventClient('x', e)
     this.startY = eventClient('y', e)
     $document.on(drag('move'), this.onResizeMove)
@@ -263,6 +267,7 @@ export default class Window extends Component<IOptions> {
     this.onResizeMove(e, true)
     const $desktop = this.createDesktop()
     $desktop.rmClass(this.c(`cursor-${this.action}`))
+    $desktop.rmClass(this.c('resizing'))
     $document.off(drag('move'), this.onResizeMove)
     $document.off(drag('end'), this.onResizeEnd)
     this.action = ''

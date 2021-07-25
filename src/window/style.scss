@@ -29,6 +29,16 @@
   right: 0;
   z-index: 3000;
   pointer-events: none;
+  &.resizing {
+    .resizer {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 
 .title-bar {

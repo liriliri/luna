@@ -7,6 +7,7 @@ import uuid from 'licia/uuid'
 import types from 'licia/types'
 import each from 'licia/each'
 import max from 'licia/max'
+import isEmpty from 'licia/isEmpty'
 import { drag, eventClient } from '../share/util'
 
 const $document = $(document as any)
@@ -30,6 +31,8 @@ export default class Window extends Component<IOptions> {
   private $body: $.$
   private $titleBarRight: $.$
   private $maximizeBtn: $.$
+  private $minimizeBtn: $.$
+  private $taskBarItem: $.$
   private $resizer: $.$
   private startX = 0
   private startY = 0
@@ -74,8 +77,10 @@ export default class Window extends Component<IOptions> {
     this.$titleBar = this.find('.title-bar')
     this.$titleBarRight = this.find('.title-bar-right')
     this.$maximizeBtn = this.find('.icon-maximize')
+    this.$minimizeBtn = this.find('.icon-minimize')
     this.$body = this.find('.body')
     this.$resizer = this.find('.resizer')
+    this.$taskBarItem = this.createTaskBarItem()
 
     this.render()
 
@@ -87,23 +92,28 @@ export default class Window extends Component<IOptions> {
     windows[this.id] = this
   }
   focus = () => {
+    const { c } = this
+
     if (this.isFocus) {
       return
     }
+
     this.isFocus = true
-    this.$container.addClass(this.c('active')).css({ zIndex: index++ })
+    this.$container.addClass(c('active')).css({ zIndex: index++ })
+    this.$taskBarItem.addClass(c('active'))
     each(windows, (window, id) => {
       if (id !== this.id) {
         window.blur()
       }
     })
   }
-  show() {
+  show = () => {
     this.$container.rmClass(this.c('hidden'))
     this.focus()
   }
   minimize = () => {
     this.$container.addClass(this.c('hidden'))
+    this.blur()
   }
   maximize() {
     const { c } = this
@@ -115,9 +125,13 @@ export default class Window extends Component<IOptions> {
     this.renderWindow()
   }
   destroy = () => {
+    this.$taskBarItem.remove()
     this.$container.remove()
     delete windows[this.id]
     super.destroy()
+    if (isEmpty(windows)) {
+      this.createDesktop().remove()
+    }
   }
   private restore() {
     const { c } = this
@@ -129,8 +143,10 @@ export default class Window extends Component<IOptions> {
     this.renderWindow()
   }
   private blur() {
+    const { c } = this
     this.isFocus = false
-    this.$container.rmClass(this.c('active'))
+    this.$container.rmClass(c('active'))
+    this.$taskBarItem.rmClass(c('active'))
   }
   private moveTo(x: number, y: number) {
     this.$container.css({
@@ -302,13 +318,18 @@ export default class Window extends Component<IOptions> {
       this.focus()
     })
 
+    this.$taskBarItem.on('click', this.show)
+
     this.$resizer.on(drag('start'), this.onResizeStart)
 
     this.$titleBar
       .on('click', c('.icon-close'), this.destroy)
-      .on('click', c('.icon-minimize'), this.minimize)
       .on(drag('start'), this.onMoveStart)
 
+    this.$minimizeBtn.on('click', (e) => {
+      e.stopPropagation()
+      this.minimize()
+    })
     this.$maximizeBtn.on('click', () => {
       if (this.isMaximized) {
         this.restore()
@@ -320,15 +341,29 @@ export default class Window extends Component<IOptions> {
     this.$container.on('click', this.focus)
   }
   private createDesktop() {
-    let $desktop = $(this.c('.desktop'))
+    const { c } = this
+
+    let $desktop = $(c('.desktop'))
     if (($desktop as any).length > 0) {
       return $desktop
     }
 
-    const desktop = h(this.c('.desktop'))
+    const desktop = h(c('.desktop'))
     $desktop = $(desktop)
+    $desktop.html(c('<div class="task-bar"></div>'))
     document.body.appendChild(desktop)
     return $desktop
+  }
+  private createTaskBarItem() {
+    const { c } = this
+    const $desktop = this.createDesktop()
+    const $taskBar = $desktop.find(c('.task-bar'))
+
+    const taskBarItem = h(c('.task-bar-item'))
+    const $taskBarItem = $(taskBarItem)
+    $taskBar.append(taskBarItem)
+
+    return $taskBarItem
   }
   private render() {
     this.renderWindow()

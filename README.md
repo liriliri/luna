@@ -26,3 +26,4 @@ Yet another UI library.
 * [notification](./src/notification/README.md): Show notifications.
 * [object-viewer](./src/object-viewer/README.md): JavaScript object viewer.
 * [video-player](./src/video-player/README.md): Video player.
+* [window](./src/window/README.md): HTML5 window manager.

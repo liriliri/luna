@@ -373,6 +373,7 @@ export default class Window extends Component<IOptions> {
     const { options } = this
 
     this.$title.text(options.title)
+    this.$taskBarItem.attr('title', options.title)
 
     if (this.isMaximized) {
       this.moveTo(0, 0)

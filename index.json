@@ -45,5 +45,8 @@
     "test": true,
     "icon": true
   },
-  "window": {}
+  "window": {
+    "test": true,
+    "icon": true
+  }
 }

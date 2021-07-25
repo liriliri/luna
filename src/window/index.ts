@@ -18,13 +18,12 @@ interface IOptions {
   y?: number
   title?: string
   content?: string | HTMLElement
+  minWidth?: number
+  minHeight?: number
 }
 
 let index = 0
 const windows: types.PlainObj<Window> = {}
-const minWidth = 200
-const minHeight = 150
-
 export default class Window extends Component<IOptions> {
   private $title: $.$
   private $titleBar: $.$
@@ -45,9 +44,18 @@ export default class Window extends Component<IOptions> {
     y = 0,
     title = '',
     content = '',
+    minWidth = 200,
+    minHeight = 150,
   }: IOptions) {
     super(h('div'), { compName: 'window' })
     this.$container.addClass(this.c('hidden'))
+
+    if (minWidth < 200) {
+      minWidth = 200
+    }
+    if (minHeight < 150) {
+      minHeight = 150
+    }
 
     this.options = {
       width,
@@ -56,6 +64,8 @@ export default class Window extends Component<IOptions> {
       x,
       y,
       content,
+      minWidth,
+      minHeight,
     }
 
     this.initTpl()
@@ -129,6 +139,7 @@ export default class Window extends Component<IOptions> {
     })
   }
   private resizeTo(width: number | string, height: number | string) {
+    const { minWidth, minHeight } = this.options
     if (typeof width === 'number' && width < minWidth) {
       width = minWidth
     }
@@ -203,7 +214,7 @@ export default class Window extends Component<IOptions> {
   private onResizeMove = (e: any, updateOptions = false) => {
     e = e.origEvent
     const { action, options } = this
-    const { x, y, width, height } = options
+    const { x, y, width, height, minWidth, minHeight } = options
 
     const deltaX = eventClient('x', e) - this.startX
     const deltaY = eventClient('y', e) - this.startY

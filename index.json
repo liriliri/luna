@@ -17,6 +17,7 @@
   "dom-highlighter": {
     "test": true
   },
+  "dom-viewer": {},
   "editor": {
     "icon": true,
     "test": true

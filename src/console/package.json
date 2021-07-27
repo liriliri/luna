@@ -5,6 +5,9 @@
   "dependencies": {
     "js-beautify": "^1.13.2"
   },
+  "peerDependencies": {
+    "luna-object-viewer": "^0.2.0"
+  },
   "devDependencies": {
     "@types/js-beautify": "^1.13.1"
   }

@@ -1,0 +1,85 @@
+@import '../share/mixin';
+
+.luna-dom-viewer {
+  @include overflow-auto(y);
+  overflow-x: hidden;
+  word-wrap: break-word;
+  padding: 10px 10px 10px 25px;
+  font-size: 12px;
+  height: 100%;
+  font-family: Consolas, Lucida Console, Monaco, MonoSpace;
+  cursor: default;
+  ul {
+    list-style: none;
+  }
+}
+
+.tree-item {
+  line-height: 16px;
+  min-height: 16px;
+  position: relative;
+  z-index: 10;
+  .toggle-btn {
+    position: absolute;
+    display: block;
+    width: 12px;
+    height: 12px;
+    left: -12px;
+    top: 2px;
+  }
+  .selection {
+    position: absolute;
+    display: none;
+    left: -10000px;
+    right: -10000px;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    background: var(--contrast);
+  }
+  &.selected {
+    &.expandable.expanded:before {
+      border-left-color: transparent;
+    }
+    .selection {
+      display: block;
+    }
+  }
+  .html-tag {
+    color: var(--tag-name-color);
+    .tag-name {
+      color: var(--tag-name-color);
+    }
+    .attribute-name {
+      color: var(--attribute-name-color);
+    }
+    .attribute-value {
+      color: var(--string-color);
+      &.attribute-underline {
+        text-decoration: underline;
+      }
+    }
+  }
+  .html-comment {
+    color: var(--comment-color);
+  }
+  &.expandable:before {
+    content: '';
+    width: 0;
+    height: 0;
+    border: 4px solid transparent;
+    position: absolute;
+    border-left-color: var(--foreground);
+    left: -10px;
+    top: 4px;
+  }
+  &.expandable.expanded:before {
+    border-top-color: var(--foreground);
+    border-left-color: transparent;
+    left: -12px;
+    top: 6px;
+  }
+}
+.children {
+  padding-left: 15px;
+}

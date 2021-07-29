@@ -90,35 +90,6 @@ export default class JsonEditor extends Component {
     this.setName(name)
     this.setValue(value)
   }
-  initTpl() {
-    this.$container.html(
-      this.c(
-        [
-          '<div class="toggle"><span class="icon icon-arrow-right"></span><span class="icon icon-arrow-down"></span></div>',
-          '<div class="name"></div>',
-          '<div class="separator"></div>',
-          '<div class="value"></div>',
-          '<div class="delete"><span class="icon icon-delete"></span></div>',
-          '<div class="children"></div>',
-          '<div class="insert"><span class="icon icon-add"></span></div>',
-        ].join('')
-      )
-    )
-  }
-  bindEvent() {
-    this.$toggle.on('click', this.onToggleClick)
-    this.$name.on('dblclick', this.editName)
-    this.$name.on('blur', this.editFieldStop.bind(this, 'name'))
-    this.$name.on('keypress', this.editFieldKeyPressed.bind(this, 'name'))
-    this.$name.on('keydown', this.editFieldTabPressed.bind(this, 'name'))
-    this.$value.on('dblclick', this.editValue)
-    this.$value.on('blur', this.editFieldStop.bind(this, 'value'))
-    this.$value.on('keypress', this.editFieldKeyPressed.bind(this, 'value'))
-    this.$value.on('keydown', this.editFieldTabPressed.bind(this, 'value'))
-    this.$value.on('keydown', this.numericValueKeyDown)
-    this.$insert.on('click', this.onInsertClick)
-    this.$delete.on('click', this.onDeleteClick)
-  }
   collapse = (recursive?: boolean) => {
     const { c } = this
     if (recursive) {
@@ -280,6 +251,35 @@ export default class JsonEditor extends Component {
   }
   editValue = () => {
     this.editField('value')
+  }
+  private initTpl() {
+    this.$container.html(
+      this.c(
+        [
+          '<div class="toggle"><span class="icon icon-arrow-right"></span><span class="icon icon-arrow-down"></span></div>',
+          '<div class="name"></div>',
+          '<div class="separator"></div>',
+          '<div class="value"></div>',
+          '<div class="delete"><span class="icon icon-delete"></span></div>',
+          '<div class="children"></div>',
+          '<div class="insert"><span class="icon icon-add"></span></div>',
+        ].join('')
+      )
+    )
+  }
+  private bindEvent() {
+    this.$toggle.on('click', this.onToggleClick)
+    this.$name.on('dblclick', this.editName)
+    this.$name.on('blur', this.editFieldStop.bind(this, 'name'))
+    this.$name.on('keypress', this.editFieldKeyPressed.bind(this, 'name'))
+    this.$name.on('keydown', this.editFieldTabPressed.bind(this, 'name'))
+    this.$value.on('dblclick', this.editValue)
+    this.$value.on('blur', this.editFieldStop.bind(this, 'value'))
+    this.$value.on('keypress', this.editFieldKeyPressed.bind(this, 'value'))
+    this.$value.on('keydown', this.editFieldTabPressed.bind(this, 'value'))
+    this.$value.on('keydown', this.numericValueKeyDown)
+    this.$insert.on('click', this.onInsertClick)
+    this.$delete.on('click', this.onDeleteClick)
   }
   private isNameEditable() {
     if (!this.nameEditable) {

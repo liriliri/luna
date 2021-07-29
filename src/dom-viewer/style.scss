@@ -9,6 +9,7 @@
   height: 100%;
   font-family: Consolas, Lucida Console, Monaco, MonoSpace;
   cursor: default;
+  list-style: none;
   ul {
     list-style: none;
   }
@@ -46,15 +47,15 @@
     }
   }
   .html-tag {
-    color: var(--tag-name-color);
+    color: #881280;
     .tag-name {
-      color: var(--tag-name-color);
+      color: #881280;
     }
     .attribute-name {
-      color: var(--attribute-name-color);
+      color: #994500;
     }
     .attribute-value {
-      color: var(--string-color);
+      color: #1a1aa6;
       &.attribute-underline {
         text-decoration: underline;
       }
@@ -69,17 +70,19 @@
     height: 0;
     border: 4px solid transparent;
     position: absolute;
-    border-left-color: var(--foreground);
+    border-left-color: #727272;
     left: -10px;
     top: 4px;
   }
   &.expandable.expanded:before {
-    border-top-color: var(--foreground);
+    border-top-color: #727272;
     border-left-color: transparent;
     left: -12px;
     top: 6px;
   }
 }
+
 .children {
+  margin: 0;
   padding-left: 15px;
 }

@@ -38,39 +38,37 @@ export default class DomViewer extends Component {
   }
   private renderHtmlTag(data: IHtmlTagData) {
     const attributes = map(data.attributes, (attribute) => {
-      return `<span class="eruda-attribute">
-        <span class="eruda-attribute-name">${attribute.name}</span>{{#if value}}="<span class="eruda-attribute-value{{#if underline}} eruda-attribute-underline{{/if}}">{{value}}</span>"{{/if}}
-      </span>`
+      const { name, value, underline } = attribute
+
+      return `<span class="attribute">
+          <span class="attribute-name">${name}</span>${
+        value
+          ? `="<span class="attribute-value${
+              underline ? ' attribute-underline' : ''
+            }">${value}</span>"`
+          : ''
+      }</span>`
     })
 
     let tail = ''
     if (data.hasTail) {
       tail = `
-      {{#if text}}{{text}}{{else}}…{{/if}}
-      <span class="eruda-html-tag">
-      &lt;
-      <span class="eruda-tag-name">/{{tagName}}</span>
-      &gt;
-      </span>
-      `
+        ${data.text || '...'}
+        <span class="html-tag">&lt;<span class="tag-name">/${
+          data.tagName
+        }</span>&gt;</span>`
     }
 
     return this.c(stripIndent`
-    <span class="eruda-toggle-btn"></span>
-    <span class="eruda-html-tag">
-      &lt;
-      <span class="eruda-tag-name">${data.tagName}</span>
-      ${attributes}
-      &gt;
-      </span>
-      ${tail}
-    <span class="eruda-selection"></span>`)
+      <span class="toggle-btn"></span>
+      <span class="html-tag">&lt;<span class="tag-name">${data.tagName}</span>${attributes}&gt;</span>${tail}
+      <span class="selection"></span>`)
   }
-  private renderTextNode() {
-    return `"<span class="eruda-text-node">{{value}}</span>"`
+  private renderTextNode(value: string) {
+    return `"<span class="text-node">${value}</span>"`
   }
-  private renderHtmlComment() {
-    return `<span class="eruda-html-comment">&lt;!-- {{value}} --&gt;</span>`
+  private renderHtmlComment(value: string) {
+    return `<span class="html-comment">&lt;!-- ${value} --&gt;</span>`
   }
   private renderChildren(node: ChildNode | null, $container: $.$) {
     let children
@@ -91,10 +89,11 @@ export default class DomViewer extends Component {
     each(children, (child) => this.renderChild(child, container as HTMLElement))
   }
   private renderChild(child: ChildNode, container: HTMLElement) {
+    const { c } = this
     const $tag = $(h('li'))
     let isEndTag = false
 
-    $tag.addClass('eruda-tree-item')
+    $tag.addClass(c('tree-item'))
     if (child.nodeType === child.ELEMENT_NODE) {
       const childCount = child.childNodes.length
       const expandable = childCount > 0
@@ -109,37 +108,29 @@ export default class DomViewer extends Component {
       }
       $tag.html(this.renderHtmlTag(data))
       if (expandable && !hasOneTextNode) {
-        $tag.addClass('eruda-expandable')
+        $tag.addClass('expandable')
       }
     } else if (child.nodeType === Node.TEXT_NODE) {
       const value = child.nodeValue as string
       if (value.trim() === '') return
 
-      $tag.html(
-        this.renderTextNode({
-          value,
-        })
-      )
+      $tag.html(this.renderTextNode(value))
     } else if (child.nodeType === Node.COMMENT_NODE) {
-      const value = child.nodeValue
+      const value = child.nodeValue as string
       if (value.trim() === '') return
 
-      $tag.html(
-        this.renderHtmlComment({
-          value,
-        })
-      )
+      $tag.html(this.renderHtmlComment(value))
     } else if (child.nodeType === 'END_TAG') {
       isEndTag = true
       child = child.node
       $tag.html(
-        `<span class="eruda-html-tag" style="margin-left: -12px;">&lt;<span class="eruda-tag-name">/${child.tagName.toLocaleLowerCase()}</span>&gt;</span><span class="eruda-selection"></span>`
+        c(`<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${child.tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`)
       )
     } else {
       return
     }
     const $children = $(h('ul'))
-    $children.addClass('eruda-children')
+    $children.addClass(c('children'))
 
     container.appendChild($tag.get(0))
     container.appendChild($children.get(0))
@@ -148,7 +139,7 @@ export default class DomViewer extends Component {
 
     let erudaDom = {}
 
-    if ($tag.hasClass('eruda-expandable')) {
+    if ($tag.hasClass('expandable')) {
       const open = () => {
         $tag.html(
           this.renderHtmlTag({
@@ -156,7 +147,7 @@ export default class DomViewer extends Component {
             hasTail: false,
           })
         )
-        $tag.addClass('eruda-expanded')
+        $tag.addClass('expanded')
         this.renderChildren(child, $children)
       }
       const close = () => {
@@ -167,16 +158,16 @@ export default class DomViewer extends Component {
             hasTail: true,
           })
         )
-        $tag.rmClass('eruda-expanded')
+        $tag.rmClass('expanded')
       }
       const toggle = () => {
-        if ($tag.hasClass('eruda-expanded')) {
+        if ($tag.hasClass('expanded')) {
           close()
         } else {
           open()
         }
       }
-      $tag.on('click', '.eruda-toggle-btn', (e) => {
+      $tag.on('click', '.toggle-btn', (e) => {
         e.stopPropagation()
         toggle()
       })
@@ -187,8 +178,8 @@ export default class DomViewer extends Component {
     }
 
     const select = () => {
-      this.$container.find('.eruda-selected').rmClass('eruda-selected')
-      $tag.addClass('eruda-selected')
+      this.$container.find('.selected').rmClass('selected')
+      $tag.addClass('selected')
     }
     $tag.on('click', select)
     erudaDom.select = select

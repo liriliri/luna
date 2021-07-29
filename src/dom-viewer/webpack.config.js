@@ -1,1 +1,3 @@
-module.exports = require('../share/webpack.config')('dom-viewer')
+module.exports = require('../share/webpack.config')('dom-viewer', {
+  useIcon: true,
+})

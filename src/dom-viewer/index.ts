@@ -31,8 +31,8 @@ export default class DomViewer extends Component {
       } else {
         break
       }
-      if (els.length === 0 && el.erudaDom) {
-        el.erudaDom.select()
+      if (els.length === 0 && (el as any).erudaDom) {
+        (el as any).erudaDom.select()
       }
     }
   }
@@ -52,11 +52,11 @@ export default class DomViewer extends Component {
 
     let tail = ''
     if (data.hasTail) {
-      tail = `
-        ${data.text || '...'}
-        <span class="html-tag">&lt;<span class="tag-name">/${
-          data.tagName
-        }</span>&gt;</span>`
+      tail = `${
+        data.text || '…'
+      }<span class="html-tag">&lt;<span class="tag-name">/${
+        data.tagName
+      }</span>&gt;</span>`
     }
 
     return this.c(stripIndent`
@@ -104,11 +104,11 @@ export default class DomViewer extends Component {
       const hasOneTextNode =
         childCount === 1 && child.childNodes[0].nodeType === child.TEXT_NODE
       if (hasOneTextNode) {
-        data.text = child.childNodes[0].nodeValue
+        data.text = child.childNodes[0].nodeValue as string
       }
       $tag.html(this.renderHtmlTag(data))
       if (expandable && !hasOneTextNode) {
-        $tag.addClass('expandable')
+        $tag.addClass(c('expandable'))
       }
     } else if (child.nodeType === Node.TEXT_NODE) {
       const value = child.nodeValue as string
@@ -120,11 +120,13 @@ export default class DomViewer extends Component {
       if (value.trim() === '') return
 
       $tag.html(this.renderHtmlComment(value))
-    } else if (child.nodeType === 'END_TAG') {
+    } else if ((child.nodeType as any) === 'END_TAG') {
       isEndTag = true
-      child = child.node
+      child = (child as any).node
       $tag.html(
-        c(`<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${child.tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`)
+        c(
+          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(child as HTMLElement).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
+        )
       )
     } else {
       return
@@ -137,37 +139,37 @@ export default class DomViewer extends Component {
 
     if (child.nodeType !== child.ELEMENT_NODE) return
 
-    let erudaDom = {}
+    let erudaDom: any = {}
 
-    if ($tag.hasClass('expandable')) {
+    if ($tag.hasClass(c('expandable'))) {
       const open = () => {
         $tag.html(
           this.renderHtmlTag({
-            ...getHtmlTagData(child),
+            ...getHtmlTagData(child as HTMLElement),
             hasTail: false,
           })
         )
-        $tag.addClass('expanded')
+        $tag.addClass(c('expanded'))
         this.renderChildren(child, $children)
       }
       const close = () => {
         $children.html('')
         $tag.html(
           this.renderHtmlTag({
-            ...getHtmlTagData(child),
+            ...getHtmlTagData(child as HTMLElement),
             hasTail: true,
           })
         )
-        $tag.rmClass('expanded')
+        $tag.rmClass(c('expanded'))
       }
       const toggle = () => {
-        if ($tag.hasClass('expanded')) {
+        if ($tag.hasClass(c('expanded'))) {
           close()
         } else {
           open()
         }
       }
-      $tag.on('click', '.toggle-btn', (e) => {
+      $tag.on('click', c('.toggle-btn'), (e) => {
         e.stopPropagation()
         toggle()
       })
@@ -178,12 +180,14 @@ export default class DomViewer extends Component {
     }
 
     const select = () => {
-      this.$container.find('.selected').rmClass('selected')
-      $tag.addClass('selected')
+      this.$container.find(c('.selected')).rmClass(c('selected'))
+      $tag.addClass(c('selected'))
     }
     $tag.on('click', select)
     erudaDom.select = select
-    if (!isEndTag) child.erudaDom = erudaDom
+    if (!isEndTag) {
+      (child as any).erudaDom = erudaDom
+    }
   }
 }
 
@@ -200,7 +204,7 @@ interface IBasicHtmlTagData {
 
 interface IHtmlTagData extends IBasicHtmlTagData {
   text?: string
-  hasTail?: string
+  hasTail?: boolean
 }
 
 function getHtmlTagData(el: HTMLElement) {

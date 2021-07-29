@@ -1,4 +1,5 @@
 @import '../share/mixin';
+@import '../share/variable';
 
 .luna-dom-viewer {
   @include overflow-auto(y);
@@ -7,7 +8,7 @@
   padding: 10px 10px 10px 25px;
   font-size: 12px;
   height: 100%;
-  font-family: Consolas, Lucida Console, Monaco, MonoSpace;
+  font-family: $font-family-code;
   cursor: default;
   list-style: none;
   ul {
@@ -36,7 +37,7 @@
     top: 0;
     bottom: 0;
     z-index: -1;
-    background: var(--contrast);
+    background: #f2f7fd;
   }
   &.selected {
     &.expandable.expanded:before {

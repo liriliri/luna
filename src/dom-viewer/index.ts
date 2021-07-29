@@ -32,19 +32,19 @@ export default class DomViewer extends Component {
         break
       }
       if (els.length === 0 && (el as any).erudaDom) {
-        (el as any).erudaDom.select()
+        ;(el as any).erudaDom.select()
       }
     }
   }
   private renderHtmlTag(data: IHtmlTagData) {
     const attributes = map(data.attributes, (attribute) => {
-      const { name, value, underline } = attribute
+      const { name, value, isLink } = attribute
 
       return `<span class="attribute">
           <span class="attribute-name">${name}</span>${
         value
           ? `="<span class="attribute-value${
-              underline ? ' attribute-underline' : ''
+              isLink ? ' attribute-underline' : ''
             }">${value}</span>"`
           : ''
       }</span>`
@@ -186,7 +186,7 @@ export default class DomViewer extends Component {
     $tag.on('click', select)
     erudaDom.select = select
     if (!isEndTag) {
-      (child as any).erudaDom = erudaDom
+      ;(child as any).erudaDom = erudaDom
     }
   }
 }
@@ -194,7 +194,7 @@ export default class DomViewer extends Component {
 interface IAttribute {
   name: string
   value: string
-  underline?: boolean
+  isLink?: boolean
 }
 
 interface IBasicHtmlTagData {
@@ -220,7 +220,7 @@ function getHtmlTagData(el: HTMLElement) {
     attributes.push({
       name,
       value,
-      underline: isUrlAttribute(el, name),
+      isLink: isUrlAttribute(el, name),
     })
   })
   ret.attributes = attributes

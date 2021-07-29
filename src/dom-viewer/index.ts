@@ -10,7 +10,7 @@ export default class DomViewer extends Component {
   constructor(container: HTMLElement) {
     super(container, { compName: 'dom-viewer' })
 
-    this.renderChildren(null, this.$container)
+    new DomViewerChild(this, this.container, document.documentElement)
     this.select(document.body)
   }
   select(el: HTMLElement) {
@@ -36,96 +36,59 @@ export default class DomViewer extends Component {
       }
     }
   }
-  private renderHtmlTag(data: IHtmlTagData) {
-    const attributes = map(data.attributes, (attribute) => {
-      const { name, value, isLink } = attribute
+}
 
-      return `<span class="attribute">
-          <span class="attribute-name">${name}</span>${
-        value
-          ? `="<span class="attribute-value${
-              isLink ? ' attribute-underline' : ''
-            }">${value}</span>"`
-          : ''
-      }</span>`
-    })
+class DomViewerChild {
+  node: ChildNode
+  private container: HTMLElement
+  private domViewer: DomViewer
+  constructor(domViewer: DomViewer, container: HTMLElement, node: ChildNode) {
+    this.domViewer = domViewer
+    this.node = node
+    this.container = container
 
-    let tail = ''
-    if (data.hasTail) {
-      tail = `${
-        data.text || '…'
-      }<span class="html-tag">&lt;<span class="tag-name">/${
-        data.tagName
-      }</span>&gt;</span>`
-    }
-
-    return this.c(stripIndent`
-      <span class="toggle-btn"></span>
-      <span class="html-tag">&lt;<span class="tag-name">${data.tagName}</span>${attributes}&gt;</span>${tail}
-      <span class="selection"></span>`)
+    this.render()
   }
-  private renderTextNode(value: string) {
-    return `"<span class="text-node">${value}</span>"`
-  }
-  private renderHtmlComment(value: string) {
-    return `<span class="html-comment">&lt;!-- ${value} --&gt;</span>`
-  }
-  private renderChildren(node: ChildNode | null, $container: $.$) {
-    let children
-    if (!node) {
-      children = [document.documentElement]
-    } else {
-      children = toArr(node.childNodes)
-    }
-
-    const container = $container.get(0)
-
-    if (node) {
-      children.push({
-        nodeType: 'END_TAG',
-        node,
-      })
-    }
-    each(children, (child) => this.renderChild(child, container as HTMLElement))
-  }
-  private renderChild(child: ChildNode, container: HTMLElement) {
-    const { c } = this
+  private render() {
+    const { container, domViewer } = this
+    let { node } = this
+    const { c } = this.domViewer
     const $tag = $(h('li'))
     let isEndTag = false
 
     $tag.addClass(c('tree-item'))
-    if (child.nodeType === child.ELEMENT_NODE) {
-      const childCount = child.childNodes.length
+    if (node.nodeType === node.ELEMENT_NODE) {
+      const childCount = node.childNodes.length
       const expandable = childCount > 0
       const data = {
-        ...getHtmlTagData(child as HTMLElement),
+        ...getHtmlTagData(node as HTMLElement),
         hasTail: expandable,
       }
       const hasOneTextNode =
-        childCount === 1 && child.childNodes[0].nodeType === child.TEXT_NODE
+        childCount === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE
       if (hasOneTextNode) {
-        data.text = child.childNodes[0].nodeValue as string
+        data.text = node.childNodes[0].nodeValue as string
       }
       $tag.html(this.renderHtmlTag(data))
       if (expandable && !hasOneTextNode) {
         $tag.addClass(c('expandable'))
       }
-    } else if (child.nodeType === Node.TEXT_NODE) {
-      const value = child.nodeValue as string
+    } else if (node.nodeType === Node.TEXT_NODE) {
+      const value = node.nodeValue as string
       if (value.trim() === '') return
 
       $tag.html(this.renderTextNode(value))
-    } else if (child.nodeType === Node.COMMENT_NODE) {
-      const value = child.nodeValue as string
+    } else if (node.nodeType === Node.COMMENT_NODE) {
+      const value = node.nodeValue as string
       if (value.trim() === '') return
 
       $tag.html(this.renderHtmlComment(value))
-    } else if ((child.nodeType as any) === 'END_TAG') {
+    } else if ((node.nodeType as any) === 'END_TAG') {
       isEndTag = true
-      child = (child as any).node
+      node = (node as any).node
       $tag.html(
         c(
-          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(child as HTMLElement).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
+          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(node as HTMLElement).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
         )
       )
     } else {
@@ -137,7 +100,7 @@ export default class DomViewer extends Component {
     container.appendChild($tag.get(0))
     container.appendChild($children.get(0))
 
-    if (child.nodeType !== child.ELEMENT_NODE) return
+    if (node.nodeType !== node.ELEMENT_NODE) return
 
     let erudaDom: any = {}
 
@@ -145,18 +108,18 @@ export default class DomViewer extends Component {
       const open = () => {
         $tag.html(
           this.renderHtmlTag({
-            ...getHtmlTagData(child as HTMLElement),
+            ...getHtmlTagData(node as HTMLElement),
             hasTail: false,
           })
         )
         $tag.addClass(c('expanded'))
-        this.renderChildren(child, $children)
+        this.renderChildren(node, $children)
       }
       const close = () => {
         $children.html('')
         $tag.html(
           this.renderHtmlTag({
-            ...getHtmlTagData(child as HTMLElement),
+            ...getHtmlTagData(node as HTMLElement),
             hasTail: true,
           })
         )
@@ -180,14 +143,63 @@ export default class DomViewer extends Component {
     }
 
     const select = () => {
-      this.$container.find(c('.selected')).rmClass(c('selected'))
+      domViewer.$container.find(c('.selected')).rmClass(c('selected'))
       $tag.addClass(c('selected'))
     }
     $tag.on('click', select)
     erudaDom.select = select
     if (!isEndTag) {
-      ;(child as any).erudaDom = erudaDom
+      ;(node as any).erudaDom = erudaDom
     }
+  }
+  private renderChildren(node: ChildNode, $container: $.$) {
+    const children = toArr(node.childNodes)
+
+    const container = $container.get(0)
+
+    if (node) {
+      children.push({
+        nodeType: 'END_TAG',
+        node,
+      })
+    }
+    each(children, (child) => {
+      new DomViewerChild(this.domViewer, container as HTMLElement, child)
+    })
+  }
+  private renderHtmlTag(data: IHtmlTagData) {
+    const attributes = map(data.attributes, (attribute) => {
+      const { name, value, isLink } = attribute
+
+      return `<span class="attribute">
+          <span class="attribute-name">${name}</span>${
+        value
+          ? `="<span class="attribute-value${
+              isLink ? ' attribute-underline' : ''
+            }">${value}</span>"`
+          : ''
+      }</span>`
+    })
+
+    let tail = ''
+    if (data.hasTail) {
+      tail = `${
+        data.text || '…'
+      }<span class="html-tag">&lt;<span class="tag-name">/${
+        data.tagName
+      }</span>&gt;</span>`
+    }
+
+    return this.domViewer.c(stripIndent`
+      <span class="toggle-btn"></span>
+      <span class="html-tag">&lt;<span class="tag-name">${data.tagName}</span>${attributes}&gt;</span>${tail}
+      <span class="selection"></span>`)
+  }
+  private renderTextNode(value: string) {
+    return `"<span class="text-node">${value}</span>"`
+  }
+  private renderHtmlComment(value: string) {
+    return `<span class="html-comment">&lt;!-- ${value} --&gt;</span>`
   }
 }
 

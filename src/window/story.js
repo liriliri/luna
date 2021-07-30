@@ -8,8 +8,8 @@ import { text } from '@storybook/addon-knobs'
 const def = story(
   'window',
   () => {
-    const titleA = text('Title A', 'Window A - Iframe')
-    const contentA = text('Content A', 'https://eruda.liriliri.io')
+    const titleA = text('Title A', 'Slayers - Wikipedia')
+    const contentA = text('Content A', 'https://en.wikipedia.org/wiki/Slayers')
 
     const winA = new Window({
       title: titleA,
@@ -19,7 +19,7 @@ const def = story(
     })
     winA.show()
 
-    const titleB = text('Title B', 'Window B - Html')
+    const titleB = text('Title B', 'README.md')
     const contentB = text(
       'Content B',
       `<div style="padding:10px">${escape(readme).replace(

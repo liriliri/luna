@@ -14,11 +14,26 @@
     .title-bar {
       background: rgb(240, 240, 240);
     }
+    .resizer {
+      position: static;
+      width: 0;
+      height: 0;
+    }
   }
 }
 
 .hidden {
   display: none;
+}
+
+@mixin fill-window {
+  position: absolute;
+  left: 0;
+  top: 30px;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: auto;
 }
 
 .desktop {
@@ -30,15 +45,14 @@
   z-index: 3000;
   pointer-events: none;
   &.resizing {
-    .resizer {
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0;
-      width: 100%;
-      height: 100%;
+    .luna-window .resizer {
+      @include fill-window;
     }
   }
+}
+
+.resizer {
+  @include fill-window;
 }
 
 .title-bar {
@@ -167,27 +181,27 @@
 }
 
 .point {
-  height: 6px;
-  width: 6px;
+  height: 20px;
+  width: 20px;
   &.point-ne {
     cursor: nesw-resize;
-    right: -5px;
-    top: -5px;
+    right: -10px;
+    top: -10px;
   }
   &.point-nw {
     cursor: nwse-resize;
-    left: -5px;
-    top: -5px;
+    left: -10px;
+    top: -10px;
   }
   &.point-sw {
-    bottom: -5px;
+    bottom: -10px;
     cursor: nesw-resize;
-    left: -5px;
+    left: -10px;
   }
   &.point-se {
-    bottom: -5px;
+    bottom: -10px;
     cursor: nwse-resize;
-    right: -5px;
+    right: -10px;
   }
 }
 

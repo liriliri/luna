@@ -10,6 +10,7 @@ interface IOptions {
   node?: ChildNode
   parent?: DomViewer | null
   isEndTag?: boolean
+  rootContainer?: HTMLElement
 }
 
 class DomViewer extends Component<IOptions> {
@@ -23,6 +24,7 @@ class DomViewer extends Component<IOptions> {
       node = document.documentElement,
       parent = null,
       isEndTag = false,
+      rootContainer,
     }: IOptions = {}
   ) {
     super(container, { compName: 'dom-viewer' })
@@ -31,10 +33,16 @@ class DomViewer extends Component<IOptions> {
       node,
       parent,
       isEndTag,
+      rootContainer: rootContainer || container,
     }
 
     this.initTpl()
     this.bindEvent()
+  }
+  select = () => {
+    const { c } = this
+    $(this.options.rootContainer).find(c('.selected')).rmClass(c('selected'))
+    this.$tag.addClass(c('selected'))
   }
   expand() {
     if (!this.isExpandable) {
@@ -53,7 +61,7 @@ class DomViewer extends Component<IOptions> {
       })
     )
     $tag.addClass(c('expanded'))
-    this.renderChildren(node, this.$children)
+    this.renderChildren(node)
   }
   collapse() {
     if (!this.isExpandable) {
@@ -61,20 +69,19 @@ class DomViewer extends Component<IOptions> {
     }
     this.isExpanded = false
 
-    const { $tag, c } = this 
-    const { node } = this.options 
+    const { $tag, c } = this
+    const { node } = this.options
 
     this.$children.html('')
     this.$tag.html(
       this.renderHtmlTag({
         ...getHtmlTagData(node as HTMLElement),
         hasTail: true,
-        hasToggleButton: true
+        hasToggleButton: true,
       })
     )
     $tag.rmClass(c('expanded'))
   }
-  select() {}
   toggle = () => {
     if (this.isExpanded) {
       this.collapse()
@@ -83,16 +90,16 @@ class DomViewer extends Component<IOptions> {
     }
   }
   private bindEvent() {
-    if (!this.isExpandable) {
-      return
+    const { c, $tag } = this
+
+    if (this.isExpandable) {
+      $tag.on('click', c('.toggle'), (e: any) => {
+        e.stopPropagation()
+        this.toggle()
+      })
     }
 
-    const { c } = this
-
-    this.$tag.on('click', c('.toggle'), (e: any) => {
-      e.stopPropagation()
-      this.toggle()
-    })
+    $tag.on('click', this.select)
   }
   private initTpl() {
     const { container, c } = this
@@ -154,17 +161,28 @@ class DomViewer extends Component<IOptions> {
     container.appendChild($children.get(0))
     this.$children = $children
   }
-  private renderChildren(node: ChildNode, $container: $.$) {
+  private renderChildren(node: ChildNode) {
+    const { rootContainer } = this.options
+    const $container = this.$children
     const children = toArr(node.childNodes)
 
     const container = $container.get(0)
 
     each(children, (child) => {
-      new DomViewer(container as HTMLElement, { node: child, parent: this })
+      new DomViewer(container as HTMLElement, {
+        node: child,
+        parent: this,
+        rootContainer,
+      })
     })
 
     if (node) {
-      new DomViewer(container as HTMLElement, { node, parent: this, isEndTag: true})
+      new DomViewer(container as HTMLElement, {
+        node,
+        parent: this,
+        isEndTag: true,
+        rootContainer,
+      })
     }
   }
   private renderHtmlTag(data: IHtmlTagData) {

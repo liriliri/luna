@@ -25,3 +25,11 @@ npm install luna-dom-viewer --save
 import 'luna-dom-viewer/luna-dom-viewer.css'
 import LunaDomViewer from 'luna-dom-viewer'
 ```
+
+## Usage
+
+```javascript
+const container = document.getElementById('container')
+const domViewer = new LunaDomViewer(container)
+domViewer.expand()
+```

@@ -115,6 +115,7 @@ class DomViewer extends Component<IOptions> {
     let isExpandable = false
     const $tag = $(h('li'))
     $tag.addClass(c('tree-item'))
+    this.$tag = $tag
 
     if (isEndTag) {
       $tag.html(
@@ -153,7 +154,6 @@ class DomViewer extends Component<IOptions> {
     }
 
     container.appendChild($tag.get(0))
-    this.$tag = $tag
 
     if (node.nodeType !== node.ELEMENT_NODE) {
       return

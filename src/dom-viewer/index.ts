@@ -3,6 +3,7 @@ import each from 'licia/each'
 import $ from 'licia/$'
 import h from 'licia/h'
 import map from 'licia/map'
+import filter from 'licia/filter'
 import stripIndent from 'licia/stripIndent'
 import toArr from 'licia/toArr'
 
@@ -61,7 +62,7 @@ class DomViewer extends Component<IOptions> {
       })
     )
     $tag.addClass(c('expanded'))
-    this.renderChildren(node)
+    this.renderChildNodes(node as HTMLElement)
   }
   collapse() {
     if (!this.isExpandable) {
@@ -101,6 +102,12 @@ class DomViewer extends Component<IOptions> {
 
     $tag.on('click', this.select)
   }
+  private getChildNodes(el: HTMLElement) {
+    const { rootContainer } = this.options
+    let childNodes = toArr(el.childNodes)
+    childNodes = filter(childNodes, (child) => child !== rootContainer)
+    return childNodes
+  }
   private initTpl() {
     const { container, c } = this
     const { node, isEndTag } = this.options
@@ -116,7 +123,7 @@ class DomViewer extends Component<IOptions> {
         )
       )
     } else if (node.nodeType === Node.ELEMENT_NODE) {
-      const childCount = node.childNodes.length
+      const childCount = this.getChildNodes(node as HTMLElement).length
       const data = {
         ...getHtmlTagData(node as HTMLElement),
         hasTail: childCount > 0,
@@ -161,16 +168,17 @@ class DomViewer extends Component<IOptions> {
     container.appendChild($children.get(0))
     this.$children = $children
   }
-  private renderChildren(node: ChildNode) {
+  private renderChildNodes(node: HTMLElement) {
     const { rootContainer } = this.options
     const $container = this.$children
-    const children = toArr(node.childNodes)
+    let childNodes = this.getChildNodes(node)
+    childNodes = filter(childNodes, (child) => child !== rootContainer)
 
     const container = $container.get(0)
 
-    each(children, (child) => {
+    each(childNodes, (node) => {
       new DomViewer(container as HTMLElement, {
-        node: child,
+        node,
         parent: this,
         rootContainer,
       })

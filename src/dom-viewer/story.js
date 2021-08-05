@@ -7,6 +7,7 @@ const def = story(
   'dom-viewer',
   (container) => {
     const domViewer = new DomViewer(container)
+    domViewer.expand()
 
     return domViewer
   },

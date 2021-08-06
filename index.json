@@ -33,6 +33,7 @@
     "icon": true,
     "test": true
   },
+  "modal": {},
   "music-player": {
     "test": true,
     "icon": true,

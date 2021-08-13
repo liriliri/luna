@@ -32,11 +32,11 @@ export default function story(name, storyFn, { readme, source } = {}) {
         each(window.components, (component) => component.destroy())
       }
 
-      waitUntil(() => !isHidden(container)).then(() => {
+      waitUntil(() => container.parentElement).then(() => {
         window.components = toArr(storyFn(container))
         window.component = window.components[0]
       })
-      
+
       return container
     },
   }

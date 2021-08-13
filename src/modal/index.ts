@@ -35,6 +35,10 @@ class Modal extends Component<IOptions> {
     this.$container.addClass(this.c('hidden'))
     this.on('optionChange', this.render)
   }
+  destroy() {
+    super.destroy()
+    this.$container.rmClass(this.c('hidden'))
+  }
   private bindEvent() {
     this.$body.on('click', this.c('.icon-close'), this.hide)
   }

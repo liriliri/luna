@@ -1,0 +1,41 @@
+.luna-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-close {
+  position: absolute;
+  right: 16px;
+  top: 18px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.body {
+  position: relative;
+  background: #fff;
+  width: 500px;
+  border-radius: 4px;
+}
+
+.hidden {
+  display: none;
+}
+
+.title {
+  padding: 16px;
+  padding-right: 36px;
+  font-size: 20px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.content {
+  padding: 16px;
+}

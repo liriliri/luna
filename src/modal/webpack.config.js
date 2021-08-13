@@ -1,1 +1,1 @@
-module.exports = require('../share/webpack.config')('modal')
+module.exports = require('../share/webpack.config')('modal', { useIcon: true })

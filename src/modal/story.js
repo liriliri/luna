@@ -6,7 +6,11 @@ import story from '../share/story'
 const def = story(
   'modal',
   (container) => {
-    const modal = new Modal(container)
+    const modal = new Modal(container, {
+      title: 'Modal Title',
+      content: 'This is the modal content.',
+    })
+    modal.show()
 
     return modal
   },

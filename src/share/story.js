@@ -3,6 +3,8 @@ import camelCase from 'licia/camelCase'
 import spaceCase from 'licia/spaceCase'
 import map from 'licia/map'
 import h from 'licia/h'
+import isHidden from 'licia/isHidden'
+import waitUntil from 'licia/waitUntil'
 import toArr from 'licia/toArr'
 import upperFirst from 'licia/upperFirst'
 import { addReadme } from 'storybook-readme/html'
@@ -29,9 +31,12 @@ export default function story(name, storyFn, { readme, source } = {}) {
       if (window.components) {
         each(window.components, (component) => component.destroy())
       }
-      window.components = toArr(storyFn(container))
-      window.component = window.components[0]
 
+      waitUntil(() => !isHidden(container)).then(() => {
+        window.components = toArr(storyFn(container))
+        window.component = window.components[0]
+      })
+      
       return container
     },
   }

@@ -23,6 +23,18 @@
   background: #fff;
   width: 500px;
   border-radius: 4px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  &.no-title {
+    position: static;
+    .title {
+      display: none;
+    }
+    .icon-close {
+      color: #fff;
+    }
+  }
 }
 
 .hidden {
@@ -33,9 +45,15 @@
   padding: 16px;
   padding-right: 36px;
   font-size: 20px;
+  height: 56px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   border-bottom: 1px solid #e9ecef;
 }
 
 .content {
   padding: 16px;
+  overflow-y: auto;
 }

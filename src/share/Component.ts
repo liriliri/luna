@@ -29,7 +29,6 @@ export default class Component<Options = any> extends Emitter {
     this.emit('destroy')
     this.removeAllListeners()
   }
-  setOption(options: Options): void
   setOption(name: string | Options, val?: any) {
     const options: any = this.options
     let newOptions: any = {}

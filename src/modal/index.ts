@@ -9,6 +9,7 @@ interface IOptions {
   title?: string
   content?: string | HTMLElement
   footer?: string | HTMLElement
+  width?: number
   showClose?: boolean
 }
 
@@ -20,7 +21,13 @@ class Modal extends Component<IOptions> {
   private $footer: $.$
   constructor(
     container: HTMLElement,
-    { title = '', content = '', footer = '', showClose = true }: IOptions = {}
+    {
+      title = '',
+      content = '',
+      footer = '',
+      showClose = true,
+      width = 500,
+    }: IOptions = {}
   ) {
     super(container, { compName: 'modal' })
     this.hide()
@@ -30,6 +37,7 @@ class Modal extends Component<IOptions> {
       content,
       footer,
       showClose,
+      width,
     }
 
     this.initTpl()
@@ -158,6 +166,7 @@ class Modal extends Component<IOptions> {
     } else {
       this.$close.show()
     }
+    this.$body.css('width', options.width + 'px')
     this.$content.html('').append(options.content)
   }
   private initTpl() {

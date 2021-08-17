@@ -12,6 +12,7 @@ const def = story(
 
     const modal = new Modal(container, {
       title,
+      width: 600,
       content,
     })
     modal.show()

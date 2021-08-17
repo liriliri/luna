@@ -1,3 +1,69 @@
 # Luna Modal
 
 Create modal dialogs.
+
+## Demo
+
+https://luna.liriliri.io/?path=/story/modal
+
+## Install
+
+Add the following script and style to your page.
+
+```html
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-modal/luna-modal.css" />
+<script src="//cdn.jsdelivr.net/npm/luna-modal/luna-modal.js"></script>
+```
+
+You can also get it on npm.
+
+```bash
+npm install luna-modal --save
+```
+
+```javascript
+import 'luna-modal/luna-modal.css'
+import LunaModal from 'luna-modal'
+```
+
+## Usage
+
+```javascript
+const container = document.getElementById('container')
+const modal = new LunaModal(container, {
+  title: 'This is the Title',
+  content: 'This is the content.',
+})
+modal.show()
+
+LunaModal.alert('This is the alert content.')
+```
+
+## Configuration
+
+* title(string): Modal title.
+* content(string | HTMLElement): Modal content.
+* footer(string | HTMLElement): Modal footer.
+* width(number): Modal width.
+
+## Api
+
+### show(): void
+
+Show the modal.
+
+### hide(): void
+
+Hide the modal.
+
+### static alert(msg: string): void
+
+Like `window.alert`.
+
+### static confirm(msg: string): Promise<boolean>
+
+Like `window.confirm`.
+
+### static prompt(title?: string, defaultText?: string): Promise\<null | string>
+
+Like `window.prompt`.

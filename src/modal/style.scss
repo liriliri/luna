@@ -1,4 +1,8 @@
+@import '../share/variable.scss';
+@import '../share/mixin.scss';
+
 .luna-modal {
+  font-family: $font-family;
   position: fixed;
   top: 0;
   left: 0;
@@ -8,6 +12,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 4px;
 }
 
 .icon-close {
@@ -22,7 +27,6 @@
   position: relative;
   background: #fff;
   width: 500px;
-  border-radius: 4px;
   max-height: 100%;
   display: flex;
   flex-direction: column;
@@ -33,6 +37,11 @@
     }
     .icon-close {
       color: #fff;
+    }
+  }
+  &.no-footer {
+    .footer {
+      display: none;
     }
   }
 }
@@ -56,4 +65,27 @@
 .content {
   padding: 16px;
   overflow-y: auto;
+}
+
+.footer {
+  padding: 12px;
+  border-top: 1px solid #e9ecef;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button {
+  @include button();
+}
+
+.input {
+  box-sizing: border-box;
+  outline: none;
+  width: 100%;
+  font-size: 16px;
+  padding: 6px 12px;
+  border: 1px solid #999;
 }

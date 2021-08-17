@@ -34,6 +34,28 @@ const def = story(
       return false
     })
 
+    const confirmContent = text(
+      'Confirm Content',
+      'This is the confirm content.'
+    )
+    button('confirm', () => {
+      modal.hide()
+      Modal.confirm(confirmContent).then((result) => {
+        console.log('Confirm result:', result)
+      })
+      return false
+    })
+
+    const promptTitle = text('Prompt Title', 'This is the prompt title.')
+    const promptDefault = text('Prompt Default', 'This is the default text.')
+    button('prompt', () => {
+      modal.hide()
+      Modal.prompt(promptTitle, promptDefault).then((result) => {
+        console.log('Prompt result:', result)
+      })
+      return false
+    })
+
     return modal
   },
   {

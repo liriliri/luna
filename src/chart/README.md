@@ -28,7 +28,7 @@ import LunaChart from 'luna-editor'
 
 ```javascript
 const container = document.getElementById('container')
-const barChart = new Chart(container, {
+const barChart = new LunaChart(container, {
   type: 'bar',
   bgColor: '#fbfbfb',
   title: {

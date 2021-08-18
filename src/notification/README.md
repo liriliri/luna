@@ -30,7 +30,7 @@ import LunaNotification from 'luna-notification'
 
 ```javascript
 const container = document.getElementById('container')
-const notification = new Notification(container, {
+const notification = new LunaNotification(container, {
   position: {
     x: 'left',
     y: 'top',

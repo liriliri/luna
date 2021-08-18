@@ -30,7 +30,7 @@ import LunaJsonEditor from 'luna-json-editor'
 
 ```javascript
 const container = document.getElementById('container')
-const jsonEditor = new JsonEditor(container, {
+const jsonEditor = new LunaJsonEditor(container, {
   name: 'luna',  
   value: {
     a: true,

@@ -512,7 +512,6 @@ export default class Log extends Emitter {
 
       if (isEl(val) && htmlForEl) {
         args[i] = this.formatEl(val)
-        console.log(args[i])
       } else if (isFn(val)) {
         args[i] = this.formatJs(val)
       } else if (isObj(val)) {

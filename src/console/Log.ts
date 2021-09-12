@@ -1,6 +1,7 @@
 import getAbstract from './getAbstract'
 // @ts-ignore
 import LunaObjectViewer from 'luna-object-viewer'
+import types from 'licia/types'
 import isObj from 'licia/isObj'
 import isStr from 'licia/isStr'
 import isErr from 'licia/isErr'
@@ -513,7 +514,7 @@ export default class Log extends Emitter {
       if (isEl(val) && htmlForEl) {
         args[i] = this.formatEl(val)
       } else if (isFn(val)) {
-        args[i] = this.formatJs(val)
+        args[i] = this.formatFn(val)
       } else if (isObj(val)) {
         args[i] = this.formatObj(val)
       } else if (isUndef(val)) {
@@ -613,6 +614,9 @@ export default class Log extends Emitter {
     return `<pre class="${this.console.c('code')}">${this.console.c(
       highlight(beautify(val, { indent_size: 2 }), 'js', emptyHighlightStyle)
     )}</pre>`
+  }
+  private formatFn(val: types.AnyFn) {
+    return `<pre style="display:inline">${this.formatJs(val.toString())}</pre>`
   }
   private formatObj(val: any) {
     let type = getObjType(val)

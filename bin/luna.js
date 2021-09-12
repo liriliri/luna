@@ -57,7 +57,7 @@ const genIcon = wrap(async function (component) {
     '--output',
     `src/${component}/icon.css`,
     '--name',
-    `${component}-icon`,
+    `luna-${component}-icon`,
   ])
   await runScript('lsla', ['prettier', `src/${component}/icon.css`, '--write'])
 }, 'icon')

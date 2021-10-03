@@ -102,12 +102,12 @@ class NotificationItem {
       ),
     })
 
-    this.render()
+    this.initTpl()
   }
   destroy() {
     this.$container.remove()
   }
-  private render() {
+  private initTpl() {
     this.$container.html(
       this.notification.c(`<div class="content">${this.content}</div>`)
     )

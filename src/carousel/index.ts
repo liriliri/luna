@@ -180,7 +180,7 @@ export default class Carousel extends Component<IOptions> {
 
     this.$indicators.html(html)
   }
-  private getSlides() {
+  getSlides() {
     return toArr(this.body.children)
   }
   private initTpl() {

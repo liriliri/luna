@@ -8,6 +8,11 @@ const def = story(
   (container) => {
     const gallery = new Gallery(container)
 
+    gallery.append('/pic1.jpg', 'pic1.jpg')
+    gallery.append('/pic2.jpg', 'pic2.jpg')
+    gallery.append('/pic3.jpg', 'pic3.jpg')
+    gallery.append('/pic4.jpg', 'pic4.jpg')
+
     return gallery
   },
   {

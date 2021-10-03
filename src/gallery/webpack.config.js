@@ -1,1 +1,3 @@
-module.exports = require('../share/webpack.config')('gallery')
+module.exports = require('../share/webpack.config')('gallery', {
+  dependencies: ['carousel'],
+})

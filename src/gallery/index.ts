@@ -7,25 +7,38 @@ import $ from 'licia/$'
 import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
 import each from 'licia/each'
+import fullscreen from 'licia/fullscreen'
 
 class Gallery extends Component {
   private onResize: () => void
   private carousel: LunaCarousel
   private images: Image[] = []
   private resizeSensor: ResizeSensor
+  private $toolbar: $.$
   constructor(container: HTMLElement) {
     super(container, { compName: 'gallery' })
+    this.hide()
 
     this.initTpl()
 
     const $body = this.find('.body')
     const body = $body.get(0) as HTMLElement
+    this.$toolbar = this.find('.toolbar')
 
     this.carousel = new LunaCarousel(body)
     this.resizeSensor = new ResizeSensor(container)
     this.onResize = throttle(() => this.reset(), 16)
 
     this.bindEvent()
+  }
+  show() {
+    this.$container.rmClass(this.c('hidden'))
+  }
+  hide = () => {
+    if (fullscreen.isActive()) {
+      this.toggleFullscreen()
+    }
+    this.$container.addClass(this.c('hidden'))
   }
   append(src: string, title?: string) {
     this.insert(this.images.length, src, title)
@@ -47,17 +60,32 @@ class Gallery extends Component {
   destroy() {
     super.destroy()
     this.resizeSensor.destroy()
+    this.$container.rmClass(this.c('hidden'))
   }
   private initTpl() {
     this.$container.html(
       this.c(stripIndent`
       <div class="body"></div>
-      <div class="toolbar"></div>
+      <div class="toolbar">
+        <div class="button">
+          <span class="icon icon-close"></span>
+        </div>
+        <div class="button">
+          <span class="icon icon-fullscreen"></span>
+        </div>
+      </div>
       `)
     )
   }
+  private toggleFullscreen = () => {
+    fullscreen.toggle(this.container)
+  }
   private bindEvent() {
+    const { c } = this
     this.resizeSensor.addListener(this.onResize)
+    this.$toolbar
+      .on('click', c('.icon-close'), this.hide)
+      .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
   }
 }
 

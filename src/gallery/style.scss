@@ -8,6 +8,11 @@
   .luna-carousel-indicators {
     display: none;
   }
+  &:hover {
+    .toolbar {
+      opacity: 1;
+    }
+  }
 }
 
 .image {
@@ -30,4 +35,30 @@
   left: 0;
   bottom: 0;
   padding: 10px 40px;
+}
+
+.hidden {
+  display: none;
+}
+
+.toolbar {
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: #eee;
+  background: rgba(0, 0, 0, 0.45);
+  transition: opacity 0.3s;
+  .button {
+    float: right;
+    cursor: pointer;
+    padding: 5px 10px 5px 5px;
+    &:hover {
+      color: #fff;
+    }
+    span {
+      font-size: 24px;
+    }
+  }
 }

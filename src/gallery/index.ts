@@ -15,6 +15,7 @@ class Gallery extends Component {
   private images: Image[] = []
   private resizeSensor: ResizeSensor
   private $toolbar: $.$
+  private $counter: $.$
   constructor(container: HTMLElement) {
     super(container, { compName: 'gallery' })
     this.hide()
@@ -24,6 +25,7 @@ class Gallery extends Component {
     const $body = this.find('.body')
     const body = $body.get(0) as HTMLElement
     this.$toolbar = this.find('.toolbar')
+    this.$counter = this.find('.counter')
 
     this.carousel = new LunaCarousel(body)
     this.resizeSensor = new ResizeSensor(container)
@@ -53,6 +55,7 @@ class Gallery extends Component {
       images.splice(pos, 0, image)
     }
     this.carousel.insert(pos, image.container)
+    this.updateCounter()
   }
   reset() {
     each(this.images, (image) => image.reset())
@@ -67,6 +70,7 @@ class Gallery extends Component {
       this.c(stripIndent`
       <div class="body"></div>
       <div class="toolbar">
+        <div class="counter"></div>
         <div class="button">
           <span class="icon icon-close"></span>
         </div>
@@ -80,12 +84,19 @@ class Gallery extends Component {
   private toggleFullscreen = () => {
     fullscreen.toggle(this.container)
   }
+  private updateCounter = () => {
+    const { carousel } = this
+    this.$counter.html(
+      `${carousel.getActiveIdx() + 1} / ${carousel.getSlides().length}`
+    )
+  }
   private bindEvent() {
     const { c } = this
     this.resizeSensor.addListener(this.onResize)
     this.$toolbar
       .on('click', c('.icon-close'), this.hide)
       .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
+    this.carousel.on('slide', this.updateCounter)
   }
 }
 
@@ -122,6 +133,8 @@ class Image {
     if (width === 0 || height === 0) {
       return
     }
+
+    const padding = 38
     const winHeight = window.innerHeight
     const winWidth = window.innerWidth
     const ratio = width / height
@@ -130,8 +143,8 @@ class Image {
       width = winWidth
       height = width / ratio
     }
-    if (height > winHeight) {
-      height = winHeight
+    if (height > winHeight - padding * 2) {
+      height = winHeight - padding * 2
       width = height * ratio
     }
 

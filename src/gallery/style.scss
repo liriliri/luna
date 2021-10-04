@@ -1,5 +1,8 @@
+@import '../share/variable';
+
 .luna-gallery {
   position: fixed;
+  font-family: $font-family;
   left: 0;
   top: 0;
   z-index: 10;
@@ -47,7 +50,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  color: #eee;
+  color: #999;
   background: rgba(0, 0, 0, 0.45);
   transition: opacity 0.3s;
   .button {
@@ -60,5 +63,10 @@
     span {
       font-size: 24px;
     }
+  }
+  .counter {
+    float: left;
+    padding: 5px 10px;
+    font-size: 20px;
   }
 }

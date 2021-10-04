@@ -94,6 +94,12 @@ export default class Carousel extends Component<IOptions> {
     this.pause()
     super.destroy()
   }
+  getSlides() {
+    return toArr(this.body.children)
+  }
+  getActiveIdx() {
+    return this.activeIdx
+  }
   private slide(order: string, nextIdx?: number) {
     if (this.isSliding) {
       return
@@ -158,6 +164,7 @@ export default class Carousel extends Component<IOptions> {
       $activeEl.rmClass(activeClass)
 
       this.isSliding = false
+      this.emit('slide')
       if (isCycling) {
         this.cycle()
       }
@@ -179,9 +186,6 @@ export default class Carousel extends Component<IOptions> {
     }
 
     this.$indicators.html(html)
-  }
-  private getSlides() {
-    return toArr(this.body.children)
   }
   private initTpl() {
     this.$container.html(

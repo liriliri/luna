@@ -100,6 +100,9 @@ class Gallery extends Component {
         <div class="button button-fullscreen">
           <span class="icon icon-fullscreen"></span>
         </div>
+        <div class="button button-download">
+          <span class="icon icon-download"></span>
+        </div>
         <div class="button button-play">
           <div class="icon-play-circle">
             <span class="icon icon-play"></span>
@@ -118,6 +121,12 @@ class Gallery extends Component {
       `${carousel.getActiveIdx() + 1} / ${carousel.getSlides().length}`
     )
   }
+  private download = () => {
+    const { carousel, images } = this
+    const activeIdx = carousel.getActiveIdx()
+    const image = images[activeIdx]
+    image.download()
+  }
   private bindEvent() {
     const { c } = this
     this.resizeSensor.addListener(this.onResize)
@@ -125,6 +134,7 @@ class Gallery extends Component {
       .on('click', c('.button-close'), this.hide)
       .on('click', c('.button-fullscreen'), this.toggleFullscreen)
       .on('click', c('.button-play'), this.toggleCycle)
+      .on('click', c('.button-download'), this.download)
     this.carousel.on('slide', this.updateCounter)
   }
 }
@@ -139,12 +149,14 @@ class Image {
   private $image: $.$
   private $container: $.$
   private gallery: Gallery
+  private src: string
   constructor(gallery: Gallery, src: string, title?: string) {
     this.container = h(gallery.c('.image'))
     this.$container = $(this.container)
 
     this.title = title
     this.gallery = gallery
+    this.src = src
 
     this.initTpl()
 
@@ -154,6 +166,18 @@ class Image {
 
     this.bindEvent()
     this.image.src = src
+  }
+  download() {
+    const el = document.createElement('a')
+    el.setAttribute('href', this.src)
+    el.setAttribute('download', '')
+    el.addEventListener('click', function (e) {
+      e.stopImmediatePropagation()
+    })
+
+    document.body.appendChild(el)
+    el.click()
+    document.body.removeChild(el)
   }
   reset() {
     const { image, $image } = this

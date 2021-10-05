@@ -21,6 +21,7 @@ Yet another UI library.
 * [dom-highlighter](./src/dom-highlighter/README.md): Highlighter for html elements.
 * [dom-viewer](./src/dom-viewer/README.md): Dom tree navigator.
 * [editor](./src/editor/README.md): Wysiwyg editor.
+* [gallery](./src/gallery/README.md): Lightweight gallery.
 * [json-editor](./src/json-editor/README.md): JSON editor.
 * [menu](./src/menu/README.md): Simple menu.
 * [modal](./src/modal/README.md): Create modal dialogs.

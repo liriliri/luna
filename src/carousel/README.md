@@ -29,6 +29,7 @@ import LunaCarousel from 'luna-carousel'
 ## Usage
 
 ```javascript
+const container = document.getElementById('container')
 const carousel = new LunaCarousel(container, { interval: 5000 })
 carousel.append('<div style="background:#e73c5e;">ITEM 1</div>')
 ```

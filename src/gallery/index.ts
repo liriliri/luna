@@ -16,6 +16,8 @@ class Gallery extends Component {
   private resizeSensor: ResizeSensor
   private $toolbar: $.$
   private $counter: $.$
+  private $playIcon: $.$
+  private isCycling = false
   constructor(container: HTMLElement) {
     super(container, { compName: 'gallery' })
     this.hide()
@@ -26,6 +28,7 @@ class Gallery extends Component {
     const body = $body.get(0) as HTMLElement
     this.$toolbar = this.find('.toolbar')
     this.$counter = this.find('.counter')
+    this.$playIcon = this.find('.icon-play')
 
     this.carousel = new LunaCarousel(body)
     this.resizeSensor = new ResizeSensor(container)
@@ -60,10 +63,30 @@ class Gallery extends Component {
   reset() {
     each(this.images, (image) => image.reset())
   }
+  cycle() {
+    const { carousel, c } = this
+    carousel.setOption('interval', 5000)
+    carousel.cycle()
+    this.$playIcon.rmClass(c('icon-play')).addClass(c('icon-pause'))
+    this.isCycling = true
+  }
+  pause() {
+    const { c } = this
+    this.carousel.pause()
+    this.$playIcon.addClass(c('icon-play')).rmClass(c('icon-pause'))
+    this.isCycling = false
+  }
   destroy() {
     super.destroy()
     this.resizeSensor.destroy()
     this.$container.rmClass(this.c('hidden'))
+  }
+  private toggleCycle = () => {
+    if (this.isCycling) {
+      this.pause()
+    } else {
+      this.cycle()
+    }
   }
   private initTpl() {
     this.$container.html(
@@ -71,11 +94,16 @@ class Gallery extends Component {
       <div class="body"></div>
       <div class="toolbar">
         <div class="counter"></div>
-        <div class="button">
+        <div class="button button-close">
           <span class="icon icon-close"></span>
         </div>
-        <div class="button">
+        <div class="button button-fullscreen">
           <span class="icon icon-fullscreen"></span>
+        </div>
+        <div class="button button-play">
+          <div class="icon-play-circle">
+            <span class="icon icon-play"></span>
+          </div>
         </div>
       </div>
       `)
@@ -94,8 +122,9 @@ class Gallery extends Component {
     const { c } = this
     this.resizeSensor.addListener(this.onResize)
     this.$toolbar
-      .on('click', c('.icon-close'), this.hide)
-      .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
+      .on('click', c('.button-close'), this.hide)
+      .on('click', c('.button-fullscreen'), this.toggleFullscreen)
+      .on('click', c('.button-play'), this.toggleCycle)
     this.carousel.on('slide', this.updateCounter)
   }
 }

@@ -59,10 +59,31 @@
     padding: 5px 10px 5px 5px;
     &:hover {
       color: #fff;
+      .icon-play-circle {
+        border-color: #fff;
+      }
     }
     span {
       font-size: 24px;
+      &.icon-play,
+      &.icon-pause {
+        font-size: 12px;
+      }
     }
+  }
+  .icon-play-circle {
+    border: 2px solid #999;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+  }
+  .icon-play {
+    position: relative;
+    left: 5px;
+  }
+  .icon-pause {
+    position: relative;
+    left: 4px;
   }
   .counter {
     float: left;

@@ -32,11 +32,6 @@ const def = story(
       url,
     })
 
-    const result = videoPlayer.play()
-    if (isPromise(result)) {
-      result.catch(noop)
-    }
-
     return videoPlayer
   },
   {

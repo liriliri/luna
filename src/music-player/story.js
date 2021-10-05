@@ -46,11 +46,6 @@ const def = story(
       audio,
     })
 
-    const result = musicPlayer.play()
-    if (isPromise(result)) {
-      result.catch(noop)
-    }
-
     return musicPlayer
   },
   {

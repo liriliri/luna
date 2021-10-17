@@ -263,7 +263,9 @@ export default class DomHighlighter extends Component<IOptions> {
   }
   private getElementInfo(target: HTMLElement) {
     const { width, height } = target.getBoundingClientRect()
-    const className = target.className
+    // svg element's className is not a string
+    let className = target.getAttribute('class') || ''
+    className = className
       .split(/\s+/)
       .map((c) => '.' + c)
       .join('')

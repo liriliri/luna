@@ -17,8 +17,9 @@ import filter from 'licia/filter'
 import chunk from 'licia/chunk'
 import toStr from 'licia/toStr'
 import noop from 'licia/noop'
+import naturalSort from 'licia/naturalSort'
 import Visitor from './Visitor'
-import { encode, getFnAbstract, sortObjName } from './util'
+import { encode, getFnAbstract } from './util'
 import Static from './Static'
 import Component from '../share/Component'
 
@@ -123,7 +124,7 @@ export default class ObjectViewer extends Component {
         typeKeys = enumerableKeys
       }
       if (!isBigArr) {
-        typeKeys.sort(sortObjName)
+        naturalSort(typeKeys)
       }
       for (let i = 0, len = typeKeys.length; i < len; i++) {
         const key = toStr(typeKeys[i])

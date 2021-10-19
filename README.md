@@ -5,7 +5,7 @@
 ![License][license-image]
 
 [travis-image]: https://img.shields.io/travis/com/liriliri/luna?style=flat-square
-[travis-url]: https://travis-ci.com/liriliri/luna
+[travis-url]: https://app.travis-ci.com/liriliri/luna
 [codecov-image]: https://img.shields.io/codecov/c/github/liriliri/luna?style=flat-square
 [codecov-url]: https://codecov.io/github/liriliri/luna?branch=master
 [license-image]: https://img.shields.io/github/license/liriliri/luna?style=flat-square
@@ -21,6 +21,7 @@ Yet another UI library.
 * [dom-highlighter](./src/dom-highlighter/README.md): Highlighter for html elements.
 * [dom-viewer](./src/dom-viewer/README.md): Dom tree navigator.
 * [editor](./src/editor/README.md): Wysiwyg editor.
+* [gallery](./src/gallery/README.md): Lightweight gallery.
 * [json-editor](./src/json-editor/README.md): JSON editor.
 * [menu](./src/menu/README.md): Simple menu.
 * [modal](./src/modal/README.md): Create modal dialogs.

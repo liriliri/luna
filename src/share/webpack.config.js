@@ -19,7 +19,7 @@ module.exports = function (
       plugins: [
         prefixer({
           prefix: `luna-${name}-`,
-          ignore: [`luna-${name}`],
+          ignore: [`luna-`],
         }),
         autoprefixer,
         clean(),

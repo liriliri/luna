@@ -25,7 +25,10 @@
     "icon": true,
     "test": true
   },
-  "gallery": {},
+  "gallery": {
+    "icon": true,
+    "test": true
+  },
   "json-editor": {
     "icon": true,
     "test": true

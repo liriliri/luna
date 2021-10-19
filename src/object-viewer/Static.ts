@@ -12,7 +12,8 @@ import isBool from 'licia/isBool'
 import isStr from 'licia/isStr'
 import keys from 'licia/keys'
 import lowerCase from 'licia/lowerCase'
-import { encode, sortObjName, getFnAbstract } from './util'
+import naturalSort from 'licia/naturalSort'
+import { encode, getFnAbstract } from './util'
 import Component from '../share/Component'
 
 export default class JsonViewer extends Component {
@@ -49,7 +50,7 @@ export default class JsonViewer extends Component {
       if (!data[type]) return
 
       const typeKeys = keys(data[type])
-      typeKeys.sort(sortObjName)
+      naturalSort(typeKeys)
       for (let i = 0, len = typeKeys.length; i < len; i++) {
         const key = typeKeys[i]
         ret += this.createEl(key, data[type][key], type, firstLevel)

@@ -559,16 +559,15 @@ function drawElementTitle(
 
   tooltipContent.style.top = boxY + 'px';
   tooltipContent.style.left = boxX + 'px';
-  tooltipContent.style.setProperty('--arrow-visibility', (arrowHidden || includes) ? 'hidden' : 'visible');
   if (arrowHidden) {
     return;
   }
 
-  tooltipContent.style.setProperty('--arrow', onTop ? 'var(--arrow-down)' : 'var(--arrow-up)');
-  tooltipContent.style.setProperty('--shadow-direction', onTop ? 'var(--shadow-up)' : 'var(--shadow-down)');
+  const tooltipArrow = createChild(tooltipContent, 'div', 'tooltip-arrow')
+  tooltipArrow.style.clipPath = onTop ? 'polygon(0 0, 100% 0, 50% 100%)' : 'polygon(50% 0, 0 100%, 100% 100%)'
   // When tooltip is on-top remove 1px from the arrow's top value to get rid of whitespace produced by the tooltip's border.
-  tooltipContent.style.setProperty('--arrow-top', (onTop ? titleHeight - 1 : -arrowHalfWidth) + 'px');
-  tooltipContent.style.setProperty('--arrow-left', (arrowX - boxX) + 'px');
+  tooltipArrow.style.top = (onTop ? titleHeight - 1 : -arrowHalfWidth) + 'px'
+  tooltipArrow.style.left = (arrowX - boxX) + 'px'
 }
 
 const DEFAULT_RULER_COLOR = 'rgba(128, 128, 128, 0.3)';

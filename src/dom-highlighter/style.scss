@@ -31,16 +31,6 @@
   font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
-body {
-  --arrow-width: 15px;
-  --arrow-height: 8px;
-  --shadow-up: 5px;
-  --shadow-down: -5px;
-  --shadow-direction: var(--shadow-up);
-  --arrow-down: polygon(0 0, 100% 0, 50% 100%);
-  --arrow-up: polygon(50% 0, 0 100%, 100% 100%);
-}
-
 .px {
   color: rgb(128, 128, 128);
 }
@@ -67,16 +57,11 @@ body {
   text-rendering: optimizeLegibility;
   pointer-events: none;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
-  &::after {
-    content: '';
+  .tooltip-arrow {
     background: #fff;
-    width: var(--arrow-width);
-    height: var(--arrow-height);
-    clip-path: var(--arrow);
+    width: 15px;
+    height: 8px;
     position: absolute;
-    top: var(--arrow-top);
-    left: var(--arrow-left);
-    visibility: var(--arrow-visibility);
   }
 }
 

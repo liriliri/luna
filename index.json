@@ -6,6 +6,7 @@
     "test": true,
     "install": true
   },
+  "command-palette": {},
   "console": {
     "icon": true,
     "test": true,

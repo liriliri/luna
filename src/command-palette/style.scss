@@ -1,0 +1,37 @@
+@import '../share/variable.scss';
+
+.luna-command-palette {
+  font-family: $font-family;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 10px;
+  overflow: hidden;
+}
+
+.body {
+  min-width: 500px;
+  max-width: 100%;
+  box-shadow: $box-shadow;
+  font-size: 12px;
+}
+
+.input {
+  box-sizing: border-box;
+  outline: none;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid rgb(200, 200, 200);
+  padding: 10px 4px;
+  color: rgb(30, 30, 30);
+  caret-color: rgb(60, 60, 60);
+}
+
+.hidden {
+  display: none;
+}

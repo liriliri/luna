@@ -15,7 +15,6 @@
 }
 
 .body {
-  min-width: 500px;
   max-width: 100%;
   box-shadow: $box-shadow;
   font-size: 12px;
@@ -30,6 +29,29 @@
   padding: 10px 4px;
   color: rgb(30, 30, 30);
   caret-color: rgb(60, 60, 60);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  &:hover {
+    background: #f5f5f5;
+  }
+  &.active {
+    color: #fff;
+    background: $primary-color;
+  }
+  .title {
+    flex: 1;
+    overflow: hidden;
+  }
 }
 
 .hidden {

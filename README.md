@@ -16,6 +16,7 @@ Yet another UI library.
 
 * [carousel](./src/carousel/README.md): Lightweight carousel.
 * [chart](./src/chart/README.md): HTML5 charts.
+* [command-palette](./src/command-palette/README.md): Command palette.
 * [console](./src/console/README.md): Console for logging.
 * [cropper](./src/cropper/README.md): Image cropper.
 * [dom-highlighter](./src/dom-highlighter/README.md): Highlighter for html elements.

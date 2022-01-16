@@ -6,7 +6,9 @@
     "test": true,
     "install": true
   },
-  "command-palette": {},
+  "command-palette": {
+    "test": true
+  },
   "console": {
     "icon": true,
     "test": true,

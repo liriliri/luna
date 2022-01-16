@@ -18,6 +18,7 @@
   max-width: 100%;
   box-shadow: $box-shadow;
   font-size: 12px;
+  background: #fff;
 }
 
 .input {
@@ -31,26 +32,27 @@
   caret-color: rgb(60, 60, 60);
 }
 
-ul {
+.list {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-li {
-  padding: 5px;
-  cursor: pointer;
-  display: flex;
-  &:hover {
-    background: #f5f5f5;
-  }
-  &.active {
-    color: #fff;
-    background: $primary-color;
-  }
-  .title {
-    flex: 1;
-    overflow: hidden;
+  max-height: 200px;
+  overflow-y: auto;
+  li {
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    &:hover {
+      background: #f5f5f5;
+    }
+    &.active {
+      color: #fff;
+      background: $primary-color;
+    }
+    .title {
+      flex: 1;
+      overflow: hidden;
+    }
   }
 }
 

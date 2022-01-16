@@ -7,15 +7,20 @@ import fuzzySearch from 'licia/fuzzySearch'
 import each from 'licia/each'
 import toStr from 'licia/toStr'
 import toNum from 'licia/toNum'
+import hotKey from 'licia/hotkey'
+import lowerCase from 'licia/lowerCase'
+import types from 'licia/types'
+import keyCode from 'licia/keyCode'
 
 interface ICommand {
   title: string
   shortcut?: string
-  handler: () => void
+  handler: types.AnyFn
 }
 
 interface IOptions {
   placeholder?: string
+  shortcut?: string
   commands?: ICommand[]
 }
 
@@ -27,10 +32,15 @@ class CommandPalette extends Component<IOptions> {
   private $list: $.$
   private $body: $.$
   private activeIdx = 0
+  private keyword = ''
   private curCommands: ICommand[] = []
   constructor(
     container: HTMLElement,
-    { placeholder = 'Type a command', commands = [] }: IOptions = {}
+    {
+      placeholder = 'Type a command',
+      commands = [],
+      shortcut = 'Ctrl+P',
+    }: IOptions = {}
   ) {
     super(container, { compName: 'command-palette' })
     this.hide()
@@ -38,6 +48,7 @@ class CommandPalette extends Component<IOptions> {
     this.options = {
       placeholder,
       commands,
+      shortcut,
     }
 
     this.initTpl()
@@ -52,22 +63,38 @@ class CommandPalette extends Component<IOptions> {
     window.removeEventListener('resize', this.calcWidth)
     this.$container.addClass(this.c('hidden'))
   }
-  show() {
-    this.input.focus()
+  show = (e: any) => {
+    if (e && e.preventDefault) {
+      e.preventDefault()
+    }
 
     this.calcWidth()
     window.addEventListener('resize', this.calcWidth)
 
     this.render()
     this.$container.rmClass(this.c('hidden'))
+
+    this.input.focus()
   }
   destroy() {
+    const { shortcut, commands } = this.options
     this.hide()
+    if (shortcut) {
+      hotKey.off(lowerCase(shortcut), this.show)
+    }
+    each(commands, (command) => {
+      const { shortcut, handler } = command
+      if (shortcut) {
+        hotKey.off(lowerCase(shortcut), handler)
+      }
+    })
     this.$container.off('click', this.hide)
     super.destroy()
   }
   private bindEvent() {
-    this.$input.on('input', this.render)
+    const { shortcut, commands } = this.options
+
+    this.$input.on('input', this.onInput).on('keydown', this.onKeydown)
     this.$body.on('click', (e) => e.stopPropagation())
     this.$container.on('click', this.hide)
     const self = this
@@ -76,6 +103,18 @@ class CommandPalette extends Component<IOptions> {
       const idx = toNum($this.data('idx'))
       const command = self.curCommands[idx]
       command.handler()
+      self.hide()
+    })
+
+    if (shortcut) {
+      hotKey.on(lowerCase(shortcut), this.show)
+    }
+
+    each(commands, (command) => {
+      const { shortcut, handler } = command
+      if (shortcut) {
+        hotKey.on(lowerCase(shortcut), handler)
+      }
     })
   }
   private calcWidth = () => {
@@ -87,11 +126,64 @@ class CommandPalette extends Component<IOptions> {
       width: width,
     })
   }
+  private onKeydown = (e: any) => {
+    e = e.origEvent
+    let { activeIdx } = this
+    const { curCommands } = this
+
+    switch ((e as KeyboardEvent).keyCode) {
+      case keyCode('down'):
+        if (activeIdx > -1) {
+          activeIdx++
+          if (activeIdx >= curCommands.length) {
+            activeIdx = 0
+          }
+          this.setActive(activeIdx)
+        }
+        break
+      case keyCode('up'):
+        if (activeIdx > -1) {
+          activeIdx--
+          if (activeIdx < 0) {
+            activeIdx = curCommands.length - 1
+          }
+          this.setActive(activeIdx)
+        }
+        break
+      case keyCode('enter'):
+        if (activeIdx > -1) {
+          const command = curCommands[activeIdx]
+          command.handler()
+          this.hide()
+        }
+        break
+      case keyCode('esc'):
+        this.hide()
+        break
+    }
+  }
+  private onInput = () => {
+    const keyword = trim(this.input.value)
+
+    if (keyword === this.keyword) {
+      return
+    }
+
+    this.keyword = keyword
+    this.render()
+  }
+  private setActive(idx: number) {
+    this.activeIdx = idx
+    if (idx < 0) {
+      return
+    }
+    const { c } = this
+    this.find('.active').rmClass(c('active'))
+    this.$body.find(`[data-idx="${toStr(idx)}"]`).addClass(c('active'))
+  }
   private render = () => {
     let { commands } = this.options
-    const { c, $list } = this
-
-    const keyword = trim(this.input.value)
+    const { c, $list, keyword } = this
 
     if (keyword) {
       commands = fuzzySearch(keyword, commands, {
@@ -103,13 +195,12 @@ class CommandPalette extends Component<IOptions> {
 
     if (isEmpty(commands)) {
       $list.addClass(c('hidden'))
+      this.setActive(-1)
     } else {
       let html = ''
       each(commands, (command, idx) => {
         html += this.c(stripIndent`
-        <li${idx === this.activeIdx ? ' class="active"' : ''} data-idx="${toStr(
-          idx
-        )}">
+        <li data-idx="${toStr(idx)}">
           <span class="title">${command.title}</span>
           ${
             command.shortcut
@@ -120,6 +211,7 @@ class CommandPalette extends Component<IOptions> {
         `)
       })
       $list.html(html).rmClass(c('hidden'))
+      this.setActive(0)
     }
 
     this.curCommands = commands

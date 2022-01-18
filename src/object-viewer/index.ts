@@ -145,7 +145,11 @@ export default class ObjectViewer extends Component {
               ;(val as any).catch(noop)
             }
           } catch (e) {
-            val = e.message
+            if (e instanceof Error) {
+              val = e.message
+            } else {
+              val = toStr(e)
+            }
           }
         }
         ret += this.createEl(key, data, val, type, firstLevel)

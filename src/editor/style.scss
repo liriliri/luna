@@ -2,7 +2,7 @@
 @import '../share/variable';
 
 .luna-editor {
-  border: 1px solid #eee;
+  border: 1px solid $border-color;
   * {
     box-sizing: border-box;
   }
@@ -17,10 +17,10 @@
 }
 
 .toolbar {
-  background: #fff;
+  background: $background-color;
   padding: 0 6px;
   font-size: 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid $border-color;
 }
 
 .button {
@@ -28,13 +28,12 @@
   width: 30px;
   height: 30px;
   text-align: center;
-  background: #fff;
+  background: $background-color;
   cursor: pointer;
   border: none;
-  color: #999;
+  color: $foreground-color;
   &:hover {
-    background: #f6f6f6;
-    color: #000;
+    background: $darker-background-color;
   }
   &.active {
     color: $primary-color;
@@ -51,7 +50,7 @@
 }
 
 .body {
-  background: #fff;
+  background: $background-color;
   height: 300px;
 }
 
@@ -67,6 +66,6 @@
     margin: 10px 0;
     padding: 5px 10px;
     border-left: 8px solid $primary-color;
-    background: #f1f1f1;
+    background: $darker-background-color;
   }
 }

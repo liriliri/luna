@@ -5,14 +5,14 @@
   pointer-events: all;
   display: flex;
   flex-flow: column;
-  background: #fff;
-  border: 1px solid rgba(196, 196, 196, 0.9);
+  background: $background-color;
+  border: 1px solid $border-color;
   overflow: hidden;
   box-shadow: $box-shadow;
   box-sizing: border-box;
   &.active {
     .title-bar {
-      background: rgb(240, 240, 240);
+      background: $darker-background-color;
     }
     .resizer {
       position: static;

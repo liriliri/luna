@@ -4,11 +4,11 @@
   font-family: $font-family;
   position: absolute;
   padding: 4px 0;
-  background: rgb(240, 240, 240);
+  background: $darker-background-color;
   user-select: none;
   box-shadow: $box-shadow;
-  color: rgb(48, 57, 66);
-  border: 1px solid rgba(196, 196, 196, 0.9);
+  color: $foreground-color;
+  border: 1px solid $border-color;
   padding: 4px 0;
   box-sizing: border-box;
   z-index: 4000;
@@ -36,7 +36,7 @@
   width: 100%;
   font-size: 12px;
   &.active {
-    color: #fff;
+    color: $select-foreground-color;
     background: $primary-color;
   }
   .icon-arrow-right {
@@ -49,6 +49,6 @@
 
 .separator {
   height: 1px;
-  background-color: #dedede;
+  background-color: $border-color;
   margin: 5px 1px;
 }

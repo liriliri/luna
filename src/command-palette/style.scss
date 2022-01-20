@@ -18,7 +18,7 @@
   max-width: 100%;
   box-shadow: $box-shadow;
   font-size: 12px;
-  background: #fff;
+  background: $background-color;
 }
 
 .input {
@@ -26,10 +26,9 @@
   outline: none;
   width: 100%;
   border: none;
-  border-bottom: 1px solid rgb(200, 200, 200);
+  border-bottom: 1px solid $border-color;
   padding: 10px 4px;
-  color: rgb(30, 30, 30);
-  caret-color: rgb(60, 60, 60);
+  color: $foreground-color;
 }
 
 .list {
@@ -43,10 +42,10 @@
     cursor: pointer;
     display: flex;
     &:hover {
-      background: #f5f5f5;
+      background: $darker-background-color;
     }
     &.active {
-      color: #fff;
+      color: $select-foreground-color;
       background: $primary-color;
     }
     .title {

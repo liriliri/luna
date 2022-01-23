@@ -1,0 +1,5 @@
+{
+  "name": "luna-performance-monitor",
+  "version": "0.1.0",
+  "description": "Realtime counter used for displaying cpu, fps metrics"
+}

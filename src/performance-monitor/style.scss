@@ -1,0 +1,25 @@
+@import '../share/variable';
+
+.luna-performance-monitor {
+  box-shadow: $box-shadow;
+  background: $background-color;
+  width: 100%;
+  padding: 5px;
+}
+
+.title {
+  font-size: $font-size;
+  margin-bottom: 5px;
+  color: $foreground-color;
+}
+
+.value {
+  float: right;
+}
+
+.chart {
+  box-sizing: border-box;
+  border: 1px solid $border-color;
+  width: 100%;
+  height: 100px;
+}

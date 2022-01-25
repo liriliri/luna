@@ -10,7 +10,8 @@ import { addReadme } from 'storybook-readme/html'
 import each from 'licia/each'
 import addons from '@storybook/addons'
 import coreEvents from '@storybook/core-events'
-import nextTick from 'licia/nextTick'
+import now from 'licia/now'
+import * as registerKnobs from '@storybook/addon-knobs/dist/registerKnobs'
 
 export default function story(name, storyFn, { readme, source } = {}) {
   const container = h('div')
@@ -30,6 +31,14 @@ export default function story(name, storyFn, { readme, source } = {}) {
       },
     },
     [camelCase(name)]: () => {
+      // Fix knobs not reset when story changed.
+      const knobStore = registerKnobs.manager.knobStore
+      knobStore.reset()
+      addons.getChannel().emit('storybookjs/knobs/set', {
+        knobs: knobStore.getAll(),
+        timestamp: now(),
+      })
+
       if (window.components) {
         each(window.components, (component) => component.destroy())
       }
@@ -37,11 +46,6 @@ export default function story(name, storyFn, { readme, source } = {}) {
       waitUntil(() => container.parentElement).then(() => {
         window.components = toArr(storyFn(container))
         window.component = window.components[0]
-      })
-
-      // Fix knobs not reset when story changed.
-      nextTick(() => {
-        addons.getChannel().emit(coreEvents.STORY_CHANGED)
       })
 
       return container

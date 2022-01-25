@@ -83,14 +83,14 @@ const def = story(
       monitors.push(memoryMonitor)
     }
 
-    button('Stop All', () => {
-      each(monitors, (monitor) => monitor.stop())
+    button('Start All', () => {
+      each(monitors, (monitor) => monitor.start())
 
       return false
     })
 
-    button('Start All', () => {
-      each(monitors, (monitor) => monitor.start())
+    button('Stop All', () => {
+      each(monitors, (monitor) => monitor.stop())
 
       return false
     })

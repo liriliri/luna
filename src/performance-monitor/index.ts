@@ -89,6 +89,7 @@ export default class PerformanceMonitor extends Component<IOptions> {
   }
   start() {
     this.pollTimer = setInterval(this.poll, POLL_INTERVAL_MS)
+    this.poll()
     this.onResize()
 
     const animate = () => {

@@ -53,7 +53,9 @@
     "icon": true,
     "test": true
   },
-  "performance-monitor": {},
+  "performance-monitor": {
+    "test": true
+  },
   "notification": {
     "test": true
   },

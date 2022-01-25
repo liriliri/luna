@@ -49,7 +49,7 @@ const commandPalette = new LunaCommandPalette(container, {
 commandPalette.show()
 ```
 
-### Configuration
+## Configuration
 
 * placeholder(string): Search input placeholder.
 * shortcut(string): Keyboard shortcut for opening the command palette.

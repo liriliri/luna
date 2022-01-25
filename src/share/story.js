@@ -8,6 +8,9 @@ import toArr from 'licia/toArr'
 import upperFirst from 'licia/upperFirst'
 import { addReadme } from 'storybook-readme/html'
 import each from 'licia/each'
+import addons from '@storybook/addons'
+import coreEvents from '@storybook/core-events'
+import nextTick from 'licia/nextTick'
 
 export default function story(name, storyFn, { readme, source } = {}) {
   const container = h('div')
@@ -34,6 +37,11 @@ export default function story(name, storyFn, { readme, source } = {}) {
       waitUntil(() => container.parentElement).then(() => {
         window.components = toArr(storyFn(container))
         window.component = window.components[0]
+      })
+
+      // Fix knobs not reset when story changed.
+      nextTick(() => {
+        addons.getChannel().emit(coreEvents.STORY_CHANGED)
       })
 
       return container

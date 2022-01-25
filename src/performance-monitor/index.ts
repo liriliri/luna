@@ -299,7 +299,7 @@ function getLightColor(color: string, opacity: number) {
   const colorObj = new Color(color)
   const rgbColor = colorObj.toRgb()
   const rgbColorObj = Color.parse(rgbColor)
-  rgbColorObj.val[3] = opacity 
+  rgbColorObj.val[3] = opacity
   return new Color(rgbColorObj).toRgb()
 }
 

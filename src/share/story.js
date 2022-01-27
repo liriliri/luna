@@ -9,11 +9,14 @@ import upperFirst from 'licia/upperFirst'
 import { addReadme } from 'storybook-readme/html'
 import each from 'licia/each'
 import addons from '@storybook/addons'
-import coreEvents from '@storybook/core-events'
 import now from 'licia/now'
 import * as registerKnobs from '@storybook/addon-knobs/dist/registerKnobs'
 
-export default function story(name, storyFn, { readme, source } = {}) {
+export default function story(
+  name,
+  storyFn,
+  { readme, source, layout = 'padded' } = {}
+) {
   const container = h('div')
 
   return {
@@ -29,6 +32,7 @@ export default function story(name, storyFn, { readme, source } = {}) {
       storySource: {
         source,
       },
+      layout,
     },
     [camelCase(name)]: () => {
       // Fix knobs not reset when story changed.

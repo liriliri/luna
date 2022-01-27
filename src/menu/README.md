@@ -47,10 +47,11 @@ menu.show(0, 0)
 Append menu item.
 
 Options:
-  * type(string): normal, separator or submenu.
-  * label(string): Menu label.
-  * click(function): Click event handler.
-  * submenu(Menu): SubMenu.
+
+* type(string): normal, separator or submenu.
+* label(string): Menu label.
+* click(function): Click event handler.
+* submenu(Menu): Sub menu.
 
 ### insert(pos: number, options: object): void
 
@@ -59,3 +60,7 @@ Inert menu item to given position.
 ### show(x: number, y: number): void
 
 Show menu at target position.
+
+### build(template: object): Menu
+
+Create menu from template.

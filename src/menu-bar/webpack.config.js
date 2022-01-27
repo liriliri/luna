@@ -1,1 +1,3 @@
-module.exports = require('../share/webpack.config')('menu-bar')
+module.exports = require('../share/webpack.config')('menu-bar', {
+  dependencies: ['menu'],
+})

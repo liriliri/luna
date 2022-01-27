@@ -40,7 +40,9 @@
     "icon": true,
     "test": true
   },
-  "menu-bar": {},
+  "menu-bar": {
+    "test": true
+  },
   "modal": {
     "icon": true,
     "test": true

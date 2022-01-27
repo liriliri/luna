@@ -1,0 +1,25 @@
+@import '../share/variable';
+@import '../share/mixin';
+
+.luna-menu-bar {
+  background: $background-color;
+  border-bottom: 1px solid $border-color;
+}
+
+.menu-list {
+  font-size: 0;
+  @include clear-float();
+}
+
+.menu-item {
+  font-size: $font-size-s;
+  padding: 2px 6px;
+  cursor: default;
+  display: block;
+  float: left;
+  user-select: none;
+  &:hover {
+    color: $foreground-color;
+    background: $darker-background-color;
+  }
+}

@@ -25,6 +25,7 @@ Yet another UI library.
 * [gallery](./src/gallery/README.md): Lightweight gallery.
 * [json-editor](./src/json-editor/README.md): JSON editor.
 * [menu](./src/menu/README.md): Simple menu.
+* [menu-bar](.src/menu-bar/README.md) Application menu bar.
 * [modal](./src/modal/README.md): Create modal dialogs.
 * [music-player](./src/music-player/README.md): Music player.
 * [notification](./src/notification/README.md): Show notifications.

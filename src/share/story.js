@@ -35,15 +35,17 @@ export default function story(
       layout,
     },
     [camelCase(name)]: () => {
-      // Fix knobs not reset when story changed.
-      const knobStore = registerKnobs.manager.knobStore
-      knobStore.reset()
-      addons.getChannel().emit('storybookjs/knobs/set', {
-        knobs: knobStore.getAll(),
-        timestamp: now(),
-      })
-
       if (window.components) {
+        const lastComponentName = window.components[0].constructor.name
+        if (upperFirst(camelCase(name)) !== lastComponentName ) {
+          // Fix knobs not reset when story changed.
+          const knobStore = registerKnobs.manager.knobStore
+          knobStore.reset()
+          addons.getChannel().emit('storybookjs/knobs/set', {
+            knobs: knobStore.getAll(),
+            timestamp: now(),
+          })
+        }
         each(window.components, (component) => component.destroy())
       }
 

@@ -5,7 +5,7 @@ import story from '../share/story'
 import h from 'licia/h'
 import $ from 'licia/$'
 import shaders from './shaders'
-import { text, optionsKnob } from '@storybook/addon-knobs'
+import { text, optionsKnob, button } from '@storybook/addon-knobs'
 
 const def = story(
   'shader-toy-player',
@@ -34,24 +34,33 @@ const def = story(
       }
     )
 
-    const code = text('Shader', shaders[example])
+    const userCode = text('Shader', shaders.star)
+    button('Compile', function () {
+      loadShader(userCode)
+      return false
+    })
 
     const shaderToyPlayer = new ShaderToyPlayer(container)
-    shaderToyPlayer.load([
-      {
-        inputs: [],
-        outputs: [
-          {
-            id: '4dfGRr',
-            channel: 0,
-          },
-        ],
-        code,
-        name: 'Image',
-        description: '',
-        type: 'image',
-      },
-    ])
+
+    function loadShader(code) {
+      shaderToyPlayer.load([
+        {
+          inputs: [],
+          outputs: [
+            {
+              id: '4dfGRr',
+              channel: 0,
+            },
+          ],
+          code,
+          name: 'Image',
+          description: '',
+          type: 'image',
+        },
+      ])
+    }
+
+    loadShader(shaders[example])
 
     return shaderToyPlayer
   },

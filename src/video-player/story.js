@@ -3,8 +3,6 @@ import story from '../share/story'
 import VideoPlayer from 'luna-video-player.js'
 import $ from 'licia/$'
 import h from 'licia/h'
-import noop from 'licia/noop'
-import isPromise from 'licia/isPromise'
 import readme from './README.md'
 import { text } from '@storybook/addon-knobs'
 

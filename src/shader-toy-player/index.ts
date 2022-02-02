@@ -113,7 +113,13 @@ export default class ShaderToyPlayer extends Component {
     this.$container.html(
       this.c(stripIndent`
       <div class="canvas"></div>
-      <div class="controller">
+      <div class="controller active">
+        <div class="controller-mask"></div>
+        <div class="controller-left">
+          <div class="play">
+            <span class="icon icon-play"></span>
+          </div>
+        </div>
       </div>
       `)
     )

@@ -4,7 +4,7 @@ import readme from './README.md'
 import story from '../share/story'
 import h from 'licia/h'
 import $ from 'licia/$'
-import shaders from './shaders'
+import shaders, { cube } from './shaders'
 import { text, optionsKnob, button } from '@storybook/addon-knobs'
 
 const def = story(
@@ -27,6 +27,7 @@ const def = story(
       {
         'Fork Star Nest elevations 792': 'star',
         Seascape: 'sea',
+        'Protean clouds': 'cloud',
       },
       'star',
       {
@@ -34,30 +35,40 @@ const def = story(
       }
     )
 
-    const userCode = text('Shader', shaders.star)
+    const userImage = text('Image', cube.image)
+    const userSound = text('Sound', cube.sound)
+
     button('Compile', function () {
-      loadShader(userCode)
+      loadShader(userImage, userSound)
       return false
     })
 
     const shaderToyPlayer = new ShaderToyPlayer(container)
 
-    function loadShader(code) {
-      shaderToyPlayer.load([
+    function loadShader(code, sound) {
+      const pass = [
         {
           inputs: [],
-          outputs: [
-            {
-              id: '4dfGRr',
-              channel: 0,
-            },
-          ],
+          outputs: [],
           code,
           name: 'Image',
           description: '',
           type: 'image',
         },
-      ])
+      ]
+
+      if (sound) {
+        pass.push({
+          inputs: [],
+          outputs: [],
+          code: sound,
+          name: 'Sound',
+          description: '',
+          type: 'sound',
+        })
+      }
+
+      shaderToyPlayer.load(pass)
     }
 
     loadShader(shaders[example])

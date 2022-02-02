@@ -62,7 +62,10 @@
   "notification": {
     "test": true
   },
-  "shader-toy-player": {},
+  "shader-toy-player": {
+    "test": true,
+    "icon": true
+  },
   "video-player": {
     "test": true,
     "icon": true

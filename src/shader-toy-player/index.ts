@@ -78,6 +78,13 @@ export default class ShaderToyPlayer extends Component {
     this.isPaused = true
     this.effect.StopOutputs()
   }
+  reset = () => {
+    this.timeOffset = 0
+    this.timeBase = perfNow()
+    this.time = 0
+    this.isRestarted = true
+    this.effect.ResetTime()
+  }
   private get isPaused() {
     return this._isPaused
   }
@@ -102,17 +109,11 @@ export default class ShaderToyPlayer extends Component {
       this.$controller.addClass(c('controller-hidden'))
     }, 3000)
   }
-  private reset() {
-    this.timeOffset = 0
-    this.timeBase = perfNow()
-    this.time = 0
-    this.isRestarted = true
-    this.effect.ResetTime()
-  }
   private bindEvent() {
     const { c } = this
 
     this.$controller
+      .on('click', c('.reset'), this.reset)
       .on('click', c('.play'), this.togglePlay)
       .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
 
@@ -185,6 +186,9 @@ export default class ShaderToyPlayer extends Component {
       <div class="controller active">
         <div class="controller-mask"></div>
         <div class="controller-left">
+          <div class="reset">
+            <span class="icon icon-step-backward"></span>
+          </div>
           <div class="play">
             <span class="icon icon-play"></span>
           </div>

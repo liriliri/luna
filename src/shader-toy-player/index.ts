@@ -4,6 +4,7 @@ import $ from 'licia/$'
 import noop from 'licia/noop'
 import perfNow from 'licia/perfNow'
 import fullscreen from 'licia/fullscreen'
+import raf from 'licia/raf'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Effect = require('./Effect')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -14,6 +15,7 @@ export default class ShaderToyPlayer extends Component {
   private canvas: HTMLCanvasElement = document.createElement('canvas')
   private $controller: $.$
   private $play: $.$
+  private $volume: $.$
   private effect: any
   private isRendering = false
   private time = 0
@@ -23,6 +25,7 @@ export default class ShaderToyPlayer extends Component {
   private _isPaused = true
   private fpsCounter: any = piCreateFPSCounter()
   private autoHideTimer: any = 0
+  private animationId: number
   constructor(container: HTMLElement) {
     super(container, { compName: 'shader-toy-player' })
 
@@ -33,6 +36,7 @@ export default class ShaderToyPlayer extends Component {
     this.$canvas.append(this.canvas)
     this.$controller = this.find('.controller')
     this.$play = this.find('.play')
+    this.$volume = this.find('.volume')
 
     this.effect = new Effect(
       null,
@@ -50,7 +54,7 @@ export default class ShaderToyPlayer extends Component {
   }
   load(pass: any[]) {
     const { effect } = this
-    this.isPaused = true
+    this.pause()
 
     if (!effect.Load({ ver: '0.1', renderpass: pass })) {
       return
@@ -63,6 +67,7 @@ export default class ShaderToyPlayer extends Component {
     })
   }
   destroy() {
+    raf.cancel.call(window, this.animationId)
     this.pause()
     this.$container.off('mousemove', this.onMouseMove)
     super.destroy()
@@ -75,6 +80,9 @@ export default class ShaderToyPlayer extends Component {
     this.effect.ResumeOutputs()
   }
   pause() {
+    if (this.isPaused) {
+      return
+    }
     this.isPaused = true
     this.effect.StopOutputs()
   }
@@ -115,12 +123,22 @@ export default class ShaderToyPlayer extends Component {
     this.$controller
       .on('click', c('.reset'), this.reset)
       .on('click', c('.play'), this.togglePlay)
+      .on('click', c('.volume'), this.toggleVolume)
       .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
 
     this.$container.on('mousemove', this.onMouseMove)
   }
   private toggleFullscreen = () => {
     fullscreen.toggle(this.container)
+  }
+  private toggleVolume = () => {
+    const { c, $volume } = this
+
+    if (this.effect.ToggleVolume()) {
+      $volume.html(c('<span class="icon icon-volume-off"></span>'))
+    } else {
+      $volume.html(c('<span class="icon icon-volume"></span>'))
+    }
   }
   private togglePlay = () => {
     if (this.isPaused) {
@@ -145,7 +163,7 @@ export default class ShaderToyPlayer extends Component {
     this.isRendering = true
 
     const loop = () => {
-      effect.RequestAnimationFrame(loop)
+      this.animationId = raf(loop)
 
       const now = perfNow()
       let time = 0.0
@@ -191,6 +209,9 @@ export default class ShaderToyPlayer extends Component {
           </div>
           <div class="play">
             <span class="icon icon-play"></span>
+          </div>
+          <div class="volume">
+            <span class="icon icon-volume"></span>
           </div>
         </div>
         <div class="controller-right">

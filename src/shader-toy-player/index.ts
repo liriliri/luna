@@ -11,14 +11,17 @@ const { piCreateAudioContext, piCreateFPSCounter } = require('./piLibs')
 export default class ShaderToyPlayer extends Component {
   private $canvas: $.$
   private canvas: HTMLCanvasElement = document.createElement('canvas')
+  private $controller: $.$
+  private $play: $.$
   private effect: any
   private isRendering = false
-  private isPaused = false
   private time = 0
   private timeOffset = 0
   private timeBase = perfNow()
   private isRestarted = true
+  private _isPaused = true
   private fpsCounter: any = piCreateFPSCounter()
+  private autoHideTimer: any = 0
   constructor(container: HTMLElement) {
     super(container, { compName: 'shader-toy-player' })
 
@@ -27,6 +30,8 @@ export default class ShaderToyPlayer extends Component {
     this.initTpl()
     this.$canvas = this.find('.canvas')
     this.$canvas.append(this.canvas)
+    this.$controller = this.find('.controller')
+    this.$play = this.find('.play')
 
     this.effect = new Effect(
       null,
@@ -39,25 +44,83 @@ export default class ShaderToyPlayer extends Component {
       this.onResize,
       this.onCrash
     )
+
+    this.bindEvent()
   }
   load(pass: any[]) {
     const { effect } = this
+    this.isPaused = true
 
     if (!effect.Load({ ver: '0.1', renderpass: pass })) {
       return
     }
 
     effect.Compile(true, () => {
+      this.isPaused = false
       this.startRendering()
-      this.resetTime()
+      this.reset()
     })
   }
-  private resetTime() {
+  destroy() {
+    this.pause()
+    this.$container.off('mousemove', this.onMouseMove)
+    super.destroy()
+  }
+  play() {
+    this.isPaused = false
+    this.timeOffset = this.time
+    this.timeBase = perfNow()
+    this.isRestarted = true
+    this.effect.ResumeOutputs()
+  }
+  pause() {
+    this.isPaused = true
+    this.effect.StopOutputs()
+  }
+  private get isPaused() {
+    return this._isPaused
+  }
+  private set isPaused(paused: boolean) {
+    const { $controller, $play, c } = this
+    this._isPaused = paused
+
+    if (paused) {
+      $controller.addClass(c('active'))
+      $play.html(c('<span class="icon icon-play"></span>'))
+    } else {
+      $controller.rmClass(c('active'))
+      $play.html(c('<span class="icon icon-pause"></span>'))
+    }
+  }
+  private onMouseMove = () => {
+    const { c } = this
+
+    this.$controller.rmClass(c('controller-hidden'))
+    clearTimeout(this.autoHideTimer)
+    this.autoHideTimer = setTimeout(() => {
+      this.$controller.addClass(c('controller-hidden'))
+    }, 3000)
+  }
+  private reset() {
     this.timeOffset = 0
     this.timeBase = perfNow()
     this.time = 0
     this.isRestarted = true
     this.effect.ResetTime()
+  }
+  private bindEvent() {
+    const { c } = this
+
+    this.$controller.on('click', c('.play'), this.togglePlay)
+
+    this.$container.on('mousemove', this.onMouseMove)
+  }
+  private togglePlay = () => {
+    if (this.isPaused) {
+      this.play()
+    } else {
+      this.pause()
+    }
   }
   private onResize = () => {
     console.log('on resize')

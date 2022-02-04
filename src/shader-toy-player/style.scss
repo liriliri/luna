@@ -4,6 +4,17 @@
   height: 100%;
   user-select: none;
   position: relative;
+  &:hover {
+    .controller {
+      opacity: 1;
+      &.controller-hidden {
+        opacity: 0;
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  }
   * {
     box-sizing: border-box;
   }

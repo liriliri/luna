@@ -96,8 +96,9 @@ export default class VideoPlayer extends Component {
     this.video.pause()
   }
   destroy() {
-    super.destroy()
     this.pause()
+    this.$container.off('mousemove', this.onMouseMove)
+    super.destroy()
   }
   seek(time: number) {
     if (!this.video.src) {

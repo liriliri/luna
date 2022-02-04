@@ -70,3 +70,14 @@
     }
   }
 }
+
+.controller-left {
+  left: 20px;
+}
+
+.controller-right {
+  right: 20px;
+  .icon {
+    margin-left: 8px;
+  }
+}

@@ -3,6 +3,7 @@ import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import noop from 'licia/noop'
 import perfNow from 'licia/perfNow'
+import fullscreen from 'licia/fullscreen'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Effect = require('./Effect')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -111,9 +112,14 @@ export default class ShaderToyPlayer extends Component {
   private bindEvent() {
     const { c } = this
 
-    this.$controller.on('click', c('.play'), this.togglePlay)
+    this.$controller
+      .on('click', c('.play'), this.togglePlay)
+      .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
 
     this.$container.on('mousemove', this.onMouseMove)
+  }
+  private toggleFullscreen = () => {
+    fullscreen.toggle(this.container)
   }
   private togglePlay = () => {
     if (this.isPaused) {
@@ -182,6 +188,9 @@ export default class ShaderToyPlayer extends Component {
           <div class="play">
             <span class="icon icon-play"></span>
           </div>
+        </div>
+        <div class="controller-right">
+          <span class="icon icon-fullscreen"></span>
         </div>
       </div>
       `)

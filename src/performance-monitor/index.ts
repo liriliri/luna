@@ -130,9 +130,12 @@ export default class PerformanceMonitor extends Component<IOptions> {
   private draw() {
     const { ctx, width, height } = this
 
+    ctx.save()
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
     ctx.clearRect(0, 0, width, height)
     this.drawChart()
     this.drawHorizontalGrid()
+    ctx.restore()
   }
   private drawChart() {
     const { ctx } = this

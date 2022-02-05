@@ -1,5 +1,8 @@
 const path = require('path')
 const each = require('licia/each')
+const contain = require('licia/contain')
+
+const headless = contain(process.argv, '--headless')
 
 module.exports = function (name) {
   const webpackCfg = require(`../${name}/webpack.config.js`)(
@@ -34,6 +37,9 @@ module.exports = function (name) {
     config.set({
       basePath: `../${name}`,
       files,
+      client: {
+        headless,
+      },
       frameworks: ['mocha', 'chai', 'jquery-3.4.0'],
       plugins: [
         'karma-jquery',
@@ -53,9 +59,9 @@ module.exports = function (name) {
       preprocessors: {
         'test.js': ['webpack', 'sourcemap'],
       },
-      browsers: ['ChromeHeadless'],
+      browsers: [headless ? 'ChromeHeadless' : 'Chrome'],
       browserNoActivityTimeout: 100000,
-      singleRun: true,
+      singleRun: headless,
       concurrency: Infinity,
     })
   }

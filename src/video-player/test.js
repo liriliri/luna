@@ -1,12 +1,10 @@
-const VideoPlayer = require('./index')
-require('./style.scss')
-require('./icon.css')
+import VideoPlayer from './index'
+import './style.scss'
+import './icon.css'
+import test from '../share/test'
 
-describe('video-player', function () {
-  it('basic', function () {
-    const container = document.createElement('container')
-    document.body.appendChild(container)
-
+test('video-player', (container) => {
+  it('basic', () => {
     const videoPlayer = new VideoPlayer(container)
     videoPlayer.play()
   })

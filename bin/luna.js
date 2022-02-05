@@ -35,8 +35,12 @@ const dev = wrap(async function (component) {
   ])
 })
 
-const test = wrap(async function (component) {
-  await runScript('karma', ['start', `./src/${component}/karma.conf.js`])
+const test = wrap(async function (component, argv) {
+  const args = ['start', `./src/${component}/karma.conf.js`]
+  if (argv.headless !== false) {
+    args.push('--headless')
+  }
+  await runScript('karma', args)
 }, 'test')
 
 const install = wrap(async function (component) {
@@ -161,7 +165,7 @@ function wrap(fn, condition) {
       })
     }
     for (let component of components) {
-      await fn(component)
+      await fn(component, argv)
     }
   }
 }

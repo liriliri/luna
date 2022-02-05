@@ -2,7 +2,7 @@ const $ = require('licia/$')
 const Modal = require('./index')
 require('./style.scss')
 
-const container = document.createElement('container')
+const container = document.createElement('div')
 document.body.appendChild(container)
 
 const title = 'This is the Title'

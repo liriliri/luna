@@ -37,7 +37,7 @@ export default function story(
     [camelCase(name)]: () => {
       if (window.components) {
         const lastComponentName = window.components[0].constructor.name
-        if (upperFirst(camelCase(name)) !== lastComponentName ) {
+        if (upperFirst(camelCase(name)) !== lastComponentName) {
           // Fix knobs not reset when story changed.
           const knobStore = registerKnobs.manager.knobStore
           knobStore.reset()

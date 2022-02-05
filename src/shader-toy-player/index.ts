@@ -16,6 +16,9 @@ export default class ShaderToyPlayer extends Component {
   private $controller: $.$
   private $play: $.$
   private $volume: $.$
+  private $resolution: $.$
+  private $time: $.$
+  private $fps: $.$
   private effect: any
   private isRendering = false
   private time = 0
@@ -37,6 +40,9 @@ export default class ShaderToyPlayer extends Component {
     this.$controller = this.find('.controller')
     this.$play = this.find('.play')
     this.$volume = this.find('.volume')
+    this.$resolution = this.find('.resolution')
+    this.$time = this.find('.time')
+    this.$fps = this.find('.fps')
 
     this.effect = new Effect(
       null,
@@ -47,7 +53,7 @@ export default class ShaderToyPlayer extends Component {
       false,
       false,
       this.onResize,
-      this.onCrash
+      noop
     )
 
     this.bindEvent()
@@ -124,12 +130,16 @@ export default class ShaderToyPlayer extends Component {
       .on('click', c('.reset'), this.reset)
       .on('click', c('.play'), this.togglePlay)
       .on('click', c('.volume'), this.toggleVolume)
+      .on('click', c('.fps-button'), this.toggleFps)
       .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
 
     this.$container.on('mousemove', this.onMouseMove)
   }
   private toggleFullscreen = () => {
     fullscreen.toggle(this.container)
+  }
+  private toggleFps = () => {
+    this.$fps.toggleClass(this.c('active'))
   }
   private toggleVolume = () => {
     const { c, $volume } = this
@@ -148,10 +158,15 @@ export default class ShaderToyPlayer extends Component {
     }
   }
   private onResize = () => {
-    console.log('on resize')
+    const { width, height } = this.canvas
+
+    this.$resolution.text(`${width} × ${height}`)
   }
-  private onCrash = () => {
-    console.log('on crash')
+  private renderTime() {
+    this.$time.text((this.time / 1000.0).toFixed(2))
+  }
+  private renderFps() {
+    this.$fps.text('FPS: ' + this.fpsCounter.GetFPS().toFixed(1))
   }
   private startRendering() {
     if (this.isRendering) {
@@ -194,6 +209,9 @@ export default class ShaderToyPlayer extends Component {
         0,
         this.isPaused
       )
+
+      this.renderTime()
+      this.renderFps()
     }
     loop()
   }
@@ -201,6 +219,7 @@ export default class ShaderToyPlayer extends Component {
     this.$container.html(
       this.c(stripIndent`
       <div class="canvas"></div>
+      <div class="fps"></div>
       <div class="controller active">
         <div class="controller-mask"></div>
         <div class="controller-left">
@@ -213,8 +232,11 @@ export default class ShaderToyPlayer extends Component {
           <div class="volume">
             <span class="icon icon-volume"></span>
           </div>
+          <span class="time">0.00</span>
         </div>
         <div class="controller-right">
+          <span class="resolution"></span>
+          <span class="fps-button">FPS</span>
           <span class="icon icon-fullscreen"></span>
         </div>
       </div>

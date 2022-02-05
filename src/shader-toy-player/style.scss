@@ -1,3 +1,5 @@
+@import '../share/variable';
+
 .luna-shader-toy-player {
   background: #000;
   width: 100%;
@@ -33,7 +35,7 @@
   opacity: 0;
   left: 0;
   right: 0;
-  height: 41px;
+  height: 38px;
   padding: 0 20px;
   position: absolute;
   bottom: 0;
@@ -89,4 +91,31 @@
   height: 100%;
   display: inline-block;
   vertical-align: top;
+}
+
+.time,
+.fps-button,
+.resolution {
+  color: #eee;
+  font-size: $font-size-s;
+  line-height: 38px;
+}
+
+.fps-button {
+  cursor: pointer;
+}
+
+.fps {
+  opacity: 0;
+  position: absolute;
+  font-size: $font-size-s;
+  top: 0;
+  right: 0;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.5);
+  color: $select-foreground-color;
+  transition: opacity 0.3s;
+  &.active {
+    opacity: 1;
+  }
 }

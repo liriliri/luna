@@ -25,7 +25,7 @@ const def = story(
     const example = optionsKnob(
       'Example',
       {
-        'Fork Star Nest elevations 792': 'star',
+        'Star Nest': 'star',
         Seascape: 'sea',
         'Protean clouds': 'cloud',
       },

@@ -5,10 +5,13 @@ import noop from 'licia/noop'
 import perfNow from 'licia/perfNow'
 import fullscreen from 'licia/fullscreen'
 import raf from 'licia/raf'
+import { drag, eventClient } from '../share/util'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Effect = require('./Effect')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { piCreateAudioContext, piCreateFPSCounter } = require('./piLibs')
+
+const $document = $(document as any)
 
 export default class ShaderToyPlayer extends Component {
   private $canvas: $.$
@@ -29,6 +32,10 @@ export default class ShaderToyPlayer extends Component {
   private fpsCounter: any = piCreateFPSCounter()
   private autoHideTimer: any = 0
   private animationId: number
+  private startX = 0
+  private startY = 0
+  private x = 0
+  private y = 0
   constructor(container: HTMLElement) {
     super(container, { compName: 'shader-toy-player' })
 
@@ -134,6 +141,47 @@ export default class ShaderToyPlayer extends Component {
       .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
 
     this.$container.on('mousemove', this.onMouseMove)
+
+    this.$canvas.on(drag('start'), this.onDragStart)
+  }
+  private onDragStart = (e: any) => {
+    const { x, y } = this.getXY(e)
+    this.startX = x
+    this.startY = y
+    this.x = x
+    this.y = y
+
+    $document.on(drag('move'), this.onDragMove)
+    $document.on(drag('end'), this.onDragEnd)
+  }
+  private onDragMove = (e: any) => {
+    const { x, y } = this.getXY(e)
+
+    this.x = x
+    this.y = y
+  }
+  private getXY(e: any) {
+    e = e.origEvent
+    const { canvas } = this
+    const offset = this.$canvas.offset()
+    const clientX = eventClient('x', e)
+    const clientY = eventClient('y', e)
+
+    let x = Math.floor(((clientX - offset.left) / offset.width) * canvas.width)
+    let y = Math.floor(
+      canvas.height - ((clientY - offset.top) / offset.height) * canvas.height
+    )
+
+    if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) {
+      x = this.x
+      y = this.y
+    }
+
+    return { x, y }
+  }
+  private onDragEnd = () => {
+    $document.off(drag('move'), this.onDragMove)
+    $document.off(drag('end'), this.onDragEnd)
   }
   private toggleFullscreen = () => {
     fullscreen.toggle(this.container)
@@ -203,10 +251,10 @@ export default class ShaderToyPlayer extends Component {
         time / 1000.0,
         dtime / 1000.0,
         this.fpsCounter.GetFPS(),
-        -0,
-        -0,
-        0,
-        0,
+        this.startX,
+        this.startY,
+        this.x,
+        this.y,
         this.isPaused
       )
 

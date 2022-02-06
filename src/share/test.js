@@ -1,4 +1,5 @@
 export default function (name, testFn) {
+  /* eslint-disable no-undef */
   if (
     !__karma__.config.headless &&
     window.location.pathname === '/context.html'

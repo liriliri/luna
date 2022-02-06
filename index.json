@@ -63,6 +63,7 @@
     "test": true
   },
   "shader-toy-player": {
+    "test": true,
     "icon": true
   },
   "video-player": {

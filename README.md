@@ -1,11 +1,11 @@
 # luna
 
-[![Build status][travis-image]][travis-url]
+[![Build status][ci-image]][ci-url]
 [![Test coverage][codecov-image]][codecov-url]
 ![License][license-image]
 
-[travis-image]: https://img.shields.io/travis/com/liriliri/luna?style=flat-square
-[travis-url]: https://app.travis-ci.com/liriliri/luna
+[ci-image]: https://img.shields.io/github/workflow/status/liriliri/luna/CI?style=flat-square
+[ci-url]: https://github.com/liriliri/luna/actions/workflows/main.yml
 [codecov-image]: https://img.shields.io/codecov/c/github/liriliri/luna?style=flat-square
 [codecov-url]: https://codecov.io/github/liriliri/luna?branch=master
 [license-image]: https://img.shields.io/github/license/liriliri/luna?style=flat-square

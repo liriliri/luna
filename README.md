@@ -31,5 +31,6 @@ Yet another UI library.
 * [notification](./src/notification/README.md): Show notifications.
 * [object-viewer](./src/object-viewer/README.md): JavaScript object viewer.
 * [performance-monitor](./src/performance-monitor/README.md): Realtime counter used for displaying cpu, fps metrics.
+* [shader-toy-player](./src/shader-toy-player/README.md): Shader toy player.
 * [video-player](./src/video-player/README.md): Video player.
 * [window](./src/window/README.md): HTML5 window manager.

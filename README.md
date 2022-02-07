@@ -1,4 +1,4 @@
-# luna
+# Luna
 
 [![Build status][ci-image]][ci-url]
 [![Test coverage][codecov-image]][codecov-url]
@@ -10,7 +10,7 @@
 [codecov-url]: https://codecov.io/github/liriliri/luna?branch=master
 [license-image]: https://img.shields.io/github/license/liriliri/luna?style=flat-square
 
-Yet another UI library.
+[Luna](https://luna.liriliri.io/) is yet another UI library, built to manage JS components that used often in my daily work. Simple components with styles only(no js involved) such as button, icon, will not be collected here.
 
 ## Components
 
@@ -34,3 +34,5 @@ Yet another UI library.
 * [shader-toy-player](./src/shader-toy-player/README.md): Shader toy player.
 * [video-player](./src/video-player/README.md): Video player.
 * [window](./src/window/README.md): HTML5 window manager.
+
+All these components is published individually. You can use any of them by adding traditional scripts and style links or installing npm packages.

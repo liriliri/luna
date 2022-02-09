@@ -1,5 +1,8 @@
 {
-  "name": "luna-danmaku",
+  "name": "danmaku",
   "version": "0.1.0",
-  "description": "Live comment player"
+  "description": "Live comment player",
+  "luna": {
+    "test": false
+  }
 }

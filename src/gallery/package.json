@@ -1,5 +1,11 @@
 {
-  "name": "luna-gallery",
+  "name": "gallery",
   "version": "0.1.0",
-  "description": "Lightweight gallery"
+  "description": "Lightweight gallery",
+  "luna": {
+    "icon": true,
+    "dependencies": [
+      "carousel"
+    ]
+  }
 }

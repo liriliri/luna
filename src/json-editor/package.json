@@ -1,5 +1,8 @@
 {
-  "name": "luna-json-editor",
+  "name": "json-editor",
   "version": "0.1.0",
-  "description": "JSON editor"
+  "description": "JSON editor",
+  "luna": {
+    "icon": true
+  }
 }

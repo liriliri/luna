@@ -1,5 +1,5 @@
 {
-  "name": "luna-music-player",
+  "name": "music-player",
   "version": "0.1.0",
   "description": "Music player",
   "dependencies": {
@@ -7,5 +7,9 @@
   },
   "devDependencies": {
     "@types/jsmediatags": "^3.9.2"
+  },
+  "luna": {
+    "icon": true,
+    "install": true
   }
 }

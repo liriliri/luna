@@ -16,6 +16,8 @@ const promisify = require('licia/promisify')
 const endWith = require('licia/endWith')
 const rmdir = promisify(require('licia/rmdir'))
 const concat = require('licia/concat')
+const startWith = require('licia/startWith')
+const onExit = require('signal-exit')
 const fs = require('licia/fs')
 
 const format = wrap(async function (component) {
@@ -27,6 +29,9 @@ const format = wrap(async function (component) {
 })
 
 const dev = wrap(async function (component) {
+  await createWebpackConfig(component)
+  rmWebpackConfig(component)
+
   await runScript('webpack', [
     '--config',
     `./src/${component}/webpack.config.js`,
@@ -36,6 +41,11 @@ const dev = wrap(async function (component) {
 })
 
 const test = wrap(async function (component, argv) {
+  await createWebpackConfig(component)
+  rmWebpackConfig(component)
+  await createKarmaConf(component)
+  rmKarmaConf(component)
+
   const args = ['start', `./src/${component}/karma.conf.js`]
   if (argv.headless !== false) {
     args.push('--headless')
@@ -73,6 +83,9 @@ const build = wrap(async function (component) {
     /* eslint-disable no-empty */
   }
 
+  await createWebpackConfig(component)
+  rmWebpackConfig(component)
+
   await runScript('webpack', [
     '--config',
     `src/${component}/webpack.config.js`,
@@ -80,8 +93,12 @@ const build = wrap(async function (component) {
   ])
 
   const pkg = cloneDeep(require('../package.json'))
+  if (!startWith(pkg.name, 'luna-')) {
+    pkg.name = `luna-${pkg.name}`
+  }
   delete pkg.scripts
   delete pkg.bin
+  delete pkg.luna
   pkg.main = `cjs/${component}/index.js`
   const componentPkg = require(`../src/${component}/package.json`)
   extendDeep(pkg, componentPkg)
@@ -168,6 +185,57 @@ function wrap(fn, condition) {
       await fn(component, argv)
     }
   }
+}
+
+const readConfigTpl = `const defaults = require('licia/defaults')
+const pkg = require('./package.json')
+const config = defaults(pkg.luna || {}, {
+  name: pkg.name,
+  style: true,
+  icon: false,
+  test: true,
+  install: false,
+  dependencies: []
+})`
+
+const webpackConfigTpl = `${readConfigTpl}
+module.exports = require('../share/webpack.config')(config.name, {
+  hasStyle: config.style,
+  useIcon: config.icon,
+  dependencies: config.dependencies,
+})
+`
+
+async function createWebpackConfig(component) {
+  await fs.writeFile(
+    resolve(`../src/${component}/webpack.config.js`),
+    webpackConfigTpl,
+    'utf8'
+  )
+}
+
+function rmWebpackConfig(component) {
+  onExit(async () => {
+    await fs.unlink(resolve(`../src/${component}/webpack.config.js`))
+  })
+}
+
+const karmaConfTpl = `${readConfigTpl}
+module.exports = require('../share/karma.conf')(config.name)
+`
+
+async function createKarmaConf(component) {
+  await fs.writeFile(
+    resolve(`../src/${component}/karma.conf.js`),
+    karmaConfTpl,
+    'utf8'
+  )
+}
+
+async function rmKarmaConf(component) {
+  onExit(async () => {
+    await fs.unlink(resolve(`../src/${component}/karma.conf.js`))
+  })
 }
 
 yargs

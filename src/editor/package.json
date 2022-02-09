@@ -1,5 +1,8 @@
 {
-  "name": "luna-editor",
+  "name": "editor",
   "version": "0.1.0",
-  "description": "Wysiwyg editor"
+  "description": "Wysiwyg editor",
+  "luna": {
+    "icon": true
+  }
 }

@@ -64,6 +64,7 @@
     "postcss-prefixer": "^2.1.2",
     "sass-loader": "^10.2.0",
     "shelljs": "^0.8.3",
+    "signal-exit": "^3.0.7",
     "storybook-readme": "^5.0.9",
     "style-loader": "^2.0.0",
     "ts-loader": "^6.2.1",

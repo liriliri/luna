@@ -1,5 +1,8 @@
 {
-  "name": "luna-modal",
+  "name": "modal",
   "version": "0.1.0",
-  "description": "Create modal dialogs"
+  "description": "Create modal dialogs",
+  "luna": {
+    "icon": true
+  }
 }

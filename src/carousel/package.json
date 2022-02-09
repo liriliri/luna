@@ -1,5 +1,8 @@
 {
-  "name": "luna-carousel",
+  "name": "carousel",
   "version": "0.2.0",
-  "description": "Lightweight carousel"
+  "description": "Lightweight carousel",
+  "luna": {
+    "icon": true
+  }
 }

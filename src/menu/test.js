@@ -1,8 +1,9 @@
-const Menu = require('./index')
-require('./style.scss')
-require('./icon.css')
+import Menu from './index'
+import './style.scss'
+import './icon.css'
+import test from '../share/test'
 
-describe('menu', function () {
+test('menu', function () {
   it('basic', function () {
     const menu = new Menu()
 

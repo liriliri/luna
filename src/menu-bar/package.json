@@ -1,5 +1,10 @@
 {
-  "name": "luna-menu-bar",
+  "name": "menu-bar",
   "version": "0.1.0",
-  "description": "Application menu bar"
+  "description": "Application menu bar",
+  "luna": {
+    "dependencies": [
+      "menu"
+    ]
+  }
 }

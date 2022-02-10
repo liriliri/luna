@@ -22,6 +22,7 @@ import lowerCase from 'licia/lowerCase'
 import dateFormat from 'licia/dateFormat'
 import isHidden from 'licia/isHidden'
 import stripIndent from 'licia/stripIndent'
+import ResizeSensor from 'licia/ResizeSensor'
 import types from 'licia/types'
 import { classPrefix } from '../share/util'
 import Component from '../share/Component'
@@ -77,6 +78,7 @@ export default class Console extends Component<IOptions> {
   private isAtBottom = true
   private groupStack = new Stack()
   private global: any
+  private resizeSensor: ResizeSensor
   constructor(
     container: HTMLElement,
     {
@@ -117,6 +119,8 @@ export default class Console extends Component<IOptions> {
       this.minSpeedTolerance = 800
     }
 
+    this.resizeSensor = new ResizeSensor(container)
+
     this.renderViewport = throttle((options) => {
       this._renderViewport(options)
     }, 16)
@@ -154,8 +158,9 @@ export default class Console extends Component<IOptions> {
     this.global[name] = val
   }
   destroy() {
-    super.destroy()
     this.$container.off('scroll', this.onScroll)
+    this.resizeSensor.destroy()
+    super.destroy()
   }
   count(label = 'default') {
     const { counter } = this
@@ -615,6 +620,8 @@ export default class Console extends Component<IOptions> {
   private bindEvent() {
     const { $el } = this
 
+    this.resizeSensor.addListener(this.renderViewport)
+
     $el.on('click', c('.log-container'), function (this: any) {
       this.log.click()
     })
@@ -697,7 +704,8 @@ export default class Console extends Component<IOptions> {
   private _renderViewport({ topTolerance = 500, bottomTolerance = 500 } = {}) {
     const { el, container } = this
     if (isHidden(container)) return
-    const { scrollTop, clientWidth, offsetHeight } = container as HTMLElement
+    const { scrollTop, offsetHeight } = container as HTMLElement
+    const containerWidth = container.getBoundingClientRect().width
     const top = scrollTop - topTolerance
     const bottom = scrollTop + offsetHeight + bottomTolerance
 
@@ -715,7 +723,7 @@ export default class Console extends Component<IOptions> {
     for (let i = 0; i < len; i++) {
       const log = displayLogs[i]
       const { width, height } = log
-      if (height === 0 || width !== clientWidth) {
+      if (height === 0 || width !== containerWidth) {
         fakeFrag.appendChild(log.container)
         logs.push(log)
       }

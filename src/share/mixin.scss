@@ -1,3 +1,5 @@
+@import './variable';
+
 @mixin overflow-auto($direction: 'both') {
   @if $direction == 'both' {
     overflow: auto;
@@ -5,6 +7,24 @@
     overflow-#{$direction}: auto;
   }
   -webkit-overflow-scrolling: touch;
+}
+
+@mixin component {
+  background: $background-color;
+  color: $foreground-color;
+  font-family: $font-family;
+  &.platform-windows {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+  }
+  &.platform-linux {
+    font-family: Roboto, Ubuntu, Arial, sans-serif;
+  }
+  .hidden {
+    display: none;
+  }
+  .invisible {
+    visibility: hidden;
+  }
 }
 
 @mixin clear-float {

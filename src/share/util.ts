@@ -5,6 +5,7 @@ import html from 'licia/html'
 import isNum from 'licia/isNum'
 import contain from 'licia/contain'
 import toNum from 'licia/toNum'
+import detectOs from 'licia/detectOs'
 
 export function classPrefix(name: string) {
   const prefix = `luna-${name}-`
@@ -119,4 +120,12 @@ export function executeAfterTransition(el: HTMLElement, callback: () => any) {
 
 export function pxToNum(str: string) {
   return toNum(str.replace('px', ''))
+}
+
+export function getPlatform() {
+  const os = detectOs()
+  if (os === 'os x') {
+    return 'mac'
+  }
+  return os
 }

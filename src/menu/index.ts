@@ -102,6 +102,8 @@ export default class Menu extends Component {
       }
     }
 
+    console.log(offset, height)
+
     $container.css({
       width,
       height,
@@ -147,9 +149,11 @@ export default class Menu extends Component {
     const $el = $(el)
 
     $el.text(item.label as string)
-    if (item.type === 'submenu') {
-      $el.append(`<span class="${this.c('icon icon-arrow-right')}"></span>`)
-    }
+    $el.append(
+      `<span class="${c('icon icon-arrow-right')}${
+        item.type === 'submenu' ? '' : ' ' + c('invisible')
+      }"></span>`
+    )
     $el.on('mouseover', () => {
       this.highlight($el)
       if (item.submenu) {

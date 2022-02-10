@@ -1,6 +1,6 @@
 import Emitter from 'licia/Emitter'
 import $ from 'licia/$'
-import { classPrefix } from './util'
+import { classPrefix, getPlatform } from './util'
 import each from 'licia/each'
 
 interface IOptions {
@@ -21,10 +21,15 @@ export default class Component<Options = any> extends Emitter {
 
     this.container = container as HTMLElement
     this.$container = $(container)
-    this.$container.addClass(`luna-${compName}`)
+    this.$container.addClass([
+      `luna-${compName}`,
+      this.c(`platform-${getPlatform()}`),
+    ])
   }
   destroy() {
-    this.$container.rmClass(`luna-${this.compName}`)
+    this.$container
+      .rmClass(`luna-${this.compName}`)
+      .rmClass(`platform-${this.c(getPlatform())}`)
     this.$container.html('')
     this.emit('destroy')
     this.removeAllListeners()

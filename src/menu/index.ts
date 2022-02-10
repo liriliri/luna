@@ -102,8 +102,6 @@ export default class Menu extends Component {
       }
     }
 
-    console.log(offset, height)
-
     $container.css({
       width,
       height,

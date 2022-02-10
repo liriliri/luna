@@ -29,7 +29,7 @@ export default class Component<Options = any> extends Emitter {
   destroy() {
     this.$container
       .rmClass(`luna-${this.compName}`)
-      .rmClass(`platform-${this.c(getPlatform())}`)
+      .rmClass(this.c(`platform-${getPlatform()}`))
     this.$container.html('')
     this.emit('destroy')
     this.removeAllListeners()

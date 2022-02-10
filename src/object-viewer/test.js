@@ -1,33 +1,29 @@
-const ObjectViewer = require('./index')
-require('./style.scss')
-require('./icon.css')
+import ObjectViewer from './index'
+import './style.scss'
+import './icon.css'
+import defineProp from 'licia/defineProp'
+import stringifyAll from 'licia/stringifyAll'
+import test from '../share/test'
 
-const defineProp = require('licia/defineProp')
-const stringifyAll = require('licia/stringifyAll')
-
-const data = { a: 1, b: function () {}, c: 'unenumerable' }
-defineProp(data, 'c', {
-  unenumerable: true,
-})
-defineProp(data, 'd', {
-  get() {
-    return 'getter'
-  },
-})
-data.e = data
-data.f = []
-for (let i = 0; i < 10000; i++) {
-  data.f.push(i)
-}
-data.g = /test/
-data.h = void 0
-data.i = null
-
-describe('object-viewer', function () {
+test('object-viewer', (container) => {
+  const data = { a: 1, b: function () {}, c: 'unenumerable' }
+  defineProp(data, 'c', {
+    unenumerable: true,
+  })
+  defineProp(data, 'd', {
+    get() {
+      return 'getter'
+    },
+  })
+  data.e = data
+  data.f = []
+  for (let i = 0; i < 10000; i++) {
+    data.f.push(i)
+  }
+  data.g = /test/
+  data.h = void 0
+  data.i = null
   it('basic', function () {
-    const container = document.createElement('div')
-    document.body.appendChild(container)
-
     const objectViewer = new ObjectViewer(container, {
       unenumerable: true,
       accessGetter: true,
@@ -36,7 +32,6 @@ describe('object-viewer', function () {
     objectViewer.set(data)
 
     const $container = $(container)
-    expect($container.attr('class')).to.equal('luna-object-viewer')
 
     const $ul = $container.children('li').children('ul')
     expect($ul.children('li').length).to.equal(11)
@@ -54,9 +49,6 @@ describe('object-viewer', function () {
   })
 
   it('static', function () {
-    const container = document.createElement('div')
-    document.body.appendChild(container)
-
     const objectViewer = new ObjectViewer.Static(container)
     objectViewer.set(
       stringifyAll(data, {
@@ -66,7 +58,6 @@ describe('object-viewer', function () {
     )
 
     const $container = $(container)
-    expect($container.attr('class')).to.equal('luna-object-viewer')
 
     const $ul = $container.children('li').children('ul')
     expect($ul.children('li').length).to.equal(9)

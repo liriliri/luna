@@ -3,3 +3,5 @@ dist/
 coverage/
 .storybook/out/
 package-lock.json
+webpack.config.js
+karma.conf.js

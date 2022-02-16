@@ -17,6 +17,7 @@ const endWith = require('licia/endWith')
 const rmdir = promisify(require('licia/rmdir'))
 const concat = require('licia/concat')
 const startWith = require('licia/startWith')
+const defaults = require('licia/defaults')
 const onExit = require('signal-exit')
 const fs = require('licia/fs')
 
@@ -75,6 +76,29 @@ const genIcon = wrap(async function (component) {
   ])
   await runScript('lsla', ['prettier', `src/${component}/icon.css`, '--write'])
 }, 'icon')
+
+const update = async function () {
+  const dirs = await fs.readdir(resolve('../src'))
+  const output = {}
+  for (let i = 0, len = dirs.length; i < len; i++) {
+    const dir = dirs[i]
+    if (await fs.exists(resolve(`../src/${dir}/package.json`))) {
+      const pkg = require(resolve(`../src/${dir}/package.json`))
+      output[dir] = defaults(pkg.luna || {}, {
+        version: pkg.version,
+        style: true,
+        icon: false,
+        test: true,
+        install: false,
+        dependencies: [],
+      })
+    }
+  }
+
+  const OUTPUT_PATH = resolve('../index.json')
+  await fs.writeFile(OUTPUT_PATH, JSON.stringify(output, null, 2), 'utf8')
+  console.log('Index file generated: ' + OUTPUT_PATH)
+}
 
 const build = wrap(async function (component) {
   try {
@@ -247,6 +271,7 @@ yargs
   .command('genIcon', 'generate icon file', noop, genIcon)
   .command('test', 'run test', noop, test)
   .command('install', 'install dependencies', noop, install)
+  .command('update', 'update index.json', noop, update)
   .fail(function () {
     process.exit(1)
   })

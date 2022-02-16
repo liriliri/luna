@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "HTML5 charts",
   "luna": {
-    "style": false
+    "style": false,
+    "install": true
   }
 }

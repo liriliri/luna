@@ -1,77 +1,186 @@
 {
   "carousel": {
-    "test": true
+    "icon": true,
+    "version": "0.2.0",
+    "style": true,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "chart": {
+    "style": false,
+    "install": true,
+    "version": "0.1.0",
+    "icon": false,
     "test": true,
-    "install": true
+    "dependencies": []
+  },
+  "color-picker": {
+    "test": false,
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "install": false,
+    "dependencies": []
   },
   "command-palette": {
-    "test": true
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "console": {
     "icon": true,
-    "test": true,
-    "install": true
+    "install": true,
+    "dependencies": ["object-viewer"],
+    "version": "0.2.1",
+    "style": true,
+    "test": true
   },
   "cropper": {
-    "test": true
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
+  },
+  "danmaku": {
+    "test": false,
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "install": false,
+    "dependencies": []
+  },
+  "data-grid": {
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "dom-highlighter": {
-    "test": true
+    "version": "0.3.2",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "dom-viewer": {
     "icon": true,
-    "test": true
+    "version": "0.1.0",
+    "style": true,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "editor": {
     "icon": true,
-    "test": true
+    "version": "0.1.0",
+    "style": true,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "gallery": {
     "icon": true,
-    "test": true
+    "dependencies": ["carousel"],
+    "version": "0.1.0",
+    "style": true,
+    "test": true,
+    "install": false
   },
   "json-editor": {
     "icon": true,
-    "test": true
+    "version": "0.1.0",
+    "style": true,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "menu": {
     "icon": true,
-    "test": true
+    "version": "0.1.0",
+    "style": true,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "menu-bar": {
-    "test": true
+    "dependencies": ["menu"],
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false
   },
   "modal": {
     "icon": true,
-    "test": true
+    "version": "0.1.0",
+    "style": true,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "music-player": {
-    "test": true,
     "icon": true,
-    "install": true
+    "install": true,
+    "version": "0.1.0",
+    "style": true,
+    "test": true,
+    "dependencies": []
+  },
+  "notification": {
+    "version": "0.1.3",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "object-viewer": {
     "icon": true,
-    "test": true
+    "version": "0.2.0",
+    "style": true,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "performance-monitor": {
-    "test": true
-  },
-  "notification": {
-    "test": true
+    "version": "0.1.1",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
   },
   "shader-toy-player": {
+    "icon": true,
+    "version": "0.1.0",
+    "style": true,
     "test": true,
-    "icon": true
+    "install": false,
+    "dependencies": []
   },
   "video-player": {
+    "icon": true,
+    "version": "0.1.0",
+    "style": true,
     "test": true,
-    "icon": true
+    "install": false,
+    "dependencies": []
   },
   "window": {
+    "icon": true,
+    "version": "0.1.0",
+    "style": true,
     "test": true,
-    "icon": true
+    "install": false,
+    "dependencies": []
   }
 }

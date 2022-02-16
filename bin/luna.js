@@ -20,6 +20,7 @@ const startWith = require('licia/startWith')
 const defaults = require('licia/defaults')
 const onExit = require('signal-exit')
 const fs = require('licia/fs')
+const isEmpty = require('licia/isEmpty')
 
 const format = wrap(async function (component) {
   await runScript('lsla', [
@@ -83,15 +84,7 @@ const update = async function () {
   for (let i = 0, len = dirs.length; i < len; i++) {
     const dir = dirs[i]
     if (await fs.exists(resolve(`../src/${dir}/package.json`))) {
-      const pkg = require(resolve(`../src/${dir}/package.json`))
-      output[dir] = defaults(pkg.luna || {}, {
-        version: pkg.version,
-        style: true,
-        icon: false,
-        test: true,
-        install: false,
-        dependencies: [],
-      })
+      output[dir] = readComponentConfig(dir)
     }
   }
 
@@ -122,11 +115,20 @@ const build = wrap(async function (component) {
   }
   delete pkg.scripts
   delete pkg.bin
-  delete pkg.luna
   pkg.main = `cjs/${component}/index.js`
   const componentPkg = require(`../src/${component}/package.json`)
   extendDeep(pkg, componentPkg)
   delete pkg.devDependencies
+  delete pkg.luna
+  const config = readComponentConfig(component)
+  if (!isEmpty(config)) {
+    const peerDependencies = {}
+    each(config.dependencies, (dependency) => {
+      const config = readComponentConfig(dependency)
+      peerDependencies[dependency] = `^${config.version}`
+    })
+    pkg.peerDependencies = peerDependencies
+  }
 
   await fs.writeFile(
     resolve(`../dist/${component}/package.json`),
@@ -260,6 +262,21 @@ async function rmKarmaConf(component) {
   onExit(async () => {
     await fs.unlink(resolve(`../src/${component}/karma.conf.js`))
   })
+}
+
+function readComponentConfig(component) {
+  const pkg = require(resolve(`../src/${component}/package.json`))
+
+  const config = defaults(pkg.luna || {}, {
+    version: pkg.version,
+    style: true,
+    icon: false,
+    test: true,
+    install: false,
+    dependencies: [],
+  })
+
+  return config
 }
 
 yargs

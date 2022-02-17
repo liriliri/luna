@@ -17,6 +17,7 @@ import filter from 'licia/filter'
 import chunk from 'licia/chunk'
 import toStr from 'licia/toStr'
 import noop from 'licia/noop'
+import extend from 'licia/extend'
 import naturalSort from 'licia/naturalSort'
 import Visitor from './Visitor'
 import { encode, getFnAbstract } from './util'
@@ -309,10 +310,11 @@ export default class ObjectViewer extends Component {
 
     this.emit('change')
   }
-  static Static = Static
 }
 
-module.exports = ObjectViewer
+export { Static }
+
+module.exports = extend(ObjectViewer, exports)
 module.exports.default = ObjectViewer
 
 function getObjAbstract(data: any, type: string) {

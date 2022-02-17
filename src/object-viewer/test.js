@@ -1,4 +1,4 @@
-import ObjectViewer from './index'
+import ObjectViewer, { Static } from './index'
 import './style.scss'
 import './icon.css'
 import defineProp from 'licia/defineProp'
@@ -49,7 +49,7 @@ test('object-viewer', (container) => {
   })
 
   it('static', function () {
-    const objectViewer = new ObjectViewer.Static(container)
+    const objectViewer = new Static(container)
     objectViewer.set(
       stringifyAll(data, {
         unenumerable: false,

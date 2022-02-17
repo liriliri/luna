@@ -1,4 +1,6 @@
+import extend from 'licia/extend'
 import Component from '../share/Component'
+import DataGridNode from './DataGridNode'
 
 export default class DataGrid extends Component {
   constructor(container: HTMLElement) {
@@ -6,5 +8,7 @@ export default class DataGrid extends Component {
   }
 }
 
-module.exports = DataGrid
+export { DataGridNode }
+
+module.exports = extend(DataGrid, exports)
 module.exports.default = DataGrid

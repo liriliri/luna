@@ -241,9 +241,7 @@ async function createWebpackConfig(component) {
 }
 
 function rmWebpackConfig(component) {
-  onExit(async () => {
-    await fs.unlink(resolve(`../src/${component}/webpack.config.js`))
-  })
+  onExit(() => unlinkSync(`../src/${component}/webpack.config.js`))
 }
 
 const karmaConfTpl = `${readConfigTpl}
@@ -259,9 +257,11 @@ async function createKarmaConf(component) {
 }
 
 async function rmKarmaConf(component) {
-  onExit(async () => {
-    await fs.unlink(resolve(`../src/${component}/karma.conf.js`))
-  })
+  onExit(() => unlinkSync(`../src/${component}/karma.conf.js`))
+}
+
+function unlinkSync(p) {
+  require('fs').unlinkSync(resolve(p))
 }
 
 function readComponentConfig(component) {

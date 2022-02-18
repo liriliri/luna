@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use strict'
 
 //==============================================================================
@@ -4204,7 +4205,7 @@ function piTriggerDownload(name, blob) {
   document.body.removeChild(aElement)
 }
 
-module.exports = {
+export {
   piCreateAudioContext,
   piIsMobile,
   piCreateGlContext,

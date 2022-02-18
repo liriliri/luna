@@ -6,10 +6,9 @@ import perfNow from 'licia/perfNow'
 import fullscreen from 'licia/fullscreen'
 import raf from 'licia/raf'
 import { drag, eventClient } from '../share/util'
+import { piCreateAudioContext, piCreateFPSCounter } from './piLibs'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Effect = require('./Effect')
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { piCreateAudioContext, piCreateFPSCounter } = require('./piLibs')
+const Effect = require('./Effect').default
 
 const $document = $(document as any)
 

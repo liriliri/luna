@@ -1,6 +1,5 @@
-const { piIsMobile, piCreateGlContext, piRenderer } = require('./piLibs')
-
-;('use strict')
+// @ts-nocheck
+import { piIsMobile, piCreateGlContext, piRenderer } from './piLibs'
 
 function bufferID_to_assetID(id) {
   if (id === 0) return '4dXGR8'
@@ -4855,4 +4854,4 @@ Effect.prototype.calcFlags = function () {
   }
 }
 
-module.exports = Effect
+export default Effect

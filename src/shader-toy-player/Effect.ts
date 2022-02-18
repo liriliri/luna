@@ -1,3 +1,4 @@
+/* eslint-disable */
 // @ts-nocheck
 import { piIsMobile, piCreateGlContext, piRenderer } from './piLibs'
 

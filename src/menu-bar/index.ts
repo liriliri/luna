@@ -1,5 +1,4 @@
 import Component from '../share/Component'
-// @ts-ignore
 import LunaMenu from 'luna-menu'
 import h from 'licia/h'
 import each from 'licia/each'
@@ -66,7 +65,7 @@ export default class MenuBar extends Component {
       const offset = $item.offset()
       const idx = toNum($item.data('idx'))
       const menuItem = menuItems[idx]
-      menuItem.submenu.show(offset.left, offset.top + offset.height)
+      menuItem.submenu?.show(offset.left, offset.top + offset.height)
     })
   }
 }

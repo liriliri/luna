@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "strict": true,
     "strictNullChecks": true,
     "module": "commonjs",
@@ -10,6 +11,31 @@
     "lib": ["dom", "es2019"],
     "sourceMap": true,
     "esModuleInterop": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "paths": {
+      "luna-menu": ["src/menu/index"],
+      "luna-carousel": ["src/carousel/index"],
+      "luna-chart": ["src/chart/index"],
+      "luna-color-picker": ["src/color-picker/index"],
+      "luna-command-palette": ["src/command-palette/index"],
+      "luna-console": ["src/console/index"],
+      "luna-cropper": ["src/cropper/index"],
+      "luna-danmaku": ["src/danmaku/index"],
+      "luna-data-grid": ["src/data-grid/index"],
+      "luna-dom-highlighter": ["src/dom-highlighter/index"],
+      "luna-dom-viewer": ["src/dom-viewer/index"],
+      "luna-editor": ["src/editor/index"],
+      "luna-gallery": ["src/gallery/index"],
+      "luna-json-editor": ["src/json-editor/index"],
+      "luna-menu-bar": ["src/menu-bar/index"],
+      "luna-modal": ["src/modal/index"],
+      "luna-music-player": ["src/music-player/index"],
+      "luna-notification": ["src/notification/index"],
+      "luna-object-viewer": ["src/object-viewer/index"],
+      "luna-performance-monitor": ["src/performance-monitor/index"],
+      "luna-shader-toy-player": ["src/shader-toy-player/index"],
+      "luna-video-player": ["src/video-player/index"],
+      "luna-window": ["src/window/index"]
+    }
   }
 }

@@ -1,6 +1,5 @@
 import stripIndent from 'licia/stripIndent'
 import Component from '../share/Component'
-// @ts-ignore
 import LunaCarousel from 'luna-carousel'
 import h from 'licia/h'
 import $ from 'licia/$'

@@ -1,6 +1,7 @@
 import getAbstract from './getAbstract'
-// @ts-ignore
-import LunaObjectViewer from 'luna-object-viewer'
+import LunaObjectViewer, {
+  Static as LunaStaticObjectViewer,
+} from 'luna-object-viewer'
 import types from 'licia/types'
 import isObj from 'licia/isObj'
 import isStr from 'licia/isStr'
@@ -274,7 +275,7 @@ export default class Log extends Emitter {
           if ($json.hasClass(c('hidden'))) {
             if ($json.data('init') !== 'true') {
               if (src) {
-                const staticViewer = new LunaObjectViewer.Static($json.get(0))
+                const staticViewer = new LunaStaticObjectViewer($json.get(0))
                 staticViewer.set(src)
                 staticViewer.on('change', () => this.updateSize(false))
               } else {

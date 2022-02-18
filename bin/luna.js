@@ -11,11 +11,9 @@ const cloneDeep = require('licia/cloneDeep')
 const extend = require('licia/extend')
 const each = require('licia/each')
 const filter = require('licia/filter')
-const map = require('licia/map')
 const promisify = require('licia/promisify')
 const endWith = require('licia/endWith')
 const rmdir = promisify(require('licia/rmdir'))
-const concat = require('licia/concat')
 const startWith = require('licia/startWith')
 const defaults = require('licia/defaults')
 const onExit = require('signal-exit')
@@ -32,7 +30,6 @@ const format = wrap(async function (component) {
 
 const dev = wrap(async function (component) {
   await createWebpackConfig(component)
-  rmWebpackConfig(component)
 
   await runScript('webpack', [
     '--config',
@@ -44,9 +41,7 @@ const dev = wrap(async function (component) {
 
 const test = wrap(async function (component, argv) {
   await createWebpackConfig(component)
-  rmWebpackConfig(component)
   await createKarmaConf(component)
-  rmKarmaConf(component)
 
   const args = ['start', `./src/${component}/karma.conf.js`]
   if (argv.headless !== false) {
@@ -80,17 +75,22 @@ const genIcon = wrap(async function (component) {
 
 const update = async function () {
   const dirs = await fs.readdir(resolve('../src'))
-  const output = {}
+  const index = {}
+  const tsConfig = JSON.parse(await fs.readFile(resolve('../tsconfig.json')))
   for (let i = 0, len = dirs.length; i < len; i++) {
     const dir = dirs[i]
     if (await fs.exists(resolve(`../src/${dir}/package.json`))) {
-      output[dir] = readComponentConfig(dir)
+      index[dir] = readComponentConfig(dir)
+      tsConfig.compilerOptions.paths[`luna-${dir}`] = [`src/${dir}/index`]
     }
   }
 
-  const OUTPUT_PATH = resolve('../index.json')
-  await fs.writeFile(OUTPUT_PATH, JSON.stringify(output, null, 2), 'utf8')
-  console.log('Index file generated: ' + OUTPUT_PATH)
+  const INDEX_OUTPUT_PATH = resolve('../index.json')
+  await fs.writeFile(INDEX_OUTPUT_PATH, stringify(index), 'utf8')
+  console.log('Index file generated: ' + INDEX_OUTPUT_PATH)
+
+  await fs.writeFile(resolve('../tsconfig.json'), stringify(tsConfig), 'utf8')
+  console.log('Tsconfig file updated')
 }
 
 const build = wrap(async function (component) {
@@ -101,7 +101,6 @@ const build = wrap(async function (component) {
   }
 
   await createWebpackConfig(component)
-  rmWebpackConfig(component)
 
   await runScript('webpack', [
     '--config',
@@ -125,39 +124,28 @@ const build = wrap(async function (component) {
     const peerDependencies = {}
     each(config.dependencies, (dependency) => {
       const config = readComponentConfig(dependency)
-      peerDependencies[dependency] = `^${config.version}`
+      peerDependencies[`luna-${dependency}`] = `^${config.version}`
     })
     pkg.peerDependencies = peerDependencies
   }
 
   await fs.writeFile(
     resolve(`../dist/${component}/package.json`),
-    JSON.stringify(pkg, null, 2),
+    stringify(pkg),
     'utf8'
   )
 
   const files = await fs.readdir(resolve(`../src/${component}`))
-  const tsFiles = map(
-    filter(files, (file) => endWith(file, '.ts')),
-    (file) => `./src/${component}/${file}`
-  )
+  const tsFiles = filter(files, (file) => endWith(file, '.ts'))
 
-  await runScript(
-    'tsc',
-    concat(
-      [
-        '--target',
-        'es2020',
-        '--esModuleInterop',
-        '-d',
-        '--module',
-        'commonjs',
-        '--outDir',
-        `dist/${component}/cjs/`,
-      ],
-      tsFiles
-    )
-  )
+  await createTsConfig(component, tsFiles)
+
+  await runScript('tsc', ['--project', `src/${component}/tsconfig.json`])
+  const dependencies = config.dependencies
+  for (let i = 0, len = dependencies.length; i < len; i++) {
+    const dependency = dependencies[i]
+    await rmdir(resolve(`../dist/${component}/cjs/${dependency}`))
+  }
 
   shell.cp(
     resolve(`../src/${component}/README.md`),
@@ -233,15 +221,9 @@ module.exports = require('../share/webpack.config')(config.name, {
 `
 
 async function createWebpackConfig(component) {
-  await fs.writeFile(
-    resolve(`../src/${component}/webpack.config.js`),
-    webpackConfigTpl,
-    'utf8'
-  )
-}
-
-function rmWebpackConfig(component) {
-  onExit(() => unlinkSync(`../src/${component}/webpack.config.js`))
+  const output = resolve(`../src/${component}/webpack.config.js`)
+  await fs.writeFile(output, webpackConfigTpl, 'utf8')
+  unlinkOnExit(output)
 }
 
 const karmaConfTpl = `${readConfigTpl}
@@ -249,19 +231,32 @@ module.exports = require('../share/karma.conf')(config.name)
 `
 
 async function createKarmaConf(component) {
-  await fs.writeFile(
-    resolve(`../src/${component}/karma.conf.js`),
-    karmaConfTpl,
-    'utf8'
-  )
+  const output = resolve(`../src/${component}/karma.conf.js`)
+  await fs.writeFile(output, karmaConfTpl, 'utf8')
+  unlinkOnExit(output)
 }
 
-async function rmKarmaConf(component) {
-  onExit(() => unlinkSync(`../src/${component}/karma.conf.js`))
+async function createTsConfig(component, files) {
+  const tsConfig = {
+    extends: '../../tsconfig.json',
+    compilerOptions: {
+      target: 'es2020',
+      declaration: true,
+      outDir: `../../dist/${component}/cjs/`,
+    },
+    files,
+  }
+  const output = resolve(`../src/${component}/tsconfig.json`)
+  await fs.writeFile(output, stringify(tsConfig), 'utf8')
+  unlinkOnExit(output)
 }
 
-function unlinkSync(p) {
-  require('fs').unlinkSync(resolve(p))
+function unlinkOnExit(p) {
+  onExit(() => require('fs').unlinkSync(p))
+}
+
+function stringify(obj) {
+  return JSON.stringify(obj, null, 2)
 }
 
 function readComponentConfig(component) {

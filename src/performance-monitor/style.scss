@@ -5,6 +5,10 @@
   background: $background-color;
   width: 100%;
   padding: 5px;
+  &.theme-dark {
+    box-shadow: $box-shadow-dark;
+    background: $background-color-dark;
+  }
 }
 
 .title {
@@ -22,4 +26,13 @@
   border: 1px solid $border-color;
   width: 100%;
   height: 100px;
+}
+
+.theme-dark {
+  .title {
+    color: $foreground-color-dark;
+  }
+  .chart {
+    border-color: $border-color-dark;
+  }
 }

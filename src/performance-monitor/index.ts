@@ -1,4 +1,4 @@
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import stripIndent from 'licia/stripIndent'
 import types from 'licia/types'
 import $ from 'licia/$'
@@ -11,7 +11,7 @@ import now from 'licia/now'
 import dateFormat from 'licia/dateFormat'
 import Color from 'licia/Color'
 
-interface IOptions {
+interface IOptions extends IComponentOptions {
   title: string
   data: types.Fn<number>
   smooth?: boolean
@@ -28,7 +28,6 @@ interface IMetric {
 const POLL_INTERVAL_MS = 500
 const LABEL_DISTANCE_SECONDS = 10
 const PIXELS_PER_MS = 10 / 1000
-const GRID_COLOR = 'rgb(0 0 0 / 8%)'
 
 // https://github.com/ChromeDevTools/devtools-frontend/blob/main/front_end/panels/performance_monitor/PerformanceMonitor.ts
 export default class PerformanceMonitor extends Component<IOptions> {
@@ -43,27 +42,17 @@ export default class PerformanceMonitor extends Component<IOptions> {
   private metricBuffer: IMetric[] = []
   private resizeSensor: ResizeSensor
   private $value: $.$
-  constructor(
-    container: HTMLElement,
-    {
-      title,
-      data,
-      smooth = true,
-      unit = '',
-      color = '#1a73e8',
-      max = 0,
-    }: IOptions
-  ) {
-    super(container, { compName: 'performance-monitor' })
+  constructor(container: HTMLElement, options: IOptions) {
+    super(container, { compName: 'performance-monitor' }, options)
 
-    this.options = {
-      title,
-      data,
-      unit,
-      smooth,
-      color,
-      max,
-    }
+    this.initOptions(options, {
+      smooth: true,
+      unit: '',
+      color: '#1a73e8',
+      max: 0,
+    })
+
+    const { color } = this.options
 
     this.fillColor = getLightColor(color, 0.2)
 
@@ -101,6 +90,11 @@ export default class PerformanceMonitor extends Component<IOptions> {
   stop() {
     clearInterval(this.pollTimer)
     raf.cancel.call(window, this.animationId)
+  }
+  private get gridColor() {
+    return this.options.theme === 'dark'
+      ? 'rgb(255 255 255 / 8%)'
+      : 'rgb(0 0 0 / 8%)'
   }
   private bindEvent() {
     this.resizeSensor.addListener(throttle(() => this.onResize(), 16))
@@ -230,10 +224,13 @@ export default class PerformanceMonitor extends Component<IOptions> {
   }
   private drawHorizontalGrid() {
     const { ctx } = this
+    const { theme } = this.options
 
-    const lightGray = 'rgb(0 0 0 / 2%)'
+    const lightGray =
+      theme === 'dark' ? 'rgb(255 255 255 / 2%)' : 'rgb(0 0 0 / 2%)'
     ctx.font = '10px Arial, Helvetica, sans-serif'
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
+    ctx.fillStyle =
+      theme === 'dark' ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'
     const currentTime = now() / 1000
     let sec = Math.ceil(currentTime)
     while (--sec) {
@@ -249,13 +246,14 @@ export default class PerformanceMonitor extends Component<IOptions> {
       if (sec >= 0 && sec % LABEL_DISTANCE_SECONDS === 0) {
         ctx.fillText(dateFormat(new Date(sec * 1000), 'HH:MM:ss'), x + 4, 12)
       }
-      ctx.strokeStyle = sec % LABEL_DISTANCE_SECONDS ? lightGray : GRID_COLOR
+      ctx.strokeStyle =
+        sec % LABEL_DISTANCE_SECONDS ? lightGray : this.gridColor
       ctx.stroke()
     }
   }
   private drawVerticalGrid(max: number) {
     const { ctx, height } = this
-    const { unit } = this.options
+    const { unit, theme } = this.options
     let base = Math.pow(10, Math.floor(Math.log10(max)))
     const firstDigit = Math.floor(max / base)
     if (firstDigit !== 1 && firstDigit % 2 === 1) {
@@ -265,8 +263,9 @@ export default class PerformanceMonitor extends Component<IOptions> {
 
     const topPadding = 18
     const visibleHeight = height - topPadding
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
-    ctx.strokeStyle = GRID_COLOR
+    ctx.fillStyle =
+      theme === 'dark' ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'
+    ctx.strokeStyle = this.gridColor
     ctx.beginPath()
     for (let i = 0; i < 2; ++i) {
       const y = calcY(scaleValue)
@@ -282,7 +281,8 @@ export default class PerformanceMonitor extends Component<IOptions> {
     ctx.beginPath()
     ctx.moveTo(0, height + 0.5)
     ctx.lineTo(this.width, height + 0.5)
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)'
+    ctx.strokeStyle =
+      theme === 'dark' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
     ctx.stroke()
     function calcY(value: number) {
       return Math.round(height - (visibleHeight * value) / max) + 0.5

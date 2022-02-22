@@ -11,6 +11,7 @@ import each from 'licia/each'
 import addons from '@storybook/addons'
 import now from 'licia/now'
 import * as registerKnobs from '@storybook/addon-knobs/dist/registerKnobs'
+import { optionsKnob } from '@storybook/addon-knobs'
 
 export default function story(
   name,
@@ -50,9 +51,27 @@ export default function story(
       }
 
       waitUntil(() => container.parentElement).then(() => {
+        const theme = optionsKnob(
+          'Theme',
+          {
+            Light: 'light',
+            Dark: 'dark',
+          },
+          'light',
+          {
+            display: 'select',
+          }
+        )
+
         window.components = toArr(storyFn(container))
         window.component = window.components[0]
         window.componentName = upperFirst(camelCase(name))
+
+        document.documentElement.style.background =
+          theme === 'dark' ? '#000' : '#fff'
+        each(window.components, (component) =>
+          component.setOption('theme', theme)
+        )
       })
 
       return container

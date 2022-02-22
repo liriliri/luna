@@ -71,7 +71,7 @@ export default class Component<Options = any> extends Emitter {
       this.emit('optionChange', name, val, oldVal)
     })
   }
-  protected initOptions(options: Options, defs: any) {
+  protected initOptions(options: Options, defs: any = {}) {
     defaults(options, defs)
     extend(this.options, options)
   }

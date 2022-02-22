@@ -12,6 +12,10 @@
   * {
     box-sizing: border-box;
   }
+  &.theme-dark {
+    box-shadow: $box-shadow-dark;
+    background-color: $background-color-dark;
+  }
 }
 
 .body-left {
@@ -62,6 +66,7 @@
 .info {
   height: 22px;
   margin: 0 0 35px 5px;
+  color: $foreground-color;
 }
 
 .controller {
@@ -194,6 +199,7 @@
   border-top: 1px solid $border-color;
   margin: 0;
   transition: background 0.3s;
+  color: $foreground-color;
   &:first-child {
     border-top: none;
   }
@@ -212,4 +218,17 @@
 
 .list-artist {
   float: right;
+}
+
+.theme-dark {
+  .body-right {
+    border-bottom-color: $border-color-dark;
+  }
+  .info {
+    color: $foreground-color-dark;
+  }
+  .list-item {
+    border-top-color: $border-color-dark;
+    color: $foreground-color-dark;
+  }
 }

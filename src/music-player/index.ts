@@ -15,7 +15,7 @@ import random from 'licia/random'
 import clamp from 'licia/clamp'
 import isArr from 'licia/isArr'
 import toArr from 'licia/toArr'
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 
 const $document = $(document as any)
 
@@ -53,11 +53,11 @@ const audioEvents = [
   'waiting',
 ]
 
-interface IOptions {
+interface IOptions extends IComponentOptions {
   audio?: IAudio | IAudio[]
 }
 
-export default class MusicPlayer extends Component {
+export default class MusicPlayer extends Component<IOptions> {
   private $body: $.$
   private $title: $.$
   private $artist: $.$
@@ -80,9 +80,12 @@ export default class MusicPlayer extends Component {
   private loop = 'all'
   private shuffle = false
   private audioTimeUpdate = true
-  constructor(container: Element, { audio }: IOptions = {}) {
-    super(container, { compName: 'music-player' })
+  constructor(container: Element, options: IOptions = {}) {
+    super(container, { compName: 'music-player' }, options)
 
+    this.initOptions(options)
+
+    let { audio } = this.options
     if (audio) {
       if (!isArr(audio)) {
         audio = toArr(audio)

@@ -2,35 +2,34 @@ import $ from 'licia/$'
 import uniqId from 'licia/uniqId'
 import find from 'licia/find'
 import h from 'licia/h'
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 
 interface IPosition {
   x: string
   y: string
 }
 
-class Notification extends Component {
+interface IOptions extends IComponentOptions {
+  position?: IPosition
+  duration?: number
+}
+
+class Notification extends Component<IOptions> {
   private notifications: NotificationItem[] = []
-  private duration: number
-  position: IPosition
-  constructor(
-    container: Element,
-    {
-      position = {
+  constructor(container: HTMLElement, options: IOptions = {}) {
+    super(container, { compName: 'notification' })
+
+    this.initOptions(options, {
+      position: {
         x: 'right',
         y: 'bottom',
       },
-      duration = 2000,
-    } = {}
-  ) {
-    super(container, { compName: 'notification' })
-
-    this.position = position
-    this.duration = duration
+      duration: 2000,
+    })
 
     this.initTpl()
   }
-  notify(content: string, { duration = this.duration } = {}) {
+  notify(content: string, { duration = this.options.duration } = {}) {
     const notification = new NotificationItem(this, content)
     this.notifications.push(notification)
     this.add(notification)
@@ -62,7 +61,7 @@ class Notification extends Component {
   }
   private initTpl() {
     const { $container } = this
-    const { x, y } = this.position
+    const { x, y } = this.options.position
 
     let justifyContent = 'flex-end'
     let alignItems = 'flex-end'
@@ -98,7 +97,9 @@ class NotificationItem {
     this.$container.attr({
       id: this.id,
       class: notification.c(
-        `item ${notification.position.y === 'bottom' ? 'lower' : 'upper'}`
+        `item ${
+          notification.getOption('position').y === 'bottom' ? 'lower' : 'upper'
+        }`
       ),
     })
 

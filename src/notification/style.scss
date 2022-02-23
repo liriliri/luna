@@ -19,6 +19,7 @@
   display: flex;
   box-shadow: $box-shadow;
   padding: 10px 16px;
+  color: $foreground-color;
   background: $background-color;
 }
 
@@ -28,4 +29,12 @@
 
 .upper {
   margin-bottom: 16px;
+}
+
+.theme-dark {
+  .item {
+    box-shadow: $box-shadow-dark;
+    color: $foreground-color-dark;
+    background: $background-color-dark;
+  }
 }

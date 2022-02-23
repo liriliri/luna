@@ -1,11 +1,9 @@
-const Notification = require('./index')
-require('./style.scss')
+import Notification from './index'
+import './style.scss'
+import test from '../share/test'
 
-describe('notification', function () {
-  it('basic', function () {
-    const container = document.createElement('div')
-    document.body.appendChild(container)
-
+test('notification', (container) => {
+  it('basic', () => {
     const notification = new Notification(container, {
       position: {
         x: 'right',

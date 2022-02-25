@@ -103,6 +103,14 @@
     "install": false,
     "dependencies": []
   },
+  "markdown-viewer": {
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
+  },
   "menu": {
     "icon": true,
     "version": "0.1.0",
@@ -152,7 +160,7 @@
     "dependencies": []
   },
   "performance-monitor": {
-    "version": "0.1.1",
+    "version": "0.2.0",
     "style": true,
     "icon": false,
     "test": true,

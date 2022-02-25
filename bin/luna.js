@@ -109,14 +109,14 @@ const build = wrap(async function (component) {
   ])
 
   const pkg = cloneDeep(require('../package.json'))
-  if (!startWith(pkg.name, 'luna-')) {
-    pkg.name = `luna-${pkg.name}`
-  }
   delete pkg.scripts
   delete pkg.bin
   pkg.main = `cjs/${component}/index.js`
   const componentPkg = require(`../src/${component}/package.json`)
   extendDeep(pkg, componentPkg)
+  if (!startWith(pkg.name, 'luna-')) {
+    pkg.name = `luna-${pkg.name}`
+  }
   delete pkg.devDependencies
   delete pkg.luna
   const config = readComponentConfig(component)

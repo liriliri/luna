@@ -1,5 +1,14 @@
 {
   "name": "markdown-viewer",
   "version": "0.1.0",
-  "description": "Live markdown renderer"
+  "description": "Live markdown renderer",
+  "dependencies": {
+    "markdown-it": "^12.3.2"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^12.2.3"
+  },
+  "luna": {
+    "install": true
+  }
 }

@@ -11,6 +11,7 @@
     "test": "npm run build && luna test",
     "lint": "eslint src/share/*.{ts,js} *.js bin/*.js && luna lint",
     "build": "luna build",
+    "update": "luna udpate",
     "format": "lsla prettier \"src/share/*.{ts,js,scss}\" \"*.{json,js}\" \"bin/*.js\" \".storybook/*.js\" --write && luna format",
     "storybook": "start-storybook -p 8080",
     "build-storybook": "build-storybook -o .storybook/out"

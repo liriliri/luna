@@ -2,8 +2,8 @@ import toArr from 'licia/toArr'
 import each from 'licia/each'
 
 export default function (name, testFn) {
-  const isHeadless = __karma__.config.headless
   /* eslint-disable no-undef */
+  const isHeadless = __karma__.config.headless
   if (!isHeadless && window.location.pathname === '/context.html') {
     window.open('/debug.html', 'debugTab')
   }

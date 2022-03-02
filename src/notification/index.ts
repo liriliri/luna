@@ -14,10 +14,10 @@ interface IOptions extends IComponentOptions {
   duration?: number
 }
 
-class Notification extends Component<IOptions> {
+export default class Notification extends Component<IOptions> {
   private notifications: NotificationItem[] = []
   constructor(container: HTMLElement, options: IOptions = {}) {
-    super(container, { compName: 'notification' })
+    super(container, { compName: 'notification' }, options)
 
     this.initOptions(options, {
       position: {
@@ -114,8 +114,6 @@ class NotificationItem {
     )
   }
 }
-
-export default Notification
 
 module.exports = Notification
 module.exports.default = Notification

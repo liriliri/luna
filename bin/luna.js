@@ -227,7 +227,11 @@ async function createWebpackConfig(component) {
 }
 
 const karmaConfTpl = `${readConfigTpl}
-module.exports = require('../share/karma.conf')(config.name)
+module.exports = require('../share/karma.conf')(config.name, {
+  hasStyle: config.style,
+  useIcon: config.icon,
+  dependencies: config.dependencies,
+})
 `
 
 async function createKarmaConf(component) {

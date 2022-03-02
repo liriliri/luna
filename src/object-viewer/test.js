@@ -1,6 +1,4 @@
 import ObjectViewer, { Static } from './index'
-import './style.scss'
-import './icon.css'
 import defineProp from 'licia/defineProp'
 import stringifyAll from 'licia/stringifyAll'
 import test from '../share/test'

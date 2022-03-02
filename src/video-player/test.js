@@ -1,6 +1,4 @@
 import VideoPlayer from './index'
-import './style.scss'
-import './icon.css'
 import test from '../share/test'
 
 test('video-player', (container) => {

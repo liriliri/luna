@@ -1,6 +1,4 @@
 import Menu from './index'
-import './style.scss'
-import './icon.css'
 import test from '../share/test'
 
 test('menu', function () {

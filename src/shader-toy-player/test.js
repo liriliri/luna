@@ -1,6 +1,4 @@
 import ShaderToyPlayer from './index'
-import './style.scss'
-import './icon.css'
 import test from '../share/test'
 
 const code = `void mainImage( out vec4 fragColor, in vec2 fragCoord )

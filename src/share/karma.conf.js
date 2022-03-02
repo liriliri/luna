@@ -1,10 +1,14 @@
 const path = require('path')
 const each = require('licia/each')
 const contain = require('licia/contain')
+const endWith = require('licia/endWith')
 
 const headless = contain(process.argv, '--headless')
 
-module.exports = function (name) {
+module.exports = function (
+  name,
+  { useIcon = false, hasStyle = true, dependencies = [] } = {}
+) {
   const webpackCfg = require(`../${name}/webpack.config.js`)(
     {},
     { mode: 'development' }
@@ -25,12 +29,35 @@ module.exports = function (name) {
     },
   })
 
+  const preprocessors = {
+    'test.js': ['webpack', 'sourcemap'],
+  }
+
   const files = ['test.js']
 
-  each(webpackCfg.externals, (external, key) => {
-    const name = key.replace('luna-', '')
-    files.unshift(`../../dist/${name}/${key}.css`)
-    files.unshift(`../../dist/${name}/${key}.js`)
+  each(dependencies, (dependency) => {
+    files.unshift(`../../dist/${dependency}/luna-${dependency}.css`)
+    files.unshift(`../../dist/${dependency}/luna-${dependency}.js`)
+  })
+
+  const postcssLoader = cssRule.loaders[2]
+  const postcssOptions = postcssLoader.options
+
+  const styles = []
+  if (hasStyle) {
+    styles.push('style.scss')
+  }
+  if (useIcon) {
+    styles.push('icon.css')
+  }
+  each(styles, (style) => {
+    const file = `../${name}/${style}`
+    files.unshift(file)
+    const preprocessor = ['postcss']
+    if (endWith(style, 'scss')) {
+      preprocessor.unshift('scss')
+    }
+    preprocessors[file] = preprocessor
   })
 
   return function (config) {
@@ -49,6 +76,8 @@ module.exports = function (name) {
         'karma-sourcemap-loader',
         'karma-chrome-launcher',
         'karma-coverage-istanbul-reporter',
+        'karma-scss-preprocessor',
+        '@metahub/karma-postcss-preprocessor',
       ],
       coverageIstanbulReporter: {
         reports: ['html', 'lcovonly', 'text', 'text-summary'],
@@ -56,9 +85,10 @@ module.exports = function (name) {
       },
       reporters: ['progress', 'coverage-istanbul'],
       webpack: webpackCfg,
-      preprocessors: {
-        'test.js': ['webpack', 'sourcemap'],
+      postcssPreprocessor: {
+        options: postcssOptions,
       },
+      preprocessors,
       browsers: [headless ? 'ChromeHeadless' : 'Chrome'],
       browserNoActivityTimeout: 100000,
       singleRun: headless,

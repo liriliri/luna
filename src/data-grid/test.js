@@ -1,5 +1,4 @@
 import DataGrid from './index'
-import './style.scss'
 import test from '../share/test'
 
 test('data-grid', (container) => {

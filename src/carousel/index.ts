@@ -1,7 +1,7 @@
 import isStr from 'licia/isStr'
 import toEl from 'licia/toEl'
 import stripIndent from 'licia/stripIndent'
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import $ from 'licia/$'
 import toArr from 'licia/toArr'
 import h from 'licia/h'
@@ -11,10 +11,20 @@ import { executeAfterTransition } from '../share/util'
 import isUndef from 'licia/isUndef'
 import toBool from 'licia/toBool'
 
-interface IOptions {
+/** Carousel options. */
+export interface IOptions extends IComponentOptions {
+  /** Time between automatically cycling. */
   interval?: number
 }
 
+/**
+ * Lightweight carousel.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const carousel = new LunaCarousel(container, { interval: 5000 })
+ * carousel.append('<div style="background:#e73c5e;">ITEM 1</div>')
+ */
 export default class Carousel extends Component<IOptions> {
   private $body: $.$
   private $arrowLeft: $.$
@@ -24,14 +34,14 @@ export default class Carousel extends Component<IOptions> {
   private activeIdx = 0
   private interval: ReturnType<typeof setInterval> | null = null
   private isSliding = false
-  constructor(container: HTMLElement, { interval = 0 }: IOptions = {}) {
-    super(container, { compName: 'carousel' })
+  constructor(container: HTMLElement, options: IOptions = {}) {
+    super(container, { compName: 'carousel' }, options)
 
     this.initTpl()
 
-    this.options = {
-      interval,
-    }
+    this.initOptions(options, {
+      interval: 0,
+    })
 
     this.$body = this.find('.body')
     this.body = this.$body.get(0) as HTMLElement
@@ -43,6 +53,7 @@ export default class Carousel extends Component<IOptions> {
 
     this.cycle()
   }
+  /** Cycle through the carousel items. */
   cycle() {
     if (this.options.interval <= 0) {
       return
@@ -52,19 +63,23 @@ export default class Carousel extends Component<IOptions> {
 
     this.interval = setInterval(this.next, this.options.interval)
   }
+  /** Stop cycling. */
   pause() {
     if (this.interval) {
       clearInterval(this.interval)
       this.interval = null
     }
   }
+  /** Slide to the item at given index. */
   slideTo(idx: number) {
     this.slide(idx > this.activeIdx ? 'next' : 'prev', idx)
   }
+  /** Append item. */
   append(content: string | HTMLElement) {
     const slides = this.getSlides()
     this.insert(slides.length, content)
   }
+  /** Insert item at given position. */
   insert(pos: number, content: string | HTMLElement) {
     const slides = this.getSlides()
     const len = slides.length
@@ -84,9 +99,11 @@ export default class Carousel extends Component<IOptions> {
 
     this.updateIndicators()
   }
+  /** Slide to the next item. */
   next = () => {
     this.slide('next')
   }
+  /** Slide to the previous item. */
   prev = () => {
     this.slide('prev')
   }

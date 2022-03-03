@@ -166,10 +166,10 @@ const doc = wrap(async function (component) {
     '--json',
     `src/${component}/typedoc.json`,
   ])
+  const typedocPath = resolve(`../src/${component}/typedoc.json`)
+  unlinkOnExit(typedocPath)
 
-  const typedoc = JSON.parse(
-    await fs.readFile(resolve(`../src/${component}/typedoc.json`))
-  )
+  const typedoc = JSON.parse(await fs.readFile(typedocPath))
   let componentClass
   let optionsInterface
   const children = typedoc.children
@@ -272,17 +272,13 @@ const doc = wrap(async function (component) {
   }
 
   readme += '\n## Api\n'
-  try {
-    each(componentClass.children, (child) => {
-      if (child.name === 'constructor') {
-        return
-      }
-      readme += `\n### ${formatMethod(child.signatures[0])}\n`
-      readme += `\n${child.signatures[0].comment.shortText}\n`
-    })
-  } catch (e) {
-    console.log(e)
-  }
+  each(componentClass.children, (child) => {
+    if (child.name === 'constructor') {
+      return
+    }
+    readme += `\n### ${formatMethod(child.signatures[0])}\n`
+    readme += `\n${child.signatures[0].comment.shortText}\n`
+  })
 
   await fs.writeFile(resolve(`../src/${component}/README.md`), readme, 'utf8')
 })

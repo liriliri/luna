@@ -36,13 +36,25 @@ carousel.append('<div style="background:#e73c5e;">ITEM 1</div>')
 
 ## Configuration
 
-* interval(number): Time between automatically cycling. 
+* interval(number): Time between automatically cycling.
 
 ## Api
+
+### append(content: string|HTMLElement): void
+
+Append item.
 
 ### cycle(): void
 
 Cycle through the carousel items.
+
+### insert(pos: number,content: string|HTMLElement): void
+
+Insert item at given position.
+
+### next(): void
+
+Slide to the next item.
 
 ### pause(): void
 
@@ -52,18 +64,6 @@ Stop cycling.
 
 Slide to the previous item.
 
-### next(): void
-
-Slide to the next item.
-
 ### slideTo(idx: number): void
 
 Slide to the item at given index.
-
-### append(content: string | HTMLElement): void
-
-Append item.
-
-### insert(pos: number, content: string | HTMLElement): void
-
-Insert item at given position.

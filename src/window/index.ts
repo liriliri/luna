@@ -1,4 +1,4 @@
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import h from 'licia/h'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
@@ -12,19 +12,43 @@ import { drag, eventClient } from '../share/util'
 
 const $document = $(document as any)
 
-interface IOptions {
+/** Window options. */
+export interface IOptions extends IComponentOptions {
+  /** Width of the window. */
   width?: number
+  /** Height of the window. */
   height?: number
+  /** Offset to the left of the viewport. */
   x?: number
+  /** Offset to the top of the viewport. */
   y?: number
+  /** Title of the window. */
   title?: string
+  /** Content to display, url is supported. */
   content?: string | HTMLElement
+  /** Minimum width of the window. */
   minWidth?: number
+  /** Minimum height of the window. */
   minHeight?: number
 }
 
 let index = 0
 const windows: types.PlainObj<Window> = {}
+
+/**
+ * HTML5 window manager.
+ *
+ * @example
+ * const win = new LunaWindow({
+ *   title: 'Window Title',
+ *   x: 50,
+ *   y: 50,
+ *   width: 800,
+ *   height: 600,
+ *   content: 'This is the content.'
+ * })
+ * win.show()
+ */
 export default class Window extends Component<IOptions> {
   private $title: $.$
   private $titleBar: $.$
@@ -40,35 +64,26 @@ export default class Window extends Component<IOptions> {
   private isFocus = false
   private isMaximized = false
   private action = ''
-  constructor({
-    width = 800,
-    height = 600,
-    x = 0,
-    y = 0,
-    title = '',
-    content = '',
-    minWidth = 200,
-    minHeight = 150,
-  }: IOptions) {
-    super(h('div'), { compName: 'window' })
+  constructor(options: IOptions) {
+    super(h('div'), { compName: 'window' }, options)
     this.$container.addClass(this.c('hidden'))
 
-    if (minWidth < 200) {
-      minWidth = 200
-    }
-    if (minHeight < 150) {
-      minHeight = 150
-    }
+    this.initOptions(options, {
+      width: 800,
+      height: 600,
+      x: 0,
+      y: 0,
+      title: '',
+      content: '',
+      minWidth: 200,
+      minHeight: 150,
+    })
 
-    this.options = {
-      width,
-      height,
-      title,
-      x,
-      y,
-      content,
-      minWidth,
-      minHeight,
+    if (this.getOption('minWidth') < 200) {
+      this.setOption('minWidth', 200)
+    }
+    if (this.getOption('minHeight') < 150) {
+      this.setOption('minHeight', 150)
     }
 
     this.initTpl()
@@ -107,14 +122,17 @@ export default class Window extends Component<IOptions> {
       }
     })
   }
+  /** Show the window. */
   show = () => {
     this.$container.rmClass(this.c('hidden'))
     this.focus()
   }
+  /** Minimize the window. */
   minimize = () => {
     this.$container.addClass(this.c('hidden'))
     this.blur()
   }
+  /** Maximize the window. */
   maximize() {
     const { c } = this
 

@@ -42,25 +42,25 @@ win.show()
 
 ## Configuration
 
+* content(string|HTMLElement): Content to display, url is supported.
+* height(number): Height of the window.
+* minHeight(number): Minimum height of the window.
+* minWidth(number): Minimum width of the window.
+* title(string): Title of the window.
+* width(number): Width of the window.
 * x(number): Offset to the left of the viewport.
 * y(number): Offset to the top of the viewport.
-* width(number): Width of the window.
-* height(number): Height of the window.
-* title(number): Title of the window.
-* content(string | HTMLElement): Content to display, url is supported.
-* minWidth(number): Minimum width of the window.
-* minHeight(number): Minimum height of the window.
 
 ## Api
 
-### show(): void
+### maximize(): void
 
-Show the window.
+Maximize the window.
 
 ### minimize(): void
 
 Minimize the window.
 
-## maximize(): void
+### show(): void
 
-Maximize the window.
+Show the window.

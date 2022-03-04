@@ -1,4 +1,4 @@
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import { HighlightOverlay } from './overlay/tool_highlight'
 import { pxToNum } from '../share/util'
 import ResizeSensor from 'licia/ResizeSensor'
@@ -29,7 +29,7 @@ interface IRgb {
   a?: number
 }
 
-interface IOptions {
+interface IOptions extends IComponentOptions {
   showRulers?: boolean
   showExtensionLines?: boolean
   showInfo?: boolean
@@ -49,37 +49,22 @@ export default class DomHighlighter extends Component<IOptions> {
   private resizeSensor: ResizeSensor
   private redraw: () => void
   private interceptor: (...args: any[]) => any | null
-  constructor(
-    container: HTMLElement,
-    {
-      showRulers = false,
-      showExtensionLines = false,
-      showInfo = true,
-      showStyles = true,
-      showAccessibilityInfo = true,
-      colorFormat = 'hex',
-      contentColor = 'rgba(111, 168, 220, .66)',
-      paddingColor = 'rgba(147, 196, 125, .55)',
-      borderColor = 'rgba(255, 229, 153, .66)',
-      marginColor = 'rgba(246, 178, 107, .66)',
-      monitorResize = true,
-    }: IOptions = {}
-  ) {
-    super(container, { compName: 'dom-highlighter' })
+  constructor(container: HTMLElement, options: IOptions = {}) {
+    super(container, { compName: 'dom-highlighter' }, options)
 
-    this.options = {
-      showRulers,
-      showExtensionLines,
-      showInfo,
-      showStyles,
-      showAccessibilityInfo,
-      colorFormat,
-      contentColor,
-      paddingColor,
-      borderColor,
-      marginColor,
-      monitorResize,
-    }
+    this.initOptions(options, {
+      showRulers: false,
+      showExtensionLines: false,
+      showInfo: true,
+      showStyles: true,
+      showAccessibilityInfo: true,
+      colorFormat: 'hex',
+      contentColor: 'rgba(111, 168, 220, .66)',
+      paddingColor: 'rgba(147, 196, 125, .55)',
+      borderColor: 'rgba(255, 229, 153, .66)',
+      marginColor: 'rgba(246, 178, 107, .66)',
+      monitorResize: true,
+    })
 
     this.overlay.setContainer(container)
     this.overlay.setPlatform('mac')

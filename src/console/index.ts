@@ -25,7 +25,7 @@ import stripIndent from 'licia/stripIndent'
 import ResizeSensor from 'licia/ResizeSensor'
 import types from 'licia/types'
 import { classPrefix } from '../share/util'
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import raf = require('licia/raf')
 
 const u = navigator.userAgent
@@ -41,7 +41,7 @@ type AsyncItem = [
   IHeader | undefined
 ]
 
-interface IOptions {
+interface IOptions extends IComponentOptions {
   maxNum?: number
   asyncRender?: boolean
   showHeader?: boolean
@@ -79,31 +79,20 @@ export default class Console extends Component<IOptions> {
   private groupStack = new Stack()
   private global: any
   private resizeSensor: ResizeSensor
-  constructor(
-    container: HTMLElement,
-    {
-      maxNum = 0,
-      asyncRender = true,
-      showHeader = false,
-      filter = 'all',
-      accessGetter = false,
-      unenumerable = true,
-      lazyEvaluation = true,
-    }: IOptions = {}
-  ) {
-    super(container, { compName: 'console' })
+  constructor(container: HTMLElement, options: IOptions = {}) {
+    super(container, { compName: 'console' }, options)
 
     this.initTpl()
 
-    this.options = {
-      maxNum,
-      asyncRender,
-      showHeader,
-      filter,
-      accessGetter,
-      unenumerable,
-      lazyEvaluation,
-    }
+    this.initOptions(options, {
+      maxNum: 0,
+      asyncRender: true,
+      showHeader: false,
+      filter: 'all',
+      accessGetter: false,
+      unenumerable: true,
+      lazyEvaluation: true,
+    })
 
     this.$el = this.find('.logs')
     this.el = this.$el.get(0) as HTMLElement

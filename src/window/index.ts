@@ -79,11 +79,11 @@ export default class Window extends Component<IOptions> {
       minHeight: 150,
     })
 
-    if (this.getOption('minWidth') < 200) {
-      this.setOption('minWidth', 200)
+    if (this.options.minWidth < 200) {
+      this.options.minWidth = 200
     }
-    if (this.getOption('minHeight') < 150) {
-      this.setOption('minHeight', 150)
+    if (this.options.minHeight < 150) {
+      this.options.minHeight = 150
     }
 
     this.initTpl()

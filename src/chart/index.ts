@@ -1,4 +1,4 @@
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import BaseChart from './BaseChart'
 import BarChart from './BarChart'
 import LineChart from './LineChart'
@@ -29,7 +29,7 @@ interface IData {
   datasets: any[]
 }
 
-interface IOptions {
+interface Options extends IComponentOptions {
   type?: string
   bgColor?: string
   title?: ITitle
@@ -37,25 +37,28 @@ interface IOptions {
   data: IData
 }
 
-export default class Chart extends Component<
-  DeepRequired<
-    IOptions,
-    | ['title', 'font']
-    | ['title', 'color']
-    | ['title', 'top']
-    | ['title', 'bottom']
-  >
-> {
+type IOptions = DeepRequired<
+  Options,
+  | ['title', 'font']
+  | ['title', 'color']
+  | ['title', 'top']
+  | ['title', 'bottom']
+>
+
+export default class Chart extends Component<IOptions> {
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
   private chart: BaseChart
-  constructor(
-    container: HTMLElement,
-    { type = 'bar', bgColor = '#fff', title, data, padding }: IOptions
-  ) {
-    super(container, { compName: 'chart' })
+  constructor(container: HTMLElement, options: IOptions) {
+    super(container, { compName: 'chart' }, options)
 
-    title = title || { text: '' }
+    this.initOptions(options, {
+      type: 'bar',
+      bgColor: '#fff',
+      title: { text: '' },
+      padding: {},
+    })
+    const title = this.options.title
     defaults(title, {
       font: `bold ${px(18)}px Arial`,
       color: '#666',
@@ -63,22 +66,13 @@ export default class Chart extends Component<
       top: px(10),
       bottom: px(5),
     })
-
-    padding = padding || {}
+    const padding = this.options.padding
     defaults(padding, {
       left: px(50),
       right: px(10),
       top: px(60),
       bottom: px(50),
     })
-
-    this.options = {
-      type,
-      bgColor,
-      title: title as Required<ITitle>,
-      padding: padding as Required<IPadding>,
-      data,
-    }
 
     this.initCanvas()
     this.initChart()

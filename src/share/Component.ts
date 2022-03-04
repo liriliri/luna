@@ -13,7 +13,9 @@ export interface IComponentOptions {
   theme?: string
 }
 
-export default class Component<Options = any> extends Emitter {
+export default class Component<
+  Options extends IComponentOptions = any
+> extends Emitter {
   c: (name: string) => string
   container: HTMLElement
   $container: $.$
@@ -52,7 +54,7 @@ export default class Component<Options = any> extends Emitter {
     this.$container
       .rmClass(`luna-${this.compName}`)
       .rmClass(c(`platform-${getPlatform()}`))
-      .rmClass(c(`theme-${(this.options as any).theme}`))
+      .rmClass(c(`theme-${this.options.theme}`))
     this.$container.html('')
     this.emit('destroy')
     this.removeAllListeners()

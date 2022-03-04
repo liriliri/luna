@@ -1,4 +1,4 @@
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import isEmpty from 'licia/isEmpty'
@@ -18,7 +18,7 @@ interface ICommand {
   handler: types.AnyFn
 }
 
-interface IOptions {
+interface IOptions extends IComponentOptions {
   placeholder?: string
   shortcut?: string
   commands?: ICommand[]
@@ -34,22 +34,15 @@ class CommandPalette extends Component<IOptions> {
   private activeIdx = 0
   private keyword = ''
   private curCommands: ICommand[] = []
-  constructor(
-    container: HTMLElement,
-    {
-      placeholder = 'Type a command',
-      commands = [],
-      shortcut = 'Ctrl+P',
-    }: IOptions = {}
-  ) {
-    super(container, { compName: 'command-palette' })
+  constructor(container: HTMLElement, options: IOptions = {}) {
+    super(container, { compName: 'command-palette' }, options)
     this.hide()
 
-    this.options = {
-      placeholder,
-      commands,
-      shortcut,
-    }
+    this.initOptions(options, {
+      placeholder: 'Type a command',
+      commands: [],
+      shortcut: 'Ctrl+P',
+    })
 
     this.initTpl()
     this.$body = this.find('.body')

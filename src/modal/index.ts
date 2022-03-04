@@ -1,11 +1,11 @@
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import h from 'licia/h'
 import types from 'licia/types'
 import map from 'licia/map'
 
-interface IOptions {
+interface IOptions extends IComponentOptions {
   title?: string
   content?: string | HTMLElement
   footer?: string | HTMLElement
@@ -19,26 +19,17 @@ class Modal extends Component<IOptions> {
   private $content: $.$
   private $close: $.$
   private $footer: $.$
-  constructor(
-    container: HTMLElement,
-    {
-      title = '',
-      content = '',
-      footer = '',
-      showClose = true,
-      width = 500,
-    }: IOptions = {}
-  ) {
-    super(container, { compName: 'modal' })
+  constructor(container: HTMLElement, options: IOptions = {}) {
+    super(container, { compName: 'modal' }, options)
     this.hide()
 
-    this.options = {
-      title,
-      content,
-      footer,
-      showClose,
-      width,
-    }
+    this.initOptions(options, {
+      title: '',
+      content: '',
+      footer: '',
+      showClose: true,
+      width: 500,
+    })
 
     this.initTpl()
     this.$title = this.find('.title')

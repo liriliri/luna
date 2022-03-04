@@ -1,4 +1,4 @@
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import extend from 'licia/extend'
@@ -11,7 +11,7 @@ import { drag, eventClient } from '../share/util'
 
 const $document = $(document as any)
 
-interface IOptions {
+interface IOptions extends IComponentOptions {
   url: string
   preview: HTMLElement | null
 }
@@ -42,7 +42,7 @@ interface ICropBoxData {
   height: number
 }
 
-export default class Cropper extends Component {
+export default class Cropper extends Component<IOptions> {
   private onResize: () => void
   private resizeSensor: ResizeSensor
   private containerData: IContainerData = {
@@ -74,8 +74,10 @@ export default class Cropper extends Component {
   private startX = 0
   private startY = 0
   private $preview: $.$ | null = null
-  constructor(container: HTMLElement, { url, preview }: IOptions) {
-    super(container, { compName: 'cropper' })
+  constructor(container: HTMLElement, options: IOptions) {
+    super(container, { compName: 'cropper' }, options)
+
+    this.initOptions(options)
 
     this.oldCropBoxData = this.cropBoxData
 
@@ -89,11 +91,11 @@ export default class Cropper extends Component {
 
     this.bindEvent()
 
-    if (preview) {
-      this.initPreview(preview)
+    if (options.preview) {
+      this.initPreview(options.preview)
     }
 
-    this.load(url)
+    this.load(options.url)
   }
   destroy() {
     super.destroy()

@@ -1,4 +1,4 @@
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import Toolbar from './Toolbar'
@@ -7,21 +7,22 @@ import isArr from 'licia/isArr'
 import h from 'licia/h'
 import concat from 'licia/concat'
 
-interface IOptions {
+interface IOptions extends IComponentOptions {
   toolbar?: string[] | Toolbar
 }
 
-export default class Editor extends Component {
+export default class Editor extends Component<IOptions> {
   selection: Selection
   toolbar: Toolbar
   private $content: $.$
   private content: HTMLElement
   static Toolbar = Toolbar
-  constructor(
-    container: Element,
-    { toolbar = concat(Toolbar.defaultActions, ['fullscreen']) }: IOptions = {}
-  ) {
+  constructor(container: Element, options: IOptions = {}) {
     super(container, { compName: 'editor' })
+
+    this.initOptions(options, {
+      toolbar: concat(Toolbar.defaultActions, ['fullscreen']),
+    })
 
     const html = this.$container.html()
 
@@ -32,6 +33,7 @@ export default class Editor extends Component {
 
     this.selection = new Selection()
 
+    const toolbar = this.options.toolbar
     if (isArr(toolbar)) {
       const toolbarContainer = h('div')
       this.container.prepend(toolbarContainer)

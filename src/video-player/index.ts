@@ -6,11 +6,11 @@ import toStr from 'licia/toStr'
 import durationFormat from 'licia/durationFormat'
 import fullscreen from 'licia/fullscreen'
 import { eventClient, drag } from '../share/util'
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 
 const $document = $(document as any)
 
-interface IOptions {
+interface IOptions extends IComponentOptions {
   url?: string
 }
 
@@ -40,7 +40,7 @@ const videoEvents = [
   'waiting',
 ]
 
-export default class VideoPlayer extends Component {
+export default class VideoPlayer extends Component<IOptions> {
   private $video: $.$
   private $controller: $.$
   private $curTime: $.$
@@ -56,8 +56,12 @@ export default class VideoPlayer extends Component {
   private video: HTMLVideoElement = document.createElement('video')
   private videoTimeUpdate = true
   private autoHideTimer: any = 0
-  constructor(container: Element, { url = '' }: IOptions = {}) {
+  constructor(container: Element, options: IOptions = {}) {
     super(container, { compName: 'video-player' })
+
+    this.initOptions(options, {
+      url: '',
+    })
 
     this.initTpl()
 
@@ -77,8 +81,8 @@ export default class VideoPlayer extends Component {
 
     this.bindEvent()
 
-    if (url) {
-      this.video.src = url
+    if (options.url) {
+      this.video.src = options.url
     }
   }
   play() {

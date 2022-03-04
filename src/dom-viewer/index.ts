@@ -1,4 +1,4 @@
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import each from 'licia/each'
 import $ from 'licia/$'
 import h from 'licia/h'
@@ -7,7 +7,7 @@ import filter from 'licia/filter'
 import stripIndent from 'licia/stripIndent'
 import toArr from 'licia/toArr'
 
-interface IOptions {
+interface IOptions extends IComponentOptions {
   node?: ChildNode
   parent?: DomViewer | null
   isEndTag?: boolean
@@ -19,23 +19,15 @@ class DomViewer extends Component<IOptions> {
   private $children: $.$
   private isExpanded = false
   private isExpandable = false
-  constructor(
-    container: HTMLElement,
-    {
-      node = document.documentElement,
-      parent = null,
-      isEndTag = false,
-      rootContainer,
-    }: IOptions = {}
-  ) {
-    super(container, { compName: 'dom-viewer' })
+  constructor(container: HTMLElement, options: IOptions = {}) {
+    super(container, { compName: 'dom-viewer' }, options)
 
-    this.options = {
-      node,
-      parent,
-      isEndTag,
-      rootContainer: rootContainer || container,
-    }
+    this.initOptions(options, {
+      node: document.documentElement,
+      parent: null,
+      isEndTag: false,
+      rootContainer: container,
+    })
 
     this.initTpl()
     this.bindEvent()

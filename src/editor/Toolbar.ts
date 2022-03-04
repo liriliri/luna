@@ -1,5 +1,5 @@
 import Editor from './index'
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import each from 'licia/each'
 import h from 'licia/h'
 import $ from 'licia/$'
@@ -167,12 +167,11 @@ const actionClassMap: any = {
   fullscreen: FullscreenAction,
 }
 
-interface IOptions {
+interface IOptions extends IComponentOptions {
   actions?: string[]
 }
 
-export default class Toolbar extends Component {
-  private actionNames: string[]
+export default class Toolbar extends Component<IOptions> {
   private actions: Action[] = []
   static defaultActions = [
     'bold',
@@ -183,17 +182,16 @@ export default class Toolbar extends Component {
     'header',
     'horizontal-rule',
   ]
-  constructor(
-    container: Element,
-    { actions = Toolbar.defaultActions }: IOptions = {}
-  ) {
+  constructor(container: Element, options: IOptions = {}) {
     super(container, { compName: 'editor-toolbar' })
-    this.actionNames = actions
+    this.initOptions(options, {
+      actions: Toolbar.defaultActions,
+    })
 
     this.bindEvent()
   }
   init(editor: Editor) {
-    each(this.actionNames, (actionName) => {
+    each(this.options.actions, (actionName) => {
       const actionClass = actionClassMap[actionName]
       if (actionClass) {
         let action: Action

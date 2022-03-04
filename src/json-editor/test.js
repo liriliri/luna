@@ -1,19 +1,16 @@
-const JsonEditor = require('./index')
-require('./style.scss')
-require('./icon.css')
+import JsonEditor from './index'
+import test from '../share/test'
 
-describe('json-editor', function () {
+test('json-editor', (container) => {
+  const jsonEditor = new JsonEditor(container, {
+    name: 'luna',
+    value: {
+      a: true,
+    },
+    nameEditable: false,
+  })
+
   it('basic', function () {
-    const container = document.createElement('div')
-    document.body.appendChild(container)
-
-    const jsonEditor = new JsonEditor(container, {
-      name: 'luna',
-      value: {
-        a: true,
-      },
-      nameEditable: false,
-    })
     jsonEditor.expand(true)
 
     const $container = $(container)
@@ -21,4 +18,6 @@ describe('json-editor', function () {
       'luna'
     )
   })
+
+  return jsonEditor
 })

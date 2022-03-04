@@ -1,15 +1,13 @@
-const DomViewer = require('./index')
-require('./style.scss')
-require('./icon.css')
+import DomViewer from './index'
+import test from '../share/test'
 
-const container = document.createElement('div')
-document.body.appendChild(container)
+test('dom-viewer', (container) => {
+  const domViewer = new DomViewer(container)
 
-const domViewer = new DomViewer(container)
-
-describe('dom-viewer', function () {
   it('basic', function () {
     domViewer.expand()
     domViewer.collapse()
   })
+
+  return domViewer
 })

@@ -1,10 +1,7 @@
-const MenuBar = require('./index')
-require('./style.scss')
+import MenuBar from './index'
+import test from '../share/test'
 
-const container = document.createElement('div')
-document.body.appendChild(container)
-
-describe('menu', function () {
+test('menu', (container) => {
   it('basic', function () {
     MenuBar.build(container, [
       {

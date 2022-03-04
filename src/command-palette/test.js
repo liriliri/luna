@@ -1,24 +1,22 @@
-const $ = require('licia/$')
-const trim = require('licia/trim')
-const CommandPalette = require('./index')
-require('./style.scss')
+import trim from 'licia/trim'
+import CommandPalette from './index'
+import test from '../share/test'
 
-const container = document.createElement('div')
-document.body.appendChild(container)
+test('command-palette', (container) => {
+  const commandPalette = new CommandPalette(container, {
+    commands: [
+      {
+        title: 'Do Nothing',
+        handler() {},
+      },
+    ],
+  })
+  commandPalette.show()
 
-const commandPalette = new CommandPalette(container, {
-  commands: [
-    {
-      title: 'Do Nothing',
-      handler() {},
-    },
-  ],
-})
-commandPalette.show()
-
-describe('command-palette', function () {
   it('basic', function () {
     const $command = $(container).find(commandPalette.c('.list') + ' li')
     expect(trim($command.text())).to.equal('Do Nothing')
   })
+
+  return commandPalette
 })

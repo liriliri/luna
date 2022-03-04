@@ -1,17 +1,19 @@
-const Window = require('./index')
-require('./style.scss')
+import Window from './index'
+import test from '../share/test'
 
-const win = new Window({
-  title: 'Window Title',
-  x: 50,
-  y: 50,
-  width: 800,
-  height: 600,
-  content: 'This is the content.',
-})
+test('window', () => {
+  const win = new Window({
+    title: 'Window Title',
+    x: 50,
+    y: 50,
+    width: 800,
+    height: 600,
+    content: 'This is the content.',
+  })
 
-describe('window', function () {
   it('basic', function () {
     win.show()
   })
+
+  return win
 })

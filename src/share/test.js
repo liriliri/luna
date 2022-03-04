@@ -1,9 +1,12 @@
 import toArr from 'licia/toArr'
 import each from 'licia/each'
+import contain from 'licia/contain'
+
+/* eslint-disable no-undef */
+const karma = __karma__
 
 export default function (name, testFn) {
-  /* eslint-disable no-undef */
-  const isHeadless = __karma__.config.headless
+  const isHeadless = karma.config.headless
   if (!isHeadless && window.location.pathname === '/context.html') {
     window.open('/debug.html', 'debugTab')
   }
@@ -24,4 +27,18 @@ export default function (name, testFn) {
       })
     }
   })
+}
+
+export function getPublicPath(p) {
+  let isMatch = false
+  each(karma.files, (val, file) => {
+    if (isMatch) {
+      return
+    }
+    if (contain(file, `public/${p}`)) {
+      p = file
+      isMatch = true
+    }
+  })
+  return p
 }

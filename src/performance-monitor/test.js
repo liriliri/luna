@@ -1,16 +1,13 @@
-const PerformanceMonitor = require('./index')
-require('./style.scss')
+import PerformanceMonitor from './index'
+import test from '../share/test'
 
-const container = document.createElement('div')
-document.body.appendChild(container)
+test('performance-monitor', (container) => {
+  const performanceMonitor = new PerformanceMonitor(container, {
+    title: 'Test',
+    data: () => 1,
+  })
+  performanceMonitor.start()
 
-const performanceMonitor = new PerformanceMonitor(container, {
-  title: 'Test',
-  data: () => 1,
-})
-performanceMonitor.start()
-
-describe('performance-monitor', function () {
   it('basic', function (done) {
     const $title = $(container).find(performanceMonitor.c('.title'))
     setTimeout(() => {
@@ -18,4 +15,6 @@ describe('performance-monitor', function () {
       done()
     }, 20)
   })
+
+  return performanceMonitor
 })

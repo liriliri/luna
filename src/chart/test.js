@@ -1,13 +1,14 @@
-const Chart = require('./index')
+import Chart from './index'
+import test from '../share/test'
 
-const canvas = document.createElement('canvas')
-document.body.appendChild(canvas)
-canvas.width = 600
-canvas.width = 300
+test('chart', (container) => {
+  $(container).css({
+    width: 600,
+    height: 300,
+  })
 
-describe('chart', function () {
   it('bar', function () {
-    const chart = new Chart(canvas, {
+    const chart = new Chart(container, {
       type: 'bar',
       bgColor: '#fbfbfb',
       title: {

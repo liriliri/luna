@@ -1,15 +1,14 @@
-const Cropper = require('./index')
-require('./style.scss')
+import Cropper from './index'
+import test, { getPublicPath } from '../share/test'
 
-const container = document.createElement('div')
-document.body.appendChild(container)
+test('cropper', (container) => {
+  const cropper = new Cropper(container, {
+    url: getPublicPath('wallpaper.jpg'),
+  })
 
-const cropper = new Cropper(container, {
-  url: '/wallpaper.jpg',
-})
-
-describe('cropper', function () {
   it('basic', function () {
     expect(cropper.getData()).to.be.a('object')
   })
+
+  return cropper
 })

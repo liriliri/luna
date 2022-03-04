@@ -1,13 +1,16 @@
-const Gallery = require('./index')
-require('./style.scss')
+import Gallery from './index'
+import test, { getPublicPath } from '../share/test'
 
-const container = document.createElement('div')
-document.body.appendChild(container)
+test('gallery', (container) => {
+  const gallery = new Gallery(container)
 
-const gallery = new Gallery(container)
-
-describe('gallery', function () {
   it('basic', function () {
+    gallery.append(getPublicPath('pic1.jpg'), 'pic1.jpg')
+    gallery.append(getPublicPath('pic2.jpg'), 'pic2.jpg')
+    gallery.append(getPublicPath('pic3.jpg'), 'pic3.jpg')
+    gallery.append(getPublicPath('pic4.jpg'), 'pic4.jpg')
     gallery.show()
   })
+
+  return gallery
 })

@@ -33,7 +33,10 @@ module.exports = function (
     'test.js': ['webpack', 'sourcemap'],
   }
 
-  const files = ['test.js']
+  const files = [
+    { pattern: '../../public/*.jpg', included: false, served: true },
+    'test.js',
+  ]
 
   each(dependencies, (dependency) => {
     files.unshift(`../../dist/${dependency}/luna-${dependency}.css`)

@@ -1,20 +1,17 @@
-const $ = require('licia/$')
-const Modal = require('./index')
-require('./style.scss')
+import Modal from './index'
+import test from '../share/test'
 
-const container = document.createElement('div')
-document.body.appendChild(container)
+test('modal', (container) => {
+  const title = 'This is the Title'
+  const modal = new Modal(container, {
+    title,
+    content: 'This is the content.',
+  })
 
-const title = 'This is the Title'
-
-const modal = new Modal(container, {
-  title,
-  content: 'This is the content.',
-})
-
-describe('modal', function () {
   it('basic', function () {
     modal.show()
     expect($(container).html()).to.include(title)
   })
+
+  return modal
 })

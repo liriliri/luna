@@ -1,15 +1,13 @@
-const Editor = require('./index')
-require('./style.scss')
-require('./icon.css')
+import Editor from './index'
+import test from '../share/test'
 
-const container = document.createElement('div')
-document.body.appendChild(container)
-container.innerHTML = 'luna'
+test('editor', (container) => {
+  container.innerHTML = 'luna'
+  const editor = new Editor(container)
 
-const editor = new Editor(container)
-
-describe('editor', function () {
   it('basic', function () {
     expect(editor.html()).to.equal('luna')
   })
+
+  return editor
 })

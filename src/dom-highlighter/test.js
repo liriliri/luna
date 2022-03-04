@@ -1,16 +1,15 @@
-const DomHighlighter = require('./index')
-require('./style.scss')
+import DomHighlighter from './index'
+import test from '../share/test'
 
-const container = document.createElement('div')
-document.body.appendChild(container)
+test('dom-highlighter', (container) => {
+  const domHighlighter = new DomHighlighter(container, {
+    showRulers: true,
+  })
 
-const domHighlighter = new DomHighlighter(container, {
-  showRulers: true,
-})
-
-describe('dom-highlighter', function () {
   it('basic', function () {
     domHighlighter.highlight(document.body)
     domHighlighter.hide()
   })
+
+  return domHighlighter
 })

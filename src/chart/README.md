@@ -21,7 +21,7 @@ npm install luna-chart --save
 ```
 
 ```javascript
-import LunaChart from 'luna-editor'
+import LunaChart from 'luna-chart'
 ```
 
 ## Usage

@@ -45,6 +45,34 @@ type IOptions = DeepRequired<
   | ['title', 'bottom']
 >
 
+/**
+ * HTML5 charts.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const barChart = new LunaChart(container, {
+ *   type: 'bar',
+ *   bgColor: '#fbfbfb',
+ *   title: {
+ *       text: 'Bar Chart',
+ *   },
+ *   data: {
+ *     labels: ['Monday', 'TuesDay', 'Wednesday', 'Thursday', 'Friday'],
+ *     datasets: [
+ *       {
+ *         label: 'Dataset 1',
+ *         bgColor: '#e73c5e',
+ *         data: [128, 146, 56, 84, 222],
+ *       },
+ *       {
+ *         label: '#614d82',
+ *         bgColor: '#614d82',
+ *         data: [119, 23, 98, 67, 88],
+ *       },
+ *     ],
+ *   },
+ * })
+ */
 export default class Chart extends Component<IOptions> {
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D

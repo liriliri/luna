@@ -192,8 +192,11 @@ const doc = wrap(async function (component) {
   readme += `\n## Demo\n\nhttps://luna.liriliri.io/?path=/story/${component}\n`
   readme += '\n## Install\n\nAdd the following script and style to your page.\n'
 
-  const jsFiles = [component],
-    cssFiles = [component]
+  const jsFiles = [component]
+  const cssFiles = []
+  if (componentConfig.style) {
+    cssFiles.push(component)
+  }
   let dependencies = componentConfig.dependencies
   while (!isEmpty(dependencies)) {
     let newDependencies = []
@@ -271,14 +274,18 @@ const doc = wrap(async function (component) {
     })
   }
 
-  readme += '\n## Api\n'
+  let api = ''
   each(componentClass.children, (child) => {
     if (child.name === 'constructor') {
       return
     }
-    readme += `\n### ${formatMethod(child.signatures[0])}\n`
-    readme += `\n${child.signatures[0].comment.shortText}\n`
+    api += `\n### ${formatMethod(child.signatures[0])}\n`
+    api += `\n${child.signatures[0].comment.shortText}\n`
   })
+
+  if (api) {
+    readme += '\n## Api\n' + api
+  }
 
   await fs.writeFile(resolve(`../src/${component}/README.md`), readme, 'utf8')
 })

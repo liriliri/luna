@@ -18,14 +18,41 @@ interface ICommand {
   handler: types.AnyFn
 }
 
+/** Command palette options. */
 interface IOptions extends IComponentOptions {
+  /** Search input placeholder. */
   placeholder?: string
+  /** Keyboard shortcut for opening the command palette. */
   shortcut?: string
+  /** Commands to show. */
   commands?: ICommand[]
 }
 
 const MAX_WIDTH = 500
 
+/**
+ * Command palette.
+ * 
+ * @example
+ * const container = document.getElementById('container')
+ * const commandPalette = new LunaCommandPalette(container, { 
+ *   placeholder: 'Type a command',
+ *   shortcut: 'Ctrl+P',
+ *   commands: [
+ *     {
+ *       title: 'Reload Page',
+ *       shortcut: 'Ctrl+R',
+ *       handler(e) {
+ *         if (e && e.preventDefault) {
+ *           e.preventDefault()
+ *         }
+ *         location.reload()
+ *       }
+ *     }
+ *   ]
+ * })
+ * commandPalette.show()
+ */
 class CommandPalette extends Component<IOptions> {
   private $input: $.$
   private input: HTMLInputElement

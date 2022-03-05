@@ -1,30 +1,26 @@
 #!/usr/bin/env node
 
-const path = require('path')
 const yargs = require('yargs')
-const execa = require('execa')
 const shell = require('shelljs')
-const concat = require('licia/concat')
-const map = require('licia/map')
 const noop = require('licia/noop')
-const clone = require('licia/clone')
 const extendDeep = require('licia/extendDeep')
 const cloneDeep = require('licia/cloneDeep')
-const extend = require('licia/extend')
 const each = require('licia/each')
 const filter = require('licia/filter')
 const promisify = require('licia/promisify')
-const reverse = require('licia/reverse')
 const endWith = require('licia/endWith')
 const rmdir = promisify(require('licia/rmdir'))
 const startWith = require('licia/startWith')
-const defaults = require('licia/defaults')
-const onExit = require('signal-exit')
 const fs = require('licia/fs')
 const isEmpty = require('licia/isEmpty')
-const upperFirst = require('licia/upperFirst')
-const camelCase = require('licia/camelCase')
-const trim = require('licia/trim')
+const {
+  runScript,
+  wrap,
+  resolve,
+  unlinkOnExit,
+  readComponentConfig,
+} = require('../lib/util')
+const doc = require('../lib/doc')
 
 const format = wrap(async function (component) {
   await runScript('lsla', [
@@ -159,206 +155,6 @@ const build = wrap(async function (component) {
   )
 })
 
-const doc = wrap(async function (component) {
-  await runScript('typedoc', [
-    `src/${component}/index.ts`,
-    '--excludeNotDocumented',
-    '--json',
-    `src/${component}/typedoc.json`,
-  ])
-  const typedocPath = resolve(`../src/${component}/typedoc.json`)
-  unlinkOnExit(typedocPath)
-
-  const typedoc = JSON.parse(await fs.readFile(typedocPath))
-  let componentClass
-  let optionsInterface
-  const children = typedoc.children
-  for (let i = 0, len = children.length; i < len; i++) {
-    const child = children[i]
-    if (child.name === 'default') {
-      componentClass = child
-    }
-    if (child.name === 'IOptions') {
-      optionsInterface = child
-    }
-  }
-
-  const componentConfig = readComponentConfig(component)
-
-  let readme = `# Luna ${map(component.split('-'), (name) =>
-    upperFirst(name)
-  ).join(' ')}\n`
-  readme += `\n${componentClass.comment.shortText}\n`
-  readme += `\n## Demo\n\nhttps://luna.liriliri.io/?path=/story/${component}\n`
-  readme += '\n## Install\n\nAdd the following script and style to your page.\n'
-
-  const jsFiles = [component]
-  const cssFiles = []
-  if (componentConfig.style) {
-    cssFiles.push(component)
-  }
-  let dependencies = componentConfig.dependencies
-  while (!isEmpty(dependencies)) {
-    let newDependencies = []
-    each(dependencies, (dependency) => {
-      jsFiles.unshift(dependency)
-      const componentConfig = readComponentConfig(dependency)
-      if (componentConfig.style) {
-        cssFiles.unshift(dependency)
-      }
-      if (componentConfig.dependencies) {
-        newDependencies = concat(newDependencies, componentConfig.dependencies)
-      }
-    })
-    dependencies = newDependencies
-  }
-
-  readme += '\n```html\n'
-  if (!isEmpty(cssFiles)) {
-    readme +=
-      map(
-        cssFiles,
-        (component) =>
-          `<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-${component}/luna-${component}.css" />`
-      ).join('\n') + '\n'
-  }
-  readme += map(
-    jsFiles,
-    (component) =>
-      `<script src="//cdn.jsdelivr.net/npm/luna-${component}/luna-${component}.js"></script>`
-  ).join('\n')
-  readme += '\n```\n'
-
-  readme += '\nYou can also get it on npm.\n'
-  readme += '\n```bash\n'
-  readme += `npm install ${reverse(
-    map(jsFiles, (component) => `luna-${component}`)
-  ).join(' ')} --save`
-  readme += '\n```\n'
-
-  readme += '\n```javascript\n'
-  if (!isEmpty(cssFiles)) {
-    readme +=
-      map(
-        cssFiles,
-        (component) => `import 'luna-${component}/luna-${component}.css'`
-      ).join('\n') + '\n'
-  }
-  readme += `import Luna${upperFirst(
-    camelCase(component)
-  )} from 'luna-${component}'`
-  readme += '\n```\n'
-
-  let example = ''
-  const tags = componentClass.comment.tags
-  for (let i = 0, len = tags.length; i < len; i++) {
-    const tag = tags[i]
-    if (tag.tag === 'example') {
-      example = tag.text
-      break
-    }
-  }
-
-  if (example) {
-    readme += '\n## Usage\n\n```javascript\n'
-    readme += trim(example)
-    readme += '\n```\n'
-  }
-
-  if (optionsInterface) {
-    readme += '\n## Configuration\n\n'
-    each(optionsInterface.children, (child) => {
-      readme += `* ${child.name}(${formatType(child.type)}): ${
-        child.comment.shortText
-      }\n`
-    })
-  }
-
-  let api = ''
-  each(componentClass.children, (child) => {
-    if (child.name === 'constructor') {
-      return
-    }
-    api += `\n### ${formatMethod(child.signatures[0])}\n`
-    api += `\n${child.signatures[0].comment.shortText}\n`
-  })
-
-  if (api) {
-    readme += '\n## Api\n' + api
-  }
-
-  await fs.writeFile(resolve(`../src/${component}/README.md`), readme, 'utf8')
-})
-
-function formatMethod(child) {
-  return `${child.name}(${formatParameters(child.parameters)}): ${formatType(
-    child.type
-  )}`
-}
-
-function formatParameters(parameters = []) {
-  return map(
-    parameters,
-    (parameter) => `${parameter.name}: ${formatType(parameter.type)}`
-  )
-}
-
-function formatType(type) {
-  if (type.type === 'union') {
-    return map(type.types, (type) => type.name).join('|')
-  }
-
-  return type.name
-}
-
-function resolve(p) {
-  return path.resolve(__dirname, p)
-}
-
-function getComponent(argv) {
-  const _ = clone(argv._)
-  _.shift()
-  const component = _.shift()
-
-  return component
-}
-
-function runScript(name, args, options = {}) {
-  return execa(
-    name,
-    args,
-    extend(
-      {
-        preferLocal: true,
-        cwd: resolve('../'),
-        stdio: 'inherit',
-      },
-      options
-    )
-  )
-}
-
-function wrap(fn, condition) {
-  return async function (argv) {
-    let components = []
-    const component = getComponent(argv)
-    if (component) {
-      components.push(component)
-    } else {
-      each(require('../index.json'), (val, key) => {
-        if (condition && !val[condition]) {
-          return
-        }
-
-        components.push(key)
-      })
-    }
-    for (let component of components) {
-      await fn(component, argv)
-    }
-  }
-}
-
 const readConfigTpl = `const defaults = require('licia/defaults')
 const pkg = require('./package.json')
 const config = defaults(pkg.luna || {}, {
@@ -413,27 +209,8 @@ async function createTsConfig(component, files) {
   unlinkOnExit(output)
 }
 
-function unlinkOnExit(p) {
-  onExit(() => require('fs').unlinkSync(p))
-}
-
 function stringify(obj) {
   return JSON.stringify(obj, null, 2)
-}
-
-function readComponentConfig(component) {
-  const pkg = require(resolve(`../src/${component}/package.json`))
-
-  const config = defaults(pkg.luna || {}, {
-    version: pkg.version,
-    style: true,
-    icon: false,
-    test: true,
-    install: false,
-    dependencies: [],
-  })
-
-  return config
 }
 
 yargs

@@ -9,10 +9,10 @@
   "scripts": {
     "ci": "luna install && npm run lint && npm test",
     "test": "npm run build && luna test",
-    "lint": "eslint src/share/*.{ts,js} *.js bin/*.js && luna lint",
+    "lint": "eslint 'src/share/*.{ts,js}' '*.js' 'bin/*.js' 'lib/*.js' && luna lint",
     "build": "luna build",
     "update": "luna udpate",
-    "format": "lsla prettier \"src/share/*.{ts,js,scss}\" \"*.{json,js}\" \"bin/*.js\" \".storybook/*.js\" --write && luna format",
+    "format": "lsla prettier 'src/share/*.{ts,js,scss}' '*.{json,js}' 'bin/*.js' '.storybook/*.js' 'lib/*.js' --write && luna format",
     "storybook": "start-storybook -p 8080",
     "build-storybook": "build-storybook -o .storybook/out"
   },
@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/liriliri/luna#readme",
   "dependencies": {
-    "licia": "^1.31.0"
+    "licia": "^1.34.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",

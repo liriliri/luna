@@ -32,10 +32,10 @@ const MAX_WIDTH = 500
 
 /**
  * Command palette.
- * 
+ *
  * @example
  * const container = document.getElementById('container')
- * const commandPalette = new LunaCommandPalette(container, { 
+ * const commandPalette = new LunaCommandPalette(container, {
  *   placeholder: 'Type a command',
  *   shortcut: 'Ctrl+P',
  *   commands: [

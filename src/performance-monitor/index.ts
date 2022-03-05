@@ -83,7 +83,7 @@ export default class PerformanceMonitor extends Component<IOptions> {
 
     const animate = () => {
       this.draw()
-      this.animationId = raf(animate)
+      this.animationId = raf.call(window, animate)
     }
     animate()
   }

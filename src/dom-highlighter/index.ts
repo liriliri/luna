@@ -22,27 +22,56 @@ interface IRect {
   height: number
 }
 
-interface IRgb {
+/** IRgb */
+export interface IRgb {
+  /** Red. */
   r: number
+  /** Green. */
   g: number
+  /** Blue. */
   b: number
+  /** Alpha. */
   a?: number
 }
 
-interface IOptions extends IComponentOptions {
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Whether the rulers should be shown. */
   showRulers?: boolean
+  /** Whether the extension lines from node to the rulers should be shown. */
   showExtensionLines?: boolean
+  /** Whether the node info tooltip should be shown. */
   showInfo?: boolean
+  /** Whether the node styles in the tooltip. */
   showStyles?: boolean
+  /** Whether the a11y info should be shown. */
   showAccessibilityInfo?: boolean
+  /** The color format used to format color styles. */
   colorFormat?: 'rgb' | 'hsl' | 'hex'
+  /** The content box highlight fill color. */
   contentColor?: string | IRgb
+  /** The padding highlight fill color. */
   paddingColor?: string | IRgb
+  /** The border highlight fill color. */
   borderColor?: string | IRgb
+  /** The margin highlight fill color. */
   marginColor?: string | IRgb
+  /** Auto redraw if target element is resized. */
   monitorResize?: boolean | IRgb
 }
 
+/**
+ * Highlighter for html elements.
+ *
+ * @example
+ * const domHighlighter = new LunaDomHighlighter(container, {
+ *   showRulers: true,
+ *   showExtensionLines: true,
+ *   showInfo: true,
+ * })
+ * domHighlighter.highlight(document.getElementById('test'))
+ * domHighlighter.hide()
+ */
 export default class DomHighlighter extends Component<IOptions> {
   private overlay: HighlightOverlay = new HighlightOverlay(window)
   private target: HTMLElement | Text | null
@@ -77,6 +106,7 @@ export default class DomHighlighter extends Component<IOptions> {
     this.redraw()
     this.bindEvent()
   }
+  /** Highlight element or text node. */
   highlight(target: HTMLElement | Text, options?: IOptions) {
     if (options) {
       extend(this.options, options)
@@ -93,6 +123,7 @@ export default class DomHighlighter extends Component<IOptions> {
 
     this.redraw()
   }
+  /** Hide highlight. */
   hide() {
     this.target = null
     this.redraw()

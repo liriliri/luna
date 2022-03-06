@@ -1,4 +1,4 @@
-# Luna DOM Highlighter
+# Luna Dom Highlighter
 
 Highlighter for html elements.
 
@@ -40,24 +40,33 @@ domHighlighter.hide()
 
 ## Configuration
 
-* showRulers(boolean): Whether the rulers should be shown.
+* borderColor(string | IRgb): The border highlight fill color.
+* colorFormat('rgb' | 'hsl' | 'hex'): The color format used to format color styles.
+* contentColor(string | IRgb): The content box highlight fill color.
+* marginColor(string | IRgb): The margin highlight fill color.
+* monitorResize(boolean | IRgb): Auto redraw if target element is resized.
+* paddingColor(string | IRgb): The padding highlight fill color.
+* showAccessibilityInfo(boolean): Whether the a11y info should be shown.
 * showExtensionLines(boolean): Whether the extension lines from node to the rulers should be shown.
 * showInfo(boolean): Whether the node info tooltip should be shown.
+* showRulers(boolean): Whether the rulers should be shown.
 * showStyles(boolean): Whether the node styles in the tooltip.
-* showAccessibilityInfo(boolean): Whether the a11y info should be shown.
-* colorFormat(string): The color format used to format color styles.
-* contentColor(string | object): The content box highlight fill color.
-* paddingColor(string | object): The padding highlight fill color.
-* borderColor(string | object): The border highlight fill color.
-* marginColor(string | object): The margin highlight fill color.
-* monitorResize(boolean): Auto redraw if target element is resized.
 
 ## Api
-
-### highlight(target: HTMLElement | Text, options?: object): void
-
-Highlight element or text node.
 
 ### hide(): void
 
 Hide highlight.
+
+### highlight(target: HTMLElement | Text,options?: IOptions): void
+
+Highlight element or text node.
+
+## Types
+
+### IRgb
+
+* a(number): Alpha.
+* b(number): Blue.
+* g(number): Green.
+* r(number): Red.

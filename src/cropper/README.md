@@ -38,18 +38,18 @@ console.log(cropper.getData())
 
 ## Configuration
 
+* preview(|HTMLElement): Preview dom container.
 * url(string): Image url.
-* preview(HTMLElement): Preview dom container.
 
 ## Api
-
-### getData(): object
-
-Get size, position data of image and crop box.
 
 ### getCanvas(): HTMLCanvasElement
 
 Get a canvas with cropped image drawn.
+
+### getData(): object
+
+Get size, position data of image and crop box.
 
 ### reset(): void
 

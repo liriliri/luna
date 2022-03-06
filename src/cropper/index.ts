@@ -11,8 +11,11 @@ import { drag, eventClient } from '../share/util'
 
 const $document = $(document as any)
 
-interface IOptions extends IComponentOptions {
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Image url. */
   url: string
+  /** Preview dom container. */
   preview: HTMLElement | null
 }
 
@@ -42,6 +45,16 @@ interface ICropBoxData {
   height: number
 }
 
+/**
+ * Image cropper.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const cropper = new LunaCropper(container, {
+ *   url: '/wallpaper.jpg',
+ * })
+ * console.log(cropper.getData())
+ */
 export default class Cropper extends Component<IOptions> {
   private onResize: () => void
   private resizeSensor: ResizeSensor
@@ -101,6 +114,7 @@ export default class Cropper extends Component<IOptions> {
     super.destroy()
     this.resizeSensor.destroy()
   }
+  /** Get size, position data of image and crop box. */
   getData() {
     const { cropBoxData, canvasData, imageData } = this
     const ratio = imageData.width / canvasData.width
@@ -118,6 +132,7 @@ export default class Cropper extends Component<IOptions> {
       },
     }
   }
+  /** Get a canvas with cropped image drawn. */
   getCanvas() {
     const { cropBox } = this.getData()
     const canvas = document.createElement('canvas')
@@ -129,6 +144,7 @@ export default class Cropper extends Component<IOptions> {
 
     return canvas
   }
+  /** Resize crop box. */
   reset() {
     this.updateContainerData()
     this.resetCanvasData()

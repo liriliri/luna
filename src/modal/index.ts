@@ -5,15 +5,34 @@ import h from 'licia/h'
 import types from 'licia/types'
 import map from 'licia/map'
 
-interface IOptions extends IComponentOptions {
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Modal title. */
   title?: string
+  /** Modal content. */
   content?: string | HTMLElement
+  /** Modal footer. */
   footer?: string | HTMLElement
+  /** Modal width. */
   width?: number
+  /** Whether to show close button. */
   showClose?: boolean
 }
 
-class Modal extends Component<IOptions> {
+/**
+ * Create modal dialogs.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const modal = new LunaModal(container, {
+ *   title: 'This is the Title',
+ *   content: 'This is the content.',
+ * })
+ * modal.show()
+ *
+ * LunaModal.alert('This is the alert content.')
+ */
+export default class Modal extends Component<IOptions> {
   private $title: $.$
   private $body: $.$
   private $content: $.$
@@ -40,10 +59,12 @@ class Modal extends Component<IOptions> {
 
     this.bindEvent()
   }
+  /** Show the modal. */
   show() {
     this.render()
     this.$container.rmClass(this.c('hidden'))
   }
+  /** Hide the modal. */
   hide = () => {
     this.$container.addClass(this.c('hidden'))
   }
@@ -51,6 +72,10 @@ class Modal extends Component<IOptions> {
     super.destroy()
     this.$container.rmClass(this.c('hidden'))
   }
+  /**
+   * Like `window.alert`.
+   * @static
+   */
   static alert(msg: string) {
     const modal = getGlobalModal()
     const { c } = modal
@@ -71,7 +96,11 @@ class Modal extends Component<IOptions> {
     })
     modal.show()
   }
-  static confirm(msg: string) {
+  /**
+   * Like `window.confirm`.
+   * @static
+   */
+  static confirm(msg: string): Promise<boolean> {
     return new Promise((resolve) => {
       const modal = getGlobalModal()
       const { c } = modal
@@ -101,7 +130,11 @@ class Modal extends Component<IOptions> {
       modal.show()
     })
   }
-  static prompt(title = '', defaultText = '') {
+  /**
+   * Like `window.prompt`.
+   * @static
+   */
+  static prompt(title = '', defaultText = ''): Promise<null | string> {
     return new Promise((resolve) => {
       const modal = getGlobalModal()
       const { c } = modal

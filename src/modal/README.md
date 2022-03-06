@@ -41,20 +41,21 @@ LunaModal.alert('This is the alert content.')
 
 ## Configuration
 
-* title(string): Modal title.
 * content(string | HTMLElement): Modal content.
 * footer(string | HTMLElement): Modal footer.
+* showClose(boolean): Whether to show close button.
+* title(string): Modal title.
 * width(number): Modal width.
 
 ## Api
 
-### show(): void
-
-Show the modal.
-
 ### hide(): void
 
 Hide the modal.
+
+### show(): void
+
+Show the modal.
 
 ### static alert(msg: string): void
 
@@ -64,6 +65,6 @@ Like `window.alert`.
 
 Like `window.confirm`.
 
-### static prompt(title?: string, defaultText?: string): Promise\<null | string>
+### static prompt(title?: string, defaultText?: string): Promise<null | string>
 
 Like `window.prompt`.

@@ -31,7 +31,7 @@ import LunaJsonEditor from 'luna-json-editor'
 ```javascript
 const container = document.getElementById('container')
 const jsonEditor = new LunaJsonEditor(container, {
-  name: 'luna',  
+  name: 'luna',
   value: {
     a: true,
   },
@@ -42,15 +42,15 @@ jsonEditor.expand(true)
 
 ## Configuration
 
-* name(string): Object name.
-* showName(boolean): Show object name or not.
-* nameEditable(boolean): Is name editable.
-* valueEditable(boolean): Is value editable.
 * enableDelete(boolean): Enable deletion.
 * enableInsert(boolean): Enable insertion.
+* name(any): Object name.
+* nameEditable(boolean): Is name editable.
+* showName(boolean): Show object name or not.
+* valueEditable(boolean): Is value editable.
 
 ## Api
 
-### expand(recursive: boolean): void
+### expand(recursive?: boolean): void
 
 Expand object.

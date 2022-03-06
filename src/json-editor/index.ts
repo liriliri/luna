@@ -9,10 +9,42 @@ import contain from 'licia/contain'
 import has from 'licia/has'
 import trim from 'licia/trim'
 import toStr from 'licia/toStr'
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
+
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Object name. */
+  name?: any
+  value?: any
+  /** Show object name or not. */
+  showName?: boolean
+  /** Is name editable. */
+  nameEditable?: boolean
+  /** Is value editable. */
+  valueEditable?: boolean
+  parent?: JsonEditor | null
+  /** Enable deletion. */
+  enableDelete?: boolean
+  /** Enable insertion. */
+  enableInsert?: boolean
+}
 
 // https://github.com/richard-livingston/json-view
-export default class JsonEditor extends Component {
+/**
+ * JSON editor.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const jsonEditor = new LunaJsonEditor(container, {
+ *   name: 'luna',
+ *   value: {
+ *     a: true,
+ *   },
+ *   nameEditable: false,
+ * })
+ * jsonEditor.expand(true)
+ */
+export default class JsonEditor extends Component<IOptions> {
   private name: any
   private value: any
   private $name: $.$
@@ -26,35 +58,35 @@ export default class JsonEditor extends Component {
   private children: JsonEditor[] = []
   private parent: JsonEditor | null = null
   private expanded = false
-  private edittingName = false
-  private edittingValue = false
+  private editingName = false
+  private editingValue = false
   private nameEditable = true
   private valueEditable = true
   private enableInsert = true
   private enableDelete = true
-  constructor(
-    container: Element,
-    {
+  constructor(container: Element, options = {}) {
+    super(container, { compName: 'json-editor' }, options)
+
+    this.initOptions(options, {
+      value: null,
+      showName: true,
+      nameEditable: true,
+      valueEditable: true,
+      parent: null,
+      enableDelete: true,
+      enableInsert: true,
+    })
+
+    const {
+      showName,
+      enableDelete,
+      enableInsert,
+      nameEditable,
+      valueEditable,
+      parent,
       name,
-      value = null,
-      showName = true,
-      nameEditable = true,
-      valueEditable = true,
-      parent = null,
-      enableDelete = true,
-      enableInsert = true,
-    }: {
-      name?: any
-      value?: any
-      showName?: boolean
-      nameEditable?: boolean
-      valueEditable?: boolean
-      parent?: JsonEditor | null
-      enableDelete?: boolean
-      enableInsert?: boolean
-    } = {}
-  ) {
-    super(container, { compName: 'json-editor' })
+      value,
+    } = this.options
 
     this.initTpl()
 
@@ -104,6 +136,7 @@ export default class JsonEditor extends Component {
     this.$container.addClass(`${c('collapsed')}`)
     this.$container.rmClass(`${c('expanded')}`)
   }
+  /** Expand object. */
   expand = (recursive?: boolean) => {
     const { type, value, children, c } = this
     let _keys: any[]
@@ -304,12 +337,12 @@ export default class JsonEditor extends Component {
     let $el = this.$name
 
     if (field === 'name') {
-      this.edittingName = true
+      this.editingName = true
     }
 
     if (field === 'value') {
       $el = this.$value
-      this.edittingValue = true
+      this.editingValue = true
     }
 
     $el.addClass(this.c('edit'))
@@ -321,18 +354,18 @@ export default class JsonEditor extends Component {
     let $el = this.$name
 
     if (field === 'name') {
-      if (!this.edittingName) {
+      if (!this.editingName) {
         return
       }
-      this.edittingName = false
+      this.editingName = false
     }
 
     if (field === 'value') {
-      if (!this.edittingValue) {
+      if (!this.editingValue) {
         return
       }
       $el = this.$value
-      this.edittingValue = false
+      this.editingValue = false
     }
 
     if (field === 'name') {

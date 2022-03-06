@@ -1,26 +1,19 @@
 #!/usr/bin/env node
 
 const yargs = require('yargs')
-const shell = require('shelljs')
 const noop = require('licia/noop')
-const extendDeep = require('licia/extendDeep')
-const cloneDeep = require('licia/cloneDeep')
-const each = require('licia/each')
-const filter = require('licia/filter')
-const promisify = require('licia/promisify')
-const endWith = require('licia/endWith')
-const rmdir = promisify(require('licia/rmdir'))
-const startWith = require('licia/startWith')
 const fs = require('licia/fs')
-const isEmpty = require('licia/isEmpty')
 const {
   runScript,
   wrap,
   resolve,
-  unlinkOnExit,
   readComponentConfig,
+  stringify,
+  createWebpackConfig,
+  createKarmaConf,
 } = require('../lib/util')
 const doc = require('../lib/doc')
+const build = require('../lib/build')
 
 const format = wrap(async function (component) {
   await runScript('lsla', [
@@ -93,124 +86,6 @@ const update = async function () {
 
   await fs.writeFile(resolve('../tsconfig.json'), stringify(tsConfig), 'utf8')
   console.log('Tsconfig file updated')
-}
-
-const build = wrap(async function (component) {
-  try {
-    await rmdir(resolve(`../dist/${component}`))
-  } catch (e) {
-    /* eslint-disable no-empty */
-  }
-
-  await createWebpackConfig(component)
-
-  await runScript('webpack', [
-    '--config',
-    `src/${component}/webpack.config.js`,
-    '--mode=production',
-  ])
-
-  const pkg = cloneDeep(require('../package.json'))
-  delete pkg.scripts
-  delete pkg.bin
-  pkg.main = `cjs/${component}/index.js`
-  const componentPkg = require(`../src/${component}/package.json`)
-  extendDeep(pkg, componentPkg)
-  if (!startWith(pkg.name, 'luna-')) {
-    pkg.name = `luna-${pkg.name}`
-  }
-  delete pkg.devDependencies
-  delete pkg.luna
-  const config = readComponentConfig(component)
-  if (!isEmpty(config)) {
-    const peerDependencies = {}
-    each(config.dependencies, (dependency) => {
-      const config = readComponentConfig(dependency)
-      peerDependencies[`luna-${dependency}`] = `^${config.version}`
-    })
-    pkg.peerDependencies = peerDependencies
-  }
-
-  await fs.writeFile(
-    resolve(`../dist/${component}/package.json`),
-    stringify(pkg),
-    'utf8'
-  )
-
-  const files = await fs.readdir(resolve(`../src/${component}`))
-  const tsFiles = filter(files, (file) => endWith(file, '.ts'))
-
-  await createTsConfig(component, tsFiles)
-
-  await runScript('tsc', ['--project', `src/${component}/tsconfig.json`])
-  const dependencies = config.dependencies
-  for (let i = 0, len = dependencies.length; i < len; i++) {
-    const dependency = dependencies[i]
-    await rmdir(resolve(`../dist/${component}/cjs/${dependency}`))
-  }
-
-  shell.cp(
-    resolve(`../src/${component}/README.md`),
-    resolve(`../dist/${component}`)
-  )
-})
-
-const readConfigTpl = `const defaults = require('licia/defaults')
-const pkg = require('./package.json')
-const config = defaults(pkg.luna || {}, {
-  name: pkg.name,
-  style: true,
-  icon: false,
-  test: true,
-  install: false,
-  dependencies: []
-})`
-
-const webpackConfigTpl = `${readConfigTpl}
-module.exports = require('../share/webpack.config')(config.name, {
-  hasStyle: config.style,
-  useIcon: config.icon,
-  dependencies: config.dependencies,
-})
-`
-
-async function createWebpackConfig(component) {
-  const output = resolve(`../src/${component}/webpack.config.js`)
-  await fs.writeFile(output, webpackConfigTpl, 'utf8')
-  unlinkOnExit(output)
-}
-
-const karmaConfTpl = `${readConfigTpl}
-module.exports = require('../share/karma.conf')(config.name, {
-  hasStyle: config.style,
-  useIcon: config.icon,
-  dependencies: config.dependencies,
-})
-`
-
-async function createKarmaConf(component) {
-  const output = resolve(`../src/${component}/karma.conf.js`)
-  await fs.writeFile(output, karmaConfTpl, 'utf8')
-  unlinkOnExit(output)
-}
-
-async function createTsConfig(component, files) {
-  const tsConfig = {
-    extends: '../../tsconfig.json',
-    compilerOptions: {
-      target: 'es2020',
-      declaration: true,
-      outDir: `../../dist/${component}/cjs/`,
-    },
-    files,
-  }
-  const output = resolve(`../src/${component}/tsconfig.json`)
-  await fs.writeFile(output, stringify(tsConfig), 'utf8')
-  unlinkOnExit(output)
-}
-
-function stringify(obj) {
-  return JSON.stringify(obj, null, 2)
 }
 
 yargs

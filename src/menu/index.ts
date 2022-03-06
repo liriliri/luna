@@ -5,6 +5,20 @@ import defaults from 'licia/defaults'
 import each from 'licia/each'
 import { measuredScrollbarWidth, hasVerticalScrollbar } from '../share/util'
 
+/**
+ * Simple menu.
+ *
+ * @example
+ * const menu = new LunaMenu()
+ * menu.append({
+ *   type: 'normal',
+ *   label: 'New File',
+ *   click() {
+ *     console.log('New File clicked')
+ *   }
+ * })
+ * menu.show(0, 0)
+ */
 export default class Menu extends Component {
   private menuItems: IMenuItemOptions[] = []
   private subMenu?: Menu
@@ -14,6 +28,10 @@ export default class Menu extends Component {
 
     this.bindEvent()
   }
+  /**
+   * Create menu from template.
+   * @static
+   */
   static build(template: any[]) {
     const menu = new Menu()
     each(template, (item) => {
@@ -24,15 +42,18 @@ export default class Menu extends Component {
     })
     return menu
   }
+  /** Append menu item. */
   append(options: IMenuItemOptions) {
     this.insert(this.menuItems.length, options)
   }
+  /** Inert menu item to given position. */
   insert(pos: number, options: IMenuItemOptions) {
     defaults(options, {
       type: 'normal',
     })
     this.menuItems.splice(pos, 0, options)
   }
+  /** Show menu at target position. */
   show(x: number, y: number, parent?: Menu) {
     if (parent) {
       this.hide()
@@ -200,9 +221,14 @@ export default class Menu extends Component {
 module.exports = Menu
 module.exports.default = Menu
 
-interface IMenuItemOptions {
+/** IMenuItemOptions */
+export interface IMenuItemOptions {
+  /** Menu type. */
   type?: 'normal' | 'separator' | 'submenu'
+  /** Menu label. */
   label?: string
+  /** Sub menu. */
   submenu?: Menu
+  /** Click event handler. */
   click?: () => void
 }

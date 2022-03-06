@@ -42,25 +42,27 @@ menu.show(0, 0)
 
 ## Api
 
-### append(options: object): void
+### append(options: IMenuItemOptions): void
 
 Append menu item.
 
-Options:
-
-* type(string): normal, separator or submenu.
-* label(string): Menu label.
-* click(function): Click event handler.
-* submenu(Menu): Sub menu.
-
-### insert(pos: number, options: object): void
+### insert(pos: number, options: IMenuItemOptions): void
 
 Inert menu item to given position.
 
-### show(x: number, y: number): void
+### show(x: number, y: number, parent?: LunaMenu): void
 
 Show menu at target position.
 
-### build(template: object): Menu
+### static build(template: any[]): LunaMenu
 
 Create menu from template.
+
+## Types
+
+### IMenuItemOptions
+
+* label(string): Menu label.
+* submenu(LunaMenu): Sub menu.
+* type('normal' | 'separator' | 'submenu'): Menu type.
+* click(function): Click event handler.

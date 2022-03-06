@@ -30,7 +30,7 @@ import LunaCommandPalette from 'luna-command-palette'
 
 ```javascript
 const container = document.getElementById('container')
-const commandPalette = new LunaCommandPalette(container, { 
+const commandPalette = new LunaCommandPalette(container, {
   placeholder: 'Type a command',
   shortcut: 'Ctrl+P',
   commands: [
@@ -51,23 +51,22 @@ commandPalette.show()
 
 ## Configuration
 
+* commands(ICommand[]): Commands to show.
 * placeholder(string): Search input placeholder.
 * shortcut(string): Keyboard shortcut for opening the command palette.
-* commands(array): Commands to show.
-
-Command:
-
-* title(string): Command title.
-* handler(function): Function to execute if command is triggered.
-* shortcut(string): Shortcut to trigger command.
 
 ## Api
-
-### show(): void
-
-Show command palette.
 
 ### hide(): void
 
 Hide command palette.
 
+### show(e: any): void
+
+Show command palette.
+
+## Types
+
+### ICommand
+
+* title(string): Command title.

@@ -11,7 +11,7 @@ import { executeAfterTransition } from '../share/util'
 import isUndef from 'licia/isUndef'
 import toBool from 'licia/toBool'
 
-/** Carousel options. */
+/** IOptions */
 export interface IOptions extends IComponentOptions {
   /** Time between automatically cycling. */
   interval?: number

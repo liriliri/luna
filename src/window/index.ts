@@ -12,7 +12,7 @@ import { drag, eventClient } from '../share/util'
 
 const $document = $(document as any)
 
-/** Window options. */
+/** IOptions */
 export interface IOptions extends IComponentOptions {
   /** Width of the window. */
   width?: number

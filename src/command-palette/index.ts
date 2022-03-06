@@ -12,14 +12,16 @@ import lowerCase from 'licia/lowerCase'
 import types from 'licia/types'
 import keyCode from 'licia/keyCode'
 
-interface ICommand {
+/** ICommand */
+export interface ICommand {
+  /** Command title. */
   title: string
   shortcut?: string
   handler: types.AnyFn
 }
 
-/** Command palette options. */
-interface IOptions extends IComponentOptions {
+/** IOptions */
+export interface IOptions extends IComponentOptions {
   /** Search input placeholder. */
   placeholder?: string
   /** Keyboard shortcut for opening the command palette. */
@@ -53,7 +55,7 @@ const MAX_WIDTH = 500
  * })
  * commandPalette.show()
  */
-class CommandPalette extends Component<IOptions> {
+export default class CommandPalette extends Component<IOptions> {
   private $input: $.$
   private input: HTMLInputElement
   private $list: $.$
@@ -79,10 +81,12 @@ class CommandPalette extends Component<IOptions> {
 
     this.bindEvent()
   }
+  /** Hide command palette. */
   hide = () => {
     window.removeEventListener('resize', this.calcWidth)
     this.$container.addClass(this.c('hidden'))
   }
+  /** Show command palette. */
   show = (e: any) => {
     if (e && e.preventDefault) {
       e.preventDefault()

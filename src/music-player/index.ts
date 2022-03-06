@@ -57,6 +57,21 @@ interface IOptions extends IComponentOptions {
   audio?: IAudio | IAudio[]
 }
 
+/**
+ * Music player with playlist support.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const musicPlayer = new LunaMusicPlayer(container, {
+ *   audio: {
+ *     url: 'https://test.surunzi.com/audio/Get_along.mp3',
+ *     cover: 'https://test.surunzi.com/audio/Get_along.jpg',
+ *     title: 'Get Along',
+ *     artist: '林原めぐみ',
+ *   }
+ * })
+ * musicPlayer.play()
+ */
 export default class MusicPlayer extends Component<IOptions> {
   private $body: $.$
   private $title: $.$

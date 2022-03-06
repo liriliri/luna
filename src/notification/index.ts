@@ -4,16 +4,44 @@ import find from 'licia/find'
 import h from 'licia/h'
 import Component, { IComponentOptions } from '../share/Component'
 
-interface IPosition {
-  x: string
-  y: string
+/** IPosition */
+export interface IPosition {
+  /** X position. */
+  x: 'left' | 'center' | 'right'
+  /** Y position. */
+  y: 'top' | 'bottom'
 }
 
-interface IOptions extends IComponentOptions {
+/** INotifyOptions */
+export interface INotifyOptions {
+  /** Notification duration. */
+  duration: number
+}
+
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Notification position. */
   position?: IPosition
+  /** Default duration, 0 means infinite. */
   duration?: number
 }
 
+/**
+ * Show notifications.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const notification = new LunaNotification(container, {
+ *   position: {
+ *     x: 'left',
+ *     y: 'top',
+ *   },
+ * })
+ * notification.notify('luna', {
+ *   duration: 2000,
+ * })
+ * notification.dismissAll()
+ */
 export default class Notification extends Component<IOptions> {
   private notifications: NotificationItem[] = []
   constructor(container: HTMLElement, options: IOptions = {}) {
@@ -29,14 +57,19 @@ export default class Notification extends Component<IOptions> {
 
     this.initTpl()
   }
-  notify(content: string, { duration = this.options.duration } = {}) {
+  /** Show notification. */
+  notify(
+    content: string,
+    options: INotifyOptions = {
+      duration: this.options.duration,
+    }
+  ) {
     const notification = new NotificationItem(this, content)
     this.notifications.push(notification)
     this.add(notification)
-    if (duration) {
-      setTimeout(() => this.remove(notification.id), duration)
-    }
+    setTimeout(() => this.remove(notification.id), options.duration)
   }
+  /** Dismiss all notifications. */
   dismissAll() {
     const { notifications } = this
     let notification = notifications[0]

@@ -12,7 +12,7 @@ Add the following script and style to your page.
 
 ```html
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-notification/luna-notification.css" />
-<script src="//cdn.jsdelivr.net/npm/luna-object-viewer/luna-notification.js"></script>
+<script src="//cdn.jsdelivr.net/npm/luna-notification/luna-notification.js"></script>
 ```
 
 You can also get it on npm.
@@ -39,31 +39,31 @@ const notification = new LunaNotification(container, {
 notification.notify('luna', {
   duration: 2000,
 })
-notification.dissmissAll()
+notification.dismissAll()
 ```
 
 ## Configuration
 
-* position(object): Notification position.
 * duration(number): Default duration, 0 means infinite.
-
-Position:
-
-* x(string): Left, center or right.
-* y(string): Top or bottom.
+* position(IPosition): Notification position.
 
 ## Api
-
-### notify(content: string, options: object): void
-
-Show notification.
-
-Options:
-
-* duration(number): Notification duration.
 
 ### dismissAll(): void
 
 Dismiss all notifications.
 
+### notify(content: string, options?: INotifyOptions): void
 
+Show notification.
+
+## Types
+
+### INotifyOptions
+
+* duration(number): Notification duration.
+
+### IPosition
+
+* x('left' | 'center' | 'right'): X position.
+* y('top' | 'bottom'): Y position.

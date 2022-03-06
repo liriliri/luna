@@ -7,14 +7,24 @@ import filter from 'licia/filter'
 import stripIndent from 'licia/stripIndent'
 import toArr from 'licia/toArr'
 
-interface IOptions extends IComponentOptions {
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Html element to navigate. */
   node?: ChildNode
   parent?: DomViewer | null
   isEndTag?: boolean
   rootContainer?: HTMLElement
 }
 
-class DomViewer extends Component<IOptions> {
+/**
+ * Dom tree navigator.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const domViewer = new LunaDomViewer(container)
+ * domViewer.expand()
+ */
+export default class DomViewer extends Component<IOptions> {
   private $tag: $.$
   private $children: $.$
   private isExpanded = false

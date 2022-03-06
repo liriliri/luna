@@ -11,6 +11,14 @@ interface IOptions extends IComponentOptions {
   toolbar?: string[] | Toolbar
 }
 
+/**
+ * Wysiwyg editor.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const editor = new LunaEditor(container)
+ * console.log(editor.html())
+ */
 export default class Editor extends Component<IOptions> {
   selection: Selection
   toolbar: Toolbar

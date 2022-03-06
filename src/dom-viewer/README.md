@@ -33,3 +33,7 @@ const container = document.getElementById('container')
 const domViewer = new LunaDomViewer(container)
 domViewer.expand()
 ```
+
+## Configuration
+
+* node(ChildNode): Html element to navigate.

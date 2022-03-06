@@ -44,6 +44,6 @@ gallery.show()
 
 Append image.
 
-### insert(pos: number, src: string, title? string): void
+### insert(pos: number, src: string, title?: string): void
 
 Insert image at given position.

@@ -8,7 +8,16 @@ import throttle from 'licia/throttle'
 import each from 'licia/each'
 import fullscreen from 'licia/fullscreen'
 
-class Gallery extends Component {
+/**
+ * Lightweight gallery.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const gallery = new LunaGallery(container)
+ * gallery.append('/pic1.jpg', 'pic1.jpg')
+ * gallery.show()
+ */
+export default class Gallery extends Component {
   private onResize: () => void
   private carousel: LunaCarousel
   private images: Image[] = []
@@ -44,9 +53,11 @@ class Gallery extends Component {
     }
     this.$container.addClass(this.c('hidden'))
   }
+  /** Append image. */
   append(src: string, title?: string) {
     this.insert(this.images.length, src, title)
   }
+  /** Insert image at given position. */
   insert(pos: number, src: string, title?: string) {
     const { images } = this
     const image = new Image(this, src, title)

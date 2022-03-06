@@ -49,19 +49,21 @@ menuBar.append({
 
 ## Api
 
-### append(options: object): void
+### append(options: IMenuItemOptions): void
 
 Append menu item.
 
-Options:
-
-* label(string): Menu label.
-* submenu(Menu): Sub menu.
-
-### insert(pos: number, options: object): void
+### insert(pos: number, options: IMenuItemOptions): void
 
 Insert menu item to given position.
 
-### static build(container: HTMLElement, template: object): MenuBar
+### build(container: HTMLElement, template: any[]): LunaComponent
 
 Create menu bar from template.
+
+## Types
+
+### IMenuItemOptions
+
+* label(string): Menu label.
+* submenu(LunaComponent): Sub menu.

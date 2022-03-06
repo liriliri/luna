@@ -7,11 +7,32 @@ import toStr from 'licia/toStr'
 import $ from 'licia/$'
 import toNum from 'licia/toNum'
 
-interface IMenuItemOptions {
+/** IMenuItemOptions */
+export interface IMenuItemOptions {
+  /** Menu label. */
   label: string
+  /** Sub menu. */
   submenu?: LunaMenu
 }
 
+/**
+ * Application menu bar.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const menuBar = new LunaMenuBar(container)
+ * menuBar.append({
+ *   label: 'File',
+ *   submenu: LunaMenu.build([
+ *     {
+ *       label: 'Exit',
+ *       click() {
+ *         console.log('Exit clicked')
+ *       }
+ *     }
+ *   ])
+ * })
+ */
 export default class MenuBar extends Component {
   private menuItems: IMenuItemOptions[] = []
   private $list: $.$
@@ -25,6 +46,7 @@ export default class MenuBar extends Component {
 
     this.bindEvent()
   }
+  /** Create menu bar from template. */
   static build(container: HTMLElement, template: any[]) {
     const menuBar = new MenuBar(container)
 
@@ -37,9 +59,11 @@ export default class MenuBar extends Component {
 
     return menuBar
   }
+  /** Append menu item. */
   append(options: IMenuItemOptions) {
     this.insert(this.menuItems.length, options)
   }
+  /** Insert menu item to given position. */
   insert(pos: number, options: IMenuItemOptions) {
     const { list, c, menuItems } = this
 

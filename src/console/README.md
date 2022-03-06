@@ -1,6 +1,8 @@
 # Luna Console
 
 Console for logging, similar to the one in chrome DevTools.
+All these methods can be used in the same way as window.console object.
+log, error, info, warn, dir, time/timeLog/timeEnd, clear, count/countReset, assert, table, group/groupCollapsed/groupEnd
 
 ## Demo
 
@@ -39,24 +41,20 @@ console.log('luna')
 
 ## Configuration
 
-* maxNum(number): Max log number, zero means infinite.
-* asyncRender(boolean): Asynchronous rendering.
-* showHeader(boolean): Show time and from.
-* filter(string|function|regexp): Log filter.
 * accessGetter(boolean): Access getter value.
+* asyncRender(boolean): Asynchronous rendering.
+* filter(string|RegExp|Fn): Log filter.
+* lazyEvaluation(boolean): Lazy evaluation for objects.
+* maxNum(number): Max log number, zero means infinite.
+* showHeader(boolean): Show time and from.
 * unenumerable(boolean): Show unenumerable properties.
 
 ## Api
-
-### log, error, info, warn, dir, time/timeLog/timeEnd, clear, count/countReset, assert, table, group/groupCollapsed/groupEnd
-
-All these methods can be used in the same way as window.console object.
-
-### html(html: string): void
-
-Log out html content.
 
 ### evaluate(code: string): void
 
 Evaluate JavaScript.
 
+### html(args: any): void
+
+Log out html content.

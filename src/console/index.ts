@@ -41,16 +41,34 @@ type AsyncItem = [
   IHeader | undefined
 ]
 
-interface IOptions extends IComponentOptions {
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Max log number, zero means infinite. */
   maxNum?: number
+  /** Asynchronous rendering. */
   asyncRender?: boolean
+  /** Show time and from. */
   showHeader?: boolean
+  /** Access getter value. */
   accessGetter?: boolean
+  /** Show unenumerable properties. */
   unenumerable?: boolean
+  /** Lazy evaluation for objects. */
   lazyEvaluation?: boolean
+  /** Log filter. */
   filter?: string | RegExp | types.AnyFn
 }
 
+/**
+ * Console for logging, similar to the one in chrome DevTools.
+ * All these methods can be used in the same way as window.console object.
+ * log, error, info, warn, dir, time/timeLog/timeEnd, clear, count/countReset, assert, table, group/groupCollapsed/groupEnd
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const console = new LunaConsole(container)
+ * console.log('luna')
+ */
 export default class Console extends Component<IOptions> {
   renderViewport: (options?: any) => void
   private $el: $.$
@@ -266,6 +284,7 @@ export default class Console extends Component<IOptions> {
   groupEnd() {
     this.insert('groupEnd')
   }
+  /** Evaluate JavaScript. */
   evaluate(code: string) {
     this.insert({
       type: 'input',
@@ -283,6 +302,7 @@ export default class Console extends Component<IOptions> {
       })
     }
   }
+  /** Log out html content. */
   html(...args: any) {
     this.insert('html', args)
   }

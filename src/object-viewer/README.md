@@ -31,7 +31,7 @@ import LunaObjectViewer from 'luna-object-viewer'
 ```javascript
 const container = document.getElementById('container')
 const objectViewer = new LunaObjectViewer(container, {
-  unenumerable: false,  
+  unenumerable: false,
   accessGetter: true,
 })
 objectViewer.set(window.navigator)
@@ -39,11 +39,11 @@ objectViewer.set(window.navigator)
 
 ## Configuration
 
-* unenumerable(boolean): Show unenumerable properties.
 * accessGetter(boolean): Access getter value.
+* unenumerable(boolean): Show unenumerable properties.
 
 ## Api
 
-### set(data: object): void
+### set(data: any): void
 
 Set the JavaScript object to display.

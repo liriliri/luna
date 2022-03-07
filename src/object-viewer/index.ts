@@ -22,25 +22,45 @@ import naturalSort from 'licia/naturalSort'
 import Visitor from './Visitor'
 import { encode, getFnAbstract } from './util'
 import Static from './Static'
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 
-export default class ObjectViewer extends Component {
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Show unenumerable properties. */
+  unenumerable?: boolean 
+  /** Access getter value. */
+  accessGetter?: boolean
+}
+
+/**
+ * JavaScript object viewer, useful for building debugging tool.
+ * 
+ * @example
+ * const container = document.getElementById('container')
+ * const objectViewer = new LunaObjectViewer(container, {
+ *   unenumerable: false,  
+ *   accessGetter: true,
+ * })
+ * objectViewer.set(window.navigator)
+ */
+export default class ObjectViewer extends Component<IOptions> {
   private data: any[]
   private visitor: Visitor
   private map: any
-  private unenumerable: boolean
-  private accessGetter: any
   constructor(
     container: Element,
-    { unenumerable = false, accessGetter = false } = {}
+    options: IOptions = {}
   ) {
     super(container, { compName: 'object-viewer' })
 
-    this.unenumerable = unenumerable
-    this.accessGetter = accessGetter
+    this.initOptions(options, {
+      unenumerable: false, 
+      accessGetter: false
+    })
 
     this.bindEvent()
   }
+  /** Set the JavaScript object to display. */
   set(data: any) {
     this.data = [data]
     this.visitor = new Visitor()
@@ -70,7 +90,7 @@ export default class ObjectViewer extends Component {
     let virtualKeys: string[] = []
     const virtualData: any = {}
 
-    if (this.unenumerable && !firstLevel) {
+    if (this.options.unenumerable && !firstLevel) {
       types.push('unenumerable')
       types.push('symbol')
       unenumerableKeys = difference(
@@ -133,7 +153,7 @@ export default class ObjectViewer extends Component {
         const descriptor = Object.getOwnPropertyDescriptor(data, key)
         const hasGetter = descriptor && descriptor.get
         const hasSetter = descriptor && descriptor.set
-        if (hasGetter && !this.accessGetter) {
+        if (hasGetter && !this.options.accessGetter) {
           val = '(...)'
         } else {
           try {

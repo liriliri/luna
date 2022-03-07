@@ -11,12 +11,19 @@ import now from 'licia/now'
 import dateFormat from 'licia/dateFormat'
 import Color from 'licia/Color'
 
-interface IOptions extends IComponentOptions {
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Monitor title. */
   title: string
+  /** Data source provider, a number should be returned. */
   data: types.Fn<number>
+  /** Smooth lines or not. */
   smooth?: boolean
+  /** Unit of the value. */
   unit?: string
+  /** Line color. */
   color?: string
+  /** Maximum value. */
   max?: number
 }
 
@@ -30,6 +37,22 @@ const LABEL_DISTANCE_SECONDS = 10
 const PIXELS_PER_MS = 10 / 1000
 
 // https://github.com/ChromeDevTools/devtools-frontend/blob/main/front_end/panels/performance_monitor/PerformanceMonitor.ts
+/**
+ * Realtime counter used for displaying cpu, fps metrics.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const memoryMonitor = new PerformanceMonitor(container, {
+ *   title: 'Used JS heap size',
+ *   unit: 'MB',
+ *   color: '#614d82',
+ *   smooth: false,
+ *   data() {
+ *     return (performance.memory.usedJSHeapSize / 1024 / 1024).toFixed(1)
+ *   },
+ * })
+ * memoryMonitor.start()
+ */
 export default class PerformanceMonitor extends Component<IOptions> {
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
@@ -76,6 +99,7 @@ export default class PerformanceMonitor extends Component<IOptions> {
     super.destroy()
     this.metricBuffer = []
   }
+  /** Start monitoring. */
   start() {
     this.pollTimer = setInterval(this.poll, POLL_INTERVAL_MS)
     this.poll()
@@ -87,6 +111,7 @@ export default class PerformanceMonitor extends Component<IOptions> {
     }
     animate()
   }
+  /** Stop monitoring. */
   stop() {
     clearInterval(this.pollTimer)
     raf.cancel.call(window, this.animationId)

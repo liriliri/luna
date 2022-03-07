@@ -12,6 +12,29 @@ const Effect = require('./Effect').default
 
 const $document = $(document as any)
 
+/**
+ * Shader toy player.
+ *
+ * @example
+ * const container = document.getElementById('container')
+ * const shaderToyPlayer = new LunaShaderToyPlayer(container)
+ *
+ * shaderToyPlayer.load([
+ *   {
+ *     inputs: [],
+ *     outputs: [],
+ *     code: `void mainImage( out vec4 fragColor, in vec2 fragCoord )
+ * {
+ *     vec2 uv = fragCoord/iResolution.xy;
+ *     vec3 col = 0.5 + 0.5*cos(iTime+uv.xyx+vec3(0,2,4));
+ *     fragColor = vec4(col,1.0);
+ * }`,
+ *     name: 'Image',
+ *     description: '',
+ *     type: 'image',
+ *   },
+ * ])
+ */
 export default class ShaderToyPlayer extends Component {
   private $canvas: $.$
   private canvas: HTMLCanvasElement = document.createElement('canvas')

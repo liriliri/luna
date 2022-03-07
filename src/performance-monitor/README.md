@@ -44,12 +44,12 @@ memoryMonitor.start()
 
 ## Configuration
 
-* title(string): Monitor title.
-* data(function): Data source provider, a number should be returned.
-* smooth(boolean): Smooth lines or not.
-* unit(string): Unit of the value.
 * color(string): Line color.
+* data(Fn<number>): Data source provider, a number should be returned.
 * max(number): Maximum value.
+* smooth(boolean): Smooth lines or not.
+* title(string): Monitor title.
+* unit(string): Unit of the value.
 
 ## Api
 

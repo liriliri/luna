@@ -27,18 +27,18 @@ import Component, { IComponentOptions } from '../share/Component'
 /** IOptions */
 export interface IOptions extends IComponentOptions {
   /** Show unenumerable properties. */
-  unenumerable?: boolean 
+  unenumerable?: boolean
   /** Access getter value. */
   accessGetter?: boolean
 }
 
 /**
  * JavaScript object viewer, useful for building debugging tool.
- * 
+ *
  * @example
  * const container = document.getElementById('container')
  * const objectViewer = new LunaObjectViewer(container, {
- *   unenumerable: false,  
+ *   unenumerable: false,
  *   accessGetter: true,
  * })
  * objectViewer.set(window.navigator)
@@ -47,15 +47,12 @@ export default class ObjectViewer extends Component<IOptions> {
   private data: any[]
   private visitor: Visitor
   private map: any
-  constructor(
-    container: Element,
-    options: IOptions = {}
-  ) {
+  constructor(container: Element, options: IOptions = {}) {
     super(container, { compName: 'object-viewer' })
 
     this.initOptions(options, {
-      unenumerable: false, 
-      accessGetter: false
+      unenumerable: false,
+      accessGetter: false,
     })
 
     this.bindEvent()

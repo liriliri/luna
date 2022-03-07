@@ -36,7 +36,8 @@
       "luna-shader-toy-player": ["src/shader-toy-player/index"],
       "luna-video-player": ["src/video-player/index"],
       "luna-window": ["src/window/index"],
-      "luna-markdown-viewer": ["src/markdown-viewer/index"]
+      "luna-markdown-viewer": ["src/markdown-viewer/index"],
+      "luna-syntax-highlighter": ["src/syntax-highlighter/index"]
     }
   }
 }

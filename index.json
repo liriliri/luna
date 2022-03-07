@@ -175,6 +175,14 @@
     "install": false,
     "dependencies": []
   },
+  "syntax-highlighter": {
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
+  },
   "video-player": {
     "icon": true,
     "version": "0.1.0",

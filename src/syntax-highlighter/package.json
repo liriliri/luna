@@ -1,5 +1,11 @@
 {
   "name": "syntax-highlighter",
   "version": "0.1.0",
-  "description": "Syntax highlighter using highlightjs"
+  "description": "Syntax highlighter using highlightjs",
+  "dependencies": {
+    "highlight.js": "^11.4.0"
+  },
+  "luna": {
+    "install": true
+  }
 }

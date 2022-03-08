@@ -25,3 +25,8 @@ npm install luna-syntax-highlighter --save
 import 'luna-syntax-highlighter/luna-syntax-highlighter.css'
 import LunaSyntaxHighlighter from 'luna-syntax-highlighter'
 ```
+
+## Configuration
+
+* code(string): Code to highlight.
+* language(string): Language to highlight code in.

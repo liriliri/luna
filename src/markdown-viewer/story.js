@@ -2,16 +2,13 @@ import 'luna-markdown-viewer.css'
 import MarkdownViewer from 'luna-markdown-viewer.js'
 import story from '../share/story'
 import readme from './README.md'
-
-const markdown = `# h1
-## h2
-`
+import markdownIt from './MARKDOWN_IT.md'
 
 const def = story(
   'markdown-viewer',
   (container) => {
     const markdownViewer = new MarkdownViewer(container, {
-      markdown,
+      markdown: readme + markdownIt,
     })
 
     return markdownViewer

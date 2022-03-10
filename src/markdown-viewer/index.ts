@@ -5,10 +5,13 @@ interface IOptions extends IComponentOptions {
   markdown?: string
 }
 
+/**
+ * Live markdown renderer.
+ */
 export default class MarkdownViewer extends Component<IOptions> {
   private md: MarkdownIt = new MarkdownIt()
   constructor(container: HTMLElement, options: IOptions = {}) {
-    super(container, { compName: 'markdown-viewer' })
+    super(container, { compName: 'markdown-viewer' }, options)
 
     this.initOptions(options, {
       markdown: '',

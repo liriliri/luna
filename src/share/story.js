@@ -6,6 +6,7 @@ import h from 'licia/h'
 import waitUntil from 'licia/waitUntil'
 import toArr from 'licia/toArr'
 import upperFirst from 'licia/upperFirst'
+import extend from 'licia/extend'
 import { addReadme } from 'storybook-readme/html'
 import each from 'licia/each'
 import addons from '@storybook/addons'
@@ -16,7 +17,7 @@ import { optionsKnob } from '@storybook/addon-knobs'
 export default function story(
   name,
   storyFn,
-  { readme, source, layout = 'padded' } = {}
+  { readme, source, layout = 'padded', themes = {} } = {}
 ) {
   const container = h('div')
 
@@ -53,10 +54,13 @@ export default function story(
       waitUntil(() => container.parentElement).then(() => {
         const theme = optionsKnob(
           'Theme',
-          {
-            Light: 'light',
-            Dark: 'dark',
-          },
+          extend(
+            {
+              Light: 'light',
+              Dark: 'dark',
+            },
+            themes
+          ),
           'light',
           {
             display: 'select',

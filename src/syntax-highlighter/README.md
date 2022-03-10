@@ -30,3 +30,11 @@ import LunaSyntaxHighlighter from 'luna-syntax-highlighter'
 
 * code(string): Code to highlight.
 * language(string): Language to highlight code in.
+* showLineNumbers(boolean): Show line numbers.
+* wrapLongLines(boolean): Wrap lone lines.
+
+## Api
+
+### registerLanguage(name: string, fn: AnyFn): void
+
+Highlight.js registerLanguage.

@@ -5,7 +5,10 @@ test('syntax-highlighter', (container) => {
   const syntaxHighlighter = new SyntaxHighlighter(container)
 
   it('basic', () => {
-    syntaxHighlighter.setOption('code', 'const a = 1;')
+    syntaxHighlighter.setOption({
+      code: 'const a = 1;',
+      language: 'javascript',
+    })
   })
 
   return syntaxHighlighter

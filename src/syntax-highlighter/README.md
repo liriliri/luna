@@ -26,6 +26,16 @@ import 'luna-syntax-highlighter/luna-syntax-highlighter.css'
 import LunaSyntaxHighlighter from 'luna-syntax-highlighter'
 ```
 
+## Usage
+
+```javascript
+const syntaxHighlighter = new LunaSyntaxHighlighter(container)
+syntaxHighlighter.setOption({
+  code: 'const a = 1;',
+  language: 'javascript',
+})
+```
+
 ## Configuration
 
 * code(string): Code to highlight.

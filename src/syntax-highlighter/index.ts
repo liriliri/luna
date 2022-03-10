@@ -29,6 +29,13 @@ export interface IOptions extends IComponentOptions {
 
 /**
  * Syntax highlighter using highlightjs.
+ *
+ * @example
+ * const syntaxHighlighter = new LunaSyntaxHighlighter(container)
+ * syntaxHighlighter.setOption({
+ *   code: 'const a = 1;',
+ *   language: 'javascript',
+ * })
  */
 export default class SyntaxHighlighter extends Component {
   private render: types.AnyFn

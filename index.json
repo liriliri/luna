@@ -105,11 +105,11 @@
   },
   "markdown-viewer": {
     "install": true,
+    "dependencies": ["syntax-highlighter"],
     "version": "0.1.0",
     "style": true,
     "icon": false,
-    "test": true,
-    "dependencies": []
+    "test": true
   },
   "menu": {
     "icon": true,
@@ -177,7 +177,7 @@
   },
   "syntax-highlighter": {
     "install": true,
-    "version": "0.1.0",
+    "version": "0.2.0",
     "style": true,
     "icon": false,
     "test": true,

@@ -116,12 +116,18 @@ export default class SyntaxHighlighter extends Component {
 
     this.$code.html(`<div class="${c('table')}">${body}</div>`)
   }
-  /** Highlight.js registerLanguage. */
+  /**
+   * Highlight.js registerLanguage.
+   * @static
+   */
   static registerLanguage(name: string, fn: types.AnyFn) {
     hljs.registerLanguage(name, fn)
   }
-  /** Highlight.js getLanguage. */
-  static getLanguage(name: string) {
+  /**
+   * Highlight.js getLanguage.
+   * @static
+   */
+  static getLanguage(name: string): any {
     return hljs.getLanguage(name)
   }
 }

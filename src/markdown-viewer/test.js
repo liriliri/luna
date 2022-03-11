@@ -2,8 +2,11 @@ import MarkdownViewer from './index'
 import test from '../share/test'
 
 test('markdown-viewer', (container) => {
+  const markdownViewer = new MarkdownViewer(container)
+
   it('basic', () => {
-    const markdownViewer = new MarkdownViewer(container)
-    markdownViewer.destroy()
+    markdownViewer.setOption('markdown', '# h1')
   })
+
+  return markdownViewer
 })

@@ -1,6 +1,7 @@
 @import '../share/variable';
 
 .luna-syntax-highlighter {
+  padding: 0;
   unicode-bidi: embed;
   position: relative;
   overflow: auto;
@@ -20,13 +21,19 @@
 }
 
 .table {
-  border-collapse: collapse;
-  td {
+  display: table;
+  .line-number,
+  .line-code {
     padding: 0;
   }
 }
 
+.table-row {
+  display: table-row;
+}
+
 .line-number {
+  display: table-cell;
   padding: 0 3px 0 8px !important;
   text-align: right;
   vertical-align: top;
@@ -35,6 +42,7 @@
 }
 
 .line-code {
+  display: table-cell;
   padding-left: 4px !important;
 }
 

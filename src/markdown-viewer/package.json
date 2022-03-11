@@ -9,6 +9,9 @@
     "@types/markdown-it": "^12.2.3"
   },
   "luna": {
-    "install": true
+    "install": true,
+    "dependencies": [
+      "syntax-highlighter"
+    ]
   }
 }

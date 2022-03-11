@@ -45,6 +45,10 @@ syntaxHighlighter.setOption({
 
 ## Api
 
+### getLanguage(name: string): undefined | Language
+
+Highlight.js getLanguage.
+
 ### registerLanguage(name: string, fn: AnyFn): void
 
 Highlight.js registerLanguage.

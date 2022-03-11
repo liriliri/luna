@@ -75,9 +75,9 @@
     box-sizing: content-box;
     background-color: #ffffff;
   }
-  code,
+  code:not([class^='luna-syntax-highlighter-code']),
   kbd,
-  pre,
+  pre:not([class^='luna-syntax-highlighter']),
   samp {
     font-family: monospace, monospace;
     font-size: 1em;
@@ -204,12 +204,12 @@
     margin-left: 0;
   }
   tt,
-  code {
+  code:not([class^='luna-syntax-highlighter-code']) {
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
       Liberation Mono, monospace;
     font-size: 12px;
   }
-  pre {
+  pre:not([class^='luna-syntax-highlighter']) {
     margin-top: 0;
     margin-bottom: 0;
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
@@ -227,7 +227,7 @@
   ol,
   dl,
   table,
-  pre,
+  pre:not([class^='luna-syntax-highlighter']),
   details {
     margin-top: 0;
     margin-bottom: 16px;
@@ -243,21 +243,6 @@
   }
   sup > a::after {
     content: ']';
-  }
-  h1 tt,
-  h1 code,
-  h2 tt,
-  h2 code,
-  h3 tt,
-  h3 code,
-  h4 tt,
-  h4 code,
-  h5 tt,
-  h5 code,
-  h6 tt,
-  h6 code {
-    padding: 0 0.2em;
-    font-size: inherit;
   }
   ol[type='1'] {
     list-style-type: decimal;
@@ -322,7 +307,7 @@
   img[align='left'] {
     padding-right: 20px;
   }
-  code,
+  code:not([class^='luna-syntax-highlighter-code']),
   tt {
     padding: 0.2em 0.4em;
     margin: 0;
@@ -330,17 +315,17 @@
     background-color: rgba(175, 184, 193, 0.2);
     border-radius: 6px;
   }
-  code br,
+  code:not([class^='luna-syntax-highlighter-code']) br,
   tt br {
     display: none;
   }
-  del code {
+  del code:not([class^='luna-syntax-highlighter-code']) {
     text-decoration: inherit;
   }
-  pre code {
+  pre:not([class^='luna-syntax-highlighter']) code {
     font-size: 100%;
   }
-  pre > code {
+  pre:not([class^='luna-syntax-highlighter']) > code {
     padding: 0;
     margin: 0;
     word-break: normal;
@@ -348,7 +333,7 @@
     background: transparent;
     border: 0;
   }
-  pre {
+  pre:not([class^='luna-syntax-highlighter']) {
     padding: 16px;
     overflow: auto;
     font-size: 85%;
@@ -356,8 +341,8 @@
     background-color: #f6f8fa;
     border-radius: 6px;
   }
-  pre code,
-  pre tt {
+  pre:not([class^='luna-syntax-highlighter']) code,
+  pre:not([class^='luna-syntax-highlighter']) tt {
     display: inline;
     max-width: auto;
     padding: 0;
@@ -426,11 +411,11 @@
   table img {
     background-color: transparent;
   }
-  code,
+  code:not([class^='luna-syntax-highlighter-code']),
   tt {
     background-color: rgba(110, 118, 129, 0.4);
   }
-  pre {
+  pre:not([class^='luna-syntax-highlighter']) {
     background-color: #161b22;
   }
 }

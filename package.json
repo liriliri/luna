@@ -14,6 +14,7 @@
     "update": "luna udpate",
     "format": "lsla prettier 'src/share/*.{ts,js,scss}' '*.{json,js}' 'bin/*.js' '.storybook/*.js' 'lib/*.js' --write && luna format",
     "storybook": "start-storybook -p 8080",
+    "storybook:no-cache": "start-storybook -p 8080 --no-manager-cache",
     "build-storybook": "build-storybook -o .storybook/out"
   },
   "repository": {

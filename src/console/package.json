@@ -1,16 +1,9 @@
 {
   "name": "console",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Console for logging",
-  "dependencies": {
-    "js-beautify": "^1.13.2"
-  },
-  "devDependencies": {
-    "@types/js-beautify": "^1.13.1"
-  },
   "luna": {
     "icon": true,
-    "install": true,
     "dependencies": [
       "object-viewer"
     ]

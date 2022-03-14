@@ -37,7 +37,6 @@ import highlight from 'licia/highlight'
 import { getObjType } from './util'
 import stripIndent from 'licia/stripIndent'
 import Console from './index'
-import beautify from 'js-beautify'
 
 export interface IGroup {
   id: string
@@ -613,7 +612,7 @@ export default class Log extends Emitter {
   }
   private formatJs(val: string) {
     return `<pre class="${this.console.c('code')}">${this.console.c(
-      highlight(beautify(val, { indent_size: 2 }), 'js', emptyHighlightStyle)
+      highlight(val, 'js', emptyHighlightStyle)
     )}</pre>`
   }
   private formatFn(val: types.AnyFn) {
@@ -629,11 +628,7 @@ export default class Log extends Emitter {
     const { c } = this.console
 
     return `<pre class="${c('code')}">${c(
-      highlight(
-        beautify.html(val.outerHTML, { unformatted: [], indent_size: 2 }),
-        'html',
-        emptyHighlightStyle
-      )
+      highlight(val.outerHTML, 'html', emptyHighlightStyle)
     )}</pre>`
   }
 }

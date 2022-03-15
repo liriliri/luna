@@ -6,13 +6,16 @@ import escape from 'licia/escape'
 import story from '../share/story'
 import readme from './README.md'
 import { text } from '@storybook/addon-knobs'
+import MarkdownIt from 'markdown-it'
+
+const md = new MarkdownIt({ linkify: true })
 
 const def = story(
   'editor',
   (wrapper) => {
     $(wrapper).html('')
 
-    const content = text('Initial Content', readme)
+    const content = text('Initial Content', md.render(readme))
 
     const toolbarContainer = h('div')
     $(toolbarContainer).css({
@@ -23,7 +26,7 @@ const def = story(
 
     const editorContainerA = h('div')
     $(editorContainerA).css('marginTop', 10)
-    editorContainerA.innerHTML = escape(content).replace(/\n/g, '<br/>')
+    editorContainerA.innerHTML = content
     const editorContainerB = h('div')
     $(editorContainerB).css('marginTop', 10)
     editorContainerB.innerHTML = editorContainerA.innerHTML

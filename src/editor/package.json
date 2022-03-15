@@ -2,7 +2,11 @@
   "name": "editor",
   "version": "0.1.0",
   "description": "Wysiwyg editor",
+  "devDependencies": {
+    "markdown-it": "^12.3.2"
+  },
   "luna": {
-    "icon": true
+    "icon": true,
+    "install": true
   }
 }

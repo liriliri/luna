@@ -103,3 +103,23 @@
 .hidden ~ ul {
   display: none;
 }
+
+.theme-dark {
+  color: #fff;
+  .null,
+  .special {
+    color: #a1a1a1;
+  }
+  .string,
+  .regexp {
+    color: #f28b54;
+  }
+  .number,
+  .boolean {
+    color: #9980ff;
+  }
+  .key,
+  .key-lighter {
+    color: #5db0d7;
+  }
+}

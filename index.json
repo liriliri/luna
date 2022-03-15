@@ -33,11 +33,11 @@
   },
   "console": {
     "icon": true,
-    "install": true,
     "dependencies": ["object-viewer"],
-    "version": "0.2.1",
+    "version": "0.3.0",
     "style": true,
-    "test": true
+    "test": true,
+    "install": false
   },
   "cropper": {
     "version": "0.1.0",
@@ -81,10 +81,10 @@
   },
   "editor": {
     "icon": true,
+    "install": true,
     "version": "0.1.0",
     "style": true,
     "test": true,
-    "install": false,
     "dependencies": []
   },
   "gallery": {

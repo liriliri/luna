@@ -40,15 +40,23 @@ carousel.append('<div style="background:#e73c5e;">ITEM 1</div>')
 
 ## Api
 
-### append(content: string|HTMLElement): void
+### append(content: string | HTMLElement): void
 
 Append item.
+
+### clear(): void
+
+Clear all items.
 
 ### cycle(): void
 
 Cycle through the carousel items.
 
-### insert(pos: number,content: string|HTMLElement): void
+### getActiveIdx(): number
+
+Get current index, starting from 1, 0 means no items.
+
+### insert(pos: number, content: string | HTMLElement): void
 
 Insert item at given position.
 

@@ -3,7 +3,7 @@ import Carousel from 'luna-carousel.js'
 import $ from 'licia/$'
 import story from '../share/story'
 import readme from './README.md'
-import { number } from '@storybook/addon-knobs'
+import { number, button } from '@storybook/addon-knobs'
 
 const def = story(
   'carousel',
@@ -39,6 +39,11 @@ const def = story(
     carousel.append(
       `<div style="${commonStyle};background-image:url(/pic4.jpg);"></div>`
     )
+
+    button('Clear', () => {
+      carousel.clear()
+      return false
+    })
 
     return carousel
   },

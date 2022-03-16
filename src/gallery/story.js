@@ -20,6 +20,11 @@ const def = story(
       return false
     })
 
+    button('Clear', () => {
+      gallery.clear()
+      return false
+    })
+
     return gallery
   },
   {

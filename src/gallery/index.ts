@@ -53,6 +53,12 @@ export default class Gallery extends Component {
     }
     this.$container.addClass(this.c('hidden'))
   }
+  /** Clear all images. */
+  clear() {
+    this.images = []
+    this.carousel.clear()
+    this.updateCounter()
+  }
   /** Append image. */
   append(src: string, title?: string) {
     this.insert(this.images.length, src, title)
@@ -128,13 +134,16 @@ export default class Gallery extends Component {
   private updateCounter = () => {
     const { carousel } = this
     this.$counter.html(
-      `${carousel.getActiveIdx() + 1} / ${carousel.getSlides().length}`
+      `${carousel.getActiveIdx()} / ${carousel.getSlides().length}`
     )
   }
   private download = () => {
     const { carousel, images } = this
     const activeIdx = carousel.getActiveIdx()
     const image = images[activeIdx]
+    if (!image) {
+      return
+    }
     image.download()
   }
   private bindEvent() {

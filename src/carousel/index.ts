@@ -31,7 +31,7 @@ export default class Carousel extends Component<IOptions> {
   private $arrowRight: $.$
   private $indicators: $.$
   private body: HTMLElement
-  private activeIdx = 0
+  private activeIdx = -1
   private interval: ReturnType<typeof setInterval> | null = null
   private isSliding = false
   constructor(container: HTMLElement, options: IOptions = {}) {
@@ -74,6 +74,12 @@ export default class Carousel extends Component<IOptions> {
   slideTo(idx: number) {
     this.slide(idx > this.activeIdx ? 'next' : 'prev', idx)
   }
+  /** Clear all items. */
+  clear() {
+    this.activeIdx = -1
+    this.body.innerHTML = ''
+    this.updateIndicators()
+  }
   /** Append item. */
   append(content: string | HTMLElement) {
     const slides = this.getSlides()
@@ -83,6 +89,9 @@ export default class Carousel extends Component<IOptions> {
   insert(pos: number, content: string | HTMLElement) {
     const slides = this.getSlides()
     const len = slides.length
+    if (len === 0) {
+      this.activeIdx = 0
+    }
 
     const item = h(this.c('.item') + this.c(len === 0 ? '.active' : ''))
     if (isStr(content)) {
@@ -107,15 +116,16 @@ export default class Carousel extends Component<IOptions> {
   prev = () => {
     this.slide('prev')
   }
+  /** Get current index, starting from 1, 0 means no items. */
+  getActiveIdx() {
+    return this.activeIdx + 1
+  }
   destroy() {
     this.pause()
     super.destroy()
   }
   getSlides() {
     return toArr(this.body.children)
-  }
-  getActiveIdx() {
-    return this.activeIdx
   }
   private slide(order: string, nextIdx?: number) {
     if (this.isSliding) {

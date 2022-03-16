@@ -44,6 +44,10 @@ gallery.show()
 
 Append image.
 
+### clear(): void
+
+Clear all images.
+
 ### insert(pos: number, src: string, title?: string): void
 
 Insert image at given position.

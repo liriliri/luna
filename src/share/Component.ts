@@ -19,6 +19,7 @@ export default class Component<
   c: (name: string) => string
   container: HTMLElement
   $container: $.$
+  private subComponents: Component[] = []
   private compName: string
   protected options: Required<Options>
   constructor(
@@ -44,12 +45,16 @@ export default class Component<
         this.$container
           .rmClass(c(`theme-${oldVal}`))
           .addClass(c(`theme-${val}`))
+        each(this.subComponents, (component) =>
+          component.setOption('theme', val)
+        )
       }
     })
 
     this.setOption('theme', theme)
   }
   destroy() {
+    this.destroySubComponents()
     const { c } = this
     this.$container
       .rmClass(`luna-${this.compName}`)
@@ -75,6 +80,14 @@ export default class Component<
   }
   getOption(name: string) {
     return (this.options as any)[name]
+  }
+  protected addSubComponent(component: Component) {
+    component.setOption('theme', this.options.theme)
+    this.subComponents.push(component)
+  }
+  protected destroySubComponents() {
+    each(this.subComponents, (component) => component.destroy())
+    this.subComponents = []
   }
   protected initOptions(options: Options, defs: any = {}) {
     defaults(options, defs)

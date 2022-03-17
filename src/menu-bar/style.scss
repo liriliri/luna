@@ -2,6 +2,7 @@
 @import '../share/mixin';
 
 .luna-menu-bar {
+  @include component();
   background: $background-color;
   border-bottom: 1px solid $border-color;
 }

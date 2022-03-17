@@ -77,7 +77,7 @@ export default class MarkdownViewer extends Component<IOptions> {
     $images.each(function (this: HTMLImageElement, idx) {
       const $img = $(this)
       $img.data('idx', idx)
-      gallery.append($img.attr('src'))
+      gallery.append($img.attr('src'), $img.attr('alt') || '')
     })
   }
   private bindEvent() {

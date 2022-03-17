@@ -1,8 +1,9 @@
 @import '../share/variable';
+@import '../share/mixin';
 
 .luna-gallery {
+  @include component();
   position: fixed;
-  font-family: $font-family;
   left: 0;
   top: 0;
   z-index: 10;
@@ -16,6 +17,10 @@
       opacity: 1;
     }
   }
+}
+
+.no-scrollbar {
+  overflow: hidden;
 }
 
 .image {
@@ -38,10 +43,6 @@
   left: 0;
   bottom: 0;
   padding: 10px 40px;
-}
-
-.hidden {
-  display: none;
 }
 
 .toolbar {

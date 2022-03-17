@@ -28,7 +28,6 @@ export default class Gallery extends Component {
   private isCycling = false
   constructor(container: HTMLElement) {
     super(container, { compName: 'gallery' })
-    this.hide()
 
     this.initTpl()
 
@@ -43,15 +42,26 @@ export default class Gallery extends Component {
     this.onResize = throttle(() => this.reset(), 16)
 
     this.bindEvent()
+    this.hide()
   }
   show() {
-    this.$container.rmClass(this.c('hidden'))
+    const { c } = this
+    $(document.body).addClass(c('no-scrollbar'))
+    this.$container.rmClass(c('hidden'))
+    this.reset()
   }
   hide = () => {
+    const { c } = this
+    this.pause()
     if (fullscreen.isActive()) {
       this.toggleFullscreen()
     }
-    this.$container.addClass(this.c('hidden'))
+    $(document.body).rmClass(c('no-scrollbar'))
+    this.$container.addClass(c('hidden'))
+  }
+  /** Slide to the item at given index. */
+  slideTo(idx: number) {
+    this.carousel.slideTo(idx)
   }
   /** Clear all images. */
   clear() {
@@ -134,7 +144,7 @@ export default class Gallery extends Component {
   private updateCounter = () => {
     const { carousel } = this
     this.$counter.html(
-      `${carousel.getActiveIdx()} / ${carousel.getSlides().length}`
+      `${carousel.getActiveIdx() + 1} / ${carousel.getSlides().length}`
     )
   }
   private download = () => {

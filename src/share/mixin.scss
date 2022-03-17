@@ -19,9 +19,11 @@
   &.platform-linux {
     font-family: Roboto, Ubuntu, Arial, sans-serif;
   }
+  &.hidden,
   .hidden {
     display: none;
   }
+  &.invisible,
   .invisible {
     visibility: hidden;
   }

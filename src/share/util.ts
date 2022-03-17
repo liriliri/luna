@@ -6,6 +6,7 @@ import isNum from 'licia/isNum'
 import contain from 'licia/contain'
 import toNum from 'licia/toNum'
 import detectOs from 'licia/detectOs'
+import isHidden from 'licia/isHidden'
 
 export function classPrefix(name: string) {
   const prefix = `luna-${name}-`
@@ -107,6 +108,9 @@ export function hasVerticalScrollbar(el: HTMLElement) {
 }
 
 export function executeAfterTransition(el: HTMLElement, callback: () => any) {
+  if (isHidden(el)) {
+    return callback()
+  }
   const handler = (e: any) => {
     const target = e.target
     if (target !== el) {

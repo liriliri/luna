@@ -1,8 +1,12 @@
 import Component, { IComponentOptions } from '../share/Component'
 import MarkdownIt from 'markdown-it'
 import $ from 'licia/$'
+import h from 'licia/h'
+import toNum from 'licia/toNum'
+import types from 'licia/types'
 import startWith from 'licia/startWith'
 import LunaSyntaxHighlighter from 'luna-syntax-highlighter'
+import LunaGallery from 'luna-gallery'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -21,6 +25,9 @@ export default class MarkdownViewer extends Component<IOptions> {
   private md: MarkdownIt = new MarkdownIt({
     linkify: true,
   })
+  private gallery: LunaGallery
+  private galleryContainer: HTMLElement = h('div')
+  private onImageClick: types.AnyFn
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'markdown-viewer' }, options)
 
@@ -28,16 +35,27 @@ export default class MarkdownViewer extends Component<IOptions> {
       markdown: '',
     })
 
-    this.render()
+    document.body.appendChild(this.galleryContainer)
+    this.gallery = new LunaGallery(this.galleryContainer)
 
     this.bindEvent()
+    this.render()
+  }
+  destroy() {
+    this.$container.off('click', this.onImageClick)
+    this.gallery.destroy()
+    document.body.removeChild(this.galleryContainer)
+    super.destroy()
   }
   private render() {
+    const { $container, gallery } = this
+    const { markdown } = this.options
+
+    gallery.clear()
     this.destroySubComponents()
 
-    const { $container } = this
-    const { markdown } = this.options
     $container.html(this.md.render(markdown))
+
     const $codes = $container.find('pre code')
     const self = this
     $codes.each(function (this: HTMLElement) {
@@ -52,12 +70,19 @@ export default class MarkdownViewer extends Component<IOptions> {
       }
       const pre = $code.parent()
 
-      self.addSubComponent(
-        new LunaSyntaxHighlighter(pre.get(0) as HTMLElement)
-      )
+      self.addSubComponent(new LunaSyntaxHighlighter(pre.get(0) as HTMLElement))
+    })
+
+    const $images = $container.find('img')
+    $images.each(function (this: HTMLImageElement, idx) {
+      const $img = $(this)
+      $img.data('idx', idx)
+      gallery.append($img.attr('src'))
     })
   }
   private bindEvent() {
+    const { gallery } = this
+
     this.on('optionChange', (name, val) => {
       switch (name) {
         case 'markdown':
@@ -65,6 +90,14 @@ export default class MarkdownViewer extends Component<IOptions> {
           break
       }
     })
+
+    this.onImageClick = function (this: HTMLImageElement) {
+      const $img = $(this)
+      const idx = toNum($img.data('idx'))
+      gallery.slideTo(idx)
+      gallery.show()
+    }
+    this.$container.on('click', 'img', this.onImageClick)
   }
 }
 

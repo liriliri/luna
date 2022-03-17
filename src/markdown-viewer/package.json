@@ -11,7 +11,8 @@
   "luna": {
     "install": true,
     "dependencies": [
-      "syntax-highlighter"
+      "syntax-highlighter",
+      "gallery"
     ]
   }
 }

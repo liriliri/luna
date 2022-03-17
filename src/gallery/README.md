@@ -51,3 +51,7 @@ Clear all images.
 ### insert(pos: number, src: string, title?: string): void
 
 Insert image at given position.
+
+### slideTo(idx: number): void
+
+Slide to the item at given index.

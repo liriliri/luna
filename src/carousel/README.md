@@ -54,7 +54,7 @@ Cycle through the carousel items.
 
 ### getActiveIdx(): number
 
-Get current index, starting from 1, 0 means no items.
+Get current index, starting from 0, -1 means no items.
 
 ### insert(pos: number, content: string | HTMLElement): void
 

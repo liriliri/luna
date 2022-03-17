@@ -116,9 +116,9 @@ export default class Carousel extends Component<IOptions> {
   prev = () => {
     this.slide('prev')
   }
-  /** Get current index, starting from 1, 0 means no items. */
+  /** Get current index, starting from 0, -1 means no items. */
   getActiveIdx() {
-    return this.activeIdx + 1
+    return this.activeIdx
   }
   destroy() {
     this.pause()

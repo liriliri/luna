@@ -105,7 +105,7 @@
   },
   "markdown-viewer": {
     "install": true,
-    "dependencies": ["syntax-highlighter"],
+    "dependencies": ["syntax-highlighter", "gallery"],
     "version": "0.1.0",
     "style": true,
     "icon": false,
@@ -161,6 +161,14 @@
   },
   "performance-monitor": {
     "version": "0.2.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
+  },
+  "scrollbar": {
+    "version": "0.1.0",
     "style": true,
     "icon": false,
     "test": true,

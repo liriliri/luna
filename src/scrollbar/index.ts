@@ -1,10 +1,9 @@
-import { IOptions } from 'dist/carousel/cjs/carousel'
 import Component from '../share/Component'
 
 /**
  * Custom scrollbar.
  */
-export default class Scrollbar extends Component<IOptions> {
+export default class Scrollbar extends Component {
   constructor(container: HTMLElement) {
     super(container, { compName: 'scrollbar' })
   }

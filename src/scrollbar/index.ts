@@ -114,8 +114,6 @@ export default class Scrollbar extends Component {
       ((trackSize - thumbSize) * contentWrapper.scrollLeft) /
       (contentSize - viewportSize)
 
-    console.log(trackSize, contentSize, viewportSize)
-
     $xThumb.css({
       width: Math.round(thumbSize) + 'px',
       transform: `translate3d(${Math.round(offset)}px, 0, 0)`,

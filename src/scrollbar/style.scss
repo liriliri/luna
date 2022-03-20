@@ -3,6 +3,11 @@
 .luna-scrollbar {
   @include component();
   position: relative;
+  &:hover {
+    .track {
+      opacity: 1;
+    }
+  }
 }
 
 .wrapper {
@@ -29,6 +34,8 @@
   z-index: 1;
   position: absolute;
   overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .thumb {

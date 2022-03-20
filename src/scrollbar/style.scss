@@ -1,4 +1,7 @@
+@import '../share/mixin.scss';
+
 .luna-scrollbar {
+  @include component();
   position: relative;
 }
 
@@ -15,4 +18,43 @@
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.content-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.track {
+  z-index: 1;
+  position: absolute;
+  overflow: hidden;
+}
+
+.thumb {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.horizontal {
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  height: 6px;
+  .thumb {
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.vertical {
+  top: 2px;
+  bottom: 2px;
+  right: 2px;
+  width: 6px;
+  .thumb {
+    left: 0;
+    right: 0;
+  }
 }

@@ -4,7 +4,7 @@ import $ from 'licia/$'
 import each from 'licia/each'
 import clone from 'licia/clone'
 import ResizeSensor from 'licia/ResizeSensor'
-import { measuredScrollbarWidth } from '../share/util'
+import { measuredScrollbarWidth, pxToNum } from '../share/util'
 
 interface IScrollbar {
   isOverflow: boolean
@@ -19,6 +19,10 @@ interface IScrollbar {
 export default class Scrollbar extends Component {
   private $offset: $.$
   private $contentWrapper: $.$
+  private $xTrack: $.$
+  private $yTrack: $.$
+  private $xThumb: $.$
+  private $yThumb: $.$
   private contentWrapper: HTMLElement
   private x: IScrollbar
   private y: IScrollbar
@@ -28,12 +32,18 @@ export default class Scrollbar extends Component {
     super(container, { compName: 'scrollbar' })
 
     const childNodes = clone(container.childNodes)
+
     this.initTpl()
     this.$offset = this.find('.offset')
     const $content = this.find('.content')
     this.content = $content.get(0) as HTMLElement
     this.$contentWrapper = this.find('.content-wrapper')
     this.contentWrapper = this.$contentWrapper.get(0) as HTMLElement
+    this.$yTrack = this.find('.vertical')
+    this.$yThumb = this.find('.vertical .thumb')
+    this.$xTrack = this.find('.horizontal')
+    this.$xThumb = this.find('.horizontal .thumb')
+
     each(childNodes, (child) => $content.append(child as Element))
 
     this.resizeSensor = new ResizeSensor(container)
@@ -51,20 +61,81 @@ export default class Scrollbar extends Component {
   }
   private bindEvent() {
     this.resizeSensor.addListener(this.reset)
+
+    this.$contentWrapper.on('scroll', this.onScroll)
+  }
+  private onScroll = () => {
+    this.renderScrollbarX()
+    this.renderScrollbarY()
   }
   private reset = () => {
-    const { content, contentWrapper } = this
+    const { content, contentWrapper, $container, c, $xTrack, $yTrack } = this
 
-    this.x.isOverflow = content.scrollWidth > content.offsetWidth
-    this.y.isOverflow = content.scrollHeight > contentWrapper.offsetHeight
+    let xIsOverflow = content.scrollWidth > content.offsetWidth
+    let yIsOverflow = content.scrollHeight > contentWrapper.offsetHeight
+    if ($container.css('overflow-x') === 'hidden') {
+      xIsOverflow = false
+    }
+    if ($container.css('overflow-y') === 'hidden') {
+      yIsOverflow = false
+    }
+
+    this.x.isOverflow = xIsOverflow
+    this.y.isOverflow = yIsOverflow
+
+    if (xIsOverflow) {
+      $xTrack.rmClass(c('hidden'))
+    } else {
+      $xTrack.addClass(c('hidden'))
+    }
+    if (yIsOverflow) {
+      $yTrack.rmClass(c('hidden'))
+    } else {
+      $yTrack.addClass(c('hidden'))
+    }
 
     this.$contentWrapper.css({
-      overflow: 'auto',
-      height: '100%',
-      width: '100%',
+      overflowX: xIsOverflow ? 'scroll' : 'hidden',
+      overflowY: yIsOverflow ? 'scroll' : 'hidden',
     })
 
+    this.renderScrollbarX()
+    this.renderScrollbarY()
     this.hideNativeScrollbar()
+  }
+  private renderScrollbarX() {
+    const { $xTrack, content, $xThumb, contentWrapper, container } = this
+    const trackSize = $xTrack.offset().width
+    const contentSize = content.scrollWidth
+    const viewportSize = pxToNum(window.getComputedStyle(container).width)
+    const thumbSize = trackSize * (viewportSize / contentSize)
+
+    const offset =
+      ((trackSize - thumbSize) * contentWrapper.scrollLeft) /
+      (contentSize - viewportSize)
+
+    console.log(trackSize, contentSize, viewportSize)
+
+    $xThumb.css({
+      width: Math.round(thumbSize) + 'px',
+      transform: `translate3d(${Math.round(offset)}px, 0, 0)`,
+    })
+  }
+  private renderScrollbarY() {
+    const { $yTrack, content, $yThumb, contentWrapper, container } = this
+    const trackSize = $yTrack.offset().height
+    const contentSize = content.scrollHeight
+    const viewportSize = pxToNum(window.getComputedStyle(container).height)
+    const thumbSize = trackSize * (viewportSize / contentSize)
+
+    const offset =
+      ((trackSize - thumbSize) * contentWrapper.scrollTop) /
+      (contentSize - viewportSize)
+
+    $yThumb.css({
+      height: Math.round(thumbSize) + 'px',
+      transform: `translate3d(0, ${Math.round(offset)}px, 0)`,
+    })
   }
   private hideNativeScrollbar() {
     const { x, y, $offset } = this

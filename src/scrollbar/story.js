@@ -1,11 +1,23 @@
 import 'luna-scrollbar.css'
 import Scrollbar from 'luna-scrollbar.js'
+import $ from 'licia/$'
+import escape from 'licia/escape'
 import story from '../share/story'
 import readme from './README.md'
 
 const def = story(
   'scrollbar',
   (container) => {
+    $(container)
+      .css({
+        maxWidth: 640,
+        width: '100',
+        overflow: 'auto',
+        aspectRatio: '4/3',
+        margin: '0 auto',
+      })
+      .html(`<div style="white-space:pre;">${escape(readme)}</div>`)
+
     const scrollbar = new Scrollbar(container)
 
     return scrollbar

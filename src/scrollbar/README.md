@@ -25,3 +25,9 @@ npm install luna-scrollbar --save
 import 'luna-scrollbar/luna-scrollbar.css'
 import LunaScrollbar from 'luna-scrollbar'
 ```
+
+## Usage
+
+```javascript
+const scrollbar = new LunaScrollbar(container)
+```

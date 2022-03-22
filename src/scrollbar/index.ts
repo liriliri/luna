@@ -4,7 +4,9 @@ import $ from 'licia/$'
 import each from 'licia/each'
 import clone from 'licia/clone'
 import ResizeSensor from 'licia/ResizeSensor'
-import { measuredScrollbarWidth, pxToNum } from '../share/util'
+import { measuredScrollbarWidth, pxToNum, drag } from '../share/util'
+
+const $document = $(document as any)
 
 interface IScrollbar {
   isOverflow: boolean
@@ -28,6 +30,8 @@ export default class Scrollbar extends Component {
   private y: IScrollbar
   private content: HTMLElement
   private resizeSensor: ResizeSensor
+  private dragAxis: 'x' | 'y' = 'x'
+  private dragOffset = 0
   constructor(container: HTMLElement) {
     super(container, { compName: 'scrollbar' })
 
@@ -62,7 +66,41 @@ export default class Scrollbar extends Component {
   private bindEvent() {
     this.resizeSensor.addListener(this.reset)
 
+    this.$xThumb.on(drag('start'), (e) => this.onDragStart(e, 'x'))
+    this.$yThumb.on(drag('start'), (e) => this.onDragStart(e, 'y'))
+
     this.$contentWrapper.on('scroll', this.onScroll)
+  }
+  private onDragStart(e: any, axis: 'x' | 'y') {
+    e = e.origEvent
+    this.dragAxis = axis
+    if (axis === 'x') {
+      this.dragOffset = e.pageX - this.$xThumb.offset().left
+    } else {
+      this.dragOffset = e.pageY - this.$yThumb.offset().top
+    }
+
+    $document.on(drag('move'), this.onDragMove)
+    $document.on(drag('end'), this.onDragEnd)
+  }
+  private onDragMove = (e: any) => {
+    const { content, container, contentWrapper } = this
+
+    if (this.dragAxis === 'x') {
+    } else {
+      const contentSize = content.scrollHeight
+      const viewportSize = pxToNum(window.getComputedStyle(container).height)
+      let dragPos = e.pageY - this.$yTrack.offset().top - this.dragOffset
+      let scrollPos =
+        (dragPos /
+          (this.$yTrack.offset().height - this.$yThumb.offset().height)) *
+        (contentSize - viewportSize)
+      contentWrapper.scrollTop = scrollPos
+    }
+  }
+  private onDragEnd = () => {
+    $document.off(drag('move'), this.onDragMove)
+    $document.off(drag('end'), this.onDragEnd)
   }
   private onScroll = () => {
     this.renderScrollbarX()

@@ -30,4 +30,11 @@ import LunaScrollbar from 'luna-scrollbar'
 
 ```javascript
 const scrollbar = new LunaScrollbar(container)
+scollbar.getContent().innerHTML = 'test'
 ```
+
+## Api
+
+### getContent(): HTMLElement
+
+Get content element.

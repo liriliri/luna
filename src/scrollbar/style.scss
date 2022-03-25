@@ -3,6 +3,7 @@
 .luna-scrollbar {
   @include component();
   position: relative;
+  box-sizing: border-box;
   &:hover {
     .track {
       opacity: 1;

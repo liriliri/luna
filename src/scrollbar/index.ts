@@ -4,7 +4,7 @@ import $ from 'licia/$'
 import each from 'licia/each'
 import clone from 'licia/clone'
 import ResizeSensor from 'licia/ResizeSensor'
-import { measuredScrollbarWidth, pxToNum, drag } from '../share/util'
+import { measuredScrollbarWidth, drag } from '../share/util'
 
 const $document = $(document as any)
 
@@ -17,6 +17,7 @@ interface IScrollbar {
  *
  * @example
  * const scrollbar = new LunaScrollbar(container)
+ * scollbar.getContent().innerHTML = 'test'
  */
 export default class Scrollbar extends Component {
   private $offset: $.$
@@ -28,19 +29,23 @@ export default class Scrollbar extends Component {
   private contentWrapper: HTMLElement
   private x: IScrollbar
   private y: IScrollbar
+  private $content: $.$
   private content: HTMLElement
   private resizeSensor: ResizeSensor
+  private contentResizeSensor: ResizeSensor
   private dragAxis: 'x' | 'y' = 'x'
   private dragOffset = 0
+  private containerStyle: CSSStyleDeclaration
   constructor(container: HTMLElement) {
     super(container, { compName: 'scrollbar' })
+    this.containerStyle = window.getComputedStyle(container)
 
     const childNodes = clone(container.childNodes)
 
     this.initTpl()
     this.$offset = this.find('.offset')
-    const $content = this.find('.content')
-    this.content = $content.get(0) as HTMLElement
+    this.$content = this.find('.content')
+    this.content = this.$content.get(0) as HTMLElement
     this.$contentWrapper = this.find('.content-wrapper')
     this.contentWrapper = this.$contentWrapper.get(0) as HTMLElement
     this.$yTrack = this.find('.vertical')
@@ -48,9 +53,10 @@ export default class Scrollbar extends Component {
     this.$xTrack = this.find('.horizontal')
     this.$xThumb = this.find('.horizontal .thumb')
 
-    each(childNodes, (child) => $content.append(child as Element))
+    each(childNodes, (child) => this.$content.append(child as Element))
 
     this.resizeSensor = new ResizeSensor(container)
+    this.contentResizeSensor = new ResizeSensor(this.content)
 
     this.x = {
       isOverflow: false,
@@ -63,8 +69,13 @@ export default class Scrollbar extends Component {
 
     this.reset()
   }
+  /** Get content element. */
+  getContent() {
+    return this.content
+  }
   private bindEvent() {
     this.resizeSensor.addListener(this.reset)
+    this.contentResizeSensor.addListener(this.reset)
 
     this.$xThumb.on(drag('start'), (e) => this.onDragStart(e, 'x'))
     this.$yThumb.on(drag('start'), (e) => this.onDragStart(e, 'y'))
@@ -90,11 +101,11 @@ export default class Scrollbar extends Component {
   }
   private onDragMove = (e: any) => {
     e = e.origEvent
-    const { content, container, contentWrapper, $yTrack, $xTrack } = this
+    const { content, contentWrapper, $yTrack, $xTrack, container } = this
 
     if (this.dragAxis === 'x') {
       const contentSize = content.scrollWidth
-      const viewportSize = pxToNum(window.getComputedStyle(container).width)
+      const viewportSize = container.clientWidth
       const dragPos = e.pageX - $xTrack.offset().left - this.dragOffset
       const trackSize = $xTrack.offset().width
       const thumbSize = this.$xThumb.offset().width
@@ -103,7 +114,7 @@ export default class Scrollbar extends Component {
       contentWrapper.scrollLeft = scrollPos
     } else {
       const contentSize = content.scrollHeight
-      const viewportSize = pxToNum(window.getComputedStyle(container).height)
+      const viewportSize = container.clientHeight
       const dragPos = e.pageY - $yTrack.offset().top - this.dragOffset
       const trackSize = $yTrack.offset().height
       const thumbSize = this.$yThumb.offset().height
@@ -128,7 +139,15 @@ export default class Scrollbar extends Component {
     this.renderScrollbarY()
   }
   private reset = () => {
-    const { content, contentWrapper, $container, c, $xTrack, $yTrack } = this
+    const {
+      content,
+      contentWrapper,
+      $container,
+      c,
+      $xTrack,
+      $yTrack,
+      containerStyle,
+    } = this
 
     let xIsOverflow = content.scrollWidth > content.offsetWidth
     let yIsOverflow = content.scrollHeight > contentWrapper.offsetHeight
@@ -153,6 +172,17 @@ export default class Scrollbar extends Component {
       $yTrack.addClass(c('hidden'))
     }
 
+    const {
+      paddingTop,
+      paddingRight,
+      paddingBottom,
+      paddingLeft,
+    } = containerStyle
+
+    this.$content.css({
+      padding: `${paddingTop} ${paddingRight} ${paddingBottom} ${paddingLeft}`,
+    })
+
     this.$contentWrapper.css({
       overflowX: xIsOverflow ? 'scroll' : 'hidden',
       overflowY: yIsOverflow ? 'scroll' : 'hidden',
@@ -166,15 +196,15 @@ export default class Scrollbar extends Component {
     const { $xTrack, content, $xThumb, contentWrapper, container } = this
     const trackSize = $xTrack.offset().width
     const contentSize = content.scrollWidth
-    const viewportSize = pxToNum(window.getComputedStyle(container).width)
-    const thumbSize = trackSize * (viewportSize / contentSize)
+    const viewportSize = container.clientWidth
+    const thumbSize = Math.round(trackSize * (viewportSize / contentSize))
 
     const offset =
       ((trackSize - thumbSize) * contentWrapper.scrollLeft) /
       (contentSize - viewportSize)
 
     $xThumb.css({
-      width: Math.round(thumbSize) + 'px',
+      width: thumbSize + 'px',
       transform: `translate3d(${Math.round(offset)}px, 0, 0)`,
     })
   }
@@ -182,15 +212,15 @@ export default class Scrollbar extends Component {
     const { $yTrack, content, $yThumb, contentWrapper, container } = this
     const trackSize = $yTrack.offset().height
     const contentSize = content.scrollHeight
-    const viewportSize = pxToNum(window.getComputedStyle(container).height)
-    const thumbSize = trackSize * (viewportSize / contentSize)
+    const viewportSize = container.clientHeight
+    const thumbSize = Math.round(trackSize * (viewportSize / contentSize))
 
     const offset =
       ((trackSize - thumbSize) * contentWrapper.scrollTop) /
       (contentSize - viewportSize)
 
     $yThumb.css({
-      height: Math.round(thumbSize) + 'px',
+      height: thumbSize + 'px',
       transform: `translate3d(0, ${Math.round(offset)}px, 0)`,
     })
   }

@@ -11,12 +11,17 @@ const def = story(
     $(container)
       .css({
         maxWidth: 640,
+        padding: '50px',
         width: '100%',
         aspectRatio: '4/3',
         margin: '0 auto',
         border: '1px solid black',
       })
-      .html(`<div style="white-space:pre;padding:8px;">${escape(readme)}</div>`)
+      .html(
+        `<div style="white-space:pre-wrap;min-width:400px;">${escape(
+          readme
+        )}</div>`
+      )
 
     const scrollbar = new Scrollbar(container)
 

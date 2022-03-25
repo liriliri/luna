@@ -4,7 +4,9 @@ import test from '../share/test'
 test('scrollbar', (container) => {
   const scrollbar = new Scrollbar(container)
 
-  it('basic', () => {})
+  it('basic', () => {
+    expect(scrollbar.getContent().innerHTML).to.equal('')
+  })
 
   return scrollbar
 })

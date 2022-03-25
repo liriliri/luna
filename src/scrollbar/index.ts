@@ -72,33 +72,54 @@ export default class Scrollbar extends Component {
     this.$contentWrapper.on('scroll', this.onScroll)
   }
   private onDragStart(e: any, axis: 'x' | 'y') {
+    e.preventDefault()
     e = e.origEvent
+
+    const { c } = this
     this.dragAxis = axis
     if (axis === 'x') {
       this.dragOffset = e.pageX - this.$xThumb.offset().left
+      this.$xTrack.addClass(c('active'))
     } else {
       this.dragOffset = e.pageY - this.$yThumb.offset().top
+      this.$yTrack.addClass(c('active'))
     }
 
     $document.on(drag('move'), this.onDragMove)
     $document.on(drag('end'), this.onDragEnd)
   }
   private onDragMove = (e: any) => {
-    const { content, container, contentWrapper } = this
+    e = e.origEvent
+    const { content, container, contentWrapper, $yTrack, $xTrack } = this
 
     if (this.dragAxis === 'x') {
+      const contentSize = content.scrollWidth
+      const viewportSize = pxToNum(window.getComputedStyle(container).width)
+      const dragPos = e.pageX - $xTrack.offset().left - this.dragOffset
+      const trackSize = $xTrack.offset().width
+      const thumbSize = this.$xThumb.offset().width
+      const dragPercentage = dragPos / (trackSize - thumbSize)
+      const scrollPos = dragPercentage * (contentSize - viewportSize)
+      contentWrapper.scrollLeft = scrollPos
     } else {
       const contentSize = content.scrollHeight
       const viewportSize = pxToNum(window.getComputedStyle(container).height)
-      let dragPos = e.pageY - this.$yTrack.offset().top - this.dragOffset
-      let scrollPos =
-        (dragPos /
-          (this.$yTrack.offset().height - this.$yThumb.offset().height)) *
-        (contentSize - viewportSize)
+      const dragPos = e.pageY - $yTrack.offset().top - this.dragOffset
+      const trackSize = $yTrack.offset().height
+      const thumbSize = this.$yThumb.offset().height
+      const dragPercentage = dragPos / (trackSize - thumbSize)
+      const scrollPos = dragPercentage * (contentSize - viewportSize)
       contentWrapper.scrollTop = scrollPos
     }
   }
   private onDragEnd = () => {
+    const { c, dragAxis } = this
+    if (dragAxis === 'x') {
+      this.$xTrack.rmClass(c('active'))
+    } else {
+      this.$yTrack.rmClass(c('active'))
+    }
+
     $document.off(drag('move'), this.onDragMove)
     $document.off(drag('end'), this.onDragEnd)
   }

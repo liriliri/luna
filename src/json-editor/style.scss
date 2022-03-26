@@ -27,6 +27,9 @@
   & > .insert {
     display: none;
   }
+  &.theme-dark {
+    color: #fff;
+  }
 }
 
 .icon-arrow-right,
@@ -133,4 +136,23 @@
 
 .insert:hover {
   color: #000;
+}
+
+.theme-dark {
+  .name {
+    color: #5db0d7;
+  }
+  .value.string {
+    color: #f28b54;
+  }
+  .value.null {
+    color: #a1a1a1;
+  }
+  .value.boolean,
+  .value.number {
+    color: #9980ff;
+  }
+  .insert:hover {
+    color: #fff;
+  }
 }

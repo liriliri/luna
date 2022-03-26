@@ -4,6 +4,7 @@ import { classPrefix, getPlatform } from './util'
 import each from 'licia/each'
 import extend from 'licia/extend'
 import defaults from 'licia/defaults'
+import remove from 'licia/remove'
 
 interface IOptions {
   compName: string
@@ -84,6 +85,9 @@ export default class Component<
   protected addSubComponent(component: Component) {
     component.setOption('theme', this.options.theme)
     this.subComponents.push(component)
+  }
+  protected removeSubComponent(component: Component) {
+    remove(this.subComponents, com => com === component)
   }
   protected destroySubComponents() {
     each(this.subComponents, (component) => component.destroy())

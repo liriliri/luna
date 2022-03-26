@@ -271,9 +271,12 @@ export default class JsonEditor extends Component<IOptions> {
       this.$children.get(0).appendChild(container)
     }
 
+    this.addSubComponent(child)
+
     return child
   }
   removeChild = (child: JsonEditor) => {
+    this.removeSubComponent(child)
     child.destroy()
   }
   getType() {

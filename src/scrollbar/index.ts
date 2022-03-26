@@ -17,7 +17,7 @@ interface IScrollbar {
  *
  * @example
  * const scrollbar = new LunaScrollbar(container)
- * scollbar.getContent().innerHTML = 'test'
+ * scrollbar.getContent().innerHTML = 'test'
  */
 export default class Scrollbar extends Component {
   private $offset: $.$

@@ -38,7 +38,8 @@
       "luna-window": ["src/window/index"],
       "luna-markdown-viewer": ["src/markdown-viewer/index"],
       "luna-syntax-highlighter": ["src/syntax-highlighter/index"],
-      "luna-scrollbar": ["src/scrollbar/index"]
+      "luna-scrollbar": ["src/scrollbar/index"],
+      "luna-music-visualizer": ["src/music-visualizer/index"]
     }
   }
 }

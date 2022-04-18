@@ -87,7 +87,7 @@ export default class Component<
     this.subComponents.push(component)
   }
   protected removeSubComponent(component: Component) {
-    remove(this.subComponents, com => com === component)
+    remove(this.subComponents, (com) => com === component)
   }
   protected destroySubComponents() {
     each(this.subComponents, (component) => component.destroy())

@@ -47,7 +47,7 @@ export default class Modal extends Component<IOptions> {
       content: '',
       footer: '',
       showClose: true,
-      width: 500,
+      width: 640,
     })
 
     this.initTpl()

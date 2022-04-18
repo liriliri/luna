@@ -11,7 +11,7 @@ const def = story(
     $(container).css({
       width: '100%',
       maxWidth: 640,
-      height: 400,
+      height: 360,
       margin: '0 auto',
     })
 

@@ -1,14 +1,63 @@
 import 'luna-music-visualizer.css'
+import 'luna-music-player.css'
 import MusicVisualizer from 'luna-music-visualizer.js'
+import MusicPlayer from 'luna-music-player.js'
+import $ from 'licia/$'
+import h from 'licia/h'
 import story from '../share/story'
 import readme from './README.md'
+import { object } from '@storybook/addon-knobs'
 
 const def = story(
   'music-visualizer',
-  (container) => {
+  (wrapper) => {
+    $(wrapper).html('')
+
+    const audio = object('Audio', [
+      {
+        url: 'https://test.surunzi.com/audio/Get_along.mp3',
+        cover: '/getAlong.jpg',
+        title: 'Get Along',
+        artist: '林原めぐみ',
+      },
+      {
+        url: 'https://test.surunzi.com/audio/Give_a_reason.mp3',
+        cover: '/giveAReason.jpg',
+        title: 'Give a Reason',
+        artist: '林原めぐみ',
+      },
+      {
+        url: 'https://test.surunzi.com/audio/Breeze.mp3',
+        cover: '/breeze.jpg',
+        title: 'Breeze',
+        artist: '林原めぐみ',
+      },
+    ])
+    const musicPlayerContainer = h('div')
+    $(musicPlayerContainer).css({
+      width: 640,
+      margin: '0 auto',
+      maxWidth: '100%',
+    })
+    const musicPlayer = new MusicPlayer(musicPlayerContainer, {
+      audio,
+    })
+
+    const container = h('div')
+    $(container).css({
+      width: 640,
+      margin: '0 auto',
+      maxWidth: '100%',
+      minHeight: 150,
+      aspectRatio: '1280/720',
+    })
+
     const musicVisualizer = new MusicVisualizer(container)
 
-    return musicVisualizer
+    wrapper.appendChild(container)
+    wrapper.appendChild(musicPlayerContainer)
+
+    return [musicVisualizer, musicPlayer]
   },
   {
     readme,

@@ -24,11 +24,11 @@ const def = story(
       const $canvas = $(canvas)
       $canvas
         .attr({
-          width: px(600),
-          height: px(400),
+          width: px(640),
+          height: px(360),
         })
         .css({
-          maxWidth: 600,
+          maxWidth: 640,
           width: '100%',
           display: 'block',
           margin: '0 auto 10px',

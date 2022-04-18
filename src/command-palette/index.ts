@@ -30,7 +30,7 @@ export interface IOptions extends IComponentOptions {
   commands?: ICommand[]
 }
 
-const MAX_WIDTH = 500
+const MAX_WIDTH = 640
 
 /**
  * Command palette.

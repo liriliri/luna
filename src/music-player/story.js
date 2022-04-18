@@ -4,8 +4,6 @@ import h from 'licia/h'
 import $ from 'licia/$'
 import MusicPlayer from 'luna-music-player.js'
 import { object } from '@storybook/addon-knobs'
-import isPromise from 'licia/isPromise'
-import noop from 'licia/noop'
 import readme from './README.md'
 
 const def = story(
@@ -13,7 +11,7 @@ const def = story(
   (wrapper) => {
     $(wrapper)
       .css({
-        width: 600,
+        width: 640,
         margin: '0 auto',
         maxWidth: '100%',
       })

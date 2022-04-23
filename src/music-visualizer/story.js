@@ -22,21 +22,9 @@ const def = story(
 
     const audio = object('Audio', [
       {
-        url: 'https://res.liriliri.io/luna/Get_along.mp3',
-        cover: '/getAlong.jpg',
-        title: 'Get Along',
-        artist: '林原めぐみ',
-      },
-      {
         url: 'https://res.liriliri.io/luna/Give_a_reason.mp3',
         cover: '/giveAReason.jpg',
         title: 'Give a Reason',
-        artist: '林原めぐみ',
-      },
-      {
-        url: 'https://res.liriliri.io/luna/Breeze.mp3',
-        cover: '/breeze.jpg',
-        title: 'Breeze',
         artist: '林原めぐみ',
       },
     ])
@@ -49,6 +37,7 @@ const def = story(
     })
     const musicPlayer = new MusicPlayer(musicPlayerContainer, {
       audio,
+      listFolded: true,
     })
 
     const container = h('div')

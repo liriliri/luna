@@ -40,3 +40,16 @@ const musicPlayer = new LunaMusicPlayer(container, {
 })
 musicPlayer.play()
 ```
+
+## Configuration
+
+* audio(IAudio | IAudio[]): Audio list.
+
+## Types
+
+### IAudio
+
+* artist(string): Audio artist.
+* cover(string): Audio cover.
+* title(string): Audio title.
+* url(string): Audio src.

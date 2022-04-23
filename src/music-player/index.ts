@@ -19,11 +19,16 @@ import Component, { IComponentOptions } from '../share/Component'
 
 const $document = $(document as any)
 
-interface IAudio {
+/** IAudio */
+export interface IAudio {
+  /** Audio title. */
   title: string
+  /** Audio src. */
   url: string
   file?: File
+  /** Audio artist. */
   artist?: string
+  /** Audio cover. */
   cover?: string
 }
 
@@ -53,8 +58,12 @@ const audioEvents = [
   'waiting',
 ]
 
-interface IOptions extends IComponentOptions {
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Audio list. */
   audio?: IAudio | IAudio[]
+  /** Whether list should folded at first. */
+  listFolded?: boolean
 }
 
 /**
@@ -98,7 +107,9 @@ export default class MusicPlayer extends Component<IOptions> {
   constructor(container: Element, options: IOptions = {}) {
     super(container, { compName: 'music-player' }, options)
 
-    this.initOptions(options)
+    this.initOptions(options, {
+      listFolded: false,
+    })
 
     let { audio } = this.options
     if (audio) {
@@ -130,6 +141,10 @@ export default class MusicPlayer extends Component<IOptions> {
 
     if (!isEmpty(this.audioList)) {
       this.setCur(0, false)
+    }
+
+    if (this.options.listFolded) {
+      this.$list.css('height', '0px')
     }
   }
   getAudio() {

@@ -11,23 +11,30 @@ import { object } from '@storybook/addon-knobs'
 const def = story(
   'music-visualizer',
   (wrapper) => {
-    $(wrapper).html('')
+    $(wrapper).html('').css({
+      boxShadow:
+        '0 2px 2px 0 rgba(0, 0, 0, 0.07), 0 1px 5px 0 rgba(0, 0, 0, 0.1)',
+      width: 640,
+      margin: '0 auto',
+      maxWidth: '100%',
+      minHeight: 150,
+    })
 
     const audio = object('Audio', [
       {
-        url: 'https://test.surunzi.com/audio/Get_along.mp3',
+        url: 'https://res.liriliri.io/luna/Get_along.mp3',
         cover: '/getAlong.jpg',
         title: 'Get Along',
         artist: '林原めぐみ',
       },
       {
-        url: 'https://test.surunzi.com/audio/Give_a_reason.mp3',
+        url: 'https://res.liriliri.io/luna/Give_a_reason.mp3',
         cover: '/giveAReason.jpg',
         title: 'Give a Reason',
         artist: '林原めぐみ',
       },
       {
-        url: 'https://test.surunzi.com/audio/Breeze.mp3',
+        url: 'https://res.liriliri.io/luna/Breeze.mp3',
         cover: '/breeze.jpg',
         title: 'Breeze',
         artist: '林原めぐみ',
@@ -38,6 +45,7 @@ const def = story(
       width: 640,
       margin: '0 auto',
       maxWidth: '100%',
+      boxShadow: 'none',
     })
     const musicPlayer = new MusicPlayer(musicPlayerContainer, {
       audio,
@@ -45,14 +53,12 @@ const def = story(
 
     const container = h('div')
     $(container).css({
-      width: 640,
-      margin: '0 auto',
-      maxWidth: '100%',
-      minHeight: 150,
       aspectRatio: '1280/720',
     })
 
-    const musicVisualizer = new MusicVisualizer(container)
+    const musicVisualizer = new MusicVisualizer(container, {
+      audio: musicPlayer.getAudio(),
+    })
 
     wrapper.appendChild(container)
     wrapper.appendChild(musicPlayerContainer)

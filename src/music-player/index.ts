@@ -73,7 +73,7 @@ interface IOptions extends IComponentOptions {
  * musicPlayer.play()
  */
 export default class MusicPlayer extends Component<IOptions> {
-  audio: HTMLAudioElement = new Audio()
+  private audio: HTMLAudioElement = new Audio()
   private $body: $.$
   private $title: $.$
   private $artist: $.$
@@ -131,6 +131,9 @@ export default class MusicPlayer extends Component<IOptions> {
     if (!isEmpty(this.audioList)) {
       this.setCur(0, false)
     }
+  }
+  getAudio() {
+    return this.audio
   }
   play() {
     if (!this.curAudio) {

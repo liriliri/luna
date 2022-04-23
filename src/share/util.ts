@@ -133,3 +133,8 @@ export function getPlatform() {
   }
   return os
 }
+
+export function resetCanvasSize(canvas: HTMLCanvasElement) {
+  canvas.width = Math.round(canvas.offsetWidth * window.devicePixelRatio)
+  canvas.height = Math.round(canvas.offsetHeight * window.devicePixelRatio)
+}

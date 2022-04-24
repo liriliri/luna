@@ -4,6 +4,7 @@ import $ from 'licia/$'
 import raf from 'licia/raf'
 import throttle from 'licia/throttle'
 import ResizeSensor from 'licia/ResizeSensor'
+import fullscreen from 'licia/fullscreen'
 import Circle from './Circle'
 import { resetCanvasSize } from '../share/util'
 
@@ -26,11 +27,13 @@ export default class MusicVisualizer extends Component<IOptions> {
   ctx: CanvasRenderingContext2D
   private onResize: () => void
   private resizeSensor: ResizeSensor
+  private $controller: $.$
   private $canvas: $.$
   private effects: IEffect[]
   private freqByteData: Uint8Array
   private analyser: AnalyserNode
   private animationId: number
+  private autoHideTimer: any = 0
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'music-visualizer' })
 
@@ -51,11 +54,13 @@ export default class MusicVisualizer extends Component<IOptions> {
     this.canvas = this.$canvas.get(0) as HTMLCanvasElement
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
     resetCanvasSize(this.canvas)
+    this.$controller = this.find('.controller')
 
     this.bindEvent()
   }
   destroy() {
     this.resizeSensor.destroy()
+    this.$container.off('mousemove', this.onMouseMove)
     this.stop()
     super.destroy()
   }
@@ -73,10 +78,12 @@ export default class MusicVisualizer extends Component<IOptions> {
       this.draw()
       this.animationId = raf(animate)
     }
+    this.$controller.rmClass(this.c('active'))
     animate()
   }
   private stop() {
     raf.cancel(this.animationId)
+    this.$controller.addClass(this.c('active'))
     this.animationId = 0
   }
   private initAudio() {
@@ -91,12 +98,28 @@ export default class MusicVisualizer extends Component<IOptions> {
     analyser.connect(audioContext.destination)
   }
   private bindEvent() {
+    const { c } = this
     const { audio } = this.options
 
     audio.addEventListener('play', this.onPlay)
     audio.addEventListener('pause', this.onPause)
 
     this.resizeSensor.addListener(this.onResize)
+
+    this.$controller.on('click', c('.icon-fullscreen'), this.toggleFullscreen)
+    this.$container.on('mousemove', this.onMouseMove)
+  }
+  private toggleFullscreen = () => {
+    fullscreen.toggle(this.container)
+  }
+  private onMouseMove = () => {
+    const { c } = this
+
+    this.$controller.rmClass(c('controller-hidden'))
+    clearTimeout(this.autoHideTimer)
+    this.autoHideTimer = setTimeout(() => {
+      this.$controller.addClass(c('controller-hidden'))
+    }, 3000)
   }
   private onPlay = () => {
     if (!this.analyser) {
@@ -113,7 +136,13 @@ export default class MusicVisualizer extends Component<IOptions> {
   private initTpl() {
     this.$container.html(
       this.c(stripIndent`
-      <canvas class="canvas"></canvas>  
+      <canvas class="canvas"></canvas> 
+      <div class="controller active">
+        <div class="controller-mask"></div>
+        <div class="controller-right">
+          <span class="icon icon-fullscreen"></span>
+        </div>
+      </div>
       `)
     )
   }

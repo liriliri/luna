@@ -145,9 +145,9 @@
   },
   "music-visualizer": {
     "test": false,
+    "icon": true,
     "version": "0.1.0",
     "style": true,
-    "icon": false,
     "install": false,
     "dependencies": []
   },

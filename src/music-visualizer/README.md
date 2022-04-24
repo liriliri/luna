@@ -25,3 +25,7 @@ npm install luna-music-visualizer --save
 import 'luna-music-visualizer/luna-music-visualizer.css'
 import LunaMusicVisualizer from 'luna-music-visualizer'
 ```
+
+## Configuration
+
+* audio(HTMLAudioElement): Html audio element.

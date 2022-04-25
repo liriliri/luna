@@ -5,13 +5,15 @@ import raf from 'licia/raf'
 import throttle from 'licia/throttle'
 import ResizeSensor from 'licia/ResizeSensor'
 import fullscreen from 'licia/fullscreen'
-import Circle from './Circle'
+import CircleEffect from './CircleEffect'
+import BarEffect from './BarEffect'
 import { resetCanvasSize } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
   /** Html audio element. */
   audio: HTMLAudioElement
+  image: string
   fftSize?: number
 }
 
@@ -30,7 +32,7 @@ export default class MusicVisualizer extends Component<IOptions> {
   private $controller: $.$
   private $canvas: $.$
   private effects: IEffect[]
-  private freqByteData: Uint8Array
+  private freqByteData: Uint8Array = new Uint8Array(0)
   private analyser: AnalyserNode
   private animationId: number
   private autoHideTimer: any = 0
@@ -39,10 +41,11 @@ export default class MusicVisualizer extends Component<IOptions> {
 
     this.initOptions(options, {
       fftSize: 512,
+      background: '',
     })
     this.options.audio.crossOrigin = 'anonymous'
 
-    this.effects = [new Circle(this)]
+    this.effects = [new CircleEffect(this), new BarEffect(this)]
     this.resizeSensor = new ResizeSensor(container)
     this.onResize = throttle(() => {
       resetCanvasSize(this.canvas)
@@ -66,6 +69,9 @@ export default class MusicVisualizer extends Component<IOptions> {
   }
   getData() {
     const { freqByteData } = this
+    if (!this.analyser) {
+      return freqByteData
+    }
     this.analyser.getByteFrequencyData(freqByteData)
 
     return freqByteData
@@ -131,7 +137,7 @@ export default class MusicVisualizer extends Component<IOptions> {
     this.stop()
   }
   private draw() {
-    this.effects[0].draw()
+    this.effects[1].draw()
   }
   private initTpl() {
     this.$container.html(

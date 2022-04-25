@@ -1,5 +1,5 @@
 import isEmpty from 'licia/isEmpty'
-import MusicPlayer, { IEffect } from './index'
+import MusicVisualizer, { IEffect } from './index'
 
 interface IParticle {
   x: number
@@ -9,30 +9,34 @@ interface IParticle {
   opacity: number
 }
 
-export default class Circle implements IEffect {
-  private musicVisualizer: MusicPlayer
-  private particles: IParticle[]
-  constructor(musicVisualizer: MusicPlayer) {
+export default class CircleEffect implements IEffect {
+  private musicVisualizer: MusicVisualizer
+  private particles: IParticle[] = []
+  private image = new Image()
+  constructor(musicVisualizer: MusicVisualizer) {
     this.musicVisualizer = musicVisualizer
 
-    musicVisualizer.on('resize', this.initParticles)
+    musicVisualizer.on('resize', this.init)
   }
   draw() {
-    const { musicVisualizer } = this
+    const { musicVisualizer, particles, image } = this
     const data = musicVisualizer.getData()
     const { ctx, canvas } = this.musicVisualizer
     const { width, height } = canvas
 
-    if (isEmpty(this.particles) || this.particles.length !== data.length) {
-      this.initParticles(data.length)
+    if (isEmpty(particles) || particles.length !== data.length) {
+      this.init()
     }
 
     ctx.save()
     ctx.clearRect(0, 0, width, height)
     ctx.fillStyle = '#13242f'
     ctx.fillRect(0, 0, width, height)
+    if (image.src) {
+      ctx.drawImage(image, 0, 0, width, height)
+    }
     for (let i = 0, len = data.length; i < len; i = i + 5) {
-      const p = this.particles[i]
+      const p = particles[i]
       const d = data[i]
       if (p.size == 0) {
         p.size = d
@@ -66,8 +70,8 @@ export default class Circle implements IEffect {
     }
     ctx.restore()
   }
-  private initParticles = (len: number) => {
-    const { musicVisualizer } = this
+  private init = () => {
+    const { musicVisualizer, particles } = this
     const { canvas } = musicVisualizer
     const colors = [
       '105, 210, 231',
@@ -82,10 +86,15 @@ export default class Circle implements IEffect {
       '12, 202, 186',
       '255, 0, 111',
     ]
-    const particles = []
+
+    const image = musicVisualizer.getOption('image')
+    if (image) {
+      this.image.src = image
+    }
 
     const { width, height } = canvas
     const colorNum = colors.length
+    const len = musicVisualizer.getData().length
     for (let i = 0; i < len; i++) {
       particles[i] = {
         x: Math.random() * width,
@@ -95,6 +104,6 @@ export default class Circle implements IEffect {
         opacity: Math.random() + 0.2,
       }
     }
-    this.particles = particles
+    particles.length = len
   }
 }

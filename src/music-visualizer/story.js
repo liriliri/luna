@@ -47,6 +47,8 @@ const def = story(
 
     const musicVisualizer = new MusicVisualizer(container, {
       audio: musicPlayer.getAudio(),
+      image: '/wallpaper.jpg',
+      fftSize: 512,
     })
 
     wrapper.appendChild(container)

@@ -75,7 +75,7 @@ export default class BarEffect implements IEffect {
     const space = width / len / 2
     const barWidth = space
     let x = space / 2
-    for (var i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       dots[i] = 0
       bars[i] = {
         x,

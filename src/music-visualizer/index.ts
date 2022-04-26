@@ -7,6 +7,7 @@ import ResizeSensor from 'licia/ResizeSensor'
 import fullscreen from 'licia/fullscreen'
 import CircleEffect from './CircleEffect'
 import BarEffect from './BarEffect'
+import LineEffect from './LineEffect'
 import { resetCanvasSize } from '../share/util'
 
 /** IOptions */
@@ -45,7 +46,11 @@ export default class MusicVisualizer extends Component<IOptions> {
     })
     this.options.audio.crossOrigin = 'anonymous'
 
-    this.effects = [new CircleEffect(this), new BarEffect(this)]
+    this.effects = [
+      new CircleEffect(this),
+      new BarEffect(this),
+      new LineEffect(this),
+    ]
     this.resizeSensor = new ResizeSensor(container)
     this.onResize = throttle(() => {
       resetCanvasSize(this.canvas)
@@ -137,7 +142,7 @@ export default class MusicVisualizer extends Component<IOptions> {
     this.stop()
   }
   private draw() {
-    this.effects[1].draw()
+    this.effects[2].draw()
   }
   private initTpl() {
     this.$container.html(

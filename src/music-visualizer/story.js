@@ -6,7 +6,7 @@ import $ from 'licia/$'
 import h from 'licia/h'
 import story from '../share/story'
 import readme from './README.md'
-import { object } from '@storybook/addon-knobs'
+import { object, boolean } from '@storybook/addon-knobs'
 
 const def = story(
   'music-visualizer',
@@ -45,9 +45,11 @@ const def = story(
       aspectRatio: '1280/720',
     })
 
+    const image = boolean('Background Image', false)
+
     const musicVisualizer = new MusicVisualizer(container, {
       audio: musicPlayer.getAudio(),
-      image: '/wallpaper.jpg',
+      image: image ? '/wallpaper.jpg' : '',
       fftSize: 512,
     })
 

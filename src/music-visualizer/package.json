@@ -3,7 +3,6 @@
   "description": "Music visualization",
   "version": "0.1.0",
   "luna": {
-    "test": false,
     "icon": true
   }
 }

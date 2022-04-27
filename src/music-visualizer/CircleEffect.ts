@@ -29,12 +29,13 @@ export default class CircleEffect implements IEffect {
     }
 
     ctx.save()
-    ctx.clearRect(0, 0, width, height)
-    ctx.fillStyle = '#13242f'
-    ctx.fillRect(0, 0, width, height)
     if (image.src) {
       ctx.drawImage(image, 0, 0, width, height)
+      ctx.fillStyle = 'rgba(19, 36, 47, 0.5)'
+    } else {
+      ctx.fillStyle = '#13242f'
     }
+    ctx.fillRect(0, 0, width, height)
     for (let i = 0, len = data.length; i < len; i = i + 5) {
       const p = particles[i]
       const d = data[i]

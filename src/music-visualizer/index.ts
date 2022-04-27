@@ -37,6 +37,7 @@ export default class MusicVisualizer extends Component<IOptions> {
   private analyser: AnalyserNode
   private animationId: number
   private autoHideTimer: any = 0
+  private idx = 0
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'music-visualizer' })
 
@@ -117,8 +118,16 @@ export default class MusicVisualizer extends Component<IOptions> {
 
     this.resizeSensor.addListener(this.onResize)
 
-    this.$controller.on('click', c('.icon-fullscreen'), this.toggleFullscreen)
+    this.$controller
+      .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
+      .on('click', c('.icon-step-forward'), this.next)
     this.$container.on('mousemove', this.onMouseMove)
+  }
+  private next = () => {
+    this.idx++
+    if (this.idx >= this.effects.length) {
+      this.idx = 0
+    }
   }
   private toggleFullscreen = () => {
     fullscreen.toggle(this.container)
@@ -142,7 +151,7 @@ export default class MusicVisualizer extends Component<IOptions> {
     this.stop()
   }
   private draw() {
-    this.effects[2].draw()
+    this.effects[this.idx].draw()
   }
   private initTpl() {
     this.$container.html(
@@ -150,6 +159,9 @@ export default class MusicVisualizer extends Component<IOptions> {
       <canvas class="canvas"></canvas> 
       <div class="controller active">
         <div class="controller-mask"></div>
+        <div class="controller-left">
+          <span class="icon icon-step-forward"></span>
+        </div>
         <div class="controller-right">
           <span class="icon icon-fullscreen"></span>
         </div>

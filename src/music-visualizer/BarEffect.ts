@@ -29,12 +29,13 @@ export default class BarEffect implements IEffect {
     }
 
     ctx.save()
-    ctx.clearRect(0, 0, width, height)
-    ctx.fillStyle = '#000'
-    ctx.fillRect(0, 0, width, height)
     if (image.src) {
       ctx.drawImage(image, 0, 0, width, height)
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
+    } else {
+      ctx.fillStyle = '#000'
     }
+    ctx.fillRect(0, 0, width, height)
     ctx.fillStyle = '#fff'
     ctx.shadowBlur = 10
     ctx.shadowColor = '#fff'

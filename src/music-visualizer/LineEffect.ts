@@ -48,12 +48,13 @@ export default class LineEffect implements IEffect {
     let total = 0
     const lastAvarage = this.average
     ctx.save()
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.fillStyle = '#000'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
     if (image.src) {
       ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
+    } else {
+      ctx.fillStyle = '#000'
     }
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
     this.changeColor()
     const { r, g, b } = this.color
     ctx.shadowColor =

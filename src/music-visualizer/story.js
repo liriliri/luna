@@ -45,7 +45,7 @@ const def = story(
       aspectRatio: '1280/720',
     })
 
-    const image = boolean('Background Image', false)
+    const image = boolean('Background Image', true)
 
     const musicVisualizer = new MusicVisualizer(container, {
       audio: musicPlayer.getAudio(),

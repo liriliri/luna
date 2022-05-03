@@ -1,4 +1,6 @@
 import $ from 'licia/$'
+import h from 'licia/h'
+import download from 'licia/download'
 import each from 'licia/each'
 import clamp from 'licia/clamp'
 import stripIndent from 'licia/stripIndent'
@@ -90,6 +92,8 @@ export default class VideoPlayer extends Component<IOptions> {
     this.$video = this.find('.video')
     this.$video.get(0).appendChild(this.video)
 
+    this.video.crossOrigin = 'anonymous'
+
     this.bindEvent()
 
     if (options.url) {
@@ -131,6 +135,22 @@ export default class VideoPlayer extends Component<IOptions> {
 
     this.$volumeBarFill.css('width', percentage * 100 + '%')
     this.$volumeIcon.attr('class', this.c('icon icon-' + this.getVolumeIcon()))
+  }
+  private captureScreenshot = () => {
+    const { video } = this
+
+    const canvas = h('canvas') as HTMLCanvasElement
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+    canvas.toBlob((blob: Blob | null) => {
+      if (!blob) {
+        return
+      }
+      download(blob, 'screenshot.png', 'image/png')
+    })
   }
   private togglePlay = () => {
     if (this.video.paused) {
@@ -183,6 +203,7 @@ export default class VideoPlayer extends Component<IOptions> {
       .on(drag('start'), c('.controller-top'), this.onBarDragStart)
       .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
       .on('click', c('.icon-pip'), this.togglePip)
+      .on('click', c('.icon-camera'), this.captureScreenshot)
       .on('click', c('.volume-controller'), this.onVolumeClick)
       .on(drag('start'), c('.volume-controller'), this.onVolumeDragStart)
 
@@ -320,6 +341,7 @@ export default class VideoPlayer extends Component<IOptions> {
           </span>
         </div>
         <div class="controller-right">
+          <span class="icon icon-camera"></span>
           <span class="icon icon-pip"></span>
           <span class="icon icon-fullscreen"></span>
         </div>

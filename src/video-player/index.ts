@@ -2,7 +2,9 @@ import $ from 'licia/$'
 import h from 'licia/h'
 import download from 'licia/download'
 import each from 'licia/each'
+import detectBrowser from 'licia/detectBrowser'
 import clamp from 'licia/clamp'
+import isMobile from 'licia/isMobile'
 import stripIndent from 'licia/stripIndent'
 import toStr from 'licia/toStr'
 import durationFormat from 'licia/durationFormat'
@@ -11,6 +13,7 @@ import { eventClient, drag } from '../share/util'
 import Component, { IComponentOptions } from '../share/Component'
 
 const $document = $(document as any)
+const isIos = detectBrowser(navigator.userAgent).name === 'ios'
 
 interface IOptions extends IComponentOptions {
   url?: string
@@ -76,6 +79,8 @@ export default class VideoPlayer extends Component<IOptions> {
       url: '',
     })
 
+    const { video } = this
+
     this.initTpl()
 
     this.$controller = this.find('.controller')
@@ -90,9 +95,10 @@ export default class VideoPlayer extends Component<IOptions> {
     this.$barPlayed = this.find('.bar-played')
     this.$barLoaded = this.find('.bar-loaded')
     this.$video = this.find('.video')
-    this.$video.get(0).appendChild(this.video)
+    this.$video.get(0).appendChild(video)
 
-    this.video.crossOrigin = 'anonymous'
+    video.crossOrigin = 'anonymous'
+    video.setAttribute('playsinline', 'true')
 
     this.bindEvent()
 
@@ -227,7 +233,13 @@ export default class VideoPlayer extends Component<IOptions> {
     this.on('progress', this.onLoaded)
   }
   private toggleFullscreen = () => {
-    fullscreen.toggle(this.container)
+    const { video } = this as any
+
+    if (isIos && video.webkitEnterFullScreen) {
+      video.webkitEnterFullScreen()
+    } else {
+      fullscreen.toggle(this.container)
+    }
   }
   private onEnded = () => {
     this.seek(0)
@@ -310,6 +322,18 @@ export default class VideoPlayer extends Component<IOptions> {
   private initTpl() {
     const volumeHeight = toStr(this.video.volume * 100)
 
+    let volume = ''
+    if (!isMobile()) {
+      volume = `<div class="volume">
+        <span class="icon icon-${this.getVolumeIcon()}"></span>
+        <div class="volume-controller">
+          <div class="volume-bar">
+            <div class="volume-bar-fill" style="width: ${volumeHeight}%"></div>
+          </div>
+        </div>
+      </div>`
+    }
+
     this.$container.html(
       this.c(stripIndent`
       <div class="video"></div>
@@ -327,21 +351,14 @@ export default class VideoPlayer extends Component<IOptions> {
           <div class="play">
             <span class="icon icon-play"></span>
           </div>
-          <div class="volume">
-            <span class="icon icon-${this.getVolumeIcon()}"></span>
-            <div class="volume-controller">
-              <div class="volume-bar">
-                <div class="volume-bar-fill" style="width: ${volumeHeight}%"></div>
-              </div>
-            </div>
-          </div>
+          ${volume} 
           <span class="time">
             <span class="cur-time">00:00</span> /
             <span class="duration">00:00</span>
           </span>
         </div>
         <div class="controller-right">
-          <span class="icon icon-camera"></span>
+          ${isMobile() ? '' : '<span class="icon icon-camera"></span>'}
           <span class="icon icon-pip"></span>
           <span class="icon icon-fullscreen"></span>
         </div>

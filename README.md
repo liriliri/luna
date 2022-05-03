@@ -29,6 +29,7 @@
 * [menu-bar](.src/menu-bar/README.md) Application menu bar.
 * [modal](./src/modal/README.md): Create modal dialogs.
 * [music-player](./src/music-player/README.md): Music player.
+* [music-visualizer](./src/music-visualizer/README.md): Music visualization.
 * [notification](./src/notification/README.md): Show notifications.
 * [object-viewer](./src/object-viewer/README.md): JavaScript object viewer.
 * [performance-monitor](./src/performance-monitor/README.md): Realtime counter used for displaying cpu, fps metrics.

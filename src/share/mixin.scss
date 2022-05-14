@@ -66,3 +66,67 @@
     background: $primary-color;
   }
 }
+
+@mixin controller($name) {
+  .luna-#{$name} {
+    &:hover {
+      .controller {
+        opacity: 1;
+        &.controller-hidden {
+          opacity: 0;
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+  .controller {
+    opacity: 0;
+    left: 0;
+    right: 0;
+    height: 41px;
+    padding: 0 20px;
+    position: absolute;
+    bottom: 0;
+    transition: opacity 0.3s;
+    &.active {
+      opacity: 1 !important;
+    }
+  }
+  .controller-mask {
+    position: absolute;
+    pointer-events: none;
+    height: 100px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==)
+      repeat-x bottom;
+  }
+  .controller-left,
+  .controller-right {
+    height: 38px;
+    position: absolute;
+    bottom: 0;
+    .icon {
+      vertical-align: top;
+      cursor: pointer;
+      color: #eee;
+      height: 100%;
+      line-height: 38px;
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+  .controller-left {
+    left: 20px;
+  }
+  .controller-right {
+    right: 20px;
+    .icon {
+      margin-left: 8px;
+    }
+  }
+}

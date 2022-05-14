@@ -10,7 +10,6 @@
 }
 
 @mixin component {
-  background: $background-color;
   color: $foreground-color;
   font-family: $font-family;
   &.platform-windows {
@@ -26,6 +25,9 @@
   &.invisible,
   .invisible {
     visibility: hidden;
+  }
+  * {
+    box-sizing: border-box;
   }
 }
 

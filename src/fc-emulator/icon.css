@@ -1,0 +1,22 @@
+@font-face {
+  font-family: 'luna-fc-emulator-icon';
+  src: url('data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAVQAAsAAAAACFwAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAAFsAAAB+IPEl1k9TLzIAAAFkAAAAPQAAAFZL+0keY21hcAAAAaQAAACwAAACNOtF6idnbHlmAAACVAAAAPUAAAFUGBG2q2hlYWQAAANMAAAAMgAAADZzrb4paGhlYQAAA4AAAAAcAAAAJAGSANRobXR4AAADnAAAABQAAAAwAZD//2xvY2EAAAOwAAAAEAAAABoDrgNSbWF4cAAAA8AAAAAfAAAAIAEaAFJuYW1lAAAD4AAAASkAAAIWm5e+CnBvc3QAAAUMAAAARAAAAF+x+RZweJxjYGRgYOBiMGCwY2BycfMJYeDLSSzJY5BiYGGAAJA8MpsxJzM9kYEDxgPKsYBpDiDWA9NMDGwMMkAWF1CGFQjZGNiBopxAyAWUY2HgBopxAuUZGZgBG0wGCgB4nGNgZFBknMDAysDAUMfQAyRloHQCAyeDMQMDEwMrMwNWEJDmmsJwgCH5IxPDCSBXCEwyMDCCCABhiQinAAAAeJzNkksKgzAQhr9E67OLIqWn6K1EQRAXijfpqqte0RPYP3E2petCZ/gC8+cxk0mAE5CIu0jBvXAEe0p1UU+oop4yKW64SPG09AyM0hbWze+75lo602ZpLmqf5rS/4Wp+k0NOqRNrVVJRkCmP0/m47Gv3L0zZdf2amB6KkP9/7BzHh0WqUj0+yEVnlKI3wlsORlg/GuGdJyNcdDYKsRih46uhLmzuIPyDzR/g3yREHCl4nD2OwUrDQBiE//l399+0GpQaowG1mIJBAy1ma/ZQihjo3ZsvoDefxKtvIQje9QV8qrrbNu5hmfn+GRjS6zUR/dIXHdIlOVoR+Ul5tcS8bfJzuCbPxAUwbxe427JMqhjYwS3ZVaLNpMZxJjelMsaaIvzvUaoiOKP0hqhIvnsRTsW/sn0rgue+VvbZzS0sVhTfD33SKTVhN/kaU8zg23u4MfIFLjCGlQNUzje+XfIUNcoZJlUpYfFJSHy8sQwBcKpu+QjoZC+6fbXqoNkgMQ/MI76WRGnbnWFg8Zpq8AgYCj+lCglY2ccwK9QH5kXrOO0PWSYfcwAAAHicY2BkYGAA4tcZF//E89t8ZeBmOAEUiOJ8vK8BRv//D1RzkmEDkORgYAKSDACZ7g4gAAB4nGNgZGBgOMEAAif+AwHDSQZGBlTAAwCUtQZkeJxjYACCE///M5xgIAoAAJLtA494nGNgAIIYhlWYEABKDgcBeJxjYGRgYOBhcGNgYQABJiDmAkIGhv9gPgMAEMABbQB4nGWQPW7CQBSEx2BIAlKCFCkps1UKIpmfkgNAT0GXwpi1MbK91npBossJcoQcIaeIcoIcKGPzaGAtP38zb97uygAG+IWHenm4bWq9WrihOnGb9CDsk5+FO+jjRbhLfyjcwxumwn084p07eP4dnQFK4Rbu8SHcpv8p7JO/hDt4wrdwl/6PcA8r/An38eoN08gUsSncUif7LLRnef6utK1SU6hJMD5bC11oGzq9Ueujqg7J1LlYxdbkas6uzjKjSmt2OnLB1rlyNhrF4geRyZEigkGBuKkOS2gk2CNDCHvVvdQrpi0q+rVWmCDA+Cq1YKpokiGVxobJNY6sFQ48bUrXMa34Ws7kpLnMat4kIyv+77q3oxPRD7BtpkrMMOITX+SD5g75Pz0RXqgAAAB4nF3FOw6AIBBAwX2IP8RTkt2EZEMB4f4WxsZpRoK8vv8ygYXIysbOwUniInNLsuk+Sldt0aorxsQZFDpKo4o86AwKLA==')
+    format('woff');
+}
+
+[class^='icon-'],
+[class*=' icon-'] {
+  display: inline-block;
+  font-family: 'luna-fc-emulator-icon' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-fullscreen:before {
+  content: '\f101';
+}
+.icon-file:before {
+  content: '\f102';
+}

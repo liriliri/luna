@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Nintendo Famicom emulator using FCEUmm",
   "luna": {
-    "test": false
+    "test": false,
+    "icon": true
   }
 }

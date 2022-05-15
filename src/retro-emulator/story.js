@@ -24,12 +24,12 @@ const def = story(
     const core = optionsKnob(
       'Core',
       {
-        'FC': 'https://res.liriliri.io/chii/fceumm_libretro.js',
-        'GBA': 'https://res.liriliri.io/chii/vba_next_libretro.js'
+        FC: 'https://res.liriliri.io/chii/fceumm_libretro.js',
+        GBA: 'https://res.liriliri.io/chii/vba_next_libretro.js',
       },
       'https://res.liriliri.io/chii/fceumm_libretro.js',
       {
-        display: 'select'
+        display: 'select',
       }
     )
 

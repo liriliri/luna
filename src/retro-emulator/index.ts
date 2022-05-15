@@ -2,6 +2,7 @@ import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import openFile from 'licia/openFile'
 import createUrl from 'licia/createUrl'
+import fullscreen from 'licia/fullscreen'
 import Component, { IComponentOptions } from '../share/Component'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bootstrap = require('!raw-loader!./bootstrap').default
@@ -58,12 +59,21 @@ export default class RetroEmulator extends Component<IOptions> {
         }
         .webplayer-container {
           position: fixed;
-          width: 100%;
-          height: 100%;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-color: black;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
         #canvas {
-          width: 100% !important;
+          width: auto !important;
           height: 100% !important;
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
         }
       </style>
       <script src="${browserFS}"></script>
@@ -84,10 +94,15 @@ export default class RetroEmulator extends Component<IOptions> {
 
     this.iframe = iframe
   }
+  private toggleFullscreen = () => {
+    fullscreen.toggle(this.container)
+  }
   private bindEvent() {
     const { c } = this
 
-    this.$controller.on('click', c('.icon-file'), this.open)
+    this.$controller
+      .on('click', c('.icon-file'), this.open)
+      .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
   }
   private initTpl() {
     this.$container.html(

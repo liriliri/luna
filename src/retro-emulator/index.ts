@@ -3,11 +3,14 @@ import $ from 'licia/$'
 import openFile from 'licia/openFile'
 import createUrl from 'licia/createUrl'
 import Component, { IComponentOptions } from '../share/Component'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const bootstrap = require('!raw-loader!./bootstrap').default
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
+  /** Libretro core url. */
   core: string
+  /** BrowserFS url. */
   browserFS: string
 }
 

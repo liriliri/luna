@@ -83,7 +83,7 @@ export default class MarkdownViewer extends Component<IOptions> {
   private bindEvent() {
     const { gallery } = this
 
-    this.on('optionChange', (name, val) => {
+    this.on('optionChange', (name) => {
       switch (name) {
         case 'markdown':
           this.render()

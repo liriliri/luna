@@ -1,9 +1,9 @@
 import Cropper from './index'
-import test, { getPublicPath } from '../share/test'
+import test from '../share/test'
 
 test('cropper', (container) => {
   const cropper = new Cropper(container, {
-    url: getPublicPath('wallpaper.jpg'),
+    url: 'https://res.liriliri.io/chii/wallpaper.jpg',
   })
 
   it('basic', function () {

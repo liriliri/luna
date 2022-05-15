@@ -28,16 +28,16 @@ const def = story(
       'position:relative;height:100%;width:100%;background-size:contain;background-repeat:no-repeat;background-position:center;'
 
     carousel.append(
-      `<div style="${commonStyle};background-image:url(/pic1.jpg);"></div>`
+      `<div style="${commonStyle};background-image:url(https://res.liriliri.io/chii/pic1.jpg);"></div>`
     )
     carousel.append(
-      `<div style="${commonStyle};background-image:url(/pic2.jpg);"></div>`
+      `<div style="${commonStyle};background-image:url(https://res.liriliri.io/chii/pic2.jpg);"></div>`
     )
     carousel.append(
-      `<div style="${commonStyle};background-image:url(/pic3.jpg);"></div>`
+      `<div style="${commonStyle};background-image:url(https://res.liriliri.io/chii/pic3.jpg);"></div>`
     )
     carousel.append(
-      `<div style="${commonStyle};background-image:url(/pic4.jpg);"></div>`
+      `<div style="${commonStyle};background-image:url(https://res.liriliri.io/chii/pic4.jpg);"></div>`
     )
 
     button('Clear', () => {

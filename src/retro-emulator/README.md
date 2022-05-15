@@ -28,3 +28,5 @@ import LunaRetroEmulator from 'luna-retro-emulator'
 
 ## Configuration
 
+* browserFS(string): BrowserFS url.
+* core(string): Libretro core url.

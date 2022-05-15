@@ -21,8 +21,8 @@ const def = story(
     wrapper.appendChild(container)
 
     const retroEmulator = new RetroEmulator(container, {
-      core: '/fceumm_libretro.js',
-      browserFS: '/browserfs.min.js',
+      core: 'https://res.liriliri.io/chii/fceumm_libretro.js',
+      browserFS: 'https://res.liriliri.io/chii/browserfs.min.js',
     })
 
     return retroEmulator

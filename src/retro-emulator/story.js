@@ -1,12 +1,12 @@
-import 'luna-fc-emulator.css'
+import 'luna-retro-emulator.css'
 import story from '../share/story'
-import FcEmulator from 'luna-fc-emulator.js'
+import RetroEmulator from 'luna-retro-emulator.js'
 import $ from 'licia/$'
 import h from 'licia/h'
 import readme from './README.md'
 
 const def = story(
-  'fc-emulator',
+  'retro-emulator',
   (wrapper) => {
     $(wrapper)
       .css({
@@ -20,12 +20,12 @@ const def = story(
     const container = h('div')
     wrapper.appendChild(container)
 
-    const fcEmulator = new FcEmulator(container, {
-      FCEUmm: '/fceumm_libretro.js',
+    const retroEmulator = new RetroEmulator(container, {
+      core: '/fceumm_libretro.js',
       browserFS: '/browserfs.min.js',
     })
 
-    return fcEmulator
+    return retroEmulator
   },
   {
     readme,
@@ -35,4 +35,4 @@ const def = story(
 
 export default def
 
-export const { fcEmulator } = def
+export const { retroEmulator } = def

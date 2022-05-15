@@ -87,14 +87,6 @@
     "test": true,
     "dependencies": []
   },
-  "fc-emulator": {
-    "test": false,
-    "version": "0.1.0",
-    "style": true,
-    "icon": false,
-    "install": false,
-    "dependencies": []
-  },
   "gallery": {
     "icon": true,
     "dependencies": ["carousel"],
@@ -180,6 +172,14 @@
     "style": true,
     "icon": false,
     "test": true,
+    "install": false,
+    "dependencies": []
+  },
+  "retro-emulator": {
+    "test": false,
+    "icon": true,
+    "version": "0.1.0",
+    "style": true,
     "install": false,
     "dependencies": []
   },

@@ -3,23 +3,23 @@ import $ from 'licia/$'
 import openFile from 'licia/openFile'
 import createUrl from 'licia/createUrl'
 import Component, { IComponentOptions } from '../share/Component'
-const FCEUmm = require('!raw-loader!./FCEUmm').default
+const bootstrap = require('!raw-loader!./bootstrap').default
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
-  FCEUmm: string
+  core: string
   browserFS: string
 }
 
 /**
- * Nintendo Famicom emulator using FCEUmm.
+ * Retro emulator using libretro.
  */
-export default class FcEmulator extends Component<IOptions> {
+export default class RetroEmulator extends Component<IOptions> {
   private $controller: $.$
   private $iframeContainer: $.$
   private iframe: HTMLIFrameElement
   constructor(container: HTMLElement, options: IOptions) {
-    super(container, { compName: 'fc-emulator' })
+    super(container, { compName: 'retro-emulator' })
 
     this.initOptions(options)
 
@@ -35,7 +35,7 @@ export default class FcEmulator extends Component<IOptions> {
     this.load(createUrl(file))
   }
   load(url?: string) {
-    const { browserFS, FCEUmm: FCEUmmLib } = this.options
+    const { browserFS, core } = this.options
     const { $iframeContainer } = this
     if (this.iframe) {
       this.$iframeContainer.html('')
@@ -69,8 +69,8 @@ export default class FcEmulator extends Component<IOptions> {
       <div class="webplayer-container">
         <canvas id="canvas"></canvas>
       </div>
-      <script>var gameUrl = '${url}';${FCEUmm}</script>
-      <script src="${FCEUmmLib}"></script>
+      <script>var gameUrl = '${url}';${bootstrap}</script>
+      <script src="${core}"></script>
     </body>
     </html>
     `
@@ -106,5 +106,5 @@ export default class FcEmulator extends Component<IOptions> {
   }
 }
 
-module.exports = FcEmulator
-module.exports.default = FcEmulator
+module.exports = RetroEmulator
+module.exports.default = RetroEmulator

@@ -1,9 +1,0 @@
-{
-  "name": "fc-emulator",
-  "version": "0.1.0",
-  "description": "Nintendo Famicom emulator using FCEUmm",
-  "luna": {
-    "test": false,
-    "icon": true
-  }
-}

@@ -1,6 +1,6 @@
 @import '../share/mixin';
 
-.luna-fc-emulator {
+.luna-retro-emulator {
   @include component();
   background: #000;
   width: 100%;
@@ -9,7 +9,7 @@
   position: relative;
 }
 
-@include controller('fc-emulator');
+@include controller('retro-emulator');
 
 .iframe-container {
   width: 100%;

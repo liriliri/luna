@@ -40,7 +40,8 @@
       "luna-syntax-highlighter": ["src/syntax-highlighter/index"],
       "luna-scrollbar": ["src/scrollbar/index"],
       "luna-music-visualizer": ["src/music-visualizer/index"],
-      "luna-fc-emulator": ["src/fc-emulator/index"]
+      "luna-fc-emulator": ["src/fc-emulator/index"],
+      "luna-retro-emulator": ["src/retro-emulator/index"]
     }
   }
 }

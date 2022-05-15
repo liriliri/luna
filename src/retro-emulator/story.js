@@ -4,6 +4,7 @@ import RetroEmulator from 'luna-retro-emulator.js'
 import $ from 'licia/$'
 import h from 'licia/h'
 import readme from './README.md'
+import { optionsKnob } from '@storybook/addon-knobs'
 
 const def = story(
   'retro-emulator',
@@ -20,8 +21,20 @@ const def = story(
     const container = h('div')
     wrapper.appendChild(container)
 
+    const core = optionsKnob(
+      'Core',
+      {
+        'FC': 'https://res.liriliri.io/chii/fceumm_libretro.js',
+        'GBA': 'https://res.liriliri.io/chii/vba_next_libretro.js'
+      },
+      'https://res.liriliri.io/chii/fceumm_libretro.js',
+      {
+        display: 'select'
+      }
+    )
+
     const retroEmulator = new RetroEmulator(container, {
-      core: 'https://res.liriliri.io/chii/fceumm_libretro.js',
+      core,
       browserFS: 'https://res.liriliri.io/chii/browserfs.min.js',
     })
 

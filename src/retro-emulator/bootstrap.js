@@ -59,7 +59,7 @@ function downloadGame() {
   return fetch(gameUrl)
     .then((response) => response.arrayBuffer())
     .then((buffer) => {
-      var name = 'game.nes'
+      var name = 'game'
       var dataView = new Uint8Array(buffer)
       FS.createDataFile('/', name, dataView, true, false)
 
@@ -118,8 +118,6 @@ var Module = {
   },
 }
 
-idbfsInit()
-
 window.addEventListener('load', function () {
   window.focus()
   document.body.addEventListener(
@@ -129,4 +127,5 @@ window.addEventListener('load', function () {
     },
     false
   )
+  idbfsInit()
 })

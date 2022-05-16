@@ -32,8 +32,8 @@ import LunaMusicPlayer from 'luna-music-player'
 const container = document.getElementById('container')
 const musicPlayer = new LunaMusicPlayer(container, {
   audio: {
-    url: 'https://test.surunzi.com/audio/Get_along.mp3',
-    cover: 'https://test.surunzi.com/audio/Get_along.jpg',
+    url: 'https://res.liriliri.io/luna/Get_along.mp3',
+    cover: 'https://res.liriliri.io/luna/Get_along.jpg',
     title: 'Get Along',
     artist: '林原めぐみ',
   }
@@ -44,6 +44,7 @@ musicPlayer.play()
 ## Configuration
 
 * audio(IAudio | IAudio[]): Audio list.
+* listFolded(boolean): Whether list should folded at first.
 
 ## Types
 

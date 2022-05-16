@@ -21,20 +21,20 @@ const def = story(
 
     const audio = object('Audio', [
       {
-        url: 'https://test.surunzi.com/audio/Get_along.mp3',
-        cover: 'https://res.liriliri.io/luna/getAlong.jpg',
+        url: 'https://res.liriliri.io/luna/Get_along.mp3',
+        cover: 'https://res.liriliri.io/luna/Get_along.jpg',
         title: 'Get Along',
         artist: '林原めぐみ',
       },
       {
-        url: 'https://test.surunzi.com/audio/Give_a_reason.mp3',
-        cover: 'https://res.liriliri.io/luna/giveAReason.jpg',
+        url: 'https://res.liriliri.io/luna/Give_a_reason.mp3',
+        cover: 'https://res.liriliri.io/luna/Give_a_reason.jpg',
         title: 'Give a Reason',
         artist: '林原めぐみ',
       },
       {
-        url: 'https://test.surunzi.com/audio/Breeze.mp3',
-        cover: 'https://res.liriliri.io/luna/breeze.jpg',
+        url: 'https://res.liriliri.io/luna/Breeze.mp3',
+        cover: 'https://res.liriliri.io/luna/Breeze.jpg',
         title: 'Breeze',
         artist: '林原めぐみ',
       },

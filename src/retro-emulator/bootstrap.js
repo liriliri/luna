@@ -62,9 +62,8 @@ function downloadGame() {
       var name = 'game'
       var dataView = new Uint8Array(buffer)
       FS.createDataFile('/', name, dataView, true, false)
-
       var data = FS.readFile(name, { encoding: 'binary' })
-      var path = '/home/web_user/retroarch/userdata/content/' + name
+      var path = '/home/web_user/retroarch/userdata/' + name
       FS.writeFile(path, data, { encoding: 'binary' })
       FS.unlink(name)
 

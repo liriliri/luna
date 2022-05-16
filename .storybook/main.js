@@ -8,7 +8,6 @@ const components = keys(require('../index.json'))
 const stories = map(components, (component) => `../src/${component}/story.js`)
 
 module.exports = {
-  staticDirs: ['../public'],
   stories,
   addons: [
     'storybook-readme/register',

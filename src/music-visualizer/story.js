@@ -23,7 +23,7 @@ const def = story(
     const audio = object('Audio', [
       {
         url: 'https://res.liriliri.io/luna/Give_a_reason.mp3',
-        cover: 'https://res.liriliri.io/chii/giveAReason.jpg',
+        cover: 'https://res.liriliri.io/luna/giveAReason.jpg',
         title: 'Give a Reason',
         artist: '林原めぐみ',
       },
@@ -49,7 +49,7 @@ const def = story(
 
     const musicVisualizer = new MusicVisualizer(container, {
       audio: musicPlayer.getAudio(),
-      image: image ? 'https://res.liriliri.io/chii/wallpaper.jpg' : '',
+      image: image ? 'https://res.liriliri.io/luna/wallpaper.jpg' : '',
       fftSize: 512,
     })
 

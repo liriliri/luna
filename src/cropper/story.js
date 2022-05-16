@@ -27,7 +27,7 @@ const def = story(
     wrapper.appendChild(container)
     wrapper.appendChild(preview)
 
-    const url = text('Url', 'https://res.liriliri.io/chii/wallpaper.jpg')
+    const url = text('Url', 'https://res.liriliri.io/luna/wallpaper.jpg')
 
     const cropper = new Cropper(container, {
       url,

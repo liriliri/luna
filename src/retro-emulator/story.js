@@ -24,10 +24,10 @@ const def = story(
     const core = optionsKnob(
       'Core',
       {
-        FC: 'https://res.liriliri.io/chii/fceumm_libretro.js',
-        GBA: 'https://res.liriliri.io/chii/vba_next_libretro.js',
+        FC: 'https://res.liriliri.io/luna/fceumm_libretro.js',
+        GBA: 'https://res.liriliri.io/luna/vba_next_libretro.js',
       },
-      'https://res.liriliri.io/chii/fceumm_libretro.js',
+      'https://res.liriliri.io/luna/fceumm_libretro.js',
       {
         display: 'select',
       }
@@ -35,7 +35,7 @@ const def = story(
 
     const retroEmulator = new RetroEmulator(container, {
       core,
-      browserFS: 'https://res.liriliri.io/chii/browserfs.min.js',
+      browserFS: 'https://res.liriliri.io/luna/browserfs.min.js',
     })
 
     return retroEmulator

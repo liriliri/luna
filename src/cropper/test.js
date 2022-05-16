@@ -3,7 +3,7 @@ import test from '../share/test'
 
 test('cropper', (container) => {
   const cropper = new Cropper(container, {
-    url: 'https://res.liriliri.io/chii/wallpaper.jpg',
+    url: 'https://res.liriliri.io/luna/wallpaper.jpg',
   })
 
   it('basic', function () {

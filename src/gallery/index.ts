@@ -14,7 +14,7 @@ import fullscreen from 'licia/fullscreen'
  * @example
  * const container = document.getElementById('container')
  * const gallery = new LunaGallery(container)
- * gallery.append('https://res.liriliri.io/chii/pic1.jpg', 'pic1.jpg')
+ * gallery.append('https://res.liriliri.io/luna/pic1.jpg', 'pic1.jpg')
  * gallery.show()
  */
 export default class Gallery extends Component {

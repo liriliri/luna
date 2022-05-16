@@ -11,6 +11,16 @@
 
 @include controller('retro-emulator');
 
+.reset,
+.play,
+.fast-forward,
+.volume {
+  margin-right: 8px;
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+}
+
 .iframe-container {
   width: 100%;
   height: 100%;

@@ -25,9 +25,11 @@ export default class RetroEmulator extends Component<IOptions> {
   private $controller: $.$
   private $iframeContainer: $.$
   private $play: $.$
+  private $volume: $.$
   private iframe: HTMLIFrameElement
   private autoHideTimer: any = 0
   private isPaused = true
+  private isMuted = false
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'retro-emulator' })
 
@@ -36,6 +38,7 @@ export default class RetroEmulator extends Component<IOptions> {
     this.initTpl()
     this.$controller = this.find('.controller')
     this.$play = this.find('.play')
+    this.$volume = this.find('.volume')
     this.$iframeContainer = this.find('.iframe-container')
 
     this.bindEvent()
@@ -102,7 +105,9 @@ export default class RetroEmulator extends Component<IOptions> {
     this.iframe = iframe
 
     this.isPaused = false
+    this.isMuted = false
     this.renderPlay()
+    this.renderVolume()
   }
   destroy() {
     document.removeEventListener('keydown', this.onKeydown)
@@ -122,11 +127,37 @@ export default class RetroEmulator extends Component<IOptions> {
     this.$controller
       .on('click', c('.icon-file'), this.open)
       .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
+      .on('click', c('.reset'), this.reset)
       .on('click', c('.play'), this.togglePlay)
+      .on('click', c('.fast-forward'), this.fastForward)
+      .on('click', c('.volume'), this.toggleVolume)
 
     document.addEventListener('keydown', this.onKeydown)
     document.addEventListener('keyup', this.onKeyup)
     document.addEventListener('keypress', this.onKeypress)
+  }
+  private fastForward = () => {
+    this.pressKey('Space')
+  }
+  private reset = () => {
+    this.pressKey('KeyH')
+  }
+  private toggleVolume = () => {
+    if (!this.iframe) {
+      return
+    }
+    this.isMuted = !this.isMuted
+    this.pressKey('F9')
+    this.renderVolume()
+  }
+  private renderVolume = () => {
+    const { c, $volume } = this
+
+    if (this.isMuted) {
+      $volume.html(c('<span class="icon icon-volume-off"></span>'))
+    } else {
+      $volume.html(c('<span class="icon icon-volume"></span>'))
+    }
   }
   private togglePlay = () => {
     if (!this.iframe) {
@@ -206,8 +237,17 @@ export default class RetroEmulator extends Component<IOptions> {
       <div class="controller active">
         <div class="controller-mask"></div>
         <div class="controller-left">
+          <div class="reset">
+            <span class="icon icon-step-backward"></span>
+          </div>
           <div class="play">
             <span class="icon icon-play"></span>
+          </div>
+          <div class="fast-forward">
+            <span class="icon icon-step-forward"></span>
+          </div>
+          <div class="volume">
+            <span class="icon icon-volume"></span>
           </div>
         </div>
         <div class="controller-right">

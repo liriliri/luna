@@ -3,12 +3,12 @@ import $ from 'licia/$'
 import openFile from 'licia/openFile'
 import createUrl from 'licia/createUrl'
 import fullscreen from 'licia/fullscreen'
-import trigger from 'licia/trigger'
 import keyCode from 'licia/keyCode'
 import some from 'licia/some'
 import Component, { IComponentOptions } from '../share/Component'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bootstrap = require('!raw-loader!./bootstrap').default
+const trigger = require('licia/trigger')
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {

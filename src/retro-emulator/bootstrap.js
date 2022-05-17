@@ -55,6 +55,10 @@ function preLoadingComplete() {
   downloadGame().then(startRetroArch)
 }
 
+function hideLoading() {
+  document.getElementById('loading').style.display = 'none'
+}
+
 function downloadGame() {
   return fetch(gameUrl)
     .then((response) => response.arrayBuffer())
@@ -91,6 +95,7 @@ function initCfg() {
 }
 
 function startRetroArch(path) {
+  hideLoading()
   Module['callMain'](['-v', path])
   Module['resumeMainLoop']()
   document.getElementById('canvas').focus()

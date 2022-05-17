@@ -78,6 +78,23 @@ export default class RetroEmulator extends Component<IOptions> {
           justify-content: center;
           align-items: center;
         }
+        #loading {
+          width: 100%;
+          height: 100%;
+          color: #fff;
+          text-align: center;
+          position: absolute;
+          left: 0;
+          top: 0;
+          background: #000;
+          display: table;
+          font-size: 18px;
+          font-family: Menlo, Consolas, Lucida Console, Courier New, monospace;
+        }
+        #loading span {
+          display: table-cell;
+          vertical-align: middle;
+        }
         #canvas {
           width: auto !important;
           height: 100% !important;
@@ -90,6 +107,7 @@ export default class RetroEmulator extends Component<IOptions> {
     </head>
     <body>
       <div class="webplayer-container">
+        <div id="loading"><span>LOADING...</span></div>
         <canvas id="canvas"></canvas>
       </div>
       <script>var gameUrl = '${url}';${bootstrap}</script>

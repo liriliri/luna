@@ -4,7 +4,7 @@ import RetroEmulator from 'luna-retro-emulator.js'
 import $ from 'licia/$'
 import h from 'licia/h'
 import readme from './README.md'
-import { optionsKnob } from '@storybook/addon-knobs'
+import { optionsKnob, button, text } from '@storybook/addon-knobs'
 
 const def = story(
   'retro-emulator',
@@ -21,13 +21,16 @@ const def = story(
     const container = h('div')
     wrapper.appendChild(container)
 
+    const fcCore = 'https://res.liriliri.io/luna/fceumm_libretro.js'
+
     const core = optionsKnob(
       'Core',
       {
-        FC: 'https://res.liriliri.io/luna/fceumm_libretro.js',
+        FC: fcCore,
+        SFC: 'https://res.liriliri.io/luna/snes9x_libretro.js',
         GBA: 'https://res.liriliri.io/luna/vba_next_libretro.js',
       },
-      'https://res.liriliri.io/luna/fceumm_libretro.js',
+      fcCore,
       {
         display: 'select',
       }
@@ -37,6 +40,14 @@ const def = story(
       core,
       browserFS: 'https://res.liriliri.io/luna/browserfs.min.js',
     })
+
+    if (core === fcCore) {
+      const rom = text('ROM', 'https://res.liriliri.io/luna/Contra.nes')
+      button('Load', () => {
+        retroEmulator.load(rom)
+        return false
+      })
+    }
 
     return retroEmulator
   },

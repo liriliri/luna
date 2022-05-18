@@ -15,7 +15,6 @@ const def = story(
         width: '100%',
         margin: '0 auto',
         aspectRatio: '1024/768',
-        background: 'red',
       })
       .html('')
     const container = h('div')

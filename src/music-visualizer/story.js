@@ -17,7 +17,6 @@ const def = story(
       width: 640,
       margin: '0 auto',
       maxWidth: '100%',
-      minHeight: 150,
     })
 
     const audio = object('Audio', [

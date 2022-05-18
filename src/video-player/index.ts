@@ -192,12 +192,12 @@ export default class VideoPlayer extends Component<IOptions> {
     this.onVolumeClick(e)
   }
   private onMouseMove = () => {
-    const { c } = this
+    const { c, $container } = this
 
-    this.$controller.rmClass(c('controller-hidden'))
+    $container.rmClass(c('controller-hidden'))
     clearTimeout(this.autoHideTimer)
     this.autoHideTimer = setTimeout(() => {
-      this.$controller.addClass(c('controller-hidden'))
+      $container.addClass(c('controller-hidden'))
     }, 3000)
   }
   private bindEvent() {

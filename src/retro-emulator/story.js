@@ -14,8 +14,8 @@ const def = story(
         maxWidth: 640,
         width: '100%',
         margin: '0 auto',
-        minHeight: 150,
         aspectRatio: '1024/768',
+        background: 'red',
       })
       .html('')
     const container = h('div')

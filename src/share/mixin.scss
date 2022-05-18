@@ -74,16 +74,20 @@
     &:hover {
       .controller {
         opacity: 1;
-        &.controller-hidden {
-          opacity: 0;
-          &:hover {
-            opacity: 1;
-          }
+      }
+    }
+    &.controller-hidden {
+      cursor: none;
+      .controller {
+        opacity: 0;
+        &:hover {
+          opacity: 1;
         }
       }
     }
   }
   .controller {
+    cursor: default;
     opacity: 0;
     left: 0;
     right: 0;

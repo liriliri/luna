@@ -8,6 +8,7 @@
   user-select: none;
   position: relative;
   min-height: 150px;
+  min-width: 300px;
 }
 
 @include controller('retro-emulator');

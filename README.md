@@ -33,6 +33,7 @@
 * [notification](./src/notification/README.md): Show notifications.
 * [object-viewer](./src/object-viewer/README.md): JavaScript object viewer.
 * [performance-monitor](./src/performance-monitor/README.md): Realtime counter used for displaying cpu, fps metrics.
+* [retro-emulator](./src/retro-emulator/README.md): Retro emulator using libretro.
 * [scrollbar](./src/scrollbar/README.md): Custom scrollbar.
 * [shader-toy-player](./src/shader-toy-player/README.md): Shader toy player.
 * [syntax-highlighter](./src/syntax-highlighter/README.md): Syntax highlighter using highlightjs.

@@ -34,7 +34,6 @@ module.exports = function (
   }
 
   const files = [
-    { pattern: '../../public/*.jpg', included: false, served: true },
     'test.js',
   ]
 

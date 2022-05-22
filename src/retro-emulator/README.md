@@ -26,7 +26,23 @@ import 'luna-retro-emulator/luna-retro-emulator.css'
 import LunaRetroEmulator from 'luna-retro-emulator'
 ```
 
+## Usage
+
+```javascript
+const retroEmulator = new RetroEmulator(container, {
+  core: 'https://res.liriliri.io/luna/fceumm_libretro.js',
+  browserFS: 'https://res.liriliri.io/luna/browserfs.min.js',
+})
+retroEmulator.load('https://res.liriliri.io/luna/Contra.nes')
+```
+
 ## Configuration
 
 * browserFS(string): BrowserFS url.
 * core(string): Libretro core url.
+
+## Api
+
+### load(url?: string): void
+
+Load rom from url.

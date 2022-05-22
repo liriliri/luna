@@ -176,10 +176,10 @@
     "dependencies": []
   },
   "retro-emulator": {
-    "test": false,
     "icon": true,
     "version": "0.1.0",
     "style": true,
+    "test": true,
     "install": false,
     "dependencies": []
   },

@@ -20,6 +20,13 @@ export interface IOptions extends IComponentOptions {
 
 /**
  * Retro emulator using libretro.
+ *
+ * @example
+ * const retroEmulator = new RetroEmulator(container, {
+ *   core: 'https://res.liriliri.io/luna/fceumm_libretro.js',
+ *   browserFS: 'https://res.liriliri.io/luna/browserfs.min.js',
+ * })
+ * retroEmulator.load('https://res.liriliri.io/luna/Contra.nes')
  */
 export default class RetroEmulator extends Component<IOptions> {
   private $controller: $.$
@@ -48,6 +55,7 @@ export default class RetroEmulator extends Component<IOptions> {
 
     this.load(createUrl(file))
   }
+  /** Load rom from url. */
   load(url?: string) {
     const { browserFS, core } = this.options
     const { $iframeContainer } = this

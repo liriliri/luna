@@ -8,16 +8,12 @@ import readme from './README.md'
 
 const def = story(
   'music-player',
-  (wrapper) => {
-    $(wrapper)
-      .css({
-        width: 640,
-        margin: '0 auto',
-        maxWidth: '100%',
-      })
-      .html('')
-    const container = h('div')
-    wrapper.appendChild(container)
+  (container) => {
+    $(container).css({
+      width: 640,
+      margin: '0 auto',
+      maxWidth: '100%',
+    })
 
     const audio = object('Audio', [
       {

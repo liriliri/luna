@@ -8,18 +8,14 @@ import { text } from '@storybook/addon-knobs'
 
 const def = story(
   'video-player',
-  (wrapper) => {
-    $(wrapper)
-      .css({
-        maxWidth: 640,
-        width: '100%',
-        margin: '0 auto',
-        minHeight: 150,
-        aspectRatio: '1280/720',
-      })
-      .html('')
-    const container = h('div')
-    wrapper.appendChild(container)
+  (container) => {
+    $(container).css({
+      maxWidth: 640,
+      width: '100%',
+      margin: '0 auto',
+      minHeight: 150,
+      aspectRatio: '1280/720',
+    })
 
     const url = text(
       'Video Url',

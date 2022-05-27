@@ -8,17 +8,13 @@ import { optionsKnob, button, text } from '@storybook/addon-knobs'
 
 const def = story(
   'retro-emulator',
-  (wrapper) => {
-    $(wrapper)
-      .css({
-        maxWidth: 640,
-        width: '100%',
-        margin: '0 auto',
-        aspectRatio: '1024/768',
-      })
-      .html('')
-    const container = h('div')
-    wrapper.appendChild(container)
+  (container) => {
+    $(container).css({
+      maxWidth: 640,
+      width: '100%',
+      margin: '0 auto',
+      aspectRatio: '1024/768',
+    })
 
     const fcCore = 'https://res.liriliri.io/luna/fceumm_libretro.js'
 

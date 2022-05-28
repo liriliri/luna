@@ -1,0 +1,256 @@
+// https://codepen.io/manz/pen/XQYoKd
+.wrapper {
+  --gameboy-width: 375px;
+  --gameboy-height: 625px;
+
+  width: var(--gameboy-width);
+  height: var(--gameboy-height);
+  position: relative;
+}
+
+/* GameBoy console body */
+.gameboy {
+  background: #d3ccd3 linear-gradient(#d3ccd3 95%, #999 98%, #777 99%);
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  position: relative;
+}
+
+.gameboy > .top {
+  display: flex;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  & .corner {
+    width: 25px;
+    height: 20px;
+  }
+  & .corner.left {
+    margin-right: 5px;
+  }
+  & .corner.right {
+    margin-left: 5px;
+  }
+  & .top {
+    width: 100%;
+  }
+
+  & > div {
+    border-radius: 0 0 2px 2px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+
+    & span {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5) inset;
+      text-shadow: 2px 1px 2px rgba(0, 0, 0, 1);
+      color: #eee;
+      border-radius: 15px;
+      margin: 0 6px;
+      padding: 2px 5px;
+      opacity: 0.25;
+    }
+  }
+}
+
+/* GameBoy complete screen (gray + green) */
+.screen {
+  width: calc(100% - 60px);
+  box-shadow: 0 0 2px #514c65;
+  height: 250px;
+  margin: 0.1em auto;
+  background: #000;
+}
+
+@keyframes startup {
+  0% {
+    transform: translate(0, -25px);
+  }
+  100% {
+    transform: translate(0, 80px);
+  }
+}
+
+/* Main controls: Cross and A/B buttons */
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cross {
+  background: linear-gradient(to bottom, #c4bfc6 -10%, #e2e0eb 130%);
+  border-radius: 50%;
+  padding: 10px;
+  width: 100px;
+  height: 100px;
+  margin: 30px;
+  display: grid;
+  grid-template-areas: '. up .' 'left center right' '. down .';
+
+  & .cursor {
+    background: #040308;
+    border: 3px solid #040308;
+    box-shadow: 2px 4px 3px rgba(0, 0, 0, 0.6);
+    display: flex;
+  }
+
+  & .cursor.up,
+  & .cursor.left,
+  & .cursor.right {
+    border-top-color: #c5d8e1;
+  }
+
+  & .cursor .circle {
+    border: 1px solid #111;
+    border-left: 0;
+    border-bottom: 0;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    background: conic-gradient(
+      transparent 0 30%,
+      rgba(255, 255, 255, 0.5) 40% 60%,
+      transparent 70%
+    );
+  }
+
+  & .cursor.up {
+    grid-area: up;
+  }
+  & .cursor.left {
+    grid-area: left;
+  }
+  & .cursor.center {
+    grid-area: center;
+  }
+  & .cursor.right {
+    grid-area: right;
+  }
+  & .cursor.down {
+    grid-area: down;
+  }
+
+  & .cursor:active {
+    box-shadow: none;
+    border-color: #111;
+  }
+  & .cursor.center:active {
+    border-color: #040308;
+  }
+}
+
+.buttons {
+  background: linear-gradient(#b7acb1 -10%, #f1f3f2 130%);
+  border-radius: 40px;
+  padding: 5px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  margin: 50px 30px 0 0;
+  transform: rotate(-30deg);
+
+  & .button {
+    width: 50px;
+    height: 50px;
+    box-shadow: -2px 3px 5px rgba(0, 0, 0, 1),
+      -3px 4px 3px rgba(255, 255, 255, 0.25) inset;
+    margin: 0 6px;
+    border-radius: 50%;
+    background: #6f001a;
+
+    &:active {
+      box-shadow: -3px 4px 3px rgba(0, 0, 0, 0.25) inset,
+        2px -2px 3px rgba(0, 0, 0, 0.25) inset;
+    }
+  }
+  & .button::after {
+    font-family: Pretendo, sans-serif;
+    font-size: 16px;
+    color: #302058;
+    content: attr(data-button);
+    position: relative;
+    right: -15px;
+    bottom: -65px;
+  }
+}
+
+/* Secondary controls: Select & Start */
+.gamecontrols {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+
+  & .gap {
+    background: linear-gradient(#b7acb1 -10%, #f1f3f2 130%);
+    transform: rotate(-28deg);
+    margin: 0 5px;
+    border-radius: 15px;
+  }
+
+  & .button {
+    background: #9e9baf;
+    border-radius: 10px;
+    box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.4) inset,
+      2px 2px 5px rgba(255, 255, 255, 0.7) inset, 2px 2px 6px rgba(0, 0, 0, 0.8);
+    width: 50px;
+    height: 12px;
+    margin: 6px 8px;
+
+    &:active {
+      box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.4) inset,
+        2px 2px 5px rgba(0, 0, 0, 0.7) inset;
+    }
+  }
+
+  & .button::after {
+    font-family: Pretendo, sans-serif;
+    font-size: 12px;
+    color: #302058;
+    content: attr(data-button);
+    position: relative;
+    right: 0;
+    bottom: -20px;
+  }
+}
+
+/* Gameboy bottom body part */
+.gameboy > .bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  left: -20px;
+}
+
+.speaker {
+  display: flex;
+  width: 120px;
+  justify-content: space-around;
+  position: absolute;
+  right: 15px;
+  bottom: 35px;
+  transform: rotate(-30deg);
+
+  &::after {
+    content: '';
+    width: 200px;
+    height: 60px;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.1);
+    top: 50px;
+  }
+
+  & .band {
+    width: 8px;
+    height: 60px;
+    border-radius: 8px;
+    box-shadow: 3px 6px 1px rgba(0, 0, 0, 0.6) inset;
+    background: rgba(0, 0, 0, 0.35);
+  }
+}

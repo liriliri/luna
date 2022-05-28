@@ -39,10 +39,15 @@ retroEmulator.load('https://res.liriliri.io/luna/Contra.nes')
 ## Configuration
 
 * browserFS(string): BrowserFS url.
+* controls(boolean): Show controls.
 * core(string): Libretro core url.
 
 ## Api
 
-### load(url?: string): void
+### load(url: string): void
 
 Load rom from url.
+
+### pressKey(code: string): void
+
+Send keys to emulator.

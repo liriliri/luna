@@ -16,6 +16,8 @@ export interface IOptions extends IComponentOptions {
   core: string
   /** BrowserFS url. */
   browserFS: string
+  /** Show controls. */
+  controls?: boolean
 }
 
 /**
@@ -40,13 +42,19 @@ export default class RetroEmulator extends Component<IOptions> {
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'retro-emulator' })
 
-    this.initOptions(options)
+    this.initOptions(options, {
+      controls: true
+    })
 
     this.initTpl()
     this.$controller = this.find('.controller')
     this.$play = this.find('.play')
     this.$volume = this.find('.volume')
     this.$iframeContainer = this.find('.iframe-container')
+
+    if (!this.options.controls) {
+      this.$controller.hide()
+    }
 
     this.bindEvent()
   }
@@ -56,7 +64,7 @@ export default class RetroEmulator extends Component<IOptions> {
     this.load(createUrl(file))
   }
   /** Load rom from url. */
-  load(url?: string) {
+  load(url: string) {
     const { browserFS, core } = this.options
     const { $iframeContainer } = this
     if (this.iframe) {
@@ -142,6 +150,19 @@ export default class RetroEmulator extends Component<IOptions> {
     this.$container.off('mousemove', this.onMouseMove)
     super.destroy()
   }
+  /** Send keys to emulator. */
+  pressKey(code: string) {
+    const event = {
+      code,
+    }
+    this.triggerEvent('keydown', new KeyboardEvent('keydown', event))
+    setTimeout(() => {
+      this.triggerEvent('keypress', new KeyboardEvent('keypress', event))
+    }, 10)
+    setTimeout(() => {
+      this.triggerEvent('keyup', new KeyboardEvent('keyup', event))
+    }, 60)
+  }
   private toggleFullscreen = () => {
     fullscreen.toggle(this.container)
   }
@@ -202,18 +223,6 @@ export default class RetroEmulator extends Component<IOptions> {
       $controller.rmClass(c('active'))
       $play.html(c('<span class="icon icon-pause"></span>'))
     }
-  }
-  private pressKey(code: string) {
-    const event = {
-      code,
-    }
-    this.triggerEvent('keydown', new KeyboardEvent('keydown', event))
-    setTimeout(() => {
-      this.triggerEvent('keypress', new KeyboardEvent('keypress', event))
-    }, 10)
-    setTimeout(() => {
-      this.triggerEvent('keyup', new KeyboardEvent('keyup', event))
-    }, 60)
   }
   private onMouseMove = () => {
     const { c, $container } = this

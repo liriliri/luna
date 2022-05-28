@@ -1,26 +1,20 @@
+@import '../share/mixin';
+
 // https://codepen.io/manz/pen/XQYoKd
-.wrapper {
-  --gameboy-width: 375px;
-  --gameboy-height: 625px;
-
-  width: var(--gameboy-width);
-  height: var(--gameboy-height);
-  position: relative;
-}
-
-/* GameBoy console body */
-.gameboy {
+.luna-retro-handheld {
+  @include component();
+  min-width: 380px;
   background: #d3ccd3 linear-gradient(#d3ccd3 95%, #999 98%, #777 99%);
   overflow: hidden;
-
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   position: relative;
+  user-select: none;
 }
 
-.gameboy > .top {
+.luna-retro-handheld > .top {
   display: flex;
   padding-bottom: 5px;
   margin-bottom: 5px;
@@ -59,25 +53,22 @@
   }
 }
 
-/* GameBoy complete screen (gray + green) */
 .screen {
-  width: calc(100% - 60px);
+  width: calc(100% - 40px);
   box-shadow: 0 0 2px #514c65;
-  height: 250px;
-  margin: 0.1em auto;
-  background: #000;
+  height: 270px;
+  margin: 0 auto;
+  padding: 12px 14px;
+  background: #6d6e77;
+  border-radius: 8px;
+  position: relative;
 }
 
-@keyframes startup {
-  0% {
-    transform: translate(0, -25px);
-  }
-  100% {
-    transform: translate(0, 80px);
-  }
+.game-screen {
+  border-radius: 4px;
+  overflow: hidden;
 }
 
-/* Main controls: Cross and A/B buttons */
 .controls {
   display: flex;
   justify-content: space-between;
@@ -145,43 +136,56 @@
   }
 }
 
+.button-container {
+  display: flex;
+  flex-direction: column;
+  margin: 30px 30px 30px 0;
+}
+
 .buttons {
-  background: linear-gradient(#b7acb1 -10%, #f1f3f2 130%);
-  border-radius: 40px;
-  padding: 5px;
-  height: 60px;
+  height: 50px;
   display: flex;
   align-items: center;
-  margin: 50px 30px 0 0;
-  transform: rotate(-30deg);
 
   & .button {
-    width: 50px;
-    height: 50px;
-    box-shadow: -2px 3px 5px rgba(0, 0, 0, 1),
-      -3px 4px 3px rgba(255, 255, 255, 0.25) inset;
+    width: 35px;
+    height: 35px;
     margin: 0 6px;
-    border-radius: 50%;
-    background: #6f001a;
+    background: #e0421b;
+    background: -webkit-radial-gradient(
+      35% 35%,
+      circle closest-corner,
+      #ff8957,
+      #e0421b 100%
+    );
+    border-radius: 2em;
+    border: 0.08em solid hsla(10, 90%, 55%, 1);
+    box-shadow: 0 1em 0.2em 0 hsla(10, 90%, 45%, 0.5) inset,
+      0 0.1em 0 hsla(10, 90%, 30%, 1), 0 0.2em 0 hsla(10, 90%, 26%, 1),
+      0 0.3em 0 hsla(10, 90%, 23%, 1), 0 0.24em 0 0.15em hsla(0, 0%, 15%, 1),
+      0 0.075em 0.5em rgba(0, 0, 0, 0.3), 0 0.15em 0.5em rgba(0, 0, 0, 0.3),
+      0 0.3em 0.5em rgba(0, 0, 0, 0.3), 0 0.6em 0.5em rgba(0, 0, 0, 0.3);
 
     &:active {
-      box-shadow: -3px 4px 3px rgba(0, 0, 0, 0.25) inset,
-        2px -2px 3px rgba(0, 0, 0, 0.25) inset;
+      box-shadow: 2em 1em 0.2em 0 hsla(10, 90%, 45%, 0.5) inset,
+        0 0.1em 0 hsla(10, 90%, 30%, 1), 0 0 0 0.15em hsla(0, 0%, 15%, 1),
+        0 0.075em 0.5em rgba(0, 0, 0, 0.3);
     }
   }
   & .button::after {
     font-family: Pretendo, sans-serif;
     font-size: 16px;
-    color: #302058;
+    color: #fff;
     content: attr(data-button);
+    opacity: 0.5;
     position: relative;
-    right: -15px;
-    bottom: -65px;
+    right: -11px;
+    bottom: -9px;
+    transform: rotate(45deg);
   }
 }
 
-/* Secondary controls: Select & Start */
-.gamecontrols {
+.game-controls {
   display: flex;
   justify-content: center;
   margin-bottom: 50px;
@@ -198,7 +202,7 @@
     border-radius: 10px;
     box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.4) inset,
       2px 2px 5px rgba(255, 255, 255, 0.7) inset, 2px 2px 6px rgba(0, 0, 0, 0.8);
-    width: 50px;
+    width: 40px;
     height: 12px;
     margin: 6px 8px;
 
@@ -209,9 +213,8 @@
   }
 
   & .button::after {
-    font-family: Pretendo, sans-serif;
-    font-size: 12px;
-    color: #302058;
+    font-size: 10px;
+    color: #fff;
     content: attr(data-button);
     position: relative;
     right: 0;
@@ -219,18 +222,15 @@
   }
 }
 
-/* Gameboy bottom body part */
-.gameboy > .bottom {
+.luna-retro-handheld > .bottom {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  left: -20px;
 }
 
 .speaker {
   display: flex;
-  width: 120px;
+  width: 80px;
   justify-content: space-around;
   position: absolute;
   right: 15px;
@@ -239,16 +239,16 @@
 
   &::after {
     content: '';
-    width: 200px;
-    height: 60px;
+    width: 300px;
+    height: 80px;
     position: absolute;
     background: rgba(0, 0, 0, 0.1);
-    top: 50px;
+    top: 30px;
   }
 
   & .band {
     width: 8px;
-    height: 60px;
+    height: 50px;
     border-radius: 8px;
     box-shadow: 3px 6px 1px rgba(0, 0, 0, 0.6) inset;
     background: rgba(0, 0, 0, 0.35);

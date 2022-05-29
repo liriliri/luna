@@ -5,6 +5,7 @@
   "luna": {
     "test": false,
     "dependencies": [
+      "menu",
       "retro-emulator"
     ]
   }

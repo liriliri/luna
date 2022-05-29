@@ -48,6 +48,18 @@ retroEmulator.load('https://res.liriliri.io/luna/Contra.nes')
 
 Load rom from url.
 
+### open(): Promise<void>
+
+Open file and load rom.
+
 ### pressKey(code: string): void
 
 Send keys to emulator.
+
+### reset(): void
+
+Reset game.
+
+### triggerEvent(type: string, e: any): void
+
+Trigger document event.

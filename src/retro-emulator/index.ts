@@ -58,6 +58,7 @@ export default class RetroEmulator extends Component<IOptions> {
 
     this.bindEvent()
   }
+  /** Open file and load rom. */
   open = async () => {
     const [file] = await openFile()
 
@@ -170,6 +171,10 @@ export default class RetroEmulator extends Component<IOptions> {
       trigger(iframeDocument, type, e)
     }
   }
+  /** Reset game. */
+  reset = () => {
+    this.pressKey('KeyH')
+  }
   private toggleFullscreen = () => {
     fullscreen.toggle(this.container)
   }
@@ -192,9 +197,6 @@ export default class RetroEmulator extends Component<IOptions> {
   }
   private fastForward = () => {
     this.pressKey('Space')
-  }
-  private reset = () => {
-    this.pressKey('KeyH')
   }
   private toggleVolume = () => {
     if (!this.iframe) {

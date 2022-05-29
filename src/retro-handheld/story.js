@@ -29,7 +29,10 @@ const def = story(
       }
     )
 
-    const retroHandheld = new RetroHandheld(container)
+    const retroHandheld = new RetroHandheld(container, {
+      core,
+      browserFS: 'https://res.liriliri.io/luna/browserfs.min.js',
+    })
 
     if (core === fcCore) {
       const rom = text('ROM', 'https://res.liriliri.io/luna/Contra.nes')

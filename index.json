@@ -185,11 +185,11 @@
   },
   "retro-handheld": {
     "test": false,
+    "dependencies": ["menu", "retro-emulator"],
     "version": "0.1.0",
     "style": true,
     "icon": false,
-    "install": false,
-    "dependencies": []
+    "install": false
   },
   "scrollbar": {
     "version": "0.1.0",

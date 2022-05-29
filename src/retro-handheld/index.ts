@@ -3,20 +3,39 @@ import $ from 'licia/$'
 import types from 'licia/types'
 import detectBrowser from 'licia/detectBrowser'
 import LunaRetroEmulator from 'luna-retro-emulator'
-import Component from '../share/Component'
-import { drag } from '../share/util'
+import LunaMenu from 'luna-menu'
+import Component, { IComponentOptions } from '../share/Component'
+import { drag, eventClient } from '../share/util'
+
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Libretro core url. */
+  core: string
+  /** BrowserFS url. */
+  browserFS: string
+}
 
 /**
  * Retro emulator with controls ui.
+ * 
+ * @example
+ * const retroHandheld = new RetroHandheld(container, {
+ *   core: 'https://res.liriliri.io/luna/fceumm_libretro.js',
+ *   browserFS: 'https://res.liriliri.io/luna/browserfs.min.js',
+ * })
+ * retroEmulator.load('https://res.liriliri.io/luna/Contra.nes')
  */
-export default class RetroHandheld extends Component {
+export default class RetroHandheld extends Component<IOptions> {
   private $gameScreen: $.$
   private $controls: $.$
   private $gameControls: $.$
   private gameScreen: HTMLDivElement
   private retroEmulator: LunaRetroEmulator
-  constructor(container: HTMLElement) {
+  private menu: LunaMenu
+  constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'retro-handheld' })
+
+    this.initOptions(options)
 
     this.initTpl()
 
@@ -30,6 +49,7 @@ export default class RetroHandheld extends Component {
     }
 
     this.initEmulator()
+    this.initMenu()
 
     this.bindEvent()
   }
@@ -44,6 +64,23 @@ export default class RetroHandheld extends Component {
         code,
       })
     )
+  }
+  private initMenu() {
+    const { retroEmulator } = this
+    this.menu = LunaMenu.build([
+      {
+        label: 'Open...',
+        click() {
+          retroEmulator.open()
+        },
+      },
+      {
+        label: 'Reset',
+        click() {
+          retroEmulator.reset()
+        },
+      },
+    ])
   }
   private bindEvent() {
     const { c } = this
@@ -89,11 +126,19 @@ export default class RetroHandheld extends Component {
     bindControl('.button-b', 'KeyZ')
     bindControl('.button-x', 'KeyS')
     bindControl('.button-y', 'KeyA')
+
+    this.$gameScreen.on('contextmenu', this.showMenu)
+  }
+  private showMenu = (e: any) => {
+    e = e.origEvent
+    e.preventDefault()
+    this.menu.show(eventClient('x', e), eventClient('y', e))
   }
   private initEmulator() {
+    const { core, browserFS } = this.options
     this.retroEmulator = new LunaRetroEmulator(this.gameScreen, {
-      core: 'https://res.liriliri.io/luna/fceumm_libretro.js',
-      browserFS: 'https://res.liriliri.io/luna/browserfs.min.js',
+      core,
+      browserFS,
       controls: false,
     })
   }

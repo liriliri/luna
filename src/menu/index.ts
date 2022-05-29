@@ -156,6 +156,7 @@ export default class Menu extends Component {
     $glassPane = $(glassPane)
     document.body.appendChild(glassPane)
     $glassPane.on('click', this.hideAll)
+    $glassPane.on('contextmenu', (e) => e.preventDefault())
     return $glassPane
   }
   private createMenuItem(item: IMenuItemOptions) {

@@ -43,7 +43,7 @@ export default class RetroEmulator extends Component<IOptions> {
     super(container, { compName: 'retro-emulator' })
 
     this.initOptions(options, {
-      controls: true
+      controls: true,
     })
 
     this.initTpl()
@@ -157,11 +157,18 @@ export default class RetroEmulator extends Component<IOptions> {
     }
     this.triggerEvent('keydown', new KeyboardEvent('keydown', event))
     setTimeout(() => {
-      this.triggerEvent('keypress', new KeyboardEvent('keypress', event))
-    }, 10)
-    setTimeout(() => {
       this.triggerEvent('keyup', new KeyboardEvent('keyup', event))
     }, 60)
+  }
+  /** Trigger document event. */
+  triggerEvent(type: string, e: any) {
+    if (!this.iframe) {
+      return
+    }
+    const iframeDocument = this.iframe.contentWindow?.document as any
+    if (iframeDocument) {
+      trigger(iframeDocument, type, e)
+    }
   }
   private toggleFullscreen = () => {
     fullscreen.toggle(this.container)
@@ -256,13 +263,6 @@ export default class RetroEmulator extends Component<IOptions> {
       ['h', 'H', 'p', 'P', 'space'],
       (val) => keyCode(val) === e.keyCode
     )
-  }
-  private triggerEvent(type: string, e: any) {
-    if (!this.iframe) {
-      return
-    }
-    const iframeDocument = this.iframe.contentWindow?.document as any
-    trigger(iframeDocument, type, e)
   }
   private initTpl() {
     this.$container.html(

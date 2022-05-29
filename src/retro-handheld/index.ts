@@ -1,8 +1,10 @@
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
+import types from 'licia/types'
 import detectBrowser from 'licia/detectBrowser'
 import LunaRetroEmulator from 'luna-retro-emulator'
 import Component from '../share/Component'
+import { drag } from '../share/util'
 
 /**
  * Retro emulator with controls ui.
@@ -35,24 +37,58 @@ export default class RetroHandheld extends Component {
   load(url: string) {
     this.retroEmulator.load(url)
   }
+  private triggerKeyboardEvent(type: string, code: string) {
+    this.retroEmulator.triggerEvent(
+      type,
+      new KeyboardEvent(type, {
+        code,
+      })
+    )
+  }
   private bindEvent() {
     const { c } = this
 
-    const pressKey = (code: string) => {
-      return () => {
-        this.retroEmulator.pressKey(code)
+    const timers: types.PlainObj<any> = {}
+    const pressKey = (code: string, once = false) => {
+      const press = () => {
+        this.triggerKeyboardEvent('keydown', code)
+        if (!once) {
+          timers[code] = setTimeout(press, 50)
+        } else {
+          setTimeout(() => {
+            this.triggerKeyboardEvent('keyup', code)
+          }, 60)
+        }
       }
+
+      return press
+    }
+    const releaseKey = (code: string) => {
+      return () => {
+        if (timers[code]) {
+          this.triggerKeyboardEvent('keyup', code)
+          clearTimeout(timers[code])
+          delete timers[code]
+        }
+      }
+    }
+    const bindControl = (selector: string, code: string) => {
+      this.$controls.on(drag('start'), c(selector), pressKey(code))
+      this.$controls.on(drag('end'), c(selector), releaseKey(code))
     }
 
     this.$gameControls
-      .on('click', c('.button-start'), pressKey('Enter'))
-      .on('click', c('.button-select'), pressKey(''))
+      .on('click', c('.button-start'), pressKey('Enter', true))
+      .on('click', c('.button-select'), pressKey('ShiftRight', true))
 
-    this.$controls
-      .on('click', c('.button-up'), pressKey('ArrowUp'))
-      .on('click', c('.button-down'), pressKey('ArrowDown'))
-      .on('click', c('.button-left'), pressKey('ArrowLeft'))
-      .on('click', c('.button-right'), pressKey('ArrowRight'))
+    bindControl('.button-up', 'ArrowUp')
+    bindControl('.button-down', 'ArrowDown')
+    bindControl('.button-left', 'ArrowLeft')
+    bindControl('.button-right', 'ArrowRight')
+    bindControl('.button-a', 'KeyX')
+    bindControl('.button-b', 'KeyZ')
+    bindControl('.button-x', 'KeyS')
+    bindControl('.button-y', 'KeyA')
   }
   private initEmulator() {
     this.retroEmulator = new LunaRetroEmulator(this.gameScreen, {

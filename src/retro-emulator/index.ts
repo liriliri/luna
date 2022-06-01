@@ -5,6 +5,7 @@ import createUrl from 'licia/createUrl'
 import fullscreen from 'licia/fullscreen'
 import keyCode from 'licia/keyCode'
 import some from 'licia/some'
+import escapeJsStr from 'licia/escapeJsStr'
 import Component, { IComponentOptions } from '../share/Component'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bootstrap = require('!raw-loader!./bootstrap').default
@@ -16,6 +17,10 @@ export interface IOptions extends IComponentOptions {
   core: string
   /** BrowserFS url. */
   browserFS: string
+  /** RetroArch config. */
+  config?: string
+  /** RetroArch core options. */
+  coreConfig?: string
   /** Show controls. */
   controls?: boolean
 }
@@ -43,6 +48,8 @@ export default class RetroEmulator extends Component<IOptions> {
     super(container, { compName: 'retro-emulator' })
 
     this.initOptions(options, {
+      config: '',
+      coreConfig: '',
       controls: true,
     })
 
@@ -66,7 +73,7 @@ export default class RetroEmulator extends Component<IOptions> {
   }
   /** Load rom from url. */
   load(url: string) {
-    const { browserFS, core } = this.options
+    const { browserFS, core, config, coreConfig } = this.options
     const { $iframeContainer } = this
     if (this.iframe) {
       this.$iframeContainer.html('')
@@ -127,7 +134,12 @@ export default class RetroEmulator extends Component<IOptions> {
         <div id="loading"><span>LOADING...</span></div>
         <canvas id="canvas"></canvas>
       </div>
-      <script>var gameUrl = '${url}';${bootstrap}</script>
+      <script>
+        var gameUrl = '${url}';
+        var retroarchCfg = '${escapeJsStr(config)}';
+        var retroarchCoreOptionsCfg = '${escapeJsStr(coreConfig)}';
+        ${bootstrap}
+      </script>
       <script src="${core}"></script>
     </body>
     </html>
@@ -151,18 +163,27 @@ export default class RetroEmulator extends Component<IOptions> {
     this.$container.off('mousemove', this.onMouseMove)
     super.destroy()
   }
-  /** Send keys to emulator. */
+  /** Press key. */
   pressKey(code: string) {
     const event = {
       code,
     }
     this.triggerEvent('keydown', new KeyboardEvent('keydown', event))
+  }
+  /** Release key. */
+  releaseKey(code: string) {
+    const event = {
+      code,
+    }
+    this.triggerEvent('keyup', new KeyboardEvent('keyup', event))
+  }
+  private input(code: string) {
+    this.pressKey(code)
     setTimeout(() => {
-      this.triggerEvent('keyup', new KeyboardEvent('keyup', event))
+      this.releaseKey(code)
     }, 60)
   }
-  /** Trigger document event. */
-  triggerEvent(type: string, e: any) {
+  private triggerEvent(type: string, e: any) {
     if (!this.iframe) {
       return
     }
@@ -173,7 +194,7 @@ export default class RetroEmulator extends Component<IOptions> {
   }
   /** Reset game. */
   reset = () => {
-    this.pressKey('KeyH')
+    this.input('KeyH')
   }
   private toggleFullscreen = () => {
     fullscreen.toggle(this.container)
@@ -196,14 +217,14 @@ export default class RetroEmulator extends Component<IOptions> {
     document.addEventListener('keypress', this.onKeypress)
   }
   private fastForward = () => {
-    this.pressKey('Space')
+    this.input('Space')
   }
   private toggleVolume = () => {
     if (!this.iframe) {
       return
     }
     this.isMuted = !this.isMuted
-    this.pressKey('F9')
+    this.input('F9')
     this.renderVolume()
   }
   private renderVolume = () => {
@@ -220,7 +241,7 @@ export default class RetroEmulator extends Component<IOptions> {
       return
     }
     this.isPaused = !this.isPaused
-    this.pressKey('KeyP')
+    this.input('KeyP')
     this.renderPlay()
   }
   private renderPlay() {

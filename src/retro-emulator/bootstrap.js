@@ -90,7 +90,12 @@ function setupFileSystem(backend) {
 function initCfg() {
   var path = '/home/web_user/retroarch/userdata/retroarch.cfg'
   var cfg = ['menu_driver = "rgui"'].join('\n')
+  cfg += '\n' + retroarchCfg
 
+  FS.writeFile(path, cfg)
+
+  path = '/home/web_user/retroarch/userdata/retroarch-core-options.cfg'
+  cfg = retroarchCoreOptionsCfg
   FS.writeFile(path, cfg)
 }
 

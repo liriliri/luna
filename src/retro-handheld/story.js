@@ -29,8 +29,16 @@ const def = story(
       }
     )
 
+    const config = text('RetroArch Config', 'fps_show = true')
+    const coreConfig = text(
+      'RetroArch Core Options',
+      core === fcCore ? 'fceumm_turbo_enable = "Player 1"' : ''
+    )
+
     const retroHandheld = new RetroHandheld(container, {
       core,
+      config,
+      coreConfig,
       browserFS: 'https://res.liriliri.io/luna/browserfs.min.js',
     })
 

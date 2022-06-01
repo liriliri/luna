@@ -39,8 +39,10 @@ retroEmulator.load('https://res.liriliri.io/luna/Contra.nes')
 ## Configuration
 
 * browserFS(string): BrowserFS url.
+* config(string): RetroArch config.
 * controls(boolean): Show controls.
 * core(string): Libretro core url.
+* coreConfig(string): RetroArch core options.
 
 ## Api
 
@@ -54,12 +56,12 @@ Open file and load rom.
 
 ### pressKey(code: string): void
 
-Send keys to emulator.
+Press key.
+
+### releaseKey(code: string): void
+
+Release key.
 
 ### reset(): void
 
 Reset game.
-
-### triggerEvent(type: string, e: any): void
-
-Trigger document event.

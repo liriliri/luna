@@ -30,10 +30,11 @@ const def = story(
       }
     )
 
-    const retroEmulator = new RetroEmulator(container, {
-      core,
-      browserFS: 'https://res.liriliri.io/luna/browserfs.min.js',
-    })
+    const config = text('RetroArch Config', 'fps_show = true')
+    const coreConfig = text(
+      'RetroArch Core Options',
+      core === fcCore ? 'fceumm_turbo_enable = "Player 1"' : ''
+    )
 
     if (core === fcCore) {
       const rom = text('ROM', 'https://res.liriliri.io/luna/Contra.nes')
@@ -42,6 +43,13 @@ const def = story(
         return false
       })
     }
+
+    const retroEmulator = new RetroEmulator(container, {
+      core,
+      coreConfig,
+      browserFS: 'https://res.liriliri.io/luna/browserfs.min.js',
+      config,
+    })
 
     return retroEmulator
   },

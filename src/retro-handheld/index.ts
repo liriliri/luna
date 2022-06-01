@@ -13,11 +13,15 @@ export interface IOptions extends IComponentOptions {
   core: string
   /** BrowserFS url. */
   browserFS: string
+  /** RetroArch config. */
+  config?: string
+  /** RetroArch core options. */
+  coreConfig?: string
 }
 
 /**
  * Retro emulator with controls ui.
- * 
+ *
  * @example
  * const retroHandheld = new RetroHandheld(container, {
  *   core: 'https://res.liriliri.io/luna/fceumm_libretro.js',
@@ -57,14 +61,6 @@ export default class RetroHandheld extends Component<IOptions> {
   load(url: string) {
     this.retroEmulator.load(url)
   }
-  private triggerKeyboardEvent(type: string, code: string) {
-    this.retroEmulator.triggerEvent(
-      type,
-      new KeyboardEvent(type, {
-        code,
-      })
-    )
-  }
   private initMenu() {
     const { retroEmulator } = this
     this.menu = LunaMenu.build([
@@ -88,12 +84,12 @@ export default class RetroHandheld extends Component<IOptions> {
     const timers: types.PlainObj<any> = {}
     const pressKey = (code: string, once = false) => {
       const press = () => {
-        this.triggerKeyboardEvent('keydown', code)
+        this.retroEmulator.pressKey(code)
         if (!once) {
           timers[code] = setTimeout(press, 50)
         } else {
           setTimeout(() => {
-            this.triggerKeyboardEvent('keyup', code)
+            this.retroEmulator.releaseKey(code)
           }, 60)
         }
       }
@@ -103,7 +99,7 @@ export default class RetroHandheld extends Component<IOptions> {
     const releaseKey = (code: string) => {
       return () => {
         if (timers[code]) {
-          this.triggerKeyboardEvent('keyup', code)
+          this.retroEmulator.releaseKey(code)
           clearTimeout(timers[code])
           delete timers[code]
         }
@@ -135,10 +131,12 @@ export default class RetroHandheld extends Component<IOptions> {
     this.menu.show(eventClient('x', e), eventClient('y', e))
   }
   private initEmulator() {
-    const { core, browserFS } = this.options
+    const { core, browserFS, config, coreConfig } = this.options
     this.retroEmulator = new LunaRetroEmulator(this.gameScreen, {
       core,
       browserFS,
+      config,
+      coreConfig,
       controls: false,
     })
   }

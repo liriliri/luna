@@ -122,7 +122,9 @@ export default class DomViewer extends Component<IOptions> {
     if (isEndTag) {
       $tag.html(
         c(
-          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(node as HTMLElement).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
+          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(
+            node as HTMLElement
+          ).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
         )
       )
     } else if (node.nodeType === Node.ELEMENT_NODE) {

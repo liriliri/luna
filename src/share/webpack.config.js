@@ -6,8 +6,8 @@ const camelCase = require('licia/camelCase')
 const upperFirst = require('licia/upperFirst')
 const each = require('licia/each')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = function (
   name,

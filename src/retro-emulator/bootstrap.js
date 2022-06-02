@@ -1,6 +1,7 @@
 var BrowserFS = BrowserFS
 var afs
 var initializationCount = 0
+var console = parent.console
 
 function idbfsInit() {
   var imfs = new BrowserFS.FileSystem.InMemory()
@@ -63,7 +64,7 @@ function downloadGame() {
   return fetch(gameUrl)
     .then((response) => response.arrayBuffer())
     .then((buffer) => {
-      var name = 'game'
+      var name = getFileName(gameUrl)
       var dataView = new Uint8Array(buffer)
       FS.createDataFile('/', name, dataView, true, false)
       var data = FS.readFile(name, { encoding: 'binary' })
@@ -73,6 +74,19 @@ function downloadGame() {
 
       return path
     })
+}
+
+function getFileName(url) {
+  let ret = url.split('/')
+  ret = ret[ret.length - 1]
+
+  if (ret.indexOf('?') > -1) ret = ret.split('?')[0].trim()
+
+  if (ret === '') {
+    ret = 'game'
+  }
+
+  return ret
 }
 
 function setupFileSystem(backend) {

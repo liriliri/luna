@@ -172,12 +172,8 @@ export default class Scrollbar extends Component {
       $yTrack.addClass(c('hidden'))
     }
 
-    const {
-      paddingTop,
-      paddingRight,
-      paddingBottom,
-      paddingLeft,
-    } = containerStyle
+    const { paddingTop, paddingRight, paddingBottom, paddingLeft } =
+      containerStyle
 
     this.$content.css({
       padding: `${paddingTop} ${paddingRight} ${paddingBottom} ${paddingLeft}`,

@@ -3,6 +3,10 @@ import $ from 'licia/$'
 import types from 'licia/types'
 import detectBrowser from 'licia/detectBrowser'
 import LunaRetroEmulator from 'luna-retro-emulator'
+import defaults from 'licia/defaults'
+import each from 'licia/each'
+import invert from 'licia/invert'
+import contain from 'licia/contain'
 import LunaMenu from 'luna-menu'
 import Component, { IComponentOptions } from '../share/Component'
 import { drag, eventClient } from '../share/util'
@@ -17,6 +21,8 @@ export interface IOptions extends IComponentOptions {
   config?: string
   /** RetroArch core options. */
   coreConfig?: string
+  /** Controller mapping. */
+  controller: types.PlainObj<string>
 }
 
 /**
@@ -39,7 +45,22 @@ export default class RetroHandheld extends Component<IOptions> {
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'retro-handheld' })
 
-    this.initOptions(options)
+    this.initOptions(options, {
+      controller: {
+        start: 'Enter',
+        select: 'ShiftRight',
+        up: 'ArrowUp',
+        down: 'ArrowDown',
+        left: 'ArrowLeft',
+        right: 'ArrowRight',
+        a: 'KeyX',
+        b: 'KeyZ',
+        x: 'KeyS',
+        y: 'KeyA',
+      },
+    })
+
+    defaults(this.options.controller, {})
 
     this.initTpl()
 
@@ -76,19 +97,34 @@ export default class RetroHandheld extends Component<IOptions> {
           retroEmulator.reset()
         },
       },
+      {
+        label: 'Fullscreen',
+        click() {
+          retroEmulator.toggleFullscreen()
+        },
+      },
     ])
+    this.addSubComponent(this.menu)
   }
   private bindEvent() {
-    const { c } = this
+    const { c, $controls, $gameControls } = this
+    const { controller } = this.options
+    const keyMap = invert(controller)
 
     const timers: types.PlainObj<any> = {}
-    const pressKey = (code: string, once = false) => {
-      const press = () => {
+    const onPressKey = (code: string, once = false) => {
+      const selector = c(`.button-${keyMap[code]}`)
+      const press = (e: any) => {
+        $(selector).addClass(c('active'))
         this.retroEmulator.pressKey(code)
         if (!once) {
+          if (e && timers[code]) {
+            releaseKey(code)
+          }
           timers[code] = setTimeout(press, 50)
         } else {
           setTimeout(() => {
+            $(selector).rmClass(c('active'))
             this.retroEmulator.releaseKey(code)
           }, 60)
         }
@@ -96,32 +132,31 @@ export default class RetroHandheld extends Component<IOptions> {
 
       return press
     }
+    const onReleaseKey = (code: string) => {
+      return releaseKey.bind(this, code)
+    }
     const releaseKey = (code: string) => {
-      return () => {
-        if (timers[code]) {
-          this.retroEmulator.releaseKey(code)
-          clearTimeout(timers[code])
-          delete timers[code]
-        }
+      const selector = c(`.button-${keyMap[code]}`)
+      if (timers[code]) {
+        $(selector).rmClass(c('active'))
+        this.retroEmulator.releaseKey(code)
+        clearTimeout(timers[code])
+        delete timers[code]
       }
     }
-    const bindControl = (selector: string, code: string) => {
-      this.$controls.on(drag('start'), c(selector), pressKey(code))
-      this.$controls.on(drag('end'), c(selector), releaseKey(code))
+    const bindControl = (button: string, code: string) => {
+      const selector = `.button-${button}`
+      if (contain(['select', 'start'], button)) {
+        $gameControls.on(drag('start'), c(selector), onPressKey(code, true))
+      } else {
+        $controls.on(drag('start'), c(selector), onPressKey(code))
+        $controls.on(drag('end'), c(selector), onReleaseKey(code))
+      }
     }
 
-    this.$gameControls
-      .on('click', c('.button-start'), pressKey('Enter', true))
-      .on('click', c('.button-select'), pressKey('ShiftRight', true))
-
-    bindControl('.button-up', 'ArrowUp')
-    bindControl('.button-down', 'ArrowDown')
-    bindControl('.button-left', 'ArrowLeft')
-    bindControl('.button-right', 'ArrowRight')
-    bindControl('.button-a', 'KeyX')
-    bindControl('.button-b', 'KeyZ')
-    bindControl('.button-x', 'KeyS')
-    bindControl('.button-y', 'KeyA')
+    each(controller, (key, button) => {
+      bindControl(button, key)
+    })
 
     this.$gameScreen.on('contextmenu', this.showMenu)
   }

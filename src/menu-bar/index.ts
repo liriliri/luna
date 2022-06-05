@@ -51,10 +51,12 @@ export default class MenuBar extends Component {
     const menuBar = new MenuBar(container)
 
     each(template, (item) => {
+      const submenu = LunaMenu.build(item.submenu)
       menuBar.append({
         label: item.label,
-        submenu: LunaMenu.build(item.submenu),
+        submenu,
       })
+      menuBar.addSubComponent(submenu)
     })
 
     return menuBar

@@ -46,6 +46,7 @@ retroEmulator.load('https://res.liriliri.io/luna/Contra.nes')
 
 * browserFS(string): BrowserFS url.
 * config(string): RetroArch config.
+* controller(PlainObj<string>): Controller mapping.
 * core(string): Libretro core url.
 * coreConfig(string): RetroArch core options.
 

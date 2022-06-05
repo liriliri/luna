@@ -69,6 +69,7 @@ export default class Menu extends Component {
 
     const $glassPane = this.createGlassPane()
     $glassPane.append(this.container)
+    $glassPane.show()
 
     this.positionContent(x, y, parent)
   }
@@ -84,7 +85,7 @@ export default class Menu extends Component {
     }
   }
   hideAll = () => {
-    $(this.c('.glass-pane')).html('').remove()
+    $(this.c('.glass-pane')).html('').hide()
   }
   private positionContent(x: number, y: number, parent?: Menu) {
     const { $container } = this
@@ -157,6 +158,15 @@ export default class Menu extends Component {
     document.body.appendChild(glassPane)
     $glassPane.on('click', this.hideAll)
     $glassPane.on('contextmenu', (e) => e.preventDefault())
+
+    document.addEventListener('fullscreenchange', () => {
+      if (document.fullscreenElement) {
+        document.fullscreenElement.appendChild(glassPane)
+      } else {
+        document.body.appendChild(glassPane)
+      }
+    })
+
     return $glassPane
   }
   private createMenuItem(item: IMenuItemOptions) {

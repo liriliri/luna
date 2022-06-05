@@ -65,3 +65,7 @@ Release key.
 ### reset(): void
 
 Reset game.
+
+### toggleFullscreen(): void
+
+Toggle fullscreen.

@@ -127,11 +127,11 @@
     grid-area: down;
   }
 
-  & .cursor:active {
+  & .cursor.active {
     box-shadow: none;
     border-color: #111;
   }
-  & .cursor.center:active {
+  & .cursor.center.active {
     border-color: #040308;
   }
 }
@@ -166,7 +166,7 @@
       0 0.075em 0.5em rgba(0, 0, 0, 0.3), 0 0.15em 0.5em rgba(0, 0, 0, 0.3),
       0 0.3em 0.5em rgba(0, 0, 0, 0.3), 0 0.6em 0.5em rgba(0, 0, 0, 0.3);
 
-    &:active {
+    &.active {
       box-shadow: 2em 1em 0.2em 0 hsla(10, 90%, 45%, 0.5) inset,
         0 0.1em 0 hsla(10, 90%, 30%, 1), 0 0 0 0.15em hsla(0, 0%, 15%, 1),
         0 0.075em 0.5em rgba(0, 0, 0, 0.3);
@@ -206,7 +206,7 @@
     height: 12px;
     margin: 6px 8px;
 
-    &:active {
+    &.active {
       box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.4) inset,
         2px 2px 5px rgba(0, 0, 0, 0.7) inset;
     }

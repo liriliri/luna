@@ -196,7 +196,8 @@ export default class RetroEmulator extends Component<IOptions> {
   reset = () => {
     this.input('KeyH')
   }
-  private toggleFullscreen = () => {
+  /** Toggle fullscreen. */
+  toggleFullscreen = () => {
     fullscreen.toggle(this.container)
   }
   private bindEvent() {

@@ -1,6 +1,6 @@
 {
   "name": "menu",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple menu",
   "luna": {
     "icon": true

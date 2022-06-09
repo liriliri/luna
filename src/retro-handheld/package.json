@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "Retro emulator with controls ui",
   "luna": {
-    "test": false,
     "dependencies": [
       "menu",
       "retro-emulator"

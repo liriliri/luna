@@ -47,6 +47,7 @@
     "autoprefixer": "^9.7.4",
     "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
+    "commander": "^9.3.0",
     "css-loader": "^3.4.2",
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.0.0",
@@ -78,7 +79,6 @@
     "typescript": "4.6.2",
     "webpack": "^4.41.5",
     "webpack-bundle-analyzer": "^4.4.2",
-    "webpack-cli": "^3.3.11",
-    "yargs": "^15.3.1"
+    "webpack-cli": "^3.3.11"
   }
 }

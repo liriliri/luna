@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const yargs = require('yargs')
+const program = require('commander')
 const noop = require('licia/noop')
 const fs = require('licia/fs')
 const {
@@ -34,12 +34,12 @@ const dev = wrap(async function (component) {
   ])
 })
 
-const test = wrap(async function (component, argv) {
+const test = wrap(async function (component, options) {
   await createWebpackConfig(component)
   await createKarmaConf(component)
 
   const args = ['start', `./src/${component}/karma.conf.js`]
-  if (argv.headless !== false) {
+  if (options.headless !== false) {
     args.push('--headless')
   }
   await runScript('karma', args)
@@ -88,18 +88,35 @@ const update = async function () {
   console.log('Tsconfig file updated')
 }
 
-yargs
-  .usage('Usage: <command> <component>')
-  .command('format', 'format code', noop, format)
-  .command('dev', 'start webpack-dev-server', noop, dev)
-  .command('build', 'build package', noop, build)
-  .command('lint', 'lint code', noop, lint)
-  .command('genIcon', 'generate icon file', noop, genIcon)
-  .command('test', 'run test', noop, test)
-  .command('install', 'install dependencies', noop, install)
-  .command('update', 'update index.json', noop, update)
-  .command('doc', 'generate readme', noop, doc)
-  .fail(function () {
-    process.exit(1)
-  })
-  .help('h').argv
+program.command('format [component]').description('format code').action(format)
+
+program
+  .command('dev <component>')
+  .description('start webpack-dev-server')
+  .action(dev)
+
+program.command('build [component]').description('build package').action(build)
+
+program.command('lint [component]').description('lint code').action(lint)
+
+program
+  .command('genIcon [component]')
+  .description('generate icon file')
+  .action(genIcon)
+
+program
+  .command('test [component]')
+  .option('--no-headless', 'do not use headless mode')
+  .description('run test')
+  .action(test)
+
+program
+  .command('install [component]')
+  .description('install dependencies')
+  .action(install)
+
+program.command('update').description('update index.json').action(update)
+
+program.command('doc [component]').description('generate readme').action(doc)
+
+program.parse(process.argv)

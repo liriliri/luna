@@ -103,6 +103,14 @@
     "install": false,
     "dependencies": []
   },
+  "keyboard": {
+    "test": false,
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "install": false,
+    "dependencies": []
+  },
   "markdown-viewer": {
     "install": true,
     "dependencies": ["syntax-highlighter", "gallery"],

@@ -42,7 +42,8 @@
       "luna-music-visualizer": ["src/music-visualizer/index"],
       "luna-fc-emulator": ["src/fc-emulator/index"],
       "luna-retro-emulator": ["src/retro-emulator/index"],
-      "luna-retro-handheld": ["src/retro-handheld/index"]
+      "luna-retro-handheld": ["src/retro-handheld/index"],
+      "luna-keyboard": ["src/keyboard/index"]
     }
   }
 }

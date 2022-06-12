@@ -6,6 +6,7 @@
     "highlight.js": "^11.4.0"
   },
   "luna": {
-    "install": true
+    "install": true,
+    "icon": true
   }
 }

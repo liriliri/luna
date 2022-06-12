@@ -18,7 +18,7 @@ export default class Keyboard extends Component<IOptions> {
   private initTpl() {
     this.$container.html(
       this.c(stripIndent`
-      <ul>
+      <ul class="keys">
         <li data-key="27"><span>esc</span></li>
         <li data-key="112"><span>F1</span></li>
         <li data-key="113"><span>F2</span></li>

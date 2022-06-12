@@ -11,6 +11,7 @@ import each from 'licia/each'
 import types from 'licia/types'
 import startWith from 'licia/startWith'
 import throttle from 'licia/throttle'
+import copy from 'licia/copy'
 
 hljs.configure({
   classPrefix: 'luna-syntax-highlighter-',
@@ -44,6 +45,7 @@ export interface IOptions extends IComponentOptions {
 export default class SyntaxHighlighter extends Component {
   private render: types.AnyFn
   private $code: $.$
+  private $copy: $.$
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'syntax-highlighter' }, options)
 
@@ -71,6 +73,7 @@ export default class SyntaxHighlighter extends Component {
 
     this.initTpl()
     this.$code = this.find('.code')
+    this.$copy = this.find('.copy')
 
     if (this.options.code) {
       this.render()
@@ -78,30 +81,67 @@ export default class SyntaxHighlighter extends Component {
 
     this.bindEvent()
   }
+  destroy() {
+    this.$container.off('scroll', this.updateCopyPos)
+    super.destroy()
+  }
   private initTpl() {
-    this.$container.html(this.c('<code class="code"></code>'))
+    this.$container.html(
+      this.c(
+        `<code class="code"></code><div class="copy"><span class="icon icon-copy"></span></div>`
+      )
+    )
   }
   private bindEvent() {
     this.on('optionChange', () => this.render())
+    this.$container.on('scroll', this.updateCopyPos)
+    this.$copy.on('click', this.copy)
+  }
+  private copy = () => {
+    const { c } = this
+
+    copy(this.options.code)
+    const $icon = this.$copy.find(c('.icon'))
+    $icon.addClass(c('icon-check')).rmClass(c('icon-copy'))
+    setTimeout(() => {
+      $icon.rmClass(c('icon-check')).addClass(c('icon-copy'))
+    }, 1000)
+  }
+  private updateCopyPos = () => {
+    const { container } = this
+
+    this.$copy.css({
+      top: container.scrollTop + 5,
+      right: -container.scrollLeft + 5,
+    })
   }
   private _render() {
-    const { c } = this
+    const { c, $copy, $code } = this
     const { code, language, showLineNumbers, wrapLongLines } = this.options
 
     if (wrapLongLines) {
-      this.$code.addClass(c('wrap-long-lines'))
+      $code.addClass(c('wrap-long-lines'))
     } else {
-      this.$code.rmClass(c('wrap-long-lines'))
+      $code.rmClass(c('wrap-long-lines'))
     }
 
     const highlightCode = hljs.highlight(code, { language }).value
     if (!showLineNumbers) {
-      this.$code.rmClass(c('line-numbers'))
+      $code.rmClass(c('line-numbers'))
       return this.$code.html(highlightCode)
     }
 
-    this.$code.addClass(c('line-numbers'))
-    const lines = getLines(highlightCode)
+    $code.addClass(c('line-numbers'))
+    let lines = getLines(highlightCode)
+    if (isEmpty(lines)) {
+      lines = ['&nbsp;']
+    }
+    if (lines.length > 3) {
+      $copy.show()
+    } else {
+      $copy.hide()
+    }
+
     if (!trim(last(lines))) {
       lines.pop()
     }
@@ -114,7 +154,9 @@ export default class SyntaxHighlighter extends Component {
       }</div></div>`
     })
 
-    this.$code.html(`<div class="${c('table')}">${body}</div>`)
+    $code.html(`<div class="${c('table')}">${body}</div>`)
+
+    this.updateCopyPos()
   }
   /**
    * Highlight.js registerLanguage.

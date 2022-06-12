@@ -1,6 +1,6 @@
 {
   "name": "syntax-highlighter",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Syntax highlighter using highlightjs",
   "dependencies": {
     "highlight.js": "^11.4.0"

@@ -52,6 +52,7 @@
 }
 
 .copy {
+  background: $background-color;
   opacity: 0;
   position: absolute;
   right: 5px;
@@ -130,6 +131,9 @@
   }
   .copy .icon-check {
     color: $success-color-dark;
+  }
+  .copy {
+    background-color: $background-color-dark;
   }
 }
 

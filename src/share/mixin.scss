@@ -12,6 +12,7 @@
 @mixin component {
   color: $foreground-color;
   font-family: $font-family;
+  box-sizing: border-box;
   &.platform-windows {
     font-family: 'Segoe UI', Tahoma, sans-serif;
   }

@@ -130,7 +130,17 @@ export default class Keyboard extends Component<IOptions> {
         return
       }
       const key = toNum($li.data('key'))
-      self.input += String.fromCharCode(key)
+      let input = self.input
+      switch (key) {
+        case 8:
+          if (input.length > 0) {
+            input = input.slice(0, input.length - 1)
+          }
+          break
+        default:
+          input += String.fromCharCode(key)
+      }
+      self.input = input
       self.emit('change', self.input)
     })
   }

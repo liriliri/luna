@@ -8,7 +8,7 @@
   user-select: none;
   position: relative;
   width: 100%;
-  max-width: 995px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 3px;
 }
@@ -37,7 +37,6 @@
     &.pressed {
       color: #fff;
       background-color: $primary-color;
-      border: 1px solid #fff;
     }
   }
   li {
@@ -112,6 +111,34 @@
     span {
       text-align: left;
       margin-left: 5px;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .row {
+    li {
+      span {
+        line-height: 25px;
+        &:only-child {
+          line-height: 50px;
+        }
+      }
+    }
+    li[data-key='37'],
+    li[data-key='39'] {
+      display: none;
+    }
+  }
+  .row:nth-child(1) {
+    li span {
+      height: 22px;
+      line-height: 22px;
+    }
+  }
+  .row:nth-child(6) {
+    li:nth-child(8) {
+      display: none;
     }
   }
 }

@@ -14,6 +14,9 @@
   ul {
     list-style: none;
   }
+  &.theme-dark {
+    color: #e8eaed;
+  }
 }
 
 .toggle {
@@ -89,4 +92,27 @@
   overflow-x: visible;
   overflow-y: visible;
   padding-left: 15px;
+}
+
+.theme-dark {
+  .icon-arrow-down,
+  .icon-arrow-right {
+    color: #9aa0a6;
+  }
+  .html-tag,
+  .tag-name {
+    color: #5db0d7;
+  }
+  .attribute-name {
+    color: #9bbbdc;
+  }
+  .attribute-value {
+    color: #f29766;
+  }
+  .html-comment {
+    color: #898989;
+  }
+  .selection {
+    background: #083c69;
+  }
 }

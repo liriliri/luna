@@ -232,10 +232,10 @@ export default class DomViewer extends Component<IOptions> {
       <span class="selection"></span>`)
   }
   private renderTextNode(value: string) {
-    return `"<span class="text-node">${value}</span>"`
+    return this.c(`"<span class="text-node">${value}</span>"`)
   }
   private renderHtmlComment(value: string) {
-    return `<span class="html-comment">&lt;!-- ${value} --&gt;</span>`
+    return this.c(`<span class="html-comment">&lt;!-- ${value} --&gt;</span>`)
   }
 }
 

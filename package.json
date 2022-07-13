@@ -9,10 +9,10 @@
   "scripts": {
     "ci": "luna install && npm run lint && npm test",
     "test": "npm run build && luna test",
-    "lint": "eslint 'src/share/*.{ts,js}' '*.js' 'bin/*.js' 'lib/*.js' && luna lint",
+    "lint": "eslint \"src/share/*.{ts,js}\" \"*.js\" \"bin/*.js\" \"lib/*.js\" && luna lint",
     "build": "luna build",
     "update": "luna update && lsla prettier '*.json' --write",
-    "format": "lsla prettier 'src/share/*.{ts,js,scss}' '*.{json,js}' 'bin/*.js' '.storybook/*.js' 'lib/*.js' --write && luna format",
+    "format": "lsla prettier \"src/share/*.{ts,js,scss}\" \"*.{json,js}\" \"bin/*.js\" \".storybook/*.js\" \"lib/*.js\" --write && luna format",
     "storybook": "start-storybook -p 8080",
     "storybook:no-cache": "start-storybook -p 8080 --no-manager-cache",
     "build-storybook": "build-storybook -o .storybook/out"

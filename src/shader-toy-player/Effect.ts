@@ -3943,8 +3943,9 @@ Effect.prototype.saveScreenshot = function (passid) {
   if (pass.mType === 'buffer') {
     let bufferID = assetID_to_bufferID(this.mPasses[passid].mOutputs[0])
 
-    let texture =
-      this.mBuffers[bufferID].mTarget[this.mBuffers[bufferID].mLastRenderDone]
+    let texture = this.mBuffers[bufferID].mTarget[
+      this.mBuffers[bufferID].mLastRenderDone
+    ]
 
     let numComponents = 3
     let width = texture.mTex0.mXres

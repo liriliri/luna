@@ -15,8 +15,20 @@ $console-warn-foreground: #5c5c00;
 $console-warn-background: #fffbe5;
 $console-warn-border: #fff5c2;
 
+$foreground-dark: #a5a5a5;
+$border-dark: #3d3d3d;
+$text-color-dark: #42597f;
+$darker-background-dark: #333;
+$contrast-dark: #0b2544;
+$console-error-background-dark: #290000;
+$console-error-foreground-dark: #ff8080;
+$console-error-border-dark: #5c0000;
+$console-warn-foreground-dark: #ffcb6b;
+$console-warn-background-dark: #332a00;
+$console-warn-border-dark: #650;
+
 .luna-console {
-  background: #fff;
+  background: $background-color;
   @include overflow-auto(y);
   height: 100%;
   position: relative;
@@ -24,6 +36,9 @@ $console-warn-border: #fff5c2;
   cursor: default;
   font-size: $font-size;
   font-family: $font-family-code;
+  &.theme-dark {
+    background-color: $background-color-dark;
+  }
 }
 
 .hidden {
@@ -241,5 +256,94 @@ $console-warn-border: #fff5c2;
   }
   .special {
     color: #5e5e5e;
+  }
+}
+
+.theme-dark {
+  .log-item {
+    color: $foreground-dark;
+    border-bottom-color: $border-dark;
+    .code {
+      .keyword {
+        color: #e36eec;
+      }
+      .number {
+        color: #9980ff;
+      }
+      .operator {
+        color: #7f7f7f;
+      }
+      .comment {
+        color: #747474;
+      }
+      .string {
+        color: #f29766;
+      }
+    }
+    &.html,
+    &.table {
+      table {
+        color: $foreground-dark;
+        th {
+          background: $darker-background-dark;
+        }
+        th,
+        td {
+          border-color: $border-dark;
+        }
+        tr:nth-child(even) {
+          background: $contrast-dark;
+        }
+      }
+    }
+    &.error {
+      background: $console-error-background-dark;
+      color: $console-error-foreground-dark;
+      border-top-color: $console-error-border-dark;
+      border-bottom-color: $console-error-border-dark;
+      .count {
+        background: $console-error-foreground-dark;
+      }
+    }
+    &.warn {
+      color: $console-warn-foreground-dark;
+      background: $console-warn-background-dark;
+      border-top-color: $console-warn-border-dark;
+      border-bottom-color: $console-warn-border-dark;
+    }
+  }
+  .icon-container {
+    .count {
+      color: $text-color-dark;
+    }
+  }
+  .header {
+    border-bottom-color: $border-dark;
+  }
+  .nesting-level {
+    border-right-color: $border-dark;
+    &::before {
+      border-bottom-color: $border-dark;
+    }
+  }
+  .abstract {
+    .key {
+      color: #e36eec;
+    }
+    .number {
+      color: #9980ff;
+    }
+    .null {
+      color: #7f7f7f;
+    }
+    .string {
+      color: #f29766;
+    }
+    .boolean {
+      color: #9980ff;
+    }
+    .special {
+      color: #7f7f7f;
+    }
   }
 }

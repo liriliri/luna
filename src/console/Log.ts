@@ -275,6 +275,7 @@ export default class Log extends Emitter {
             if ($json.data('init') !== 'true') {
               if (src) {
                 const staticViewer = new LunaStaticObjectViewer($json.get(0))
+                staticViewer.setOption('theme', console.getOption('theme'))
                 staticViewer.set(src)
                 staticViewer.on('change', () => this.updateSize(false))
               } else {
@@ -285,6 +286,7 @@ export default class Log extends Emitter {
                   unenumerable,
                   accessGetter,
                 })
+                objViewer.setOption('theme', console.getOption('theme'))
                 objViewer.set(args)
                 objViewer.on('change', () => this.updateSize(false))
               }

@@ -78,6 +78,22 @@
         margin-left: 5px;
       }
     }
+    &[data-key='20'] {
+      &.active {
+        span:first-child {
+          &::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 10px;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 3px;
+          }
+        }
+      }
+    }
     &[data-key='32'] {
       flex-grow: 8;
     }
@@ -91,14 +107,7 @@
   }
 }
 
-.row:nth-child(1) {
-  li span {
-    height: 28px;
-    line-height: 28px;
-  }
-}
-
-.row:nth-child(5) {
+.row:nth-child(4) {
   li:last-child {
     flex-grow: 2;
     span {
@@ -130,13 +139,7 @@
       display: none;
     }
   }
-  .row:nth-child(1) {
-    li span {
-      height: 22px;
-      line-height: 22px;
-    }
-  }
-  .row:nth-child(6) {
+  .row:nth-child(5) {
     li:nth-child(8) {
       display: none;
     }

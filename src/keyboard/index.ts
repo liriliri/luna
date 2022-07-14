@@ -12,6 +12,8 @@ export interface IOptions extends IComponentOptions {}
  */
 export default class Keyboard extends Component<IOptions> {
   private input = ''
+  private capsLock = false
+  private shift = false
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'keyboard' })
 
@@ -27,21 +29,6 @@ export default class Keyboard extends Component<IOptions> {
   private initTpl() {
     this.$container.html(
       this.c(stripIndent`
-      <ul class="row">
-        <li data-key="27"><span>esc</span></li>
-        <li data-key="112"><span>F1</span></li>
-        <li data-key="113"><span>F2</span></li>
-        <li data-key="114"><span>F3</span></li>
-        <li data-key="115"><span>F4</span></li>
-        <li data-key="116"><span>F5</span></li>
-        <li data-key="117"><span>F6</span></li>
-        <li data-key="118"><span>F7</span></li>
-        <li data-key="119"><span>F8</span></li>
-        <li data-key="120"><span>F9</span></li>
-        <li data-key="121"><span>F10</span></li>
-        <li data-key="122"><span>F11</span></li>
-        <li data-key="123"><span>F12</span></li>
-      </ul>
       <ul class="row">
         <li data-key="192"><span>~</span><span>\`</span></li>
         <li data-key="49"><span>!</span><span>1</span></li>
@@ -72,7 +59,7 @@ export default class Keyboard extends Component<IOptions> {
         <li data-key="80"><span>P</span></li>
         <li data-key="219"><span>{</span><span>[</span></li>
         <li data-key="221"><span>}</span><span>]</span></li>
-        <li data-key="220"><span>|</span><span>\</span></li>
+        <li data-key="220"><span>|</span><span>\\</span></li>
       </ul>
       <ul class="row">
         <li data-key="20"><span>&nbsp;</span><span>CapsLock</span></li>
@@ -123,13 +110,14 @@ export default class Keyboard extends Component<IOptions> {
     )
   }
   private bindEvent() {
+    const { c, $container } = this
     const self = this
     this.find('.row').on(drag('start'), 'li', function (this: HTMLLIElement) {
       const $li = $(this)
       if (!$li.data('key')) {
         return
       }
-      const key = toNum($li.data('key'))
+      let key = toNum($li.data('key'))
       let input = self.input
       switch (key) {
         case 8:
@@ -137,7 +125,26 @@ export default class Keyboard extends Component<IOptions> {
             input = input.slice(0, input.length - 1)
           }
           break
+        case 16:
+          const isPressed = $li.hasClass(c('pressed'))
+          $container.find('li[data-key="16"]').rmClass(c('pressed'))
+          self.shift = !isPressed
+          if (isPressed) {
+            $li.rmClass(c('pressed'))
+          } else {
+            $li.addClass(c('pressed'))
+          }
+          break
+        case 20:
+          self.capsLock = !self.capsLock
+          $li.toggleClass(c('active'))
+          break
         default:
+          if (key >= 65 && key <= 90) {
+            if (!self.capsLock && !self.shift) {
+              key += 32
+            }
+          }
           input += String.fromCharCode(key)
       }
       self.input = input

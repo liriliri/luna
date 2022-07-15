@@ -1,8 +1,5 @@
 {
   "name": "keyboard",
   "version": "0.1.0",
-  "description": "Virtual keyboard",
-  "luna": {
-    "test": false
-  }
+  "description": "Virtual keyboard"
 }

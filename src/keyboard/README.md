@@ -26,5 +26,22 @@ import 'luna-keyboard/luna-keyboard.css'
 import LunaKeyboard from 'luna-keyboard'
 ```
 
-## Configuration
+## Usage
 
+```javascript
+const textarea = document.getElementById('textarea')
+const container = document.getElementById('container')
+const keyboard = new LunaKeyboard(container)
+keyboard.on('change', (input) => {
+  textarea.value = input
+})
+textarea.addEventListener('input', (event) => {
+  keyboard.setInput(event.target.value)
+})
+```
+
+## Api
+
+### setInput(input: string): void
+
+Set input.

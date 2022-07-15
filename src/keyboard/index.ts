@@ -1,28 +1,36 @@
-import Component, { IComponentOptions } from '../share/Component'
+import Component from '../share/Component'
 import stripIndent from 'licia/stripIndent'
 import { drag } from '../share/util'
 import $ from 'licia/$'
 import toNum from 'licia/toNum'
-
-/** IOptions */
-export interface IOptions extends IComponentOptions {}
+import types from 'licia/types'
 
 /**
  * Virtual keyboard.
+ *
+ * @example
+ * const textarea = document.getElementById('textarea')
+ * const container = document.getElementById('container')
+ * const keyboard = new LunaKeyboard(container)
+ * keyboard.on('change', (input) => {
+ *   textarea.value = input
+ * })
+ * textarea.addEventListener('input', (event) => {
+ *   keyboard.setInput(event.target.value)
+ * })
  */
-export default class Keyboard extends Component<IOptions> {
+export default class Keyboard extends Component {
   private input = ''
   private capsLock = false
   private shift = false
-  constructor(container: HTMLElement, options: IOptions) {
+  constructor(container: HTMLElement) {
     super(container, { compName: 'keyboard' })
-
-    this.initOptions(options, {})
 
     this.initTpl()
 
     this.bindEvent()
   }
+  /** Set input. */
   setInput(input: string) {
     this.input = input
   }
@@ -135,22 +143,79 @@ export default class Keyboard extends Component<IOptions> {
             $li.addClass(c('pressed'))
           }
           break
+        case 17:
+        case 18:
+        case 37:
+        case 38:
+        case 39:
+        case 40:
+        case 91:
+        case 93:
+          break
         case 20:
           self.capsLock = !self.capsLock
           $li.toggleClass(c('active'))
           break
         default:
-          if (key >= 65 && key <= 90) {
-            if (!self.capsLock && !self.shift) {
-              key += 32
-            }
-          }
-          input += String.fromCharCode(key)
+          input += keyCodeToChar(key, self.capsLock, self.shift)
       }
       self.input = input
       self.emit('change', self.input)
     })
   }
+}
+
+const keyMap: types.PlainObj<string> = {
+  186: ';',
+  187: '=',
+  188: ',',
+  189: '-',
+  190: '.',
+  191: '/',
+  192: '`',
+  219: '[',
+  220: '\\',
+  221: ']',
+  222: "'",
+}
+
+const shiftMap: types.PlainObj<string> = {
+  49: '!',
+  50: '@',
+  51: '#',
+  52: '$',
+  53: '%',
+  54: '^',
+  55: '&',
+  56: '*',
+  57: '(',
+  48: ')',
+  186: ':',
+  187: '+',
+  188: '<',
+  189: '_',
+  190: '>',
+  191: '?',
+  192: '~',
+  219: '{',
+  220: '|',
+  221: '}',
+  222: '"',
+}
+
+function keyCodeToChar(key: number, capsLock = false, shift = false) {
+  if (shift && shiftMap[key]) {
+    return shiftMap[key]
+  }
+  if (keyMap[key]) {
+    return keyMap[key]
+  }
+  if (key >= 65 && key <= 90) {
+    if (!capsLock && !shift) {
+      key += 32
+    }
+  }
+  return String.fromCharCode(key)
 }
 
 module.exports = Keyboard

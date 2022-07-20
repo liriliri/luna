@@ -122,7 +122,9 @@ export default class DomViewer extends Component<IOptions> {
     if (isEndTag) {
       $tag.html(
         c(
-          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(node as HTMLElement).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
+          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(
+            node as HTMLElement
+          ).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
         )
       )
     } else if (node.nodeType === Node.ELEMENT_NODE) {
@@ -171,6 +173,7 @@ export default class DomViewer extends Component<IOptions> {
     this.$children = $children
   }
   private renderChildNodes(node: HTMLElement) {
+    this.destroySubComponents()
     const { rootContainer } = this.options
     const $container = this.$children
     let childNodes = this.getChildNodes(node)
@@ -179,20 +182,24 @@ export default class DomViewer extends Component<IOptions> {
     const container = $container.get(0)
 
     each(childNodes, (node) => {
-      new DomViewer(container as HTMLElement, {
-        node,
-        parent: this,
-        rootContainer,
-      })
+      this.addSubComponent(
+        new DomViewer(container as HTMLElement, {
+          node,
+          parent: this,
+          rootContainer,
+        })
+      )
     })
 
     if (node) {
-      new DomViewer(container as HTMLElement, {
-        node,
-        parent: this,
-        isEndTag: true,
-        rootContainer,
-      })
+      this.addSubComponent(
+        new DomViewer(container as HTMLElement, {
+          node,
+          parent: this,
+          isEndTag: true,
+          rootContainer,
+        })
+      )
     }
   }
   private renderHtmlTag(data: IHtmlTagData) {

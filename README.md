@@ -24,6 +24,7 @@
 * [editor](./src/editor/README.md): Wysiwyg editor.
 * [gallery](./src/gallery/README.md): Lightweight gallery.
 * [json-editor](./src/json-editor/README.md): JSON editor.
+* [keyboard](./src/keyboard/README.md): Virtual keyboard.
 * [markdown-viewer](./src/markdown-viewer/README.md): Live markdown renderer.
 * [menu](./src/menu/README.md): Simple menu.
 * [menu-bar](.src/menu-bar/README.md) Application menu bar.

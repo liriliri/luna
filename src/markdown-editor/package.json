@@ -1,10 +1,11 @@
 {
   "name": "markdown-editor",
   "version": "0.1.0",
-  "description": "Markdown player with preview",
+  "description": "Markdown editor with preview",
   "luna": {
     "dependencies": [
       "markdown-viewer"
-    ]
+    ],
+    "icon": true
   }
 }

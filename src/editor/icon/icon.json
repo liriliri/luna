@@ -1,1 +1,6 @@
-["../../share/icon/fullscreen.svg"]
+[
+  "../../share/icon/fullscreen.svg",
+  "../../share/icon/header.svg",
+  "../../share/icon/bold.svg",
+  "../../share/icon/italic.svg"
+]

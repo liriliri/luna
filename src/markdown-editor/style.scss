@@ -1,0 +1,97 @@
+@import '../share/mixin';
+@import '../share/variable';
+
+.luna-markdown-editor {
+  @include component();
+  border: 1px solid $border-color;
+  background: $background-color;
+  display: flex;
+  flex-direction: column;
+  &.theme-dark {
+    border-color: $border-color-dark;
+  }
+  &.fullscreen {
+    position: fixed;
+    width: 100% !important;
+    height: 100% !important;
+    left: 0;
+    top: 0;
+    border: none;
+    .textarea,
+    .preview-container {
+      height: 100% !important;
+    }
+  }
+}
+
+.toolbar {
+  border-bottom: 1px solid $border-color;
+  font-size: 0;
+}
+
+.button {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  color: $foreground-color;
+  border: none;
+  background: $background-color;
+  cursor: pointer;
+  &:hover {
+    background: $darker-background-color;
+  }
+  &.active {
+    color: $primary-color;
+  }
+}
+
+.body {
+  position: relative;
+  font-size: 0;
+  height: 100%;
+}
+
+.textarea {
+  padding: 8px;
+  margin: 0;
+  width: 100%;
+  outline: none;
+  border: none;
+  resize: vertical;
+  min-height: 100px;
+  height: 300px;
+  font-family: inherit;
+  color: $foreground-color;
+}
+
+.preview-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 8px;
+  background: $background-color;
+}
+
+.theme-dark {
+  .toolbar {
+    border-color: $border-color-dark;
+  }
+  .toolbar,
+  .button {
+    background: $background-color-dark;
+  }
+  .button {
+    color: $foreground-color-dark;
+  }
+  .textarea {
+    color: $foreground-color-dark;
+  }
+  .textarea,
+  .preview-container {
+    background: #0d1117;
+  }
+}

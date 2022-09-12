@@ -61,8 +61,12 @@ export default class MarkdownEditor extends Component<IOptions> {
     const markdown = this.markdown() as string
     const noSelection = start === end
 
-    let newMarkdown = `${chars}${noSelection ? '' : markdown.slice(start, end)}${chars}`
-    newMarkdown = `${markdown.slice(0, start)}${newMarkdown}${markdown.slice(end)}`
+    let newMarkdown = `${chars}${
+      noSelection ? '' : markdown.slice(start, end)
+    }${chars}`
+    newMarkdown = `${markdown.slice(0, start)}${newMarkdown}${markdown.slice(
+      end
+    )}`
     this.markdown(newMarkdown)
 
     if (noSelection) {
@@ -89,7 +93,7 @@ export default class MarkdownEditor extends Component<IOptions> {
   private getCursorPos() {
     const { textarea } = this
 
-    return  [textarea.selectionStart, textarea.selectionEnd]
+    return [textarea.selectionStart, textarea.selectionEnd]
   }
   private bindEvent() {
     const { c } = this

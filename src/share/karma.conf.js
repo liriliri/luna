@@ -2,13 +2,11 @@ const path = require('path')
 const each = require('licia/each')
 const contain = require('licia/contain')
 const endWith = require('licia/endWith')
+const { getFullDependencies, readComponentConfig } = require('../../lib/util')
 
 const headless = contain(process.argv, '--headless')
 
-module.exports = function (
-  name,
-  { useIcon = false, hasStyle = true, dependencies = [] } = {}
-) {
+module.exports = function (name, { useIcon = false, hasStyle = true } = {}) {
   const webpackCfg = require(`../${name}/webpack.config.js`)(
     {},
     { mode: 'development' }
@@ -33,12 +31,17 @@ module.exports = function (
     'test.js': ['webpack', 'sourcemap'],
   }
 
-  const files = ['test.js']
+  const files = []
 
+  const dependencies = getFullDependencies(name)
   each(dependencies, (dependency) => {
-    files.unshift(`../../dist/${dependency}/luna-${dependency}.css`)
-    files.unshift(`../../dist/${dependency}/luna-${dependency}.js`)
+    const componentConfig = readComponentConfig(dependency)
+    if (componentConfig.style) {
+      files.push(`../../dist/${dependency}/luna-${dependency}.css`)
+    }
+    files.push(`../../dist/${dependency}/luna-${dependency}.js`)
   })
+  files.push('test.js')
 
   const postcssLoader = cssRule.loaders[2]
   const postcssOptions = postcssLoader.options

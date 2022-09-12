@@ -125,15 +125,16 @@ export default class Keyboard extends Component {
       if (!$li.data('key')) {
         return
       }
-      let key = toNum($li.data('key'))
+      const key = toNum($li.data('key'))
       let input = self.input
       switch (key) {
-        case 8:
+        case 8: {
           if (input.length > 0) {
             input = input.slice(0, input.length - 1)
           }
           break
-        case 16:
+        }
+        case 16: {
           const isPressed = $li.hasClass(c('pressed'))
           $container.find('li[data-key="16"]').rmClass(c('pressed'))
           self.shift = !isPressed
@@ -143,6 +144,7 @@ export default class Keyboard extends Component {
             $li.addClass(c('pressed'))
           }
           break
+        }
         case 17:
         case 18:
         case 37:

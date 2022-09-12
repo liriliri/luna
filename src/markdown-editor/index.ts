@@ -17,6 +17,7 @@ export interface IOptions extends IComponentOptions {
  */
 export default class MarkdownEditor extends Component<IOptions> {
   private $textarea: $.$
+  private textarea: HTMLTextAreaElement
   private $toolbar: $.$
   private $preview: $.$
   private $fullscreen: $.$
@@ -33,6 +34,7 @@ export default class MarkdownEditor extends Component<IOptions> {
 
     this.$textarea = this.find('.textarea')
     this.$textarea.val(this.options.markdown)
+    this.textarea = this.$textarea.get(0) as HTMLTextAreaElement
     this.$toolbar = this.find('.toolbar')
     this.$preview = this.find('.preview')
     this.$previewContainer = this.find('.preview-container')
@@ -54,11 +56,48 @@ export default class MarkdownEditor extends Component<IOptions> {
       return this.$textarea.val()
     }
   }
+  private wrapText = (chars: string) => {
+    const [start, end] = this.getCursorPos()
+    const markdown = this.markdown() as string
+    const noSelection = start === end
+
+    let newMarkdown = `${chars}${noSelection ? '' : markdown.slice(start, end)}${chars}`
+    newMarkdown = `${markdown.slice(0, start)}${newMarkdown}${markdown.slice(end)}`
+    this.markdown(newMarkdown)
+
+    if (noSelection) {
+      this.setCursorPos(start + chars.length)
+    } else {
+      this.setSelection(start + chars.length, end + chars.length)
+    }
+  }
+  private setSelection(start: number, end: number) {
+    this.focus()
+    this.textarea.setSelectionRange(start, end)
+  }
+  private focus() {
+    const { textarea } = this
+    const { scrollTop } = textarea
+
+    textarea.focus()
+    textarea.scrollTop = scrollTop
+  }
+  private setCursorPos(pos: number) {
+    this.focus()
+    this.textarea.selectionEnd = pos
+  }
+  private getCursorPos() {
+    const { textarea } = this
+
+    return  [textarea.selectionStart, textarea.selectionEnd]
+  }
   private bindEvent() {
     const { c } = this
 
     this.$toolbar
       .on('click', c('.preview'), this.togglePreview)
+      .on('click', c('.bold'), () => this.wrapText('**'))
+      .on('click', c('.italic'), () => this.wrapText('_'))
       .on('click', c('.fullscreen'), this.toggleFullscreen)
   }
   private toggleFullscreen = () => {
@@ -89,13 +128,10 @@ export default class MarkdownEditor extends Component<IOptions> {
           <button class="button preview">
             <span class="icon icon-eye"></span>
           </button>
-          <button class="button">
-            <span class="icon icon-header"></span>
-          </button>
-          <button class="button">
+          <button class="button bold">
             <span class="icon icon-bold"></span>
           </button>
-          <button class="button">
+          <button class="button italic">
             <span class="icon icon-italic"></span>
           </button>
           <button class="button fullscreen">

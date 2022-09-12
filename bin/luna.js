@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const program = require('commander')
-const noop = require('licia/noop')
 const fs = require('licia/fs')
 const {
   runScript,

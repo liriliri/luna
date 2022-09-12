@@ -9,6 +9,7 @@ import escapeJsStr from 'licia/escapeJsStr'
 import Component, { IComponentOptions } from '../share/Component'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bootstrap = require('!raw-loader!./bootstrap').default
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const trigger = require('licia/trigger')
 
 /** IOptions */

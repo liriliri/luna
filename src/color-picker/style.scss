@@ -1,0 +1,31 @@
+@import '../share/mixin';
+@import '../share/variable';
+
+.luna-color-picker {
+  @include component();
+  width: 225px;
+  box-shadow: $box-shadow;
+}
+
+.saturation {
+  position: relative;
+  padding-bottom: 55%;
+}
+
+.saturation-white,
+.saturation-black {
+  position: absolute;
+  inset: 0;
+}
+
+.saturation-white {
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+}
+
+.saturation-black {
+  background: linear-gradient(to top, #000, rgba(0, 0, 0, 0));
+}
+
+.body {
+  padding: 16px 16px 12px;
+}

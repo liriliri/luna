@@ -79,6 +79,19 @@ export function eventClient(type: string, e: any) {
   return 0
 }
 
+export function eventPage(type: string, e: any) {
+  const name = type === 'x' ? 'pageX' : 'pageY'
+
+  if (e[name]) {
+    return e[name]
+  }
+  if (e.changedTouches) {
+    return e.changedTouches[0][name]
+  }
+
+  return 0
+}
+
 let scrollbarWidth: number
 
 export function measuredScrollbarWidth() {

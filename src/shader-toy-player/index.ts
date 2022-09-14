@@ -5,7 +5,7 @@ import noop from 'licia/noop'
 import perfNow from 'licia/perfNow'
 import fullscreen from 'licia/fullscreen'
 import raf from 'licia/raf'
-import { drag, eventClient } from '../share/util'
+import { drag, eventPage } from '../share/util'
 import { piCreateAudioContext, piCreateFPSCounter } from './piLibs'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Effect = require('./Effect').default
@@ -186,12 +186,12 @@ export default class ShaderToyPlayer extends Component {
     e = e.origEvent
     const { canvas } = this
     const offset = this.$canvas.offset()
-    const clientX = eventClient('x', e)
-    const clientY = eventClient('y', e)
+    const pageX = eventPage('x', e)
+    const pageY = eventPage('y', e)
 
-    let x = Math.floor(((clientX - offset.left) / offset.width) * canvas.width)
+    let x = Math.floor(((pageX - offset.left) / offset.width) * canvas.width)
     let y = Math.floor(
-      canvas.height - ((clientY - offset.top) / offset.height) * canvas.height
+      canvas.height - ((pageY - offset.top) / offset.height) * canvas.height
     )
 
     if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) {

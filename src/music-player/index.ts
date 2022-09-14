@@ -2,7 +2,7 @@ import $ from 'licia/$'
 import stripIndent from 'licia/stripIndent'
 import openFile from 'licia/openFile'
 import createUrl from 'licia/createUrl'
-import { drag, eventClient } from '../share/util'
+import { drag, eventPage } from '../share/util'
 import each from 'licia/each'
 import { splitName } from './util'
 import durationFormat from 'licia/durationFormat'
@@ -275,8 +275,8 @@ export default class MusicPlayer extends Component<IOptions> {
   }
   private onVolumeClick = (e: any) => {
     const { top, height } = this.$volumeController.offset()
-    const clientY = eventClient('y', e.origEvent)
-    this.volume(1 - (clientY - top) / (height - 5))
+    const pageY = eventPage('y', e.origEvent)
+    this.volume(1 - (pageY - top) / (height - 5))
   }
   private onBarClick = (e: any) => {
     const time = this.getBarClickTime(e)
@@ -285,7 +285,7 @@ export default class MusicPlayer extends Component<IOptions> {
   }
   private getBarClickTime(e: any) {
     const { left, width } = this.$bar.offset()
-    const percent = clamp((eventClient('x', e.origEvent) - left) / width, 0, 1)
+    const percent = clamp((eventPage('x', e.origEvent) - left) / width, 0, 1)
     return percent * this.audio.duration
   }
   private renderList() {

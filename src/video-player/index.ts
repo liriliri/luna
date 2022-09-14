@@ -9,7 +9,7 @@ import stripIndent from 'licia/stripIndent'
 import toStr from 'licia/toStr'
 import durationFormat from 'licia/durationFormat'
 import fullscreen from 'licia/fullscreen'
-import { eventClient, drag } from '../share/util'
+import { eventPage, drag } from '../share/util'
 import Component, { IComponentOptions } from '../share/Component'
 
 const $document = $(document as any)
@@ -174,8 +174,8 @@ export default class VideoPlayer extends Component<IOptions> {
   }
   private onVolumeClick = (e: any) => {
     const { left, width } = this.$volumeController.offset()
-    const clientX = eventClient('x', e.origEvent)
-    this.volume((clientX - left) / (width - 5))
+    const pageX = eventPage('x', e.origEvent)
+    this.volume((pageX - left) / (width - 5))
   }
   private onVolumeDragStart = () => {
     this.$volume.addClass(this.c('active'))
@@ -293,7 +293,7 @@ export default class VideoPlayer extends Component<IOptions> {
   }
   private getBarClickTime(e: any) {
     const { left, width } = this.$bar.offset()
-    const percent = clamp((eventClient('x', e.origEvent) - left) / width, 0, 1)
+    const percent = clamp((eventPage('x', e.origEvent) - left) / width, 0, 1)
     return percent * this.video.duration
   }
   private onTimeUpdate = () => {

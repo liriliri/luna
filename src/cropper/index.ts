@@ -7,7 +7,7 @@ import throttle from 'licia/throttle'
 import clone from 'licia/clone'
 import max from 'licia/max'
 import contain from 'licia/contain'
-import { drag, eventClient } from '../share/util'
+import { drag, eventPage } from '../share/util'
 
 const $document = $(document as any)
 
@@ -184,8 +184,8 @@ export default class Cropper extends Component<IOptions> {
     e = e.origEvent
     this.action = $(e.target).data('action')
     this.$container.addClass(this.c(`cursor-${this.action}`))
-    this.startX = eventClient('x', e)
-    this.startY = eventClient('y', e)
+    this.startX = eventPage('x', e)
+    this.startY = eventPage('y', e)
     this.oldCropBoxData = clone(this.cropBoxData)
     $document.on(drag('move'), this.onCropMove)
     $document.on(drag('end'), this.onCropEnd)
@@ -220,8 +220,8 @@ export default class Cropper extends Component<IOptions> {
     let newTop = top
     let newWidth = width
     let newHeight = height
-    const deltaX = eventClient('x', e) - this.startX
-    const deltaY = eventClient('y', e) - this.startY
+    const deltaX = eventPage('x', e) - this.startX
+    const deltaY = eventPage('y', e) - this.startY
 
     switch (action) {
       case 'all':

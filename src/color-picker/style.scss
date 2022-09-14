@@ -10,6 +10,7 @@
 .saturation {
   position: relative;
   padding-bottom: 55%;
+  overflow: hidden;
 }
 
 .saturation-white,
@@ -24,6 +25,15 @@
 
 .saturation-black {
   background: linear-gradient(to top, #000, rgba(0, 0, 0, 0));
+}
+
+.saturation-pointer {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  transform: translate(-6px, -6px);
+  box-shadow: rgb(255, 255, 255) 0px 0px 0px 1px inset;
 }
 
 .body {

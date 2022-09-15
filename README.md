@@ -28,7 +28,7 @@
 * [markdown-editor](./src/markdown-editor/README.md): Markdown editor with preview.
 * [markdown-viewer](./src/markdown-viewer/README.md): Live markdown renderer.
 * [menu](./src/menu/README.md): Simple menu.
-* [menu-bar](.src/menu-bar/README.md) Application menu bar.
+* [menu-bar](./src/menu-bar/README.md) Application menu bar.
 * [modal](./src/modal/README.md): Create modal dialogs.
 * [music-player](./src/music-player/README.md): Music player.
 * [music-visualizer](./src/music-visualizer/README.md): Music visualization.

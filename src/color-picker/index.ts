@@ -3,6 +3,7 @@ import Component, { IComponentOptions } from '../share/Component'
 import stripIndent from 'licia/stripIndent'
 import Color from 'licia/Color'
 import clamp from 'licia/clamp'
+import throttle from 'licia/throttle'
 import { rgbToHsv } from './util'
 import { drag, eventPage } from '../share/util'
 
@@ -24,6 +25,7 @@ export default class ColorPicker extends Component<IOptions> {
   private color: Color
   private $saturation: $.$
   private $saturationPointer: $.$
+  private $swatch: $.$
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'color-picker' })
     this.$container = $(container)
@@ -37,18 +39,22 @@ export default class ColorPicker extends Component<IOptions> {
     this.initTpl()
     this.$saturation = this.find('.saturation')
     this.$saturationPointer = this.find('.saturation-pointer')
+    this.$swatch = this.find('.swatch')
 
     this.bindEvent()
 
     this.updateColor()
   }
-  private updateColor() {
+  private updateColor = () => {
     const hsl = this.color.toHsl()
+    const rgb = this.color.toRgb()
     const color = Color.parse(hsl)
     const hsv = this.getHsv()
 
     this.$saturation.css('background', `hsl(${color.val[0]},100%, 50%)`)
     this.updateSaturationPointer(-hsv[2] + 100, hsv[1])
+
+    this.$swatch.css('backgroundColor', rgb)
   }
   private getHsv() {
     const rgb = this.color.toRgb()
@@ -59,6 +65,16 @@ export default class ColorPicker extends Component<IOptions> {
   }
   private bindEvent() {
     this.$saturation.on(drag('start'), this.onSaturationStart)
+
+    const updateColor = throttle(this.updateColor, 50)
+    this.on('optionChange', (name, val) => {
+      switch (name) {
+        case 'color':
+          this.color = new Color(val)
+          updateColor()
+          break
+      }
+    })
   }
   private onSaturationStart = (e: any) => {
     this.onSaturationMove(e)
@@ -97,6 +113,17 @@ export default class ColorPicker extends Component<IOptions> {
           </div>
         </div>
         <div class="body">
+          <div class="controls">
+            <div class="color">
+              <div class="swatch-container">
+                <div class="swatch"></div>
+              </div>
+            </div>
+            <div class="toggles">
+              <div class="hue"></div>
+              <div class="alpha"></div>
+            </div>
+          </div>
         </div>
       `)
     )

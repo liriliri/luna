@@ -6,6 +6,8 @@ import map from 'licia/map'
 import filter from 'licia/filter'
 import stripIndent from 'licia/stripIndent'
 import toArr from 'licia/toArr'
+import MutationObserver from 'licia/MutationObserver'
+import contain from 'licia/contain'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -28,7 +30,8 @@ export default class DomViewer extends Component<IOptions> {
   private $tag: $.$
   private $children: $.$
   private isExpanded = false
-  private isExpandable = false
+  private isChildNodesRendered = false
+  private observer: MutationObserver
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'dom-viewer' }, options)
 
@@ -41,6 +44,7 @@ export default class DomViewer extends Component<IOptions> {
 
     this.initTpl()
     this.bindEvent()
+    this.initObserver()
   }
   select = () => {
     const { c } = this
@@ -48,7 +52,7 @@ export default class DomViewer extends Component<IOptions> {
     this.$tag.addClass(c('selected'))
   }
   expand() {
-    if (!this.isExpandable) {
+    if (!this.isExpandable()) {
       return
     }
     this.isExpanded = true
@@ -64,10 +68,12 @@ export default class DomViewer extends Component<IOptions> {
       })
     )
     $tag.addClass(c('expanded'))
+    this.$children.rmClass(c('hidden'))
+
     this.renderChildNodes(node as HTMLElement)
   }
   collapse() {
-    if (!this.isExpandable) {
+    if (!this.isExpandable()) {
       return
     }
     this.isExpanded = false
@@ -75,7 +81,7 @@ export default class DomViewer extends Component<IOptions> {
     const { $tag, c } = this
     const { node } = this.options
 
-    this.$children.html('')
+    this.$children.addClass(c('hidden'))
     this.$tag.html(
       this.renderHtmlTag({
         ...getHtmlTagData(node as HTMLElement),
@@ -92,10 +98,53 @@ export default class DomViewer extends Component<IOptions> {
       this.expand()
     }
   }
+  destroy() {
+    this.observer.disconnect()
+    super.destroy()
+  }
+  private initObserver() {
+    this.observer = new MutationObserver((mutations) => {
+      each(mutations, (mutation) => this.handleMutation(mutation))
+    })
+    this.observer.observe(this.options.node, {
+      attributes: true,
+      childList: true,
+      characterData: true,
+    })
+  }
+  private handleMutation(mutation: MutationRecord) {
+    const { $tag, c } = this
+    const { node } = this.options
+
+    if (contain(['attributes', 'childList'], mutation.type)) {
+      if (mutation.type === 'childList') {
+        this.isChildNodesRendered = false
+      }
+
+      if (this.isExpandable()) {
+        this.isExpanded ? this.expand() : this.collapse()
+      } else {
+        this.$children.addClass(c('hidden'))
+        $tag.html(
+          this.renderHtmlTag({
+            ...getHtmlTagData(node as HTMLElement),
+            hasTail: false,
+          })
+        )
+      }
+    } else if (mutation.type === 'characterData') {
+      if (node.nodeType === Node.TEXT_NODE) {
+        $tag.html(this.renderTextNode(node.nodeValue as string))
+      } else if (node.nodeType === Node.COMMENT_NODE) {
+        $tag.html(this.renderHtmlComment(node.nodeValue as string))
+      }
+    }
+  }
   private bindEvent() {
     const { c, $tag } = this
+    const { node } = this.options
 
-    if (this.isExpandable) {
+    if (node.nodeType === Node.ELEMENT_NODE) {
       $tag.on('click', c('.toggle'), (e: any) => {
         e.stopPropagation()
         this.toggle()
@@ -103,6 +152,14 @@ export default class DomViewer extends Component<IOptions> {
     }
 
     $tag.on('click', this.select)
+  }
+  private isExpandable() {
+    const { node } = this.options
+
+    return (
+      node.nodeType === Node.ELEMENT_NODE &&
+      this.getChildNodes(node as HTMLElement).length > 0
+    )
   }
   private getChildNodes(el: HTMLElement) {
     const { rootContainer } = this.options
@@ -114,7 +171,6 @@ export default class DomViewer extends Component<IOptions> {
     const { container, c } = this
     const { node, isEndTag } = this.options
 
-    let isExpandable = false
     const $tag = $(h('li'))
     $tag.addClass(c('tree-item'))
     this.$tag = $tag
@@ -122,25 +178,15 @@ export default class DomViewer extends Component<IOptions> {
     if (isEndTag) {
       $tag.html(
         c(
-          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(
-            node as HTMLElement
-          ).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
+          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(node as HTMLElement).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
         )
       )
     } else if (node.nodeType === Node.ELEMENT_NODE) {
-      const childCount = this.getChildNodes(node as HTMLElement).length
+      const isExpandable = this.isExpandable()
       const data = {
         ...getHtmlTagData(node as HTMLElement),
-        hasTail: childCount > 0,
-      }
-      const hasOneTextNode =
-        childCount === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE
-      if (hasOneTextNode) {
-        data.text = node.childNodes[0].nodeValue as string
-      }
-      if (data.hasTail && !hasOneTextNode) {
-        isExpandable = true
-        data.hasToggleButton = true
+        hasTail: isExpandable,
+        hasToggleButton: isExpandable,
       }
       $tag.html(this.renderHtmlTag(data))
     } else if (node.nodeType === Node.TEXT_NODE) {
@@ -159,20 +205,19 @@ export default class DomViewer extends Component<IOptions> {
 
     container.appendChild($tag.get(0))
 
-    if (node.nodeType !== node.ELEMENT_NODE) {
-      return
+    if (node.nodeType === node.ELEMENT_NODE) {
+      const $children = $(h('ul'))
+      $children.addClass([c('children'), c('hidden')])
+      container.appendChild($children.get(0))
+      this.$children = $children
     }
-    if (!isExpandable) {
-      return
-    }
-    this.isExpandable = true
-
-    const $children = $(h('ul'))
-    $children.addClass(c('children'))
-    container.appendChild($children.get(0))
-    this.$children = $children
   }
   private renderChildNodes(node: HTMLElement) {
+    if (this.isChildNodesRendered) {
+      return
+    }
+    this.isChildNodesRendered = true
+
     this.destroySubComponents()
     const { rootContainer } = this.options
     const $container = this.$children
@@ -219,10 +264,12 @@ export default class DomViewer extends Component<IOptions> {
     let tail = ''
     if (data.hasTail) {
       tail = `${
-        data.text || '…'
+        data.hasTail ? '…' : ''
       }<span class="html-tag">&lt;<span class="tag-name">/${
         data.tagName
       }</span>&gt;</span>`
+    } else if (!this.isExpandable()) {
+      tail = `<span class="html-tag">&lt;<span class="tag-name">/${data.tagName}</span>&gt;</span>`
     }
 
     let toggle = ''
@@ -237,10 +284,14 @@ export default class DomViewer extends Component<IOptions> {
       <span class="selection"></span>`)
   }
   private renderTextNode(value: string) {
-    return this.c(`"<span class="text-node">${value}</span>"`)
+    return this.c(
+      `"<span class="text-node">${value}</span><span class="selection"></span>"`
+    )
   }
   private renderHtmlComment(value: string) {
-    return this.c(`<span class="html-comment">&lt;!-- ${value} --&gt;</span>`)
+    return this.c(
+      `<span class="html-comment">&lt;!-- ${value} --&gt;</span><span class="selection"></span>`
+    )
   }
 }
 

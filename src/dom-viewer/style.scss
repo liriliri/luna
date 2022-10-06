@@ -2,6 +2,7 @@
 @import '../share/variable';
 
 .luna-dom-viewer {
+  @include component();
   @include overflow-auto(y);
   overflow-x: hidden;
   word-wrap: break-word;

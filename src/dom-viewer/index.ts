@@ -9,6 +9,7 @@ import toArr from 'licia/toArr'
 import MutationObserver from 'licia/MutationObserver'
 import contain from 'licia/contain'
 import highlight from 'licia/highlight'
+import truncate from 'licia/truncate'
 
 const emptyHighlightStyle = {
   comment: '',
@@ -300,17 +301,24 @@ export default class DomViewer extends Component<IOptions> {
     const prepend = '<span class="text-node">'
     const append = '</span><span class="selection"></span>'
 
-    if (parent && parent.tagName === 'STYLE') {
-      return c(
-        `${prepend}${highlight(value, 'css', emptyHighlightStyle)}${append}`
-      )
-    } else if (parent && parent.tagName === 'SCRIPT') {
-      return c(
-        `${prepend}${highlight(value, 'js', emptyHighlightStyle)}${append}`
-      )
+    if (parent && value.length < 10000) {
+      if (parent.tagName === 'STYLE') {
+        return c(
+          `${prepend}${highlight(value, 'css', emptyHighlightStyle)}${append}`
+        )
+      } else if (parent.tagName === 'SCRIPT') {
+        return c(
+          `${prepend}${highlight(value, 'js', emptyHighlightStyle)}${append}`
+        )
+      }
     }
 
-    return c(`"${prepend}${value}${append}"`)
+    return c(
+      `"${prepend}${truncate(value, 10000, {
+        separator: ' ',
+        ellipsis: '…',
+      })}${append}"`
+    )
   }
   private renderHtmlComment(value: string) {
     return this.c(

@@ -2,6 +2,7 @@ import 'luna-dom-viewer.css'
 import DomViewer from 'luna-dom-viewer.js'
 import story from '../share/story'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 
 const def = story(
   'dom-viewer',
@@ -20,6 +21,7 @@ const def = story(
   },
   {
     readme,
+    changelog,
     source: __STORY__,
   }
 )

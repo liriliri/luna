@@ -11,6 +11,7 @@ import contain from 'licia/contain'
 import highlight from 'licia/highlight'
 import truncate from 'licia/truncate'
 import types from 'licia/types'
+import escape from 'licia/escape'
 
 const emptyHighlightStyle = {
   comment: '',
@@ -269,11 +270,11 @@ export default class DomViewer extends Component<IOptions> {
       const { name, value, isLink } = attribute
 
       return `<span class="attribute">
-          <span class="attribute-name">${name}</span>${
+          <span class="attribute-name">${escape(name)}</span>${
         value
           ? `="<span class="attribute-value${
               isLink ? ' attribute-underline' : ''
-            }">${value}</span>"`
+            }">${escape(value)}</span>"`
           : ''
       }</span>`
     })
@@ -322,15 +323,15 @@ export default class DomViewer extends Component<IOptions> {
     }
 
     return c(
-      `"${prepend}${truncate(value, 10000, {
+      `"${prepend}${escape(truncate(value, 10000, {
         separator: ' ',
         ellipsis: '…',
-      })}${append}"`
+      }))}${append}"`
     )
   }
   private renderHtmlComment(value: string) {
     return this.c(
-      `<span class="html-comment">&lt;!-- ${value} --&gt;</span><span class="selection"></span>`
+      `<span class="html-comment">&lt;!-- ${escape(value)} --&gt;</span><span class="selection"></span>`
     )
   }
 }

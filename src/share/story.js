@@ -17,9 +17,13 @@ import { optionsKnob } from '@storybook/addon-knobs'
 export default function story(
   name,
   storyFn,
-  { readme, source, layout = 'padded', themes = {} } = {}
+  { readme, changelog = '', source, layout = 'padded', themes = {} } = {}
 ) {
   const container = h('div')
+
+  if (changelog) {
+    readme += `\n## Changelog\n${changelog.replace(/## /g, '### ')}`
+  }
 
   return {
     title: map(spaceCase(name).split(' '), upperFirst).join(' '),

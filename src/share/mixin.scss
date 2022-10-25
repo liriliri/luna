@@ -137,3 +137,39 @@
     }
   }
 }
+
+@mixin code-color($dark: false) {
+  @if $dark {
+    .keyword {
+      color: #e36eec;
+    }
+    .number {
+      color: #9980ff;
+    }
+    .operator {
+      color: #7f7f7f;
+    }
+    .comment {
+      color: #747474;
+    }
+    .string {
+      color: #f29766;
+    }
+  } @else {
+    .keyword {
+      color: #881280;
+    }
+    .number {
+      color: #1c00cf;
+    }
+    .operator {
+      color: #808080;
+    }
+    .comment {
+      color: #236e25;
+    }
+    .string {
+      color: #1a1aa6;
+    }
+  }
+}

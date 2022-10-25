@@ -115,21 +115,7 @@ $console-warn-border-dark: #650;
   .code {
     display: inline;
     font-family: $font-family-code;
-    .keyword {
-      color: #881280;
-    }
-    .number {
-      color: #1c00cf;
-    }
-    .operator {
-      color: #808080;
-    }
-    .comment {
-      color: #236e25;
-    }
-    .string {
-      color: #1a1aa6;
-    }
+    @include code-color;
   }
   a {
     color: #15c !important;
@@ -264,21 +250,7 @@ $console-warn-border-dark: #650;
     color: $foreground-dark;
     border-bottom-color: $border-dark;
     .code {
-      .keyword {
-        color: #e36eec;
-      }
-      .number {
-        color: #9980ff;
-      }
-      .operator {
-        color: #7f7f7f;
-      }
-      .comment {
-        color: #747474;
-      }
-      .string {
-        color: #f29766;
-      }
+      @include code-color(true);
     }
     &.html,
     &.table {

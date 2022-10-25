@@ -8,6 +8,15 @@ import stripIndent from 'licia/stripIndent'
 import toArr from 'licia/toArr'
 import MutationObserver from 'licia/MutationObserver'
 import contain from 'licia/contain'
+import highlight from 'licia/highlight'
+
+const emptyHighlightStyle = {
+  comment: '',
+  string: '',
+  number: '',
+  keyword: '',
+  operator: '',
+}
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -134,7 +143,7 @@ export default class DomViewer extends Component<IOptions> {
       }
     } else if (mutation.type === 'characterData') {
       if (node.nodeType === Node.TEXT_NODE) {
-        $tag.html(this.renderTextNode(node.nodeValue as string))
+        $tag.html(this.renderTextNode(node))
       } else if (node.nodeType === Node.COMMENT_NODE) {
         $tag.html(this.renderHtmlComment(node.nodeValue as string))
       }
@@ -178,7 +187,9 @@ export default class DomViewer extends Component<IOptions> {
     if (isEndTag) {
       $tag.html(
         c(
-          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(node as HTMLElement).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
+          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(
+            node as HTMLElement
+          ).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
         )
       )
     } else if (node.nodeType === Node.ELEMENT_NODE) {
@@ -190,10 +201,7 @@ export default class DomViewer extends Component<IOptions> {
       }
       $tag.html(this.renderHtmlTag(data))
     } else if (node.nodeType === Node.TEXT_NODE) {
-      const value = node.nodeValue as string
-      if (value.trim() === '') return
-
-      $tag.html(this.renderTextNode(value))
+      $tag.html(this.renderTextNode(node))
     } else if (node.nodeType === Node.COMMENT_NODE) {
       const value = node.nodeValue as string
       if (value.trim() === '') return
@@ -283,10 +291,26 @@ export default class DomViewer extends Component<IOptions> {
       <span class="html-tag">&lt;<span class="tag-name">${data.tagName}</span>${attributes}&gt;</span>${tail}
       <span class="selection"></span>`)
   }
-  private renderTextNode(value: string) {
-    return this.c(
-      `"<span class="text-node">${value}</span><span class="selection"></span>"`
-    )
+  private renderTextNode(node: ChildNode) {
+    const { c } = this
+    const value = node.nodeValue as string
+    if (value.trim() === '') return ''
+
+    const parent = node.parentElement
+    const prepend = '<span class="text-node">'
+    const append = '</span><span class="selection"></span>'
+
+    if (parent && parent.tagName === 'STYLE') {
+      return c(
+        `${prepend}${highlight(value, 'css', emptyHighlightStyle)}${append}`
+      )
+    } else if (parent && parent.tagName === 'SCRIPT') {
+      return c(
+        `${prepend}${highlight(value, 'js', emptyHighlightStyle)}${append}`
+      )
+    }
+
+    return c(`"${prepend}${value}${append}"`)
   }
   private renderHtmlComment(value: string) {
     return this.c(

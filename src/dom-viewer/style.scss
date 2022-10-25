@@ -95,6 +95,10 @@
   padding-left: 15px;
 }
 
+.text-node {
+  @include code-color;
+}
+
 .theme-dark {
   .icon-arrow-down,
   .icon-arrow-right {
@@ -115,5 +119,8 @@
   }
   .selection {
     background: #083c69;
+  }
+  .text-node {
+    @include code-color(true);
   }
 }

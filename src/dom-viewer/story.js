@@ -6,7 +6,14 @@ import readme from './README.md'
 const def = story(
   'dom-viewer',
   (container) => {
-    const domViewer = new DomViewer(container)
+    const domViewer = new DomViewer(container, {
+      ignore(node) {
+        if (node.tagName === 'STYLE') {
+          return true
+        }
+        return false
+      },
+    })
     domViewer.expand()
 
     return domViewer

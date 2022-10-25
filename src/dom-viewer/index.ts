@@ -10,6 +10,7 @@ import MutationObserver from 'licia/MutationObserver'
 import contain from 'licia/contain'
 import highlight from 'licia/highlight'
 import truncate from 'licia/truncate'
+import types from 'licia/types'
 
 const emptyHighlightStyle = {
   comment: '',
@@ -23,6 +24,8 @@ const emptyHighlightStyle = {
 export interface IOptions extends IComponentOptions {
   /** Html element to navigate. */
   node?: ChildNode
+  /** Predicate function which removes the matching child nodes. */
+  ignore?: types.AnyFn
   parent?: DomViewer | null
   isEndTag?: boolean
   rootContainer?: HTMLElement
@@ -50,6 +53,7 @@ export default class DomViewer extends Component<IOptions> {
       parent: null,
       isEndTag: false,
       rootContainer: container,
+      ignore: () => false,
     })
 
     this.initTpl()
@@ -228,10 +232,12 @@ export default class DomViewer extends Component<IOptions> {
     this.isChildNodesRendered = true
 
     this.destroySubComponents()
-    const { rootContainer } = this.options
+    const { rootContainer, ignore } = this.options
     const $container = this.$children
     let childNodes = this.getChildNodes(node)
-    childNodes = filter(childNodes, (child) => child !== rootContainer)
+    childNodes = filter(childNodes, (child) => {
+      return child !== rootContainer && !ignore(child)
+    })
 
     const container = $container.get(0)
 
@@ -241,6 +247,7 @@ export default class DomViewer extends Component<IOptions> {
           node,
           parent: this,
           rootContainer,
+          ignore,
         })
       )
     })
@@ -252,6 +259,7 @@ export default class DomViewer extends Component<IOptions> {
           parent: this,
           isEndTag: true,
           rootContainer,
+          ignore,
         })
       )
     }

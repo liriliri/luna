@@ -1,1 +1,3 @@
-export default class DataGridNode {}
+export default class DataGridNode {
+  constructor() {}
+}

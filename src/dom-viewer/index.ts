@@ -323,15 +323,19 @@ export default class DomViewer extends Component<IOptions> {
     }
 
     return c(
-      `"${prepend}${escape(truncate(value, 10000, {
-        separator: ' ',
-        ellipsis: '…',
-      }))}${append}"`
+      `"${prepend}${escape(
+        truncate(value, 10000, {
+          separator: ' ',
+          ellipsis: '…',
+        })
+      )}${append}"`
     )
   }
   private renderHtmlComment(value: string) {
     return this.c(
-      `<span class="html-comment">&lt;!-- ${escape(value)} --&gt;</span><span class="selection"></span>`
+      `<span class="html-comment">&lt;!-- ${escape(
+        value
+      )} --&gt;</span><span class="selection"></span>`
     )
   }
 }

@@ -13,6 +13,7 @@
   color: $foreground-color;
   font-family: $font-family;
   box-sizing: border-box;
+  user-select: none;
   &.platform-windows {
     font-family: 'Segoe UI', Tahoma, sans-serif;
   }

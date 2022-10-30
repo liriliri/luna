@@ -1,10 +1,13 @@
-import extend from 'licia/extend'
 import $ from 'licia/$'
 import stripIndent from 'licia/stripIndent'
 import Component, { IComponentOptions } from '../share/Component'
-import DataGridNode from './DataGridNode'
 import each from 'licia/each'
 import escape from 'licia/escape'
+import types from 'licia/types'
+import h from 'licia/h'
+import toStr from 'licia/toStr'
+import isEl from 'licia/isEl'
+import isUndef from 'licia/isUndef'
 
 interface IColumn {
   id: string
@@ -21,6 +24,9 @@ export interface IOptions extends IComponentOptions {
  */
 export default class DataGrid extends Component<IOptions> {
   private $headerRow: $.$
+  private $tableBody: $.$
+  private tableBody: HTMLElement
+  private nodes: DataGridNode[] = []
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'data-grid' })
 
@@ -28,10 +34,17 @@ export default class DataGrid extends Component<IOptions> {
 
     this.initTpl()
     this.$headerRow = this.find('.header').find('tr')
+    this.$tableBody = this.find('.data').find('tbody')
+    this.tableBody = this.$tableBody.get(0) as HTMLElement
 
     this.renderHeader()
   }
-  insert(node: DataGridNode) {}
+  append(data: types.PlainObj<string | HTMLElement>) {
+    console.log('lalala')
+    const node = new DataGridNode(this, data)
+    this.tableBody.appendChild(node.container)
+    this.nodes.push(node)
+  }
   private renderHeader() {
     let html = ''
     each(this.options.columns, (column) => {
@@ -50,6 +63,8 @@ export default class DataGrid extends Component<IOptions> {
         </div>
         <div class="data-container">
           <table class="data">
+            <tbody>
+            </tbody>
           </table>
         </div>
       `)
@@ -57,7 +72,38 @@ export default class DataGrid extends Component<IOptions> {
   }
 }
 
-export { DataGridNode }
+class DataGridNode {
+  container: HTMLElement = h('tr')
+  private $container: $.$
+  private dataGrid: DataGrid
+  private data: types.PlainObj<string | HTMLElement>
+  constructor(dataGrid: DataGrid, data: types.PlainObj<string | HTMLElement>) {
+    this.$container = $(this.container)
 
-module.exports = extend(DataGrid, exports)
+    this.dataGrid = dataGrid
+    this.data = data
+
+    this.render()
+  }
+  render() {
+    const { data, $container, container } = this
+    const columns = this.dataGrid.getOption('columns') as IColumn[]
+
+    $container.html('')
+    each(columns, (column) => {
+      const td = h('td')
+      const val = data[column.id]
+      if (!isUndef(val)) {
+        if (isEl(val)) {
+          td.appendChild(val as HTMLElement)
+        } else {
+          td.innerText = toStr(val)
+        }
+      }
+      container.appendChild(td)
+    })
+  }
+}
+
+module.exports = DataGrid
 module.exports.default = DataGrid

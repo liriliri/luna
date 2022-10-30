@@ -3,13 +3,13 @@
 .luna-data-grid {
   @include component();
   font-size: $font-size-s;
+  border: 1px solid $border-color;
 
   table {
     width: 100%;
     height: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    border: 1px solid $border-color;
   }
 
   th,

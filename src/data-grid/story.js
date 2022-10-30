@@ -23,6 +23,24 @@ const def = story(
       ],
     })
 
+    dataGrid.append({
+      index: 0,
+      name: 'Runoob',
+      site: 'www.runoob.com',
+    })
+
+    dataGrid.append({
+      index: 1,
+      name: 'Google',
+      site: 'www.google.com',
+    })
+
+    dataGrid.append({
+      index: 2,
+      name: 'Taobao',
+      site: 'www.taobao.com',
+    })
+
     return dataGrid
   },
   {

@@ -66,6 +66,8 @@ export default class DataGrid extends Component<IOptions> {
   private nodes: DataGridNode[] = []
   private columnWidthsInitialized = false
   private columnMap: types.PlainObj<IColumn> = {}
+  private sortId?: string
+  private isAscending = true
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'data-grid' })
 
@@ -99,8 +101,13 @@ export default class DataGrid extends Component<IOptions> {
   /** Append row data. */
   append(data: types.PlainObj<string | HTMLElement>) {
     const node = new DataGridNode(this, data)
-    this.tableBody.appendChild(node.container)
     this.nodes.push(node)
+
+    if (this.sortId) {
+      this.sortNodes(this.sortId, this.isAscending)
+    } else {
+      this.tableBody.appendChild(node.container)
+    }
   }
   private bindEvent() {
     const { c, $headerRow } = this
@@ -141,6 +148,9 @@ export default class DataGrid extends Component<IOptions> {
     })
 
     this.renderData()
+
+    this.sortId = id
+    this.isAscending = isAscending
   }
   private updateWeights() {
     const { container, $headerRow } = this

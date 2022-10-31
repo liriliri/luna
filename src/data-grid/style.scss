@@ -6,6 +6,12 @@
   border: 1px solid $border-color;
   overflow: hidden;
 
+  &.theme-dark {
+    color: $foreground-color-dark;
+    background: $background-color-dark;
+    border-color: $border-color-dark;
+  }
+
   table {
     width: 100%;
     height: 100%;
@@ -46,5 +52,20 @@
 .data-container {
   tr:nth-child(even) {
     background: #f2f7fd;
+  }
+}
+
+.theme-dark {
+  th,
+  td {
+    border-color: $border-color-dark;
+  }
+  th {
+    background: $darker-background-color-dark;
+  }
+  .data-container {
+    tr:nth-child(even) {
+      background: #0b2544;
+    }
   }
 }

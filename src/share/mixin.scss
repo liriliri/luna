@@ -11,6 +11,7 @@
 
 @mixin component {
   color: $foreground-color;
+  background-color: $background-color;
   font-family: $font-family;
   box-sizing: border-box;
   user-select: none;

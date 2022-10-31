@@ -12,34 +12,35 @@ const def = story(
           id: 'index',
           title: 'Index',
           weight: 20,
+          sortable: true,
         },
         {
           id: 'name',
           title: 'Name',
+          sortable: true,
           weight: 30,
         },
         {
           id: 'site',
           title: 'Site',
-          weight: 50,
         },
       ],
     })
 
     dataGrid.append({
-      index: 0,
+      index: 1,
       name: 'Runoob',
       site: 'www.runoob.com',
     })
 
     dataGrid.append({
-      index: 1,
+      index: 2,
       name: 'Google',
       site: 'www.google.com',
     })
 
     dataGrid.append({
-      index: 2,
+      index: 0,
       name: 'Taobao',
       site: 'www.taobao.com',
     })

@@ -37,6 +37,11 @@
     border-bottom: 1px solid $border-color;
     text-align: left;
     background: $darker-background-color;
+    &.sortable {
+      &:hover {
+        background: #e6e6e6;
+      }
+    }
   }
 
   td {
@@ -62,6 +67,11 @@
   }
   th {
     background: $darker-background-color-dark;
+    &.sortable {
+      &:hover {
+        background: #303030;
+      }
+    }
   }
   .data-container {
     tr:nth-child(even) {

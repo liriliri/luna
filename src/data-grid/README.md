@@ -25,3 +25,46 @@ npm install luna-data-grid --save
 import 'luna-data-grid/luna-data-grid.css'
 import LunaDataGrid from 'luna-data-grid'
 ```
+
+## Usage
+
+```javascript
+const dataGrid = new DataGrid(container, {
+  columns: [
+    {
+      id: 'name',
+      title: 'Name',
+      sortable: true,
+    },
+    {
+       id: 'site',
+       title: 'Site',
+     },
+  ],
+})
+
+dataGrid.append({
+  name: 'Runoob',
+  site: 'www.runoob.com',
+})
+```
+
+## Configuration
+
+* columns(IColumn[]): Table columns.
+
+## Api
+
+### append(data: PlainObj<string | HTMLElement>): void
+
+Append row data.
+
+## Types
+
+### IColumn
+
+* comparator(AnyFn): Column sort comparator if sortable is true.
+* id(string): Column id.
+* sortable(boolean): Is column sortable.
+* title(string): Column display name.
+* weight(number): Column weight.

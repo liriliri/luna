@@ -11,14 +11,17 @@ const def = story(
         {
           id: 'index',
           title: 'Index',
+          weight: 20,
         },
         {
           id: 'name',
           title: 'Name',
+          weight: 30,
         },
         {
           id: 'site',
           title: 'Site',
+          weight: 50,
         },
       ],
     })

@@ -2,6 +2,7 @@
 
 .luna-data-grid {
   @include component();
+  position: relative;
   font-size: $font-size-s;
   border: 1px solid $border-color;
   overflow: hidden;
@@ -45,9 +46,15 @@
   }
 
   td {
+    height: 20px;
     cursor: default;
     user-select: text;
   }
+}
+
+.header-container,
+.data-container {
+  overflow: hidden;
 }
 
 .header-container {
@@ -55,12 +62,20 @@
 }
 
 .data-container {
+  overflow-y: auto;
   tr:nth-child(even) {
     background: #f2f7fd;
   }
 }
 
+.filler-row {
+  td {
+    height: auto;
+  }
+}
+
 .theme-dark {
+  color-scheme: dark;
   th,
   td {
     border-color: $border-color-dark;

@@ -52,6 +52,9 @@ dataGrid.append({
 ## Configuration
 
 * columns(IColumn[]): Table columns.
+* height(number): Table height.
+* maxHeight(number): Max table height.
+* minHeight(number): Min table height.
 
 ## Api
 

@@ -31,6 +31,12 @@ export interface IColumn {
 export interface IOptions extends IComponentOptions {
   /** Table columns. */
   columns: IColumn[]
+  /** Table height. */
+  height?: number
+  /** Max table height. */
+  maxHeight?: number
+  /** Min table height. */
+  minHeight?: number
 }
 
 /**
@@ -58,8 +64,11 @@ export interface IOptions extends IComponentOptions {
  */
 export default class DataGrid extends Component<IOptions> {
   private $headerRow: $.$
+  private $fillerRow: $.$
+  private fillerRow: HTMLElement
   private $tableBody: $.$
   private $colgroup: $.$
+  private $dataContainer: $.$
   private resizeSensor: ResizeSensor
   private onResize: () => void
   private tableBody: HTMLElement
@@ -74,23 +83,37 @@ export default class DataGrid extends Component<IOptions> {
     this.resizeSensor = new ResizeSensor(container)
     this.onResize = throttle(() => this.updateWeights(), 16)
 
-    this.initOptions(options)
-    const { columns } = this.options
+    if (options.height) {
+      options.maxHeight = options.height
+      options.minHeight = options.height
+    }
+    this.initOptions(options, {
+      minHeight: 41,
+      maxHeight: Infinity,
+    })
+    const { columns, minHeight, maxHeight } = this.options
     each(columns, (column) => {
       defaults(column, {
         sortable: false,
       })
       this.columnMap[column.id] = column
     })
+    if (maxHeight < minHeight) {
+      this.setOption('maxHeight', minHeight)
+    }
 
     this.initTpl()
     this.$headerRow = this.find('.header').find('tr')
+    this.$fillerRow = this.find('.filler-row')
+    this.fillerRow = this.$fillerRow.get(0) as HTMLElement
     this.$tableBody = this.find('.data').find('tbody')
     this.tableBody = this.$tableBody.get(0) as HTMLElement
     this.$colgroup = this.$container.find('colgroup')
+    this.$dataContainer = this.find('.data-container')
 
     this.renderHeader()
     this.updateWeights()
+    this.updateHeight()
 
     this.bindEvent()
   }
@@ -106,8 +129,35 @@ export default class DataGrid extends Component<IOptions> {
     if (this.sortId) {
       this.sortNodes(this.sortId, this.isAscending)
     } else {
-      this.tableBody.appendChild(node.container)
+      this.tableBody.insertBefore(node.container, this.fillerRow)
+      this.updateHeight()
     }
+  }
+  private updateHeight() {
+    const { $fillerRow } = this
+    let { maxHeight, minHeight } = this.options
+
+    minHeight -= 21
+    if (minHeight < 0) {
+      minHeight = 0
+    }
+    maxHeight -= 21
+
+    let height = this.tableBody.offsetHeight
+
+    if (height > minHeight) {
+      $fillerRow.hide()
+    } else {
+      $fillerRow.show()
+    }
+
+    if (height < minHeight) {
+      height = minHeight
+    } else if (height >= maxHeight) {
+      height = maxHeight
+    }
+
+    this.$dataContainer.css({ height })
   }
   private bindEvent() {
     const { c, $headerRow } = this
@@ -204,16 +254,19 @@ export default class DataGrid extends Component<IOptions> {
     $colgroup.html(html)
   }
   private renderData() {
-    const { $tableBody, tableBody, nodes } = this
+    const { tableBody, nodes, fillerRow } = this
 
-    $tableBody.html('')
+    each(nodes, (node) => node.detach())
     each(nodes, (node) => {
-      tableBody.appendChild(node.container)
+      tableBody.insertBefore(node.container, fillerRow)
     })
+
+    this.updateHeight()
   }
   private renderHeader() {
     const { c } = this
     let html = ''
+    let fillerRowHtml = ''
     each(this.options.columns, (column) => {
       const title = escape(column.title)
       if (column.sortable) {
@@ -221,9 +274,11 @@ export default class DataGrid extends Component<IOptions> {
       } else {
         html += `<th>${title}</th>`
       }
+      fillerRowHtml += '<td></td>'
     })
 
     this.$headerRow.html(html)
+    this.$fillerRow.html(fillerRowHtml)
   }
   private initTpl() {
     this.$container.html(
@@ -239,7 +294,9 @@ export default class DataGrid extends Component<IOptions> {
         <div class="data-container">
           <table class="data">
             <colgroup></colgroup>
-            <tbody></tbody>
+            <tbody>
+              <tr class="filler-row"></tr>
+            </tbody>
           </table>
         </div>
       `)
@@ -259,6 +316,9 @@ class DataGridNode {
     this.data = data
 
     this.render()
+  }
+  detach() {
+    this.$container.remove()
   }
   render() {
     const { data, $container, container } = this

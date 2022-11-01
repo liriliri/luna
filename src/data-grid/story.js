@@ -3,7 +3,7 @@ import DataGrid from 'luna-data-grid'
 import story from '../share/story'
 import readme from './README.md'
 import each from 'licia/each'
-import { object } from '@storybook/addon-knobs'
+import { object, number } from '@storybook/addon-knobs'
 
 const def = story(
   'data-grid',
@@ -27,8 +27,22 @@ const def = story(
       },
     ])
 
+    const minHeight = number('Min Height', 80, {
+      range: true,
+      min: 0,
+      max: 500,
+    })
+
+    const maxHeight = number('Max Height', 100, {
+      range: true,
+      min: 50,
+      max: 1000,
+    })
+
     const dataGrid = new DataGrid(container, {
       columns,
+      maxHeight,
+      minHeight,
     })
 
     const data = object('Data', [
@@ -37,17 +51,40 @@ const def = story(
         name: 'Runoob',
         site: 'www.runoob.com',
       },
-
       {
         index: 2,
         name: 'Google',
         site: 'www.google.com',
       },
-
       {
         index: 0,
         name: 'Taobao',
         site: 'www.taobao.com',
+      },
+      {
+        index: 3,
+        name: 'Bilibili',
+        site: 'www.bilibili.com',
+      },
+      {
+        index: 4,
+        name: 'Baidu',
+        site: 'www.baidu.com',
+      },
+      {
+        index: 5,
+        name: 'Zhihu',
+        site: 'www.zhihu.com',
+      },
+      {
+        index: 6,
+        name: 'Twitter',
+        site: 'www.twitter.com',
+      },
+      {
+        index: 7,
+        name: 'Luna',
+        site: 'luna.liriliri.io',
       },
     ])
 

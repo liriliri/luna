@@ -19,6 +19,7 @@
 * [command-palette](./src/command-palette/README.md): Command palette.
 * [console](./src/console/README.md): Console for logging.
 * [cropper](./src/cropper/README.md): Image cropper.
+* [data-grid](./src/data-grid/README.md): Grid for displaying datasets.
 * [dom-highlighter](./src/dom-highlighter/README.md): Highlighter for html elements.
 * [dom-viewer](./src/dom-viewer/README.md): Dom tree navigator.
 * [editor](./src/editor/README.md): Wysiwyg editor.

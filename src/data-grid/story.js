@@ -3,6 +3,7 @@ import DataGrid from 'luna-data-grid'
 import story from '../share/story'
 import readme from './README.md'
 import each from 'licia/each'
+import toEl from 'licia/toEl'
 import { object, number } from '@storybook/addon-knobs'
 
 const def = story(
@@ -83,7 +84,7 @@ const def = story(
       },
       {
         index: 7,
-        name: 'Luna',
+        name: toEl('<span style="color:red">Luna</span>'),
         site: 'luna.liriliri.io',
       },
     ])

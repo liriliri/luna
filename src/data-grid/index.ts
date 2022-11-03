@@ -191,8 +191,14 @@ export default class DataGrid extends Component<IOptions> {
 
     const comparator = column.comparator || naturalOrderComparator
     this.nodes.sort(function (a, b) {
-      const aVal = a.data[id]
-      const bVal = b.data[id]
+      let aVal = a.data[id]
+      let bVal = b.data[id]
+      if (isEl(aVal)) {
+        aVal = (aVal as HTMLElement).innerText
+      }
+      if (isEl(bVal)) {
+        bVal = (bVal as HTMLElement).innerText
+      }
 
       return isAscending ? comparator(aVal, bVal) : comparator(bVal, aVal)
     })

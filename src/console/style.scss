@@ -52,11 +52,6 @@ $console-warn-border-dark: #650;
   pointer-events: none;
   visibility: hidden;
   width: 100%;
-  * {
-    overflow: hidden;
-    color: black;
-    position: static;
-  }
 }
 
 .logs {
@@ -246,6 +241,7 @@ $console-warn-border-dark: #650;
 }
 
 .theme-dark {
+  color-scheme: dark;
   .log-item {
     color: $foreground-dark;
     border-bottom-color: $border-dark;

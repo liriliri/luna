@@ -205,7 +205,7 @@ export default class Log extends Emitter {
     // offsetHeight, offsetWidth is rounded to an integer.
     const { width, height } = this.container.getBoundingClientRect()
     if (this.height !== height || this.width !== width) {
-      this.height = height
+      this.height = height - 1
       this.width = width
       if (!silent) this.emit('updateSize')
     }

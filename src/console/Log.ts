@@ -2,6 +2,7 @@ import getAbstract from './getAbstract'
 import LunaObjectViewer, {
   Static as LunaStaticObjectViewer,
 } from 'luna-object-viewer'
+import ResizeSensor from 'licia/ResizeSensor'
 import types from 'licia/types'
 import isObj from 'licia/isObj'
 import isStr from 'licia/isStr'
@@ -26,10 +27,12 @@ import noop from 'licia/noop'
 import each from 'licia/each'
 import trim from 'licia/trim'
 import lowerCase from 'licia/lowerCase'
+import isHidden from 'licia/isHidden'
 import keys from 'licia/keys'
 import $ from 'licia/$'
 import h from 'licia/h'
 import Emitter from 'licia/Emitter'
+import debounce from 'licia/debounce'
 import stringifyAll from 'licia/stringifyAll'
 import nextTick from 'licia/nextTick'
 import linkify from 'licia/linkify'
@@ -93,6 +96,9 @@ export default class Log extends Emitter {
   private content: Element
   private $content: $.$
   private console: Console
+  private resizeSensor: ResizeSensor
+  private onResize: () => void
+  private isHidden = false
   constructor(
     console: Console,
     {
@@ -127,11 +133,25 @@ export default class Log extends Emitter {
     this.unenumerable = unenumerable
     this.lazyEvaluation = lazyEvaluation
 
+    this.resizeSensor = new ResizeSensor(this.container)
+    this.onResize = debounce(() => {
+      if (isHidden(this.container)) {
+        this.isHidden = true
+      } else {
+        if (!this.isHidden) {
+          this.updateSize(false)
+        }
+        this.isHidden = false
+      }
+    }, 16)
+
     this.formatMsg()
 
     if (this.group) {
       this.checkGroup()
     }
+
+    this.bindEvent()
   }
   // If state changed, return true.
   checkGroup() {
@@ -204,10 +224,15 @@ export default class Log extends Emitter {
   updateSize(silent = true) {
     // offsetHeight, offsetWidth is rounded to an integer.
     const { width, height } = this.container.getBoundingClientRect()
-    if (this.height !== height || this.width !== width) {
-      this.height = height - 1
+    let newHeight = height - 1
+    if (this.height !== newHeight) {
+      this.height = newHeight
+      if (!silent) {
+        this.emit('updateHeight')
+      }
+    }
+    if (this.width !== width) {
       this.width = width
-      if (!silent) this.emit('updateSize')
     }
   }
   html() {
@@ -215,6 +240,9 @@ export default class Log extends Emitter {
   }
   text() {
     return this.content.textContent || ''
+  }
+  private bindEvent() {
+    this.resizeSensor.addListener(this.onResize)
   }
   private needSrc() {
     const { type, args } = this
@@ -277,7 +305,6 @@ export default class Log extends Emitter {
                 const staticViewer = new LunaStaticObjectViewer($json.get(0))
                 staticViewer.setOption('theme', console.getOption('theme'))
                 staticViewer.set(src)
-                staticViewer.on('change', () => this.updateSize(false))
               } else {
                 if (type === 'table' || args.length === 1) {
                   if (isObj(args[0])) args = args[0]
@@ -288,7 +315,6 @@ export default class Log extends Emitter {
                 })
                 objViewer.setOption('theme', console.getOption('theme'))
                 objViewer.set(args)
-                objViewer.on('change', () => this.updateSize(false))
               }
               $json.data('init', 'true')
             }

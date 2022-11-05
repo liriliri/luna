@@ -3,6 +3,7 @@ import LunaObjectViewer, {
   Static as LunaStaticObjectViewer,
 } from 'luna-object-viewer'
 import LunaDataGrid from 'luna-data-grid'
+import LunaDomViewer from 'luna-dom-viewer'
 import ResizeSensor from 'licia/ResizeSensor'
 import types from 'licia/types'
 import isObj from 'licia/isObj'
@@ -43,6 +44,7 @@ import highlight from 'licia/highlight'
 import { getObjType } from './util'
 import stripIndent from 'licia/stripIndent'
 import toEl from 'licia/toEl'
+import uniqId from 'licia/uniqId'
 import Console from './index'
 
 export interface IGroup {
@@ -104,6 +106,7 @@ export default class Log extends Emitter {
   private onResize: () => void
   private isHidden = false
   private columns: string[] = []
+  private elements: types.PlainObj<HTMLElement> = {}
   constructor(
     console: Console,
     {
@@ -248,6 +251,23 @@ export default class Log extends Emitter {
   }
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
+    this.$container.on('click', this.console.c('.dom-viewer'), (e) =>
+      e.stopPropagation()
+    )
+  }
+  private renderEl() {
+    const { elements } = this
+    const { c } = this.console
+
+    const self = this
+    this.$container.find(c('.dom-viewer')).each(function (this: HTMLElement) {
+      const $this = $(this)
+      const id = $this.data('id')
+      new LunaDomViewer(this, {
+        node: elements[id],
+        theme: self.console.getOption('theme'),
+      })
+    })
   }
   private renderTable(args: any[]) {
     const Value = '__LunaConsoleValue'
@@ -469,6 +489,9 @@ export default class Log extends Emitter {
         }
         break
     }
+    if (!isEmpty(this.elements)) {
+      this.renderEl()
+    }
 
     this.$content = this.$container.find(c('.log-content'))
     this.content = this.$content.get(0)
@@ -685,11 +708,10 @@ export default class Log extends Emitter {
     return `${type} ${this.getAbstract(val)}`
   }
   private formatEl(val: HTMLElement) {
-    const { c } = this.console
+    const id = uniqId()
+    this.elements[id] = val
 
-    return `<pre class="${c('code')}">${c(
-      highlight(val.outerHTML, 'html', emptyHighlightStyle)
-    )}</pre>`
+    return this.console.c(`<div class="dom-viewer" data-id="${id}"></div>`)
   }
 }
 

@@ -122,26 +122,6 @@ test('console', (container) => {
     expect(log(0).find(c('.table')).find('table').length).to.equal(0)
   })
 
-  it('table sort keys', function () {
-    console.table([{ a: 1 }, { d: 2, a: 2 }, { c: 1 }])
-    expect(
-      log(0)
-        .find(`${c('.table')} thead tr`)
-        .html()
-    ).to.include('<th>(index)</th><th>a</th><th>c</th><th>d</th>')
-  })
-
-  it('table basic', function () {
-    console.table([{ test: 1 }, { test: 2, test2: 3 }])
-    expect(log(0).find(`${c('.table')} tbody tr`).length).to.equal(2)
-    expect(log(0).find(`${c('.table')} thead th`).length).to.equal(3)
-  })
-
-  it('table filter', function () {
-    console.table([{ test: 1 }, { test: 2, test2: 3 }], 'test')
-    expect(log(0).find(`${c('.table')} thead th`).length).to.equal(2)
-  })
-
   // Test case from https://github.com/liriliri/eruda/issues/14
   it('filter function', function () {
     console.setOption('filter', function (log) {

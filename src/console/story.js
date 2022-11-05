@@ -1,6 +1,7 @@
 import 'luna-console.css'
 import h from 'licia/h'
 import $ from 'licia/$'
+import toEl from 'licia/toEl'
 import Console from 'luna-console.js'
 import readme from './README.md'
 import { button, number, boolean, text } from '@storybook/addon-knobs'
@@ -59,6 +60,10 @@ const def = story(
       var site2 = { name: 'Google', site: 'www.google.com' }
       var site3 = { name: 'Taobao', site: 'www.taobao.com' }
       console.table([site1, site2, site3], ['site'])
+      console.log(
+        'test dom',
+        toEl('<div class="test"><div class="test-inner"></div></div>')
+      )
       console.log('%c Oh my heavens!', 'background: #222; color: #bada55')
       console.log('This is the outer level')
       console.group()

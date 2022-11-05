@@ -6,7 +6,8 @@
     "icon": true,
     "dependencies": [
       "object-viewer",
-      "data-grid"
+      "data-grid",
+      "dom-viewer"
     ]
   }
 }

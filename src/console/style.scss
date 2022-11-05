@@ -160,10 +160,9 @@ $console-warn-border-dark: #650;
       user-select: text;
     }
   }
-  &.table {
-    .log-content {
-      white-space: initial;
-    }
+  .data-grid,
+  .dom-viewer {
+    white-space: initial;
   }
   &.error {
     z-index: 50;

@@ -2,6 +2,7 @@ import getAbstract from './getAbstract'
 import LunaObjectViewer, {
   Static as LunaStaticObjectViewer,
 } from 'luna-object-viewer'
+import LunaDataGrid from 'luna-data-grid'
 import ResizeSensor from 'licia/ResizeSensor'
 import types from 'licia/types'
 import isObj from 'licia/isObj'
@@ -13,6 +14,7 @@ import isEl from 'licia/isEl'
 import toStr from 'licia/toStr'
 import toNum from 'licia/toNum'
 import toInt from 'licia/toInt'
+import concat from 'licia/concat'
 import escape from 'licia/escape'
 import isNull from 'licia/isNull'
 import isUndef from 'licia/isUndef'
@@ -25,6 +27,7 @@ import isEmpty from 'licia/isEmpty'
 import clone from 'licia/clone'
 import noop from 'licia/noop'
 import each from 'licia/each'
+import map from 'licia/map'
 import trim from 'licia/trim'
 import lowerCase from 'licia/lowerCase'
 import isHidden from 'licia/isHidden'
@@ -39,6 +42,7 @@ import linkify from 'licia/linkify'
 import highlight from 'licia/highlight'
 import { getObjType } from './util'
 import stripIndent from 'licia/stripIndent'
+import toEl from 'licia/toEl'
 import Console from './index'
 
 export interface IGroup {
@@ -99,6 +103,7 @@ export default class Log extends Emitter {
   private resizeSensor: ResizeSensor
   private onResize: () => void
   private isHidden = false
+  private columns: string[] = []
   constructor(
     console: Console,
     {
@@ -243,6 +248,48 @@ export default class Log extends Emitter {
   }
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
+  }
+  private renderTable(args: any[]) {
+    const Value = '__LunaConsoleValue'
+    const { columns, $container, console } = this
+    const { c } = console
+    const $dataGrid = $container.find(c('.data-grid'))
+    const table = args[0]
+
+    const dataGrid = new LunaDataGrid($dataGrid.get(0) as HTMLElement, {
+      columns: concat(
+        [
+          {
+            id: '(index)',
+            title: '(index)',
+            sortable: true,
+          },
+        ],
+        map(columns, (column) => {
+          return {
+            id: column,
+            title: column,
+            sortable: true,
+          }
+        })
+      ),
+      theme: console.getOption('theme'),
+    })
+
+    each(table, (obj: any, idx) => {
+      const data: any = {
+        '(index)': toStr(idx),
+      }
+      columns.forEach((column) => {
+        if (isObj(obj)) {
+          data[column] =
+            column === Value ? '' : this.formatTableVal(obj[column])
+        } else if (isPrimitive(obj)) {
+          data[column] = column === Value ? this.formatTableVal(obj) : ''
+        }
+      })
+      dataGrid.append(data)
+    })
   }
   private needSrc() {
     const { type, args } = this
@@ -414,6 +461,15 @@ export default class Log extends Emitter {
     msg = this.render({ msg, type, icon, id, header, group })
 
     this.$container.addClass(`${c('log-container')}`).html(msg)
+
+    switch (type) {
+      case 'table':
+        if (!isEmpty(this.columns)) {
+          this.renderTable(args)
+        }
+        break
+    }
+
     this.$content = this.$container.find(c('.log-content'))
     this.content = this.$content.get(0)
   }
@@ -463,7 +519,6 @@ export default class Log extends Emitter {
   private formatTable(args: any[]) {
     const Value = '__LunaConsoleValue'
     const table = args[0]
-    let ret = ''
     let filter = args[1]
     let columns: string[] = []
 
@@ -485,34 +540,11 @@ export default class Log extends Emitter {
     if (columns.length > 20) columns = columns.slice(0, 20)
     if (isEmpty(columns)) return this.formatCommon(args)
 
-    ret += '<table><thead><tr><th>(index)</th>'
-    columns.forEach(
-      (val) => (ret += `<th>${val === Value ? 'Value' : toStr(val)}</th>`)
+    this.columns = columns
+
+    return this.console.c(
+      '<div class="data-grid"></div><div class="json hidden"></div>'
     )
-    ret += '</tr></thead><tbody>'
-
-    each(table, (obj: any, idx) => {
-      ret += `<tr><td>${idx}</td>`
-      columns.forEach((column) => {
-        if (isObj(obj)) {
-          ret +=
-            column === Value
-              ? '<td></td>'
-              : `<td>${this.formatTableVal(obj[column])}</td>`
-        } else if (isPrimitive(obj)) {
-          ret +=
-            column === Value
-              ? `<td>${this.formatTableVal(obj)}</td>`
-              : '<td></td>'
-        }
-      })
-      ret += '</tr>'
-    })
-
-    ret += '</tbody></table>'
-    ret += `<div class="${this.console.c('json hidden')}"></div>`
-
-    return ret
   }
   private formatErr(err: Error) {
     let lines = err.stack ? err.stack.split('\n') : []
@@ -564,8 +596,8 @@ export default class Log extends Emitter {
     return this.formatCommon(args, { htmlForEl: false })
   }
   private formatTableVal(val: any) {
-    if (isObj(val)) return (val = '{…}')
-    if (isPrimitive(val)) return this.getAbstract(val)
+    if (isObj(val)) return '{…}'
+    if (isPrimitive(val)) return toEl(this.getAbstract(val))
 
     return toStr(val)
   }

@@ -78,10 +78,13 @@ export default class DataGrid extends Component<IOptions> {
   private sortId?: string
   private isAscending = true
   constructor(container: HTMLElement, options: IOptions) {
-    super(container, { compName: 'data-grid' })
+    super(container, { compName: 'data-grid' }, options)
 
     this.resizeSensor = new ResizeSensor(container)
-    this.onResize = throttle(() => this.updateWeights(), 16)
+    this.onResize = throttle(() => {
+      this.updateHeight()
+      this.updateWeights()
+    }, 16)
 
     if (options.height) {
       options.maxHeight = options.height
@@ -168,7 +171,9 @@ export default class DataGrid extends Component<IOptions> {
     $headerRow.on(
       'click',
       c('.sortable'),
-      function (this: HTMLTableCellElement) {
+      function (this: HTMLTableCellElement, e) {
+        e.stopPropagation()
+
         const $this = $(this)
         const id = $this.data('id')
         const order = $this.data('order')

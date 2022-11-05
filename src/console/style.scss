@@ -160,24 +160,9 @@ $console-warn-border-dark: #650;
       user-select: text;
     }
   }
-  &.html,
   &.table {
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow: hidden;
-      color: $foreground;
-      th {
-        background: $darker-background;
-      }
-      th,
-      td {
-        border: 1px solid $border;
-        padding: 3px $padding;
-      }
-      tr:nth-child(even) {
-        background: $contrast;
-      }
+    .log-content {
+      white-space: initial;
     }
   }
   &.error {
@@ -247,22 +232,6 @@ $console-warn-border-dark: #650;
     border-bottom-color: $border-dark;
     .code {
       @include code-color(true);
-    }
-    &.html,
-    &.table {
-      table {
-        color: $foreground-dark;
-        th {
-          background: $darker-background-dark;
-        }
-        th,
-        td {
-          border-color: $border-dark;
-        }
-        tr:nth-child(even) {
-          background: $contrast-dark;
-        }
-      }
     }
     &.error {
       background: $console-error-background-dark;

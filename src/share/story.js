@@ -5,6 +5,7 @@ import map from 'licia/map'
 import h from 'licia/h'
 import waitUntil from 'licia/waitUntil'
 import toArr from 'licia/toArr'
+import contain from 'licia/contain'
 import upperFirst from 'licia/upperFirst'
 import extend from 'licia/extend'
 import { addReadme } from 'storybook-readme/html'
@@ -76,7 +77,7 @@ export default function story(
         window.componentName = upperFirst(camelCase(name))
 
         document.documentElement.style.background =
-          theme === 'dark' ? '#000' : '#fff'
+          contain(theme, 'dark') ? '#000' : '#fff'
         each(window.components, (component) =>
           component.setOption('theme', theme)
         )

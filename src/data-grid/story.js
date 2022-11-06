@@ -4,7 +4,7 @@ import story from '../share/story'
 import readme from './README.md'
 import each from 'licia/each'
 import toEl from 'licia/toEl'
-import { object, number } from '@storybook/addon-knobs'
+import { object, number, button } from '@storybook/addon-knobs'
 
 const def = story(
   'data-grid',
@@ -30,7 +30,7 @@ const def = story(
 
     const minHeight = number('Min Height', 80, {
       range: true,
-      min: 0,
+      min: 21,
       max: 500,
     })
 
@@ -46,7 +46,7 @@ const def = story(
       minHeight,
     })
 
-    const data = object('Data', [
+    const data = [
       {
         index: 1,
         name: 'Runoob',
@@ -87,9 +87,14 @@ const def = story(
         name: toEl('<span style="color:red">Luna</span>'),
         site: 'luna.liriliri.io',
       },
-    ])
+    ]
 
     each(data, (item) => dataGrid.append(item))
+
+    button('Clear', () => {
+      dataGrid.clear()
+      return false
+    })
 
     return dataGrid
   },

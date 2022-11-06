@@ -135,10 +135,21 @@ export default class DataGrid extends Component<IOptions> {
       this.tableBody.insertBefore(node.container, this.fillerRow)
       this.updateHeight()
     }
+
+    return node
+  }
+  /** Clear all data. */
+  clear() {
+    each(this.nodes, (node) => node.detach())
+    this.nodes = []
+
+    this.updateHeight()
   }
   private updateHeight() {
     const { $fillerRow } = this
     let { maxHeight, minHeight } = this.options
+
+    this.$dataContainer.css({ height: 'auto' })
 
     minHeight -= 21
     if (minHeight < 0) {
@@ -146,7 +157,7 @@ export default class DataGrid extends Component<IOptions> {
     }
     maxHeight -= 21
 
-    let height = this.tableBody.offsetHeight
+    let height = this.nodes.length * 20
 
     if (height > minHeight) {
       $fillerRow.hide()
@@ -190,6 +201,15 @@ export default class DataGrid extends Component<IOptions> {
         })
       }
     )
+
+    this.on('optionChange', (name) => {
+      switch (name) {
+        case 'minHeight':
+        case 'maxHeight':
+          this.updateHeight()
+          break
+      }
+    })
   }
   private sortNodes(id: string, isAscending: boolean) {
     const column = this.columnMap[id]

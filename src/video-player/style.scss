@@ -2,14 +2,11 @@
 @import '../share/mixin';
 
 .luna-video-player {
+  @include component();
   background: #000;
   min-height: 150px;
-  user-select: none;
   position: relative;
   font-size: 14px;
-  * {
-    box-sizing: border-box;
-  }
 }
 
 @include controller('video-player');

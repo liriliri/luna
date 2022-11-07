@@ -2,15 +2,13 @@
 @import '../share/mixin';
 
 .luna-music-player {
+  @include component();
   min-width: 375px;
   font-family: $font-family;
   box-shadow: $box-shadow;
   background: $background-color;
   font-size: 14px;
   cursor: default;
-  * {
-    box-sizing: border-box;
-  }
   &.theme-dark {
     box-shadow: $box-shadow-dark;
     background-color: $background-color-dark;

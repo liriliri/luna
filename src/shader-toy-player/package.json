@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Shader toy player",
   "luna": {
-    "icon": true
+    "icon": true,
+    "test": false
   }
 }

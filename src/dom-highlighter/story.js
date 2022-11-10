@@ -2,6 +2,7 @@ import 'luna-dom-highlighter.css'
 import DomHighlighter from 'luna-dom-highlighter.js'
 import story from '../share/story'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 import $ from 'licia/$'
 import h from 'licia/h'
 import {
@@ -99,6 +100,7 @@ const def = story(
   },
   {
     readme,
+    changelog,
     source: __STORY__,
   }
 )

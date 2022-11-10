@@ -1,6 +1,7 @@
 import 'luna-syntax-highlighter.css'
 import SyntaxHighlighter from 'luna-syntax-highlighter.js'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 import story from '../share/story'
 import { text, boolean, optionsKnob } from '@storybook/addon-knobs'
 import componentCode from '!!raw-loader!./index'
@@ -36,6 +37,7 @@ const def = story(
   },
   {
     readme,
+    changelog,
     source: __STORY__,
     themes: {
       'Vs Dark': 'vs-dark',

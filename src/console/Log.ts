@@ -1,4 +1,4 @@
-import getAbstract from './getAbstract'
+import getPreview from './getPreview'
 import LunaObjectViewer, {
   Static as LunaStaticObjectViewer,
 } from 'luna-object-viewer'
@@ -26,7 +26,6 @@ import unique from 'licia/unique'
 import contain from 'licia/contain'
 import isEmpty from 'licia/isEmpty'
 import clone from 'licia/clone'
-import noop from 'licia/noop'
 import each from 'licia/each'
 import map from 'licia/map'
 import trim from 'licia/trim'
@@ -107,6 +106,7 @@ export default class Log extends Emitter {
   private isHidden = false
   private columns: string[] = []
   private elements: types.PlainObj<HTMLElement> = {}
+  private objects: types.PlainObj<any> = {}
   constructor(
     console: Console,
     {
@@ -251,10 +251,15 @@ export default class Log extends Emitter {
   }
   private bindEvent() {
     const { c } = this.console
+    const self = this
 
     this.resizeSensor.addListener(this.onResize)
     this.$container
       .on('click', c('.dom-viewer'), (e) => e.stopPropagation())
+      .on('click', c('.preview'), function (this: HTMLElement, e) {
+        e.stopPropagation()
+        self.renderObjectViewer(this)
+      })
       .on('click', () => this.click())
   }
   private renderEl() {
@@ -271,28 +276,32 @@ export default class Log extends Emitter {
       })
     })
   }
-  private renderObjectViewer() {
-    const { type, src, $container, console, unenumerable, accessGetter } = this
+  private renderObjectViewer(preview: HTMLElement) {
+    const { console, unenumerable, accessGetter, lazyEvaluation } = this
     const { c } = console
-    let { args } = this
+
+    const $container = $(preview)
+    const id = $container.data('id')
+    if (!id) {
+      return
+    }
+
+    const obj = this.objects[id]
 
     const $json = $container.find(c('.json'))
     if ($json.hasClass(c('hidden'))) {
       if ($json.data('init') !== 'true') {
-        if (src) {
+        if (!lazyEvaluation) {
           const staticViewer = new LunaStaticObjectViewer($json.get(0))
           staticViewer.setOption('theme', console.getOption('theme'))
-          staticViewer.set(src)
+          staticViewer.set(obj)
         } else {
-          if (type === 'table' || args.length === 1) {
-            if (isObj(args[0])) args = args[0]
-          }
           const objViewer = new LunaObjectViewer($json.get(0), {
             unenumerable,
             accessGetter,
           })
           objViewer.setOption('theme', console.getOption('theme'))
-          objViewer.set(args)
+          objViewer.set(obj)
         }
         $json.data('init', 'true')
       }
@@ -343,35 +352,7 @@ export default class Log extends Emitter {
       dataGrid.append(data)
     })
   }
-  private needSrc() {
-    const { type, args } = this
-
-    if (type === 'html') return false
-
-    for (let i = 0, len = args.length; i < len; i++) {
-      if (isObj(args[i])) return true
-    }
-
-    return false
-  }
-  private extractObj(cb = noop) {
-    const { args, type } = this
-
-    const setSrc = (result: any) => {
-      this.src = result
-      cb()
-    }
-    if (type === 'table') {
-      this._extractObj(args[0], {}, setSrc)
-    } else {
-      this._extractObj(
-        args.length === 1 && isObj(args[0]) ? args[0] : args,
-        {},
-        setSrc
-      )
-    }
-  }
-  private _extractObj(obj: any, options = {}, cb: Function) {
+  private extractObj(obj: any, options = {}, cb: Function) {
     const { accessGetter, unenumerable } = this
     defaults(options, {
       accessGetter,
@@ -383,7 +364,7 @@ export default class Log extends Emitter {
     stringify(obj, options, (result: string) => cb(JSON.parse(result)))
   }
   private click() {
-    const { type, src, $container, console, args } = this
+    const { type, $container, console } = this
     const { c } = console
 
     switch (type) {
@@ -393,13 +374,10 @@ export default class Log extends Emitter {
       case 'output':
       case 'table':
       case 'dir':
+        break
       case 'group':
       case 'groupCollapsed':
-        if (src || args) {
-          this.renderObjectViewer()
-        } else if (type === 'group' || type === 'groupCollapsed') {
-          console.toggleGroup(this)
-        }
+        console.toggleGroup(this)
         break
       case 'error':
         $container.find(c('.stack')).toggleClass(c('hidden'))
@@ -408,15 +386,11 @@ export default class Log extends Emitter {
   }
   private formatMsg() {
     let { args } = this
-    const { type, id, header, group, lazyEvaluation } = this
+    const { type, id, header, group } = this
     const { c } = this.console
 
     // Don't change original args for lazy evaluation.
     args = clone(args)
-
-    if (this.needSrc() && !lazyEvaluation) {
-      this.extractObj()
-    }
 
     let msg = ''
     let icon
@@ -447,7 +421,6 @@ export default class Log extends Emitter {
         err = args[0]
         icon = 'error'
         err = isErr(err) ? err : new Error(this.formatCommon(args))
-        this.src = err
         msg = this.formatErr(err)
         break
       case 'table':
@@ -474,9 +447,7 @@ export default class Log extends Emitter {
         break
     }
 
-    if (!this.needSrc() || !lazyEvaluation) {
-      delete (this as any).args
-    }
+    delete (this as any).args
 
     // Only linkify for simple types
     if (type !== 'error' && !this.args) {
@@ -571,8 +542,9 @@ export default class Log extends Emitter {
 
     this.columns = columns
 
-    return this.console.c(
-      '<div class="data-grid"></div><div class="json hidden"></div>'
+    return (
+      this.console.c('<div class="data-grid"></div>') +
+      this.formatPreview(table)
     )
   }
   private formatErr(err: Error) {
@@ -605,7 +577,7 @@ export default class Log extends Emitter {
       } else if (isFn(val)) {
         args[i] = this.formatFn(val)
       } else if (isObj(val)) {
-        args[i] = this.formatObj(val)
+        args[i] = this.formatPreview(val)
       } else if (isUndef(val)) {
         args[i] = 'undefined'
       } else if (isNull(val)) {
@@ -617,27 +589,42 @@ export default class Log extends Emitter {
       }
     }
 
-    return (
-      args.join(' ') + `<div class="${this.console.c('json hidden')}"></div>`
-    )
+    return args.join(' ')
   }
   private formatDir(args: any[]) {
     return this.formatCommon(args, { htmlForEl: false })
   }
   private formatTableVal(val: any) {
+    const { c } = this.console
     if (isObj(val)) return '{…}'
-    if (isPrimitive(val)) return toEl(this.getAbstract(val))
+    if (isPrimitive(val))
+      return toEl(`<div class="${c('preview')}">${getPreview(val)}</div>`)
 
     return toStr(val)
   }
-  private getAbstract(obj: any) {
+  private formatPreview(obj: any) {
+    const { c } = this.console
+
+    const id = uniqId()
+    if (this.lazyEvaluation) {
+      this.objects[id] = obj
+    } else {
+      this.extractObj(obj, {}, (result: any) => {
+        this.objects[id] = result
+      })
+    }
+
+    let type = getObjType(obj)
+    if (type === 'Array' && obj.length > 1) type = `(${obj.length})`
+
     return (
-      `<span class="${this.console.c('abstract')}">` +
-      getAbstract(obj, {
+      `<div class="${c('preview')}" data-id="${id}">` +
+      `<span class="${c('descriptor')}">${type}</span> ` +
+      `<span class="${c('object-preview')}">${getPreview(obj, {
         getterVal: this.accessGetter,
         unenumerable: false,
-      }) +
-      '</span>'
+      })}</span>` +
+      `<div class="${c('json hidden')}"></div></div>`
     )
   }
   private substituteStr(args: any[]) {
@@ -666,14 +653,14 @@ export default class Log extends Emitter {
             break
           case 'O':
             if (isObj(arg)) {
-              newStr += this.getAbstract(arg)
+              newStr += this.formatPreview(arg)
             }
             break
           case 'o':
             if (isEl(arg)) {
               newStr += this.formatEl(arg)
             } else if (isObj(arg)) {
-              newStr += this.getAbstract(arg)
+              newStr += this.formatPreview(arg)
             }
             break
           case 'c':
@@ -706,12 +693,6 @@ export default class Log extends Emitter {
   }
   private formatFn(val: types.AnyFn) {
     return `<pre style="display:inline">${this.formatJs(val.toString())}</pre>`
-  }
-  private formatObj(val: any) {
-    let type = getObjType(val)
-    if (type === 'Array' && val.length > 1) type = `(${val.length})`
-
-    return `${type} ${this.getAbstract(val)}`
   }
   private formatEl(val: HTMLElement) {
     const id = uniqId()

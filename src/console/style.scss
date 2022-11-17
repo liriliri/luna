@@ -159,6 +159,9 @@ $console-warn-border-dark: #650;
     * {
       user-select: text;
     }
+    & > * {
+      vertical-align: top;
+    }
   }
   .data-grid,
   .dom-viewer {
@@ -203,7 +206,12 @@ $console-warn-border-dark: #650;
   }
 }
 
-.abstract {
+.preview {
+  display: inline-block;
+  .descriptor,
+  .object-preview {
+    font-style: italic;
+  }
   .key {
     color: #881391;
   }
@@ -262,7 +270,7 @@ $console-warn-border-dark: #650;
       border-bottom-color: $border-dark;
     }
   }
-  .abstract {
+  .preview {
     .key {
       color: #e36eec;
     }

@@ -1,4 +1,4 @@
-// Simple version for stringify, used for displaying object abstract.
+// Simple version for stringify, used for displaying object preview.
 import escape from 'licia/escape'
 import toStr from 'licia/toStr'
 import contain from 'licia/contain'
@@ -13,7 +13,7 @@ import { classPrefix } from '../share/util'
 const c = classPrefix('console')
 
 // Modified from: https://jsconsole.com/
-export default function getAbstract(
+export default function getPreview(
   obj: any,
   {
     topObj,
@@ -85,7 +85,7 @@ export default function getAbstract(
         return
       }
     }
-    parts.push(`${key}: ${getAbstract(topObj[name], passOpts)}`)
+    parts.push(`${key}: ${getPreview(topObj[name], passOpts)}`)
     i++
   }
 
@@ -123,7 +123,7 @@ export default function getAbstract(
         arrEllipsis = ', …'
       }
       for (let i = 0; i < len; i++) {
-        parts.push(`${getAbstract(obj[i], passOpts)}`)
+        parts.push(`${getPreview(obj[i], passOpts)}`)
       }
       json += parts.join(', ') + arrEllipsis + ']'
     } else {

@@ -50,7 +50,6 @@ const def = story(
       console.error(Error('test'))
       console.info('info')
       console.debug('debug')
-      console.dir(document.createElement('div'))
       console.time('test')
       console.timeEnd('test')
       console.count('luna')
@@ -60,10 +59,9 @@ const def = story(
       var site2 = { name: 'Google', site: 'www.google.com' }
       var site3 = { name: 'Taobao', site: 'www.taobao.com' }
       console.table([site1, site2, site3], ['site'])
-      console.log(
-        'test dom',
-        toEl('<div class="test"><div class="test-inner"></div></div>')
-      )
+      const el = toEl('<div class="test"><div class="test-inner"></div></div>')
+      console.log('test dom', el)
+      console.dir(el)
       console.log('%c Oh my heavens!', 'background: #222; color: #bada55')
       console.log('This is the outer level')
       console.group()
@@ -75,9 +73,12 @@ const def = story(
       console.log('Back to level 2')
       console.groupEnd()
       console.log('Back to the outer level')
-      console.log(navigator)
-      console.log(location)
-      console.log(performance)
+      console.log(
+        'navigator: %o location: %o performance: %o',
+        navigator,
+        location,
+        performance
+      )
       var arr = []
       for (var i = 0; i < 10000; i++) arr.push(i)
       console.log(arr)

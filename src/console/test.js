@@ -99,7 +99,7 @@ test('console', (container) => {
 
   it('substitution object', function () {
     console.log('Object is %O', { a: 1 })
-    expect(logContent(0).text()).to.include('Object is {a: 1}')
+    expect(logContent(0).text()).to.include('Object is Object {a: 1}')
     console.clear(true)
 
     console.log('Dom is %o', document.createElement('script'))

@@ -232,7 +232,7 @@ export default class Log extends Emitter {
   updateSize(silent = true) {
     // offsetHeight, offsetWidth is rounded to an integer.
     const { width, height } = this.container.getBoundingClientRect()
-    let newHeight = height - 1
+    const newHeight = height - 1
     if (this.height !== newHeight) {
       this.height = newHeight
       if (!silent) {
@@ -250,10 +250,12 @@ export default class Log extends Emitter {
     return this.content.textContent || ''
   }
   private bindEvent() {
+    const { c } = this.console
+
     this.resizeSensor.addListener(this.onResize)
-    this.$container.on('click', this.console.c('.dom-viewer'), (e) =>
-      e.stopPropagation()
-    )
+    this.$container
+      .on('click', c('.dom-viewer'), (e) => e.stopPropagation())
+      .on('click', () => this.click())
   }
   private renderEl() {
     const { elements } = this
@@ -268,6 +270,36 @@ export default class Log extends Emitter {
         theme: self.console.getOption('theme'),
       })
     })
+  }
+  private renderObjectViewer() {
+    const { type, src, $container, console, unenumerable, accessGetter } = this
+    const { c } = console
+    let { args } = this
+
+    const $json = $container.find(c('.json'))
+    if ($json.hasClass(c('hidden'))) {
+      if ($json.data('init') !== 'true') {
+        if (src) {
+          const staticViewer = new LunaStaticObjectViewer($json.get(0))
+          staticViewer.setOption('theme', console.getOption('theme'))
+          staticViewer.set(src)
+        } else {
+          if (type === 'table' || args.length === 1) {
+            if (isObj(args[0])) args = args[0]
+          }
+          const objViewer = new LunaObjectViewer($json.get(0), {
+            unenumerable,
+            accessGetter,
+          })
+          objViewer.setOption('theme', console.getOption('theme'))
+          objViewer.set(args)
+        }
+        $json.data('init', 'true')
+      }
+      $json.rmClass(c('hidden'))
+    } else {
+      $json.addClass(c('hidden'))
+    }
   }
   private renderTable(args: any[]) {
     const Value = '__LunaConsoleValue'
@@ -350,10 +382,9 @@ export default class Log extends Emitter {
 
     stringify(obj, options, (result: string) => cb(JSON.parse(result)))
   }
-  click() {
-    const { type, src, $container, console, unenumerable, accessGetter } = this
+  private click() {
+    const { type, src, $container, console, args } = this
     const { c } = console
-    let { args } = this
 
     switch (type) {
       case 'log':
@@ -365,30 +396,7 @@ export default class Log extends Emitter {
       case 'group':
       case 'groupCollapsed':
         if (src || args) {
-          const $json = $container.find(c('.json'))
-          if ($json.hasClass(c('hidden'))) {
-            if ($json.data('init') !== 'true') {
-              if (src) {
-                const staticViewer = new LunaStaticObjectViewer($json.get(0))
-                staticViewer.setOption('theme', console.getOption('theme'))
-                staticViewer.set(src)
-              } else {
-                if (type === 'table' || args.length === 1) {
-                  if (isObj(args[0])) args = args[0]
-                }
-                const objViewer = new LunaObjectViewer($json.get(0), {
-                  unenumerable,
-                  accessGetter,
-                })
-                objViewer.setOption('theme', console.getOption('theme'))
-                objViewer.set(args)
-              }
-              $json.data('init', 'true')
-            }
-            $json.rmClass(c('hidden'))
-          } else {
-            $json.addClass(c('hidden'))
-          }
+          this.renderObjectViewer()
         } else if (type === 'group' || type === 'groupCollapsed') {
           console.toggleGroup(this)
         }
@@ -397,8 +405,6 @@ export default class Log extends Emitter {
         $container.find(c('.stack')).toggleClass(c('hidden'))
         break
     }
-
-    this.updateSize(false)
   }
   private formatMsg() {
     let { args } = this

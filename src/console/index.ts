@@ -24,13 +24,11 @@ import isHidden from 'licia/isHidden'
 import stripIndent from 'licia/stripIndent'
 import ResizeSensor from 'licia/ResizeSensor'
 import types from 'licia/types'
-import { classPrefix } from '../share/util'
 import Component, { IComponentOptions } from '../share/Component'
 import raf = require('licia/raf')
 
 const u = navigator.userAgent
 const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
-const c = classPrefix('console')
 
 let id = 0
 
@@ -627,13 +625,7 @@ export default class Console extends Component<IOptions> {
     }
   }
   private bindEvent() {
-    const { $el } = this
-
     this.resizeSensor.addListener(this.renderViewport)
-
-    $el.on('click', c('.log-container'), function (this: any) {
-      this.log.click()
-    })
 
     this.on('optionChange', (name, val) => {
       const { logs } = this

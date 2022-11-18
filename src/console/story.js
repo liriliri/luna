@@ -89,6 +89,15 @@ const def = story(
     const code = text('JavaScript', '1 + 2')
     console.evaluate(code)
 
+    let selectedLog
+    console.on('select', (log) => (selectedLog = log))
+    button('Copy Selected', () => {
+      if (selectedLog) {
+        selectedLog.copy()
+      }
+      return false
+    })
+
     button('Log Message', () => {
       logMessage()
       return false

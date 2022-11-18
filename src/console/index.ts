@@ -24,6 +24,7 @@ import isHidden from 'licia/isHidden'
 import stripIndent from 'licia/stripIndent'
 import ResizeSensor from 'licia/ResizeSensor'
 import types from 'licia/types'
+import isNull from 'licia/isNull'
 import Component, { IComponentOptions } from '../share/Component'
 import raf = require('licia/raf')
 
@@ -95,6 +96,7 @@ export default class Console extends Component<IOptions> {
   private groupStack = new Stack()
   private global: any
   private resizeSensor: ResizeSensor
+  private selectedLog: Log | null = null
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'console' }, options)
 
@@ -231,6 +233,7 @@ export default class Console extends Component<IOptions> {
   clear(silent = false) {
     this.logs = []
     this.displayLogs = []
+    this.selectLog(null)
     this.lastLog = undefined
     this.counter = {}
     this.timer = {}
@@ -318,7 +321,7 @@ export default class Console extends Component<IOptions> {
     })
   }
   private render() {
-    const { logs } = this
+    const { logs, selectedLog } = this
 
     this.$el.html('')
     this.isAtBottom = true
@@ -327,6 +330,11 @@ export default class Console extends Component<IOptions> {
     this.displayLogs = []
     for (let i = 0, len = logs.length; i < len; i++) {
       this.attachLog(logs[i])
+    }
+    if (selectedLog) {
+      if (!contain(this.displayLogs, selectedLog)) {
+        this.selectLog(null)
+      }
     }
   }
   private insert(type: string | InsertOptions, args?: any[]) {
@@ -415,8 +423,7 @@ export default class Console extends Component<IOptions> {
       lastLog &&
       !contain(['html', 'group', 'groupCollapsed'], log.type) &&
       lastLog.type === log.type &&
-      !log.src &&
-      !log.args &&
+      log.isSimple() &&
       lastLog.text() === log.text()
     ) {
       lastLog.addCount()
@@ -624,8 +631,28 @@ export default class Console extends Component<IOptions> {
       i++
     }
   }
+  private selectLog(log: Log | null) {
+    if (this.selectedLog) {
+      this.selectedLog.deselect()
+      this.selectedLog = null
+    }
+    if (!isNull(log)) {
+      this.selectedLog = log
+      this.selectedLog?.select()
+      this.emit('select', log)
+    } else {
+      this.emit('deselect')
+    }
+  }
   private bindEvent() {
+    const { $el, c } = this
+
     this.resizeSensor.addListener(this.renderViewport)
+
+    const self = this
+    $el.on('click', c('.log-container'), function (this: any) {
+      self.selectLog(this.log)
+    })
 
     this.on('optionChange', (name, val) => {
       const { logs } = this

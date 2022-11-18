@@ -111,7 +111,7 @@ test('console', (container) => {
     expect(logContent(0).text()).to.include('bluegreen')
   })
 
-  it('substitution repeat log', function () {
+  it('repeat log', function () {
     for (let i = 0; i < 10; i++) console.log(1)
     expect(logs().length).to.equal(1)
     expect(log(0).text()).to.include('10')

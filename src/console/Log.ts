@@ -36,10 +36,13 @@ import $ from 'licia/$'
 import h from 'licia/h'
 import Emitter from 'licia/Emitter'
 import debounce from 'licia/debounce'
+import safeStringify from 'licia/stringify'
+import copy from 'licia/copy'
 import stringifyAll from 'licia/stringifyAll'
 import nextTick from 'licia/nextTick'
 import linkify from 'licia/linkify'
 import highlight from 'licia/highlight'
+import some from 'licia/some'
 import { getObjType } from './util'
 import stripIndent from 'licia/stripIndent'
 import toEl from 'licia/toEl'
@@ -229,6 +232,10 @@ export default class Log extends Emitter {
   isAttached() {
     return !!this.container.parentNode
   }
+  // No object types.
+  isSimple() {
+    return !some(this.args, (arg) => isObj(arg))
+  }
   updateSize(silent = true) {
     // offsetHeight, offsetWidth is rounded to an integer.
     const { width, height } = this.container.getBoundingClientRect()
@@ -248,6 +255,30 @@ export default class Log extends Emitter {
   }
   text() {
     return this.content.textContent || ''
+  }
+  select() {
+    this.$container.addClass(this.console.c('selected'))
+  }
+  deselect() {
+    this.$container.rmClass(this.console.c('selected'))
+  }
+  copy() {
+    const { args } = this
+
+    let str = ''
+
+    each(args, (arg, idx) => {
+      if (idx !== 0) {
+        str += ' '
+      }
+      if (isObj(arg)) {
+        str += safeStringify(arg)
+      } else {
+        str += toStr(arg)
+      }
+    })
+
+    copy(str)
   }
   private bindEvent() {
     const { c } = this.console
@@ -447,10 +478,8 @@ export default class Log extends Emitter {
         break
     }
 
-    delete (this as any).args
-
     // Only linkify for simple types
-    if (type !== 'error' && !this.args) {
+    if (contain(['log', 'debug', 'warn'], type) && this.isSimple()) {
       msg = linkify(msg, (url) => {
         return `<a href="${url}" target="_blank">${url}</a>`
       })

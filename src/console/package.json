@@ -1,6 +1,6 @@
 {
   "name": "console",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "Console for logging",
   "luna": {
     "icon": true,

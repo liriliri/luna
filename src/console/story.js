@@ -4,6 +4,7 @@ import $ from 'licia/$'
 import toEl from 'licia/toEl'
 import Console from 'luna-console.js'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 import { button, number, boolean, text } from '@storybook/addon-knobs'
 import story from '../share/story'
 
@@ -122,6 +123,7 @@ const def = story(
   },
   {
     readme,
+    changelog,
     source: __STORY__,
   }
 )

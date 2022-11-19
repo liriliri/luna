@@ -15,21 +15,24 @@ Add the following script and style to your page.
 ```html
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-object-viewer/luna-object-viewer.css" />
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-data-grid/luna-data-grid.css" />
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-dom-viewer/luna-dom-viewer.css" />
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-console/luna-console.css" />
 <script src="//cdn.jsdelivr.net/npm/luna-object-viewer/luna-object-viewer.js"></script>
 <script src="//cdn.jsdelivr.net/npm/luna-data-grid/luna-data-grid.js"></script>
+<script src="//cdn.jsdelivr.net/npm/luna-dom-viewer/luna-dom-viewer.js"></script>
 <script src="//cdn.jsdelivr.net/npm/luna-console/luna-console.js"></script>
 ```
 
 You can also get it on npm.
 
 ```bash
-npm install luna-console luna-data-grid luna-object-viewer --save
+npm install luna-console luna-dom-viewer luna-data-grid luna-object-viewer --save
 ```
 
 ```javascript
 import 'luna-object-viewer/luna-object-viewer.css'
 import 'luna-data-grid/luna-data-grid.css'
+import 'luna-dom-viewer/luna-dom-viewer.css'
 import 'luna-console/luna-console.css'
 import LunaConsole from 'luna-console'
 ```

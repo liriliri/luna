@@ -67,9 +67,11 @@ $console-selected-border-dark: #4173b4;
 .log-container {
   box-sizing: content-box;
   &.selected {
-    background: $console-selected-background;
     .log-item {
-      border-color: $console-selected-border;
+      background: $console-selected-background;
+      &:not(.error):not(.warn) {
+        border-color: $console-selected-border;
+      }
     }
   }
 }

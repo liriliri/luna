@@ -58,9 +58,13 @@ dataGrid.append({
 
 ## Api
 
-### append(data: PlainObj<string | HTMLElement>): void
+### append(data: PlainObj<string | HTMLElement>): DataGridNode
 
 Append row data.
+
+### clear(): void
+
+Clear all data.
 
 ## Types
 

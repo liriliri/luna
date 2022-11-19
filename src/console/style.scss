@@ -5,7 +5,6 @@ $padding: 10px;
 $font-size: 12px;
 $border: #ccc;
 $foreground: #333;
-$text-color: #8097bd;
 $darker-background: #f3f3f3;
 $contrast: #f2f7fd;
 $console-error-background: #fff0f0;
@@ -19,7 +18,6 @@ $console-selected-border: #ccdef5;
 
 $foreground-dark: #a5a5a5;
 $border-dark: #3d3d3d;
-$text-color-dark: #42597f;
 $darker-background-dark: #333;
 $contrast-dark: #0b2544;
 $console-error-background-dark: #290000;
@@ -150,9 +148,9 @@ $console-selected-border-dark: #4173b4;
     }
   }
   .count {
-    background: $text-color;
+    background: #8097bd;
+    color: #fff;
     padding: 2px 4px;
-    color: #000;
     border-radius: 10px;
     font-size: $font-size;
     float: left;
@@ -248,9 +246,11 @@ $console-selected-border-dark: #4173b4;
   color-scheme: dark;
   .log-container {
     &.selected {
-      background: $console-selected-background-dark;
       .log-item {
-        border-color: $console-selected-border-dark;
+        background: $console-selected-background-dark;
+        &:not(.error):not(.warn) {
+          border-color: $console-selected-border-dark;
+        }
       }
     }
   }
@@ -275,10 +275,15 @@ $console-selected-border-dark: #4173b4;
       border-top-color: $console-warn-border-dark;
       border-bottom-color: $console-warn-border-dark;
     }
+    .count {
+      background: #42597f;
+      color: #949494;
+    }
   }
   .icon-container {
-    .count {
-      color: $text-color-dark;
+    .icon-caret-right,
+    .icon-caret-down {
+      color: #9aa0a6;
     }
   }
   .header {

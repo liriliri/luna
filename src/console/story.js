@@ -46,6 +46,9 @@ const def = story(
 
     function logMessage() {
       console.log('log')
+      for (let i = 0; i < 10; i++) {
+        console.log('repeat log')
+      }
       console.warn('warn')
       console.error(Error('test'))
       console.info('info')

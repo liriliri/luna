@@ -187,7 +187,7 @@
 <script>
   ;(function () {
     var src = '//cdn.jsdelivr.net/npm/eruda';
-    if (!_.isMobile()) return;
+    if (!_.isMobile() || !(location.search.indexOf('eruda') > -1)) return;
     document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
     document.write('<scr' + 'ipt>eruda.init();</scr' + 'ipt>');
   })();

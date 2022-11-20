@@ -4,6 +4,7 @@
 .luna-dom-viewer {
   @include component();
   @include overflow-auto(y);
+  background: transparent;
   overflow-x: hidden;
   word-wrap: break-word;
   padding: 0 0 0 12px;

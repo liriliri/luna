@@ -1,3 +1,7 @@
+## 1.0.1 (20 Nov 2022)
+
+* fix: end tag rendering error
+
 ## 1.0.0 (25 Oct 2022)
 
 * feat: dark mode

@@ -59,7 +59,9 @@ export default class DomViewer extends Component<IOptions> {
 
     this.initTpl()
     this.bindEvent()
-    this.initObserver()
+    if (!this.options.isEndTag) {
+      this.initObserver()
+    }
   }
   select = () => {
     const { c } = this
@@ -114,7 +116,9 @@ export default class DomViewer extends Component<IOptions> {
     }
   }
   destroy() {
-    this.observer.disconnect()
+    if (this.observer) {
+      this.observer.disconnect()
+    }
     super.destroy()
   }
   private initObserver() {

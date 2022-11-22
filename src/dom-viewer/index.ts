@@ -12,6 +12,7 @@ import highlight from 'licia/highlight'
 import truncate from 'licia/truncate'
 import types from 'licia/types'
 import escape from 'licia/escape'
+import trim from 'licia/trim'
 
 const emptyHighlightStyle = {
   comment: '',
@@ -181,9 +182,20 @@ export default class DomViewer extends Component<IOptions> {
     )
   }
   private getChildNodes(el: HTMLElement) {
-    const { rootContainer } = this.options
+    const { rootContainer, ignore } = this.options
     let childNodes = toArr(el.childNodes)
-    childNodes = filter(childNodes, (child) => child !== rootContainer)
+    childNodes = filter(childNodes, (child) => {
+      if (
+        child.nodeType === Node.TEXT_NODE ||
+        child.nodeType === Node.COMMENT_NODE
+      ) {
+        const value = child.nodeValue
+        if (trim(value) === '') {
+          return false
+        }
+      }
+      return child !== rootContainer && !ignore(child)
+    })
     return childNodes
   }
   private initTpl() {
@@ -239,13 +251,9 @@ export default class DomViewer extends Component<IOptions> {
     this.destroySubComponents()
     const { rootContainer, ignore } = this.options
     const $container = this.$children
-    let childNodes = this.getChildNodes(node)
-    childNodes = filter(childNodes, (child) => {
-      return child !== rootContainer && !ignore(child)
-    })
-
     const container = $container.get(0)
 
+    const childNodes = this.getChildNodes(node)
     each(childNodes, (node) => {
       this.addSubComponent(
         new DomViewer(container as HTMLElement, {
@@ -308,7 +316,6 @@ export default class DomViewer extends Component<IOptions> {
   private renderTextNode(node: ChildNode) {
     const { c } = this
     const value = node.nodeValue as string
-    if (value.trim() === '') return ''
 
     const parent = node.parentElement
     const prepend = '<span class="text-node">'

@@ -1,3 +1,7 @@
+## 1.0.2 (22 Nov 2022)
+
+* fix: hide empty text node
+
 ## 1.0.1 (20 Nov 2022)
 
 * fix: end tag rendering error

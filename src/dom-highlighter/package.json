@@ -1,5 +1,8 @@
 {
   "name": "dom-highlighter",
-  "version": "1.0.0",
-  "description": "Highlighter for html elements"
+  "version": "1.0.1",
+  "description": "Highlighter for html elements",
+  "dependencies": {
+    "path2d-polyfill": "^1.2.3"
+  }
 }

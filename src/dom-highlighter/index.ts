@@ -14,6 +14,7 @@ import contain from 'licia/contain'
 import toNum from 'licia/toNum'
 import elementRoles from './elementRoles'
 import isStr from 'licia/isStr'
+import 'path2d-polyfill'
 
 interface IRect {
   left: number
@@ -435,8 +436,7 @@ module.exports = DomHighlighter
 module.exports.default = DomHighlighter
 
 const regRgb = /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/
-const regRgba =
-  /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d*(?:\.\d+)?)\)$/
+const regRgba = /^rgba\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),\s*(\d*(?:\.\d+)?)\)$/
 
 function isColor(color: string) {
   return regRgb.test(color) || regRgba.test(color)

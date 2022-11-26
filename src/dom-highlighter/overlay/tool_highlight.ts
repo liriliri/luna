@@ -105,10 +105,10 @@ export class HighlightOverlay extends Overlay {
   install() {
     const canvas = this.document.createElement('canvas');
     canvas.classList.add('luna-dom-highlighter-fill');
-    this.container.append(canvas);
+    this.container.appendChild(canvas);
 
     const tooltip = this.document.createElement('div');
-    this.container.append(tooltip);
+    this.container.appendChild(tooltip);
     this.tooltip = tooltip;
 
     this.setCanvas(canvas);

@@ -28,6 +28,7 @@
 //  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import endWith from 'licia/endWith';
 import {contrastRatio, contrastRatioAPCA, getAPCAThreshold, getContrastThreshold} from './ColorUtils';
 
 import type {Bounds, PathCommands, ResetData} from './common';
@@ -317,7 +318,7 @@ const gridBackgroundColor = 'rgba(255, 255, 255, 0.8)';
  * @return {String|null} The layout type of the object, or null if none was found
  */
 function getElementLayoutType(elementInfo: ElementInfo): string|null {
-  if (elementInfo.layoutObjectName && elementInfo.layoutObjectName.endsWith('Grid')) {
+  if (elementInfo.layoutObjectName && endWith(elementInfo.layoutObjectName, 'Grid')) {
     return 'grid';
   }
 

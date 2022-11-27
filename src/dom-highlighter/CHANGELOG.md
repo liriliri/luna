@@ -1,3 +1,7 @@
+## 1.0.2 (27 Nov 2022)
+
+* fix: ie11 string endsWith not supported
+
 ## 1.0.1 (26 Nov 2022)
 
 * fix: support ie11

@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import endWith from 'licia/endWith';
 import {luminance} from './ColorUtils';
 
 import type {AreaBounds, Bounds, Position} from './common';
@@ -434,7 +435,7 @@ export function drawGridTrackSizes(
     const point = applyMatrixToPoint({x, y}, writingModeMatrix);
 
     const size = computedSize.toFixed(2);
-    const formattedComputed = `${size.endsWith('.00') ? size.slice(0, -3) : size}px`;
+    const formattedComputed = `${endWith(size, '.00') ? size.slice(0, -3) : size}px`;
     const element =
         createLabelElement(container, `${authoredSize ? authoredSize + '·' : ''}${formattedComputed}`, direction);
     const labelSize = getLabelSize(element, writingMode);

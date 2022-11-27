@@ -28,6 +28,7 @@
 //  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import endWith from 'licia/endWith';
 import {rgbaToHsla} from './ColorUtils';
 
 import type {Bounds, PathCommands, Quad} from './common';
@@ -281,7 +282,7 @@ export function formatColor(hexa: string, colorFormat: string): string {
     return formatRgba(parseHexa(hexa), colorFormat);
   }
 
-  if (hexa.endsWith('FF')) {
+  if (endWith(hexa, 'FF')) {
     // short hex if no alpha
     return hexa.substr(0, 7);
   }

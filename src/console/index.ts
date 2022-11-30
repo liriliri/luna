@@ -761,7 +761,7 @@ export default class Console extends Component<IOptions> {
       for (let i = 0, len = logs.length; i < len; i++) {
         logs[i].updateSize()
       }
-      fakeEl.innerHTML = ''
+      fakeEl.textContent = ''
     }
 
     const frag = document.createDocumentFragment()

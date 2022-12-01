@@ -186,7 +186,7 @@ export default class Log extends Emitter {
   }
   updateIcon(icon: string) {
     const { c } = this.console
-    const $icon = this.$container.find(c('.icon'))
+    const $icon = this.$container.find(c('.icon-container')).find(c('.icon'))
 
     $icon.rmAttr('class').addClass([c('icon'), c(`icon-${icon}`)])
 
@@ -290,6 +290,13 @@ export default class Log extends Emitter {
       .on('click', c('.dom-viewer'), (e) => e.stopPropagation())
       .on('click', c('.preview'), function (this: HTMLElement, e) {
         e.stopPropagation()
+        const $this = $(this)
+        const $icon = $this.find(c('.preview-icon-container')).find(c('.icon'))
+        let icon = 'caret-down'
+        if ($icon.hasClass(c('icon-caret-down'))) {
+          icon = 'caret-right'
+        }
+        $icon.rmAttr('class').addClass([c('icon'), c(`icon-${icon}`)])
         self.renderObjectViewer(this)
       })
       .on('click', () => this.click())
@@ -652,16 +659,32 @@ export default class Log extends Emitter {
       })
     }
 
+    const noPreview = contain(['dir', 'table'], this.type)
     let type = getObjType(obj)
-    if (type === 'Array' && obj.length > 1) type = `(${obj.length})`
+    if (type === 'Array' && obj.length > 1) {
+      type = `(${obj.length})`
+      if (noPreview) {
+        type = `Array${type}`
+      }
+    }
 
     return (
       `<div class="${c('preview')}" data-id="${id}">` +
+      `<div class="${c('preview-container')}">` +
+      `<div class="${c('preview-icon-container')}"><span class="${c(
+        'icon icon-caret-right'
+      )}"></span></div>` +
+      `<span class="${c('preview-content-container')}">` +
       `<span class="${c('descriptor')}">${type}</span> ` +
-      `<span class="${c('object-preview')}">${getPreview(obj, {
-        getterVal: this.accessGetter,
-        unenumerable: false,
-      })}</span>` +
+      `<span class="${c('object-preview')}">${
+        noPreview
+          ? ''
+          : getPreview(obj, {
+              getterVal: this.accessGetter,
+              unenumerable: false,
+            })
+      }</span>` +
+      '</span></div>' +
       `<div class="${c('json hidden')}"></div></div>`
     )
   }

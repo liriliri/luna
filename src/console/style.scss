@@ -218,7 +218,30 @@ $console-selected-border-dark: #4173b4;
 
 .preview {
   display: inline-block;
-  word-break: break-all;
+  .preview-container {
+    display: flex;
+    align-items: center;
+  }
+  .json {
+    @include overflow-auto(x);
+    padding-left: 12px;
+  }
+  .preview-icon-container {
+    display: block;
+    .icon {
+      position: relative;
+      font-size: $font-size-s;
+    }
+    .icon-caret-down {
+      top: 2px;
+    }
+    .icon-caret-right {
+      top: 1px;
+    }
+  }
+  .preview-content-container {
+    word-break: break-all;
+  }
   .descriptor,
   .object-preview {
     font-style: italic;

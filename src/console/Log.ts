@@ -42,6 +42,7 @@ import stringifyAll from 'licia/stringifyAll'
 import nextTick from 'licia/nextTick'
 import linkify from 'licia/linkify'
 import highlight from 'licia/highlight'
+import truncate from 'licia/truncate'
 import some from 'licia/some'
 import { getObjType } from './util'
 import stripIndent from 'licia/stripIndent'
@@ -613,7 +614,15 @@ export default class Log extends Emitter {
         args[i] = 'null'
       } else {
         val = toStr(val)
-        if (i !== 0 || !needStrSubstitution) val = escape(val)
+        if (i !== 0 || !needStrSubstitution) {
+          val = escape(val)
+        }
+        if (val.length > 5000) {
+          val = truncate(val, 5000, {
+            separator: ' ',
+            ellipsis: '…',
+          })
+        }
         args[i] = val
       }
     }

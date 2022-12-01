@@ -12,6 +12,8 @@ import isPromise from 'licia/isPromise'
 import type from 'licia/type'
 import $ from 'licia/$'
 import difference from 'licia/difference'
+import truncate from 'licia/truncate'
+import isStr from 'licia/isStr'
 import allKeys from 'licia/allKeys'
 import filter from 'licia/filter'
 import chunk from 'licia/chunk'
@@ -290,6 +292,12 @@ export default class ObjectViewer extends Component<IOptions> {
       return `<span class="${keyClass}">${encode(key)}</span>: `
     }
 
+    if (isStr(val) && val.length > 10000) {
+      val = truncate(val, 50, {
+        separator: ' ',
+        ellipsis: '…',
+      })
+    }
     return `<li>${wrapKey(key)}<span class="${c(typeof val)}">"${encode(
       val
     )}"</span></li>`

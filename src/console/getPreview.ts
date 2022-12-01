@@ -7,6 +7,7 @@ import escapeJsStr from 'licia/escapeJsStr'
 import each from 'licia/each'
 import endWith from 'licia/endWith'
 import isEmpty from 'licia/isEmpty'
+import truncate from 'licia/truncate'
 import { getObjType } from './util'
 import { classPrefix } from '../share/util'
 
@@ -67,6 +68,12 @@ export default function getPreview(
       return specialWrapper + strEscape(str) + wrapperEnd
     }
 
+    if (str.length > 100) {
+      str = truncate(str, 100, {
+        separator: ' ',
+        ellipsis: '…',
+      })
+    }
     return strWrapper + strEscape(`"${str}"`) + wrapperEnd
   }
 

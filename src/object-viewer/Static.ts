@@ -10,6 +10,7 @@ import isNaN from 'licia/isNaN'
 import isNum from 'licia/isNum'
 import isBool from 'licia/isBool'
 import isStr from 'licia/isStr'
+import truncate from 'licia/truncate'
 import keys from 'licia/keys'
 import lowerCase from 'licia/lowerCase'
 import naturalSort from 'licia/naturalSort'
@@ -132,6 +133,13 @@ export default class JsonViewer extends Component {
       }
 
       return `<span class="${keyClass}">${encode(key)}</span>: `
+    }
+
+    if (isStr(val) && val.length > 10000) {
+      val = truncate(val, 50, {
+        separator: ' ',
+        ellipsis: '…',
+      })
     }
 
     return `<li>${wrapKey(key)}<span class="${c(typeof val)}">"${encode(

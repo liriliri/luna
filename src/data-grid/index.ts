@@ -151,11 +151,11 @@ export default class DataGrid extends Component<IOptions> {
 
     this.$dataContainer.css({ height: 'auto' })
 
-    minHeight -= 21
+    minHeight -= 23
     if (minHeight < 0) {
       minHeight = 0
     }
-    maxHeight -= 21
+    maxHeight -= 23
 
     let height = this.nodes.length * 20
 

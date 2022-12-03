@@ -368,7 +368,7 @@ export default class Log extends Emitter {
         map(columns, (column) => {
           return {
             id: column,
-            title: column,
+            title: column === Value ? 'Value' : column,
             sortable: true,
           }
         })

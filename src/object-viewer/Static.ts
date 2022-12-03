@@ -62,7 +62,7 @@ export default class JsonViewer extends Component {
       if (ret === '') {
         ret = this.objToHtml(data.proto)
       } else {
-        ret += this.createEl('__proto__', data.proto, 'proto')
+        ret += this.createEl('[[Prototype]]', data.proto, 'proto')
       }
     }
 
@@ -124,12 +124,10 @@ export default class JsonViewer extends Component {
       if (isObj(val) && val.jsonSplitArr) return ''
 
       let keyClass = c('key')
-      if (
-        keyType === 'unenumerable' ||
-        keyType === 'proto' ||
-        keyType === 'symbol'
-      ) {
+      if (keyType === 'unenumerable' || keyType === 'symbol') {
         keyClass = c('key-lighter')
+      } else if (keyType === 'proto') {
+        keyClass = c('key-special')
       }
 
       return `<span class="${keyClass}">${encode(key)}</span>: `

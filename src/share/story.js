@@ -76,8 +76,9 @@ export default function story(
         window.component = window.components[0]
         window.componentName = upperFirst(camelCase(name))
 
-        document.documentElement.style.background =
-          contain(theme, 'dark') ? '#000' : '#fff'
+        document.documentElement.style.background = contain(theme, 'dark')
+          ? '#000'
+          : '#fff'
         each(window.components, (component) =>
           component.setOption('theme', theme)
         )

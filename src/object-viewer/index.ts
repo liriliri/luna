@@ -203,7 +203,7 @@ export default class ObjectViewer extends Component<IOptions> {
         this.map[id] = proto
         ret = this.objToHtml(proto)
       } else {
-        ret += this.createEl('__proto__', self || data, proto, 'proto')
+        ret += this.createEl('[[Prototype]]', self || data, proto, 'proto')
       }
     }
 
@@ -281,12 +281,10 @@ export default class ObjectViewer extends Component<IOptions> {
       if (isObj(val) && keyType === 'virtual') return ''
 
       let keyClass = c('key')
-      if (
-        keyType === 'unenumerable' ||
-        keyType === 'proto' ||
-        keyType === 'symbol'
-      ) {
+      if (keyType === 'unenumerable' || keyType === 'symbol') {
         keyClass = c('key-lighter')
+      } else if (keyType === 'proto') {
+        keyClass = c('key-special')
       }
 
       return `<span class="${keyClass}">${encode(key)}</span>: `

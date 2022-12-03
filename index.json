@@ -34,7 +34,7 @@
   "console": {
     "icon": true,
     "dependencies": ["object-viewer", "data-grid", "dom-viewer"],
-    "version": "1.0.0",
+    "version": "1.1.0",
     "style": true,
     "test": true,
     "install": false
@@ -56,7 +56,7 @@
     "dependencies": []
   },
   "data-grid": {
-    "version": "0.2.0",
+    "version": "0.2.1",
     "style": true,
     "icon": false,
     "test": true,
@@ -64,16 +64,16 @@
     "dependencies": []
   },
   "dom-highlighter": {
-    "version": "1.0.0",
+    "install": true,
+    "version": "1.0.2",
     "style": true,
     "icon": false,
     "test": true,
-    "install": false,
     "dependencies": []
   },
   "dom-viewer": {
     "icon": true,
-    "version": "1.0.1",
+    "version": "1.0.2",
     "style": true,
     "test": true,
     "install": false,
@@ -177,7 +177,7 @@
   },
   "object-viewer": {
     "icon": true,
-    "version": "0.2.1",
+    "version": "0.2.2",
     "style": true,
     "test": true,
     "install": false,

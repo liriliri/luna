@@ -4,5 +4,8 @@
   "description": "Highlighter for html elements",
   "dependencies": {
     "path2d-polyfill": "^1.2.3"
+  },
+  "luna": {
+    "install": true
   }
 }

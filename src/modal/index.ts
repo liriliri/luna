@@ -47,7 +47,7 @@ export default class Modal extends Component<IOptions> {
       content: '',
       footer: '',
       showClose: true,
-      width: 640,
+      width: getDefaultWidth(),
     })
 
     this.initTpl()
@@ -82,6 +82,7 @@ export default class Modal extends Component<IOptions> {
     modal.setOption({
       title: '',
       content: msg,
+      width: getDefaultWidth(),
       footer: createButtons(
         {
           OK: {
@@ -107,6 +108,7 @@ export default class Modal extends Component<IOptions> {
       modal.setOption({
         title: '',
         content: msg,
+        width: getDefaultWidth(),
         footer: createButtons(
           {
             Cancel: {
@@ -116,7 +118,7 @@ export default class Modal extends Component<IOptions> {
                 resolve(false)
               },
             },
-            Ok: {
+            OK: {
               type: 'primary',
               onclick() {
                 modal.hide()
@@ -144,6 +146,7 @@ export default class Modal extends Component<IOptions> {
       modal.setOption({
         title,
         content: input,
+        width: getDefaultWidth(),
         footer: createButtons(
           {
             Cancel: {
@@ -153,7 +156,7 @@ export default class Modal extends Component<IOptions> {
                 resolve(null)
               },
             },
-            Ok: {
+            OK: {
               type: 'primary',
               onclick() {
                 modal.hide()
@@ -238,6 +241,14 @@ function createButtons(buttons: types.PlainObj<IButton>, c: types.AnyFn) {
   })
 
   return h(c('.button-group'), {}, ...buttonEls)
+}
+
+function getDefaultWidth() {
+  if (window.innerWidth < 500) {
+    return window.innerWidth - 16 * 2
+  }
+
+  return 500
 }
 
 module.exports = Modal

@@ -1,3 +1,7 @@
+## 1.1.2 (7 Dec 2022)
+
+* fix: remove debug log
+
 ## 1.1.1 (5 Dec 2022)
 
 * fix: pc scroll performance

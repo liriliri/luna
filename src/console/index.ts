@@ -759,13 +759,6 @@ export default class Console extends Component<IOptions> {
     if (logs.length > 0) {
       fakeEl.appendChild(fakeFrag)
       for (let i = 0, len = logs.length; i < len; i++) {
-        console.log(
-          'update size',
-          i,
-          logs[i].width,
-          logs[i].height,
-          containerWidth
-        )
         logs[i].updateSize()
       }
       fakeEl.textContent = ''

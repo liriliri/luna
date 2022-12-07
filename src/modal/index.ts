@@ -170,6 +170,13 @@ export default class Modal extends Component<IOptions> {
       modal.show()
     })
   }
+  /**
+   * Set alert, prompt, confirm container, need to be called first.
+   * @static
+   */
+  static setContainer(container: HTMLElement) {
+    globalContainer = container
+  }
   private bindEvent() {
     this.$body.on('click', this.c('.icon-close'), this.hide)
     this.on('optionChange', this.render)
@@ -212,11 +219,15 @@ export default class Modal extends Component<IOptions> {
 
 let globalModal: Modal | null = null
 
+let globalContainer: HTMLElement | null = null
+
 function getGlobalModal() {
+  if (!globalContainer) {
+    globalContainer = h('div')
+    document.body.append(globalContainer)
+  }
   if (!globalModal) {
-    const container = h('div')
-    document.body.append(container)
-    globalModal = new Modal(container, {
+    globalModal = new Modal(globalContainer, {
       showClose: false,
     })
   }

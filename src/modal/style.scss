@@ -76,7 +76,7 @@
 }
 
 .button {
-  padding: 6px 12px;
+  padding: 0 12px;
   background: #e9ecef;
   cursor: default;
   position: relative;
@@ -84,6 +84,9 @@
   margin: 0 4px;
   font-size: $font-size-s;
   border-radius: 4px;
+  overflow: hidden;
+  height: 28px;
+  line-height: 28px;
   &:active {
     &::before {
       background: $primary-color;
@@ -115,6 +118,8 @@
   font-size: 16px;
   padding: 6px 12px;
   border: 1px solid $border-color;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 .theme-dark {

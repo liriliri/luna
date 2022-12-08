@@ -1,8 +1,5 @@
 {
   "name": "tab",
   "version": "0.1.0",
-  "description": "Easy tabs",
-  "luna": {
-    "test": false
-  }
+  "description": "Easy tabs"
 }

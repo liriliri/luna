@@ -5,6 +5,7 @@ import map from 'licia/map'
 import h from 'licia/h'
 import waitUntil from 'licia/waitUntil'
 import toArr from 'licia/toArr'
+import isArr from 'licia/isArr'
 import contain from 'licia/contain'
 import upperFirst from 'licia/upperFirst'
 import extend from 'licia/extend'
@@ -72,7 +73,12 @@ export default function story(
           }
         )
 
-        window.components = toArr(storyFn(container))
+        const story = storyFn(container)
+        if (isArr(story)) {
+          window.components = story
+        } else {
+          window.components = [story]
+        }
         window.component = window.components[0]
         window.componentName = upperFirst(camelCase(name))
 

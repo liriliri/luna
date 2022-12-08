@@ -41,6 +41,7 @@
 * [scrollbar](./src/scrollbar/README.md): Custom scrollbar.
 * [shader-toy-player](./src/shader-toy-player/README.md): Shader toy player.
 * [syntax-highlighter](./src/syntax-highlighter/README.md): Syntax highlighter using highlightjs.
+* [tab](./src/tab/README.md): Easy tabs.
 * [video-player](./src/video-player/README.md): Video player.
 * [window](./src/window/README.md): HTML5 window manager.
 

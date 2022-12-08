@@ -1,6 +1,5 @@
 import 'luna-music-player.css'
 import story from '../share/story'
-import h from 'licia/h'
 import $ from 'licia/$'
 import MusicPlayer from 'luna-music-player.js'
 import { object } from '@storybook/addon-knobs'

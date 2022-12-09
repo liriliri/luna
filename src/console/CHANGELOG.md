@@ -1,3 +1,7 @@
+## 1.1.3 (9 Dec 2022)
+
+* feat: support esm
+
 ## 1.1.2 (7 Dec 2022)
 
 * fix: remove debug log

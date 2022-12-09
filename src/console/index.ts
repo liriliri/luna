@@ -27,6 +27,7 @@ import types from 'licia/types'
 import isNull from 'licia/isNull'
 import Component, { IComponentOptions } from '../share/Component'
 import raf from 'licia/raf'
+import { exportCjs } from '../share/util'
 
 const u = navigator.userAgent
 const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
@@ -808,9 +809,6 @@ export default class Console extends Component<IOptions> {
   }
 }
 
-module.exports = Console
-module.exports.default = Console
-
 const getCurTime = () => dateFormat('HH:MM:ss ')
 
 function getFrom() {
@@ -827,4 +825,8 @@ function getFrom() {
   }
 
   return ret
+}
+
+if (typeof module !== 'undefined') {
+  exportCjs(module, Console)
 }

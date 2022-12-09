@@ -222,7 +222,13 @@ export default class Scrollbar extends Component {
   }
   private hideNativeScrollbar() {
     const { x, y, $offset } = this
-    const scrollbarWidth = measuredScrollbarWidth()
+    let scrollbarWidth = 0
+    if (
+      getComputedStyle(this.contentWrapper, '::-webkit-scrollbar').display !==
+      'none'
+    ) {
+      scrollbarWidth = measuredScrollbarWidth()
+    }
 
     $offset.css({
       right: y.isOverflow ? -scrollbarWidth : 0,

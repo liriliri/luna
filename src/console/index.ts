@@ -26,7 +26,7 @@ import ResizeSensor from 'licia/ResizeSensor'
 import types from 'licia/types'
 import isNull from 'licia/isNull'
 import Component, { IComponentOptions } from '../share/Component'
-import raf = require('licia/raf')
+import raf from 'licia/raf'
 
 const u = navigator.userAgent
 const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1

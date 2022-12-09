@@ -68,3 +68,7 @@ Like `window.confirm`.
 ### static prompt(title?: string, defaultText?: string): Promise<null | string>
 
 Like `window.prompt`.
+
+### static setContainer(container: HTMLElement): void
+
+Set alert, prompt, confirm container, need to be called first.

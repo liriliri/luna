@@ -3,7 +3,7 @@ import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import escape from 'licia/escape'
 import isNum from 'licia/isNum'
-import { measuredScrollbarWidth } from '../share/util'
+import { measuredScrollbarWidth, exportCjs } from '../share/util'
 
 /** ITab */
 export interface ITab {
@@ -198,5 +198,6 @@ export default class Tab extends Component<IOptions> {
   }
 }
 
-module.exports = Tab
-module.exports.default = Tab
+if (typeof module !== 'undefined') {
+  exportCjs(module, Tab)
+}

@@ -8,6 +8,15 @@ import toNum from 'licia/toNum'
 import detectOs from 'licia/detectOs'
 import isHidden from 'licia/isHidden'
 
+export function exportCjs(module: any, clazz: any) {
+  try {
+    module.exports = clazz
+    module.exports.default = clazz
+  } catch (e) {
+    /* eslint-disable no-empty */
+  }
+}
+
 export function classPrefix(name: string) {
   const prefix = `luna-${name}-`
 

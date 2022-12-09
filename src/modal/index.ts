@@ -4,6 +4,7 @@ import $ from 'licia/$'
 import h from 'licia/h'
 import types from 'licia/types'
 import map from 'licia/map'
+import { exportCjs } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -143,6 +144,16 @@ export default class Modal extends Component<IOptions> {
       const input = h('input' + c('.input'), {
         value: defaultText,
       }) as HTMLInputElement
+      function ok() {
+        modal.hide()
+        resolve(input.value)
+      }
+      $(input).on('keypress', (e) => {
+        e = e.origEvent
+        if (e.key === 'Enter') {
+          ok()
+        }
+      })
       modal.setOption({
         title,
         content: input,
@@ -158,16 +169,16 @@ export default class Modal extends Component<IOptions> {
             },
             OK: {
               type: 'primary',
-              onclick() {
-                modal.hide()
-                resolve(input.value)
-              },
+              onclick: ok,
             },
           },
           c
         ),
       })
       modal.show()
+      const end = input.value.length
+      input.setSelectionRange(end, end)
+      input.focus()
     })
   }
   /**
@@ -262,5 +273,6 @@ function getDefaultWidth() {
   return 500
 }
 
-module.exports = Modal
-module.exports.default = Modal
+if (typeof module !== 'undefined') {
+  exportCjs(module, Modal)
+}

@@ -1,6 +1,7 @@
 import 'luna-modal.css'
 import Modal from 'luna-modal.js'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 import story from '../share/story'
 import { text, button } from '@storybook/addon-knobs'
 
@@ -60,6 +61,7 @@ const def = story(
   },
   {
     readme,
+    changelog,
     source: __STORY__,
   }
 )

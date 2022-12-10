@@ -58,13 +58,17 @@ dataGrid.append({
 
 ## Api
 
-### append(data: PlainObj<string | HTMLElement>): DataGridNode
+### append(data: PlainObj<string | HTMLElement>, options?: IDataGridNodeOptions): DataGridNode
 
 Append row data.
 
 ### clear(): void
 
 Clear all data.
+
+### remove(node: DataGridNode): void
+
+Remove row data.
 
 ## Types
 
@@ -75,3 +79,7 @@ Clear all data.
 * sortable(boolean): Is column sortable.
 * title(string): Column display name.
 * weight(number): Column weight.
+
+### IDataGridNodeOptions
+
+* selectable(boolean): Whether the node is selectable.

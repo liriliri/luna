@@ -12,6 +12,8 @@ import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
 import defaults from 'licia/defaults'
 import startWith from 'licia/startWith'
+import isNull from 'licia/isNull'
+import { exportCjs } from '../share/util'
 
 /** IColumn */
 export interface IColumn {
@@ -37,6 +39,12 @@ export interface IOptions extends IComponentOptions {
   maxHeight?: number
   /** Min table height. */
   minHeight?: number
+}
+
+/** IDataGridNodeOptions */
+export interface IDataGridNodeOptions {
+  /** Whether the node is selectable. */
+  selectable?: boolean
 }
 
 /**
@@ -76,6 +84,7 @@ export default class DataGrid extends Component<IOptions> {
   private columnWidthsInitialized = false
   private columnMap: types.PlainObj<IColumn> = {}
   private sortId?: string
+  private selectedNode: DataGridNode | null = null
   private isAscending = true
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'data-grid' }, options)
@@ -124,9 +133,25 @@ export default class DataGrid extends Component<IOptions> {
     super.destroy()
     this.resizeSensor.destroy()
   }
+  /** Remove row data. */
+  remove(node: DataGridNode) {
+    const { nodes } = this
+    const pos = nodes.indexOf(node)
+    if (pos > -1) {
+      node.detach()
+      nodes.splice(pos, 1)
+      if (node === this.selectedNode) {
+        this.selectNode(nodes[pos] || nodes[pos - 1] || null)
+      }
+      this.updateHeight()
+    }
+  }
   /** Append row data. */
-  append(data: types.PlainObj<string | HTMLElement>) {
-    const node = new DataGridNode(this, data)
+  append(
+    data: types.PlainObj<string | HTMLElement>,
+    options?: IDataGridNodeOptions
+  ) {
+    const node = new DataGridNode(this, data, options)
     this.nodes.push(node)
 
     if (this.sortId) {
@@ -142,6 +167,7 @@ export default class DataGrid extends Component<IOptions> {
   clear() {
     each(this.nodes, (node) => node.detach())
     this.nodes = []
+    this.selectNode(null)
 
     this.updateHeight()
   }
@@ -173,12 +199,33 @@ export default class DataGrid extends Component<IOptions> {
 
     this.$dataContainer.css({ height })
   }
+  private selectNode(node: DataGridNode | null) {
+    if (!node?.selectable) {
+      return
+    }
+    if (this.selectedNode) {
+      this.selectedNode.deselect()
+      this.selectedNode = null
+    }
+    if (!isNull(node)) {
+      this.selectedNode = node
+      this.selectedNode?.select()
+      this.emit('select', node)
+    } else {
+      this.emit('deselect')
+    }
+  }
   private bindEvent() {
-    const { c, $headerRow } = this
+    const { c, $headerRow, $tableBody } = this
 
     this.resizeSensor.addListener(this.onResize)
 
     const self = this
+
+    $tableBody.on('click', c('.node'), function (this: any) {
+      self.selectNode(this.dataGridNode)
+    })
+
     $headerRow.on(
       'click',
       c('.sortable'),
@@ -322,7 +369,7 @@ export default class DataGrid extends Component<IOptions> {
             </tbody>
           </table>
         </div>
-        <div class="data-container">
+        <div class="data-container" tabindex="0">
           <table class="data">
             <colgroup></colgroup>
             <tbody>
@@ -335,21 +382,39 @@ export default class DataGrid extends Component<IOptions> {
   }
 }
 
-class DataGridNode {
+export class DataGridNode {
   container: HTMLElement = h('tr')
   data: types.PlainObj<string | HTMLElement>
+  selectable: boolean = false
   private $container: $.$
   private dataGrid: DataGrid
-  constructor(dataGrid: DataGrid, data: types.PlainObj<string | HTMLElement>) {
+  constructor(
+    dataGrid: DataGrid,
+    data: types.PlainObj<string | HTMLElement>,
+    options: IDataGridNodeOptions = {
+      selectable: false,
+    }
+  ) {
+    ;(this.container as any).dataGridNode = this
     this.$container = $(this.container)
+    this.$container.addClass(dataGrid.c('node'))
 
     this.dataGrid = dataGrid
     this.data = data
+    if (options.selectable) {
+      this.selectable = options.selectable
+    }
 
     this.render()
   }
   detach() {
     this.$container.remove()
+  }
+  select() {
+    this.$container.addClass(this.dataGrid.c('selected'))
+  }
+  deselect() {
+    this.$container.rmClass(this.dataGrid.c('selected'))
   }
   render() {
     const { data, $container, container } = this
@@ -424,5 +489,6 @@ function naturalOrderComparator(a: any, b: any) {
   }
 }
 
-module.exports = DataGrid
-module.exports.default = DataGrid
+if (typeof module !== 'undefined') {
+  exportCjs(module, DataGrid)
+}

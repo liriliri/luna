@@ -95,6 +95,7 @@ const def = story(
 
     let selectedLog
     console.on('select', (log) => (selectedLog = log))
+    console.on('deselect', () => selectedLog = null)
     button('Copy Selected', () => {
       if (selectedLog) {
         selectedLog.copy()

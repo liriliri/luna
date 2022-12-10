@@ -39,7 +39,8 @@
     text-align: left;
     background: $darker-background-color;
     &.sortable {
-      &:hover {
+      &:hover,
+      &:active {
         background: #e6e6e6;
       }
     }
@@ -63,6 +64,15 @@
 
 .data-container {
   overflow-y: auto;
+  &:focus {
+    .node.selected {
+      color: #fff;
+      background: #1a73e8;
+    }
+  }
+  .node.selected {
+    background: #ddd;
+  }
   tr:nth-child(even) {
     background: #f2f7fd;
   }
@@ -89,6 +99,14 @@
     }
   }
   .data-container {
+    &:focus {
+      .node.selected {
+        background: #0e639c;
+      }
+    }
+    .node.selected {
+      background: #393939;
+    }
     tr:nth-child(even) {
       background: #0b2544;
     }

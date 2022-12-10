@@ -89,7 +89,17 @@ const def = story(
       },
     ]
 
-    each(data, (item) => dataGrid.append(item))
+    each(data, (item) => dataGrid.append(item, { selectable: true }))
+
+    let selectedNode
+    dataGrid.on('select', (node) => (selectedNode = node))
+    dataGrid.on('deselect', () => (selectedNode = null))
+    button('Remove Selected', () => {
+      if (selectedNode) {
+        dataGrid.remove(selectedNode)
+      }
+      return false
+    })
 
     button('Clear', () => {
       dataGrid.clear()

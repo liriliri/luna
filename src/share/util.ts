@@ -119,9 +119,10 @@ export function measuredScrollbarWidth() {
   )
   innerDiv.setAttribute('style', 'height: 200px')
   scrollDiv.appendChild(innerDiv)
-  document.body.appendChild(scrollDiv)
+  const container = document.body || document.documentElement
+  container.appendChild(scrollDiv)
   scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth
-  document.body.removeChild(scrollDiv)
+  container.removeChild(scrollDiv)
   return scrollbarWidth
 }
 

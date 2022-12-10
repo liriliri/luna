@@ -152,7 +152,7 @@ export default class Tab extends Component<IOptions> {
     }
 
     const scrollbarHeight = measuredScrollbarWidth()
-    $tabs.css('height', $tabs.offset().height + scrollbarHeight + 'px')
+    $tabs.css('height', this.options.height - 1 + scrollbarHeight + 'px')
   }
   private updateSlider() {
     const { $slider, $tabs, c } = this

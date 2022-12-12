@@ -628,6 +628,8 @@ export default class Log extends Emitter {
         args[i] = `<span class="${c('null')}">null</span>`
       } else if (isNum(val)) {
         args[i] = `<span class="${c('number')}">${toStr(val)}</span>`
+      } else if (typeof val === 'bigint') {
+        args[i] = `<span class="${c('number')}">${toStr(val)}n</span>`
       } else if (isBool(val)) {
         args[i] = `<span class="${c('boolean')}">${toStr(val)}</span>`
       } else if (isSymbol(val)) {

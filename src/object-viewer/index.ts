@@ -19,7 +19,6 @@ import filter from 'licia/filter'
 import chunk from 'licia/chunk'
 import toStr from 'licia/toStr'
 import noop from 'licia/noop'
-import extend from 'licia/extend'
 import naturalSort from 'licia/naturalSort'
 import Visitor from './Visitor'
 import { encode, getFnAbstract } from './util'
@@ -353,6 +352,6 @@ function getObjAbstract(data: any, type: string) {
 }
 
 if (typeof module !== 'undefined') {
-  extend(ObjectViewer, exports)
+  ;(ObjectViewer as any).Static = Static
   exportCjs(module, ObjectViewer)
 }

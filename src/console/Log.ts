@@ -44,10 +44,14 @@ import linkify from 'licia/linkify'
 import highlight from 'licia/highlight'
 import truncate from 'licia/truncate'
 import some from 'licia/some'
+import isNum from 'licia/isNum'
 import { getObjType } from './util'
 import stripIndent from 'licia/stripIndent'
 import toEl from 'licia/toEl'
 import uniqId from 'licia/uniqId'
+import isBool from 'licia/isBool'
+import isSymbol from 'licia/isSymbol'
+import isRegExp from 'licia/isRegExp'
 import Console from './index'
 
 export interface IGroup {
@@ -602,23 +606,32 @@ export default class Log extends Emitter {
       )
     )
   }
-  private formatCommon(args: any[], { htmlForEl = true } = {}) {
+  private formatCommon(args: any[]) {
+    const { c } = this.console
     const needStrSubstitution = isStr(args[0]) && args.length !== 1
     if (needStrSubstitution) args = this.substituteStr(args)
 
     for (let i = 0, len = args.length; i < len; i++) {
       let val = args[i]
 
-      if (isEl(val) && htmlForEl) {
+      if (isEl(val)) {
         args[i] = this.formatEl(val)
       } else if (isFn(val)) {
         args[i] = this.formatFn(val)
+      } else if (isRegExp(val)) {
+        args[i] = `<span class="${c('regexp')}">${escape(toStr(val))}</span>`
       } else if (isObj(val)) {
         args[i] = this.formatPreview(val)
       } else if (isUndef(val)) {
-        args[i] = 'undefined'
+        args[i] = `<span class="${c('undefined')}">undefined</span>`
       } else if (isNull(val)) {
-        args[i] = 'null'
+        args[i] = `<span class="${c('null')}">null</span>`
+      } else if (isNum(val)) {
+        args[i] = `<span class="${c('number')}">${toStr(val)}</span>`
+      } else if (isBool(val)) {
+        args[i] = `<span class="${c('boolean')}">${toStr(val)}</span>`
+      } else if (isSymbol(val)) {
+        args[i] = `<span class="${c('symbol')}">${escape(toStr(val))}</span>`
       } else {
         val = toStr(val)
         if (i !== 0 || !needStrSubstitution) {
@@ -637,7 +650,10 @@ export default class Log extends Emitter {
     return args.join(' ')
   }
   private formatDir(args: any[]) {
-    return this.formatCommon(args, { htmlForEl: false })
+    if (isObj(args[0])) {
+      return this.formatPreview(args[0])
+    }
+    return this.formatCommon(args)
   }
   private formatTableVal(val: any) {
     const { c } = this.console
@@ -667,6 +683,9 @@ export default class Log extends Emitter {
         type = `Array${type}`
       }
     }
+    if (type === 'RegExp') {
+      type = toStr(obj)
+    }
 
     return (
       `<div class="${c('preview')}" data-id="${id}">` +
@@ -675,7 +694,7 @@ export default class Log extends Emitter {
         'icon icon-caret-right'
       )}"></span></div>` +
       `<span class="${c('preview-content-container')}">` +
-      `<span class="${c('descriptor')}">${type}</span> ` +
+      `<span class="${c('descriptor')}">${escape(type)}</span> ` +
       `<span class="${c('object-preview')}">${
         noPreview
           ? ''

@@ -47,6 +47,11 @@ const def = story(
 
     function logMessage() {
       console.log('log')
+      console.log('number:', 5)
+      console.log('boolean:', true, false)
+      console.log('null:', null)
+      console.log('undefined:', undefined)
+      console.log('regexp:', /test/gi)
       for (let i = 0; i < 10; i++) {
         console.log('repeat log')
       }
@@ -95,7 +100,7 @@ const def = story(
 
     let selectedLog
     console.on('select', (log) => (selectedLog = log))
-    console.on('deselect', () => selectedLog = null)
+    console.on('deselect', () => (selectedLog = null))
     button('Copy Selected', () => {
       if (selectedLog) {
         selectedLog.copy()

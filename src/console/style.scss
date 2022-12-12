@@ -172,6 +172,20 @@ $console-selected-border-dark: #4173b4;
     & > * {
       vertical-align: top;
     }
+    .undefined,
+    .null {
+      color: #5e5e5e;
+    }
+    .number {
+      color: #1c00cf;
+    }
+    .boolean {
+      color: #0d22aa;
+    }
+    .symbol,
+    .regexp {
+      color: #881391;
+    }
   }
   .data-grid,
   .dom-viewer {
@@ -302,6 +316,20 @@ $console-selected-border-dark: #4173b4;
     .count {
       background: #42597f;
       color: #949494;
+    }
+    .log-content {
+      .undefined,
+      .null {
+        color: #7f7f7f;
+      }
+      .number,
+      .boolean {
+        color: #9980ff;
+      }
+      .symbol,
+      .regexp {
+        color: #e36eec;
+      }
     }
   }
   .icon-container {

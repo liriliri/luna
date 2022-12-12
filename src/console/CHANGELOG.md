@@ -1,3 +1,8 @@
+## 1.2.0 (12 Dec 2022)
+
+* feat: support bigint
+* fix: primitives highlight
+
 ## 1.1.3 (9 Dec 2022)
 
 * feat: support esm

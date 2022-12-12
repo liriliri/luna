@@ -6,6 +6,7 @@
   font-size: $font-size-s;
   border: 1px solid $border-color;
   overflow: hidden;
+  outline: none;
 
   &.theme-dark {
     color: $foreground-color-dark;
@@ -51,6 +52,19 @@
     cursor: default;
     user-select: text;
   }
+
+  &:focus {
+    .node.selected {
+      color: #fff;
+      background: #1a73e8;
+    }
+  }
+
+  &:focus.theme-dark {
+    .node.selected {
+      background: #0e639c;
+    }
+  }
 }
 
 .header-container,
@@ -64,12 +78,6 @@
 
 .data-container {
   overflow-y: auto;
-  &:focus {
-    .node.selected {
-      color: #fff;
-      background: #1a73e8;
-    }
-  }
   .node.selected {
     background: #ddd;
   }
@@ -99,11 +107,6 @@
     }
   }
   .data-container {
-    &:focus {
-      .node.selected {
-        background: #0e639c;
-      }
-    }
     .node.selected {
       background: #393939;
     }

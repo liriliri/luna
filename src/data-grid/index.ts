@@ -88,6 +88,7 @@ export default class DataGrid extends Component<IOptions> {
   private isAscending = true
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'data-grid' }, options)
+    this.$container.attr('tabindex', '0')
 
     this.resizeSensor = new ResizeSensor(container)
     this.onResize = throttle(() => {
@@ -132,6 +133,7 @@ export default class DataGrid extends Component<IOptions> {
   destroy() {
     super.destroy()
     this.resizeSensor.destroy()
+    this.$container.rmAttr('tabindex')
   }
   /** Remove row data. */
   remove(node: DataGridNode) {
@@ -369,7 +371,7 @@ export default class DataGrid extends Component<IOptions> {
             </tbody>
           </table>
         </div>
-        <div class="data-container" tabindex="0">
+        <div class="data-container">
           <table class="data">
             <colgroup></colgroup>
             <tbody>

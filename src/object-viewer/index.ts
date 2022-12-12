@@ -25,6 +25,7 @@ import Visitor from './Visitor'
 import { encode, getFnAbstract } from './util'
 import Static from './Static'
 import Component, { IComponentOptions } from '../share/Component'
+import { exportCjs } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -232,11 +233,7 @@ export default class ObjectViewer extends Component<IOptions> {
     if (valType === 'RegExp') t = 'regexp'
     if (valType === 'Number') t = 'number'
 
-    if (valType === 'Number' || valType === 'RegExp') {
-      return `<li>${wrapKey(key)}<span class="${c(t)}">${encode(
-        val.value
-      )}</span></li>`
-    } else if (valType === 'Undefined' || valType === 'Symbol') {
+    if (valType === 'Undefined' || valType === 'Symbol') {
       return `<li>${wrapKey(key)}<span class="${c('special')}">${lowerCase(
         valType
       )}</span></li>`
@@ -257,7 +254,12 @@ export default class ObjectViewer extends Component<IOptions> {
         id = visitor.set(val, extra)
         this.map[id] = val
       }
-      const objAbstract = getObjAbstract(val, valType) || upperFirst(t)
+      let objAbstract = 'Object'
+      if (t === 'regexp') {
+        objAbstract = `<span class="${c(t)}">${encode(val)}`
+      } else {
+        objAbstract = encode(getObjAbstract(val, valType) || upperFirst(t))
+      }
 
       const icon = firstLevel
         ? ''
@@ -337,9 +339,6 @@ export default class ObjectViewer extends Component<IOptions> {
 
 export { Static }
 
-module.exports = extend(ObjectViewer, exports)
-module.exports.default = ObjectViewer
-
 function getObjAbstract(data: any, type: string) {
   if (!type) return
 
@@ -351,4 +350,9 @@ function getObjAbstract(data: any, type: string) {
   }
 
   return type
+}
+
+if (typeof module !== 'undefined') {
+  extend(ObjectViewer, exports)
+  exportCjs(module, ObjectViewer)
 }

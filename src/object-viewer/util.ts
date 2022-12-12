@@ -2,8 +2,8 @@ import toStr from 'licia/toStr'
 import trim from 'licia/trim'
 import escape from 'licia/escape'
 
-export const encode = (str: string) => {
-  return escape(toStr(str))
+export const encode = (val: any) => {
+  return escape(toStr(val))
     .replace(/\n/g, '↵')
     .replace(/\f|\r|\t/g, '')
 }

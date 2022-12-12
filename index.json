@@ -56,7 +56,7 @@
     "dependencies": []
   },
   "data-grid": {
-    "version": "0.2.1",
+    "version": "0.3.1",
     "style": true,
     "icon": false,
     "test": true,
@@ -177,7 +177,7 @@
   },
   "object-viewer": {
     "icon": true,
-    "version": "0.2.2",
+    "version": "0.2.3",
     "style": true,
     "test": true,
     "install": false,
@@ -232,7 +232,7 @@
     "dependencies": []
   },
   "tab": {
-    "version": "0.1.0",
+    "version": "0.1.2",
     "style": true,
     "icon": false,
     "test": true,

@@ -684,9 +684,10 @@ export default class Log extends Emitter {
       if (noPreview) {
         type = `Array${type}`
       }
-    }
-    if (type === 'RegExp') {
+    } else if (type === 'RegExp') {
       type = toStr(obj)
+    } else if (isEl(obj)) {
+      type = this.formatElName(obj)
     }
 
     return (
@@ -775,6 +776,24 @@ export default class Log extends Emitter {
   }
   private formatFn(val: types.AnyFn) {
     return `<pre style="display:inline">${this.formatJs(val.toString())}</pre>`
+  }
+  private formatElName(val: HTMLElement) {
+    const { id, className } = val
+
+    let ret = val.tagName.toLowerCase()
+
+    if (id !== '') ret += `#${id}`
+
+    if (isStr(className)) {
+      let classes = ''
+      each(className.split(/\s+/g), (val) => {
+        if (val.trim() === '') return
+        classes += `.${val}`
+      })
+      ret += classes
+    }
+
+    return ret
   }
   private formatEl(val: HTMLElement) {
     const id = uniqId()

@@ -289,7 +289,7 @@ export default class DomViewer extends Component<IOptions> {
             }">${escape(value)}</span>"`
           : ''
       }</span>`
-    })
+    }).join('')
 
     let tail = ''
     if (data.hasTail) {

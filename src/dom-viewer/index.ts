@@ -13,6 +13,7 @@ import truncate from 'licia/truncate'
 import types from 'licia/types'
 import escape from 'licia/escape'
 import trim from 'licia/trim'
+import { exportCjs } from '../share/util'
 
 const emptyHighlightStyle = {
   comment: '',
@@ -91,7 +92,8 @@ export default class DomViewer extends Component<IOptions> {
     while (curNode) {
       if (curNode === options.node) {
         this.expand()
-        const childNodeDomViewer = this.childNodeDomViewers[childNodes.indexOf(childNode)]
+        const childNodeDomViewer =
+          this.childNodeDomViewers[childNodes.indexOf(childNode)]
         childNodeDomViewer.select(node)
         break
       }
@@ -208,8 +210,7 @@ export default class DomViewer extends Component<IOptions> {
     const { node } = this.options
 
     return (
-      node.nodeType === Node.ELEMENT_NODE &&
-      this.getChildNodes().length > 0
+      node.nodeType === Node.ELEMENT_NODE && this.getChildNodes().length > 0
     )
   }
   private getChildNodes() {
@@ -295,7 +296,7 @@ export default class DomViewer extends Component<IOptions> {
         rootDomViewer,
         ignore,
       })
-      this.childNodeDomViewers[idx] = domViewer 
+      this.childNodeDomViewers[idx] = domViewer
       this.addSubComponent(domViewer)
     })
 
@@ -442,5 +443,6 @@ function isUrlAttribute(el: HTMLElement, name: string) {
   return false
 }
 
-module.exports = DomViewer
-module.exports.default = DomViewer
+if (typeof module !== undefined) {
+  exportCjs(module, DomViewer)
+}

@@ -4,7 +4,7 @@
 [![Test coverage][codecov-image]][codecov-url]
 ![License][license-image]
 
-[ci-image]: https://img.shields.io/github/workflow/status/liriliri/luna/CI?style=flat-square
+[ci-image]: https://img.shields.io/github/actions/workflow/status/liriliri/luna/main.yml?branch=master&style=flat-square
 [ci-url]: https://github.com/liriliri/luna/actions/workflows/main.yml
 [codecov-image]: https://img.shields.io/codecov/c/github/liriliri/luna?style=flat-square
 [codecov-url]: https://codecov.io/github/liriliri/luna?branch=master

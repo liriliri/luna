@@ -1,3 +1,7 @@
+## 1.1.1 (16 Dec 2022)
+
+* fix: wrong css style
+
 ## 1.1.0 (16 Dec 2022)
 
 * feat: support select given node

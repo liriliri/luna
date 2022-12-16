@@ -31,6 +31,7 @@ export interface IOptions extends IComponentOptions {
   parent?: DomViewer | null
   isEndTag?: boolean
   rootContainer?: HTMLElement
+  rootDomViewer?: DomViewer
 }
 
 /**
@@ -47,6 +48,7 @@ export default class DomViewer extends Component<IOptions> {
   private isExpanded = false
   private isChildNodesRendered = false
   private observer: MutationObserver
+  private childNodeDomViewers: DomViewer[] = []
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'dom-viewer' }, options)
 
@@ -55,6 +57,7 @@ export default class DomViewer extends Component<IOptions> {
       parent: null,
       isEndTag: false,
       rootContainer: container,
+      rootDomViewer: this,
       ignore: () => false,
     })
 
@@ -64,13 +67,40 @@ export default class DomViewer extends Component<IOptions> {
       this.initObserver()
     }
   }
-  select = () => {
-    const { c } = this
-    $(this.options.rootContainer).find(c('.selected')).rmClass(c('selected'))
-    this.$tag.addClass(c('selected'))
+  /** Select given node. */
+  select(node?: ChildNode) {
+    const { c, options } = this
+
+    if (!node || (node && options.node === node)) {
+      if (this.$tag.hasClass(c('selected'))) {
+        return
+      }
+      $(this.options.rootContainer).find(c('.selected')).rmClass(c('selected'))
+      this.$tag.addClass(c('selected'))
+      options.rootDomViewer.emit('select', options.node)
+      return
+    }
+
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+      return
+    }
+
+    const childNodes = this.getChildNodes()
+    let childNode = node
+    let curNode = node.parentElement
+    while (curNode) {
+      if (curNode === options.node) {
+        this.expand()
+        const childNodeDomViewer = this.childNodeDomViewers[childNodes.indexOf(childNode)]
+        childNodeDomViewer.select(node)
+        break
+      }
+      childNode = curNode
+      curNode = curNode.parentElement
+    }
   }
   expand() {
-    if (!this.isExpandable()) {
+    if (!this.isExpandable() || this.isExpanded) {
       return
     }
     this.isExpanded = true
@@ -88,10 +118,10 @@ export default class DomViewer extends Component<IOptions> {
     $tag.addClass(c('expanded'))
     this.$children.rmClass(c('hidden'))
 
-    this.renderChildNodes(node as HTMLElement)
+    this.renderChildNodes()
   }
   collapse() {
-    if (!this.isExpandable()) {
+    if (!this.isExpandable() || !this.isExpanded) {
       return
     }
     this.isExpanded = false
@@ -120,6 +150,7 @@ export default class DomViewer extends Component<IOptions> {
     if (this.observer) {
       this.observer.disconnect()
     }
+    this.childNodeDomViewers = []
     super.destroy()
   }
   private initObserver() {
@@ -171,19 +202,20 @@ export default class DomViewer extends Component<IOptions> {
       })
     }
 
-    $tag.on('click', this.select)
+    $tag.on('click', () => this.select())
   }
   private isExpandable() {
     const { node } = this.options
 
     return (
       node.nodeType === Node.ELEMENT_NODE &&
-      this.getChildNodes(node as HTMLElement).length > 0
+      this.getChildNodes().length > 0
     )
   }
-  private getChildNodes(el: HTMLElement) {
+  private getChildNodes() {
     const { rootContainer, ignore } = this.options
-    let childNodes = toArr(el.childNodes)
+    const node = this.options.node as HTMLElement
+    let childNodes = toArr(node.childNodes)
     childNodes = filter(childNodes, (child) => {
       if (
         child.nodeType === Node.TEXT_NODE ||
@@ -242,27 +274,29 @@ export default class DomViewer extends Component<IOptions> {
       this.$children = $children
     }
   }
-  private renderChildNodes(node: HTMLElement) {
+  private renderChildNodes() {
+    const node = this.options.node as HTMLElement
     if (this.isChildNodesRendered) {
       return
     }
     this.isChildNodesRendered = true
 
     this.destroySubComponents()
-    const { rootContainer, ignore } = this.options
+    const { rootContainer, ignore, rootDomViewer } = this.options
     const $container = this.$children
     const container = $container.get(0)
 
-    const childNodes = this.getChildNodes(node)
-    each(childNodes, (node) => {
-      this.addSubComponent(
-        new DomViewer(container as HTMLElement, {
-          node,
-          parent: this,
-          rootContainer,
-          ignore,
-        })
-      )
+    const childNodes = this.getChildNodes()
+    each(childNodes, (node, idx) => {
+      const domViewer = new DomViewer(container as HTMLElement, {
+        node,
+        parent: this,
+        rootContainer,
+        rootDomViewer,
+        ignore,
+      })
+      this.childNodeDomViewers[idx] = domViewer 
+      this.addSubComponent(domViewer)
     })
 
     if (node) {
@@ -272,6 +306,7 @@ export default class DomViewer extends Component<IOptions> {
           parent: this,
           isEndTag: true,
           rootContainer,
+          rootDomViewer,
           ignore,
         })
       )

@@ -38,3 +38,9 @@ domViewer.expand()
 
 * ignore(AnyFn): Predicate function which removes the matching child nodes.
 * node(ChildNode): Html element to navigate.
+
+## Api
+
+### select(node?: ChildNode): void
+
+Select given node.

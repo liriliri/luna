@@ -202,7 +202,7 @@ export default class DataGrid extends Component<IOptions> {
     this.$dataContainer.css({ height })
   }
   private selectNode(node: DataGridNode | null) {
-    if (!node?.selectable) {
+    if (!isNull(node) && !node?.selectable) {
       return
     }
     if (this.selectedNode) {

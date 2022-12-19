@@ -36,9 +36,26 @@
   min-height: 16px;
   position: relative;
   z-index: 10;
-  &.selected {
+  outline: none;
+  &.selected,
+  &:hover {
     .selection {
       display: block;
+    }
+  }
+  &:hover {
+    .selection {
+      background: #f2f7fd;
+    }
+  }
+  &.selected {
+    .selection {
+      background: #e0e0e0;
+    }
+  }
+  &.selected:focus {
+    .selection {
+      background: #cfe8fc;
     }
   }
   .icon-arrow-down {
@@ -85,7 +102,6 @@
   top: 0;
   bottom: 0;
   z-index: -1;
-  background: #f2f7fd;
 }
 
 .children {
@@ -117,8 +133,22 @@
   .html-comment {
     color: #898989;
   }
-  .selection {
-    background: #083c69;
+  .tree-item {
+    &:hover {
+      .selection {
+        background: #083c69;
+      }
+    }
+    &.selected {
+      .selection {
+        background: #454545;
+      }
+    }
+    &.selected:focus {
+      .selection {
+        background: #073d69;
+      }
+    }
   }
   .text-node {
     @include code-color(true);

@@ -13,7 +13,7 @@ import truncate from 'licia/truncate'
 import types from 'licia/types'
 import escape from 'licia/escape'
 import trim from 'licia/trim'
-import { exportCjs } from '../share/util'
+import { exportCjs, drag } from '../share/util'
 
 const emptyHighlightStyle = {
   comment: '',
@@ -76,7 +76,11 @@ export default class DomViewer extends Component<IOptions> {
       if (this.$tag.hasClass(c('selected'))) {
         return
       }
-      $(this.options.rootContainer).find(c('.selected')).rmClass(c('selected'))
+      $(this.options.rootContainer)
+        .find(c('.selected'))
+        .rmClass(c('selected'))
+        .rmAttr('tabindex')
+      ;(this.$tag.attr('tabindex', '0').get(0) as HTMLElement).focus()
       this.$tag.addClass(c('selected'))
       options.rootDomViewer.emit('select', options.node)
       return
@@ -175,7 +179,13 @@ export default class DomViewer extends Component<IOptions> {
       }
 
       if (this.isExpandable()) {
-        this.isExpanded ? this.expand() : this.collapse()
+        if (this.isExpanded) {
+          this.isExpanded = false
+          this.expand()
+        } else {
+          this.isExpanded = true
+          this.collapse()
+        }
       } else {
         this.$children.addClass(c('hidden'))
         $tag.html(
@@ -204,7 +214,7 @@ export default class DomViewer extends Component<IOptions> {
       })
     }
 
-    $tag.on('click', () => this.select())
+    $tag.on(drag('start'), () => this.select())
   }
   private isExpandable() {
     const { node } = this.options

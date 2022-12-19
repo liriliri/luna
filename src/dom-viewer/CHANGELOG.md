@@ -1,3 +1,7 @@
+## 1.1.2 (19 Dec 2022)
+
+* fix: auto update if node deleted
+
 ## 1.1.1 (16 Dec 2022)
 
 * fix: wrong css style

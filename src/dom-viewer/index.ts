@@ -13,6 +13,7 @@ import truncate from 'licia/truncate'
 import types from 'licia/types'
 import escape from 'licia/escape'
 import trim from 'licia/trim'
+import every from 'licia/every'
 import { exportCjs, drag } from '../share/util'
 
 const emptyHighlightStyle = {
@@ -161,7 +162,9 @@ export default class DomViewer extends Component<IOptions> {
   }
   private initObserver() {
     this.observer = new MutationObserver((mutations) => {
-      each(mutations, (mutation) => this.handleMutation(mutation))
+      each(mutations, (mutation) => {
+        this.handleMutation(mutation)
+      })
     })
     this.observer.observe(this.options.node, {
       attributes: true,
@@ -171,10 +174,16 @@ export default class DomViewer extends Component<IOptions> {
   }
   private handleMutation(mutation: MutationRecord) {
     const { $tag, c } = this
-    const { node } = this.options
+    const { node, ignore } = this.options
 
     if (contain(['attributes', 'childList'], mutation.type)) {
       if (mutation.type === 'childList') {
+        if (
+          every(mutation.addedNodes, ignore) &&
+          every(mutation.removedNodes, ignore)
+        ) {
+          return
+        }
         this.isChildNodesRendered = false
       }
 

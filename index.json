@@ -73,7 +73,7 @@
   },
   "dom-viewer": {
     "icon": true,
-    "version": "1.2.1",
+    "version": "1.2.2",
     "style": true,
     "test": true,
     "install": false,

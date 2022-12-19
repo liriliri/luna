@@ -72,7 +72,7 @@ export default class DomViewer extends Component<IOptions> {
   }
   /** Select given node. */
   select(node?: ChildNode) {
-    const { c, options, childNodes } = this
+    const { c, options } = this
 
     if (!node || (node && options.node === node)) {
       if (this.$tag.hasClass(c('selected'))) {
@@ -98,7 +98,7 @@ export default class DomViewer extends Component<IOptions> {
       if (curNode === options.node) {
         this.expand()
         const childNodeDomViewer =
-          this.childNodeDomViewers[childNodes.indexOf(childNode)]
+          this.childNodeDomViewers[this.childNodes.indexOf(childNode)]
         childNodeDomViewer.select(node)
         break
       }

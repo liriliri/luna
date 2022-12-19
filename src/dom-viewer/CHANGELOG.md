@@ -1,3 +1,7 @@
+## 1.2.2 (20 Dec 2022)
+
+* fix: select node
+
 ## 1.2.1 (19 Dec 2022)
 
 * fix: deselect event

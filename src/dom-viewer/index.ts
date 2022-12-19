@@ -149,6 +149,9 @@ export default class DomViewer extends Component<IOptions> {
   destroy() {
     const { c } = this
 
+    if (this.$tag.hasClass(c('selected'))) {
+      this.options.rootDomViewer.emit('deselect')
+    }
     this.detach()
     if (this.observer) {
       this.observer.disconnect()

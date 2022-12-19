@@ -1,3 +1,7 @@
+## 1.2.1 (19 Dec 2022)
+
+* fix: deselect event
+
 ## 1.2.0 (19 Dec 2022)
 
 * feat: child nodes incremental rendering

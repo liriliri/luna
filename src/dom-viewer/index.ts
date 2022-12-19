@@ -14,7 +14,7 @@ import types from 'licia/types'
 import escape from 'licia/escape'
 import trim from 'licia/trim'
 import every from 'licia/every'
-import { exportCjs, drag } from '../share/util'
+import { exportCjs, drag, getPlatform } from '../share/util'
 
 const emptyHighlightStyle = {
   comment: '',
@@ -48,9 +48,10 @@ export default class DomViewer extends Component<IOptions> {
   private $tag: $.$
   private $children: $.$
   private isExpanded = false
-  private isChildNodesRendered = false
   private observer: MutationObserver
+  private childNodes: ChildNode[] = []
   private childNodeDomViewers: DomViewer[] = []
+  private endTagDomViewer?: DomViewer
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'dom-viewer' }, options)
 
@@ -71,7 +72,7 @@ export default class DomViewer extends Component<IOptions> {
   }
   /** Select given node. */
   select(node?: ChildNode) {
-    const { c, options } = this
+    const { c, options, childNodes } = this
 
     if (!node || (node && options.node === node)) {
       if (this.$tag.hasClass(c('selected'))) {
@@ -91,7 +92,6 @@ export default class DomViewer extends Component<IOptions> {
       return
     }
 
-    const childNodes = this.getChildNodes()
     let childNode = node
     let curNode = node.parentElement
     while (curNode) {
@@ -106,12 +106,66 @@ export default class DomViewer extends Component<IOptions> {
       curNode = curNode.parentElement
     }
   }
+  attach() {
+    this.container.appendChild(this.$tag.get(0))
+    if (this.$children) {
+      this.container.appendChild(this.$children.get(0))
+    }
+  }
+  isAttached() {
+    return !!this.$tag.get(0).parentNode
+  }
+  detach() {
+    this.$tag.remove()
+    if (this.$children) {
+      this.$children.remove()
+    }
+  }
   expand() {
     if (!this.isExpandable() || this.isExpanded) {
       return
     }
     this.isExpanded = true
 
+    this.renderExpandTag()
+
+    this.renderChildNodes()
+  }
+  collapse() {
+    if (!this.isExpandable() || !this.isExpanded) {
+      return
+    }
+    this.isExpanded = false
+
+    this.renderCollapseTag()
+  }
+  toggle = () => {
+    if (this.isExpanded) {
+      this.collapse()
+    } else {
+      this.expand()
+    }
+  }
+  destroy() {
+    const { c } = this
+
+    this.detach()
+    if (this.observer) {
+      this.observer.disconnect()
+    }
+    this.destroySubComponents()
+
+    if (this.options.rootDomViewer === this) {
+      this.$container
+        .rmClass(`luna-dom-viewer`)
+        .rmClass(c(`platform-${getPlatform()}`))
+        .rmClass(c(`theme-${this.options.theme}`))
+    }
+
+    this.emit('destroy')
+    this.removeAllListeners()
+  }
+  private renderExpandTag() {
     const { $tag, c } = this
     const { node } = this.options
 
@@ -124,15 +178,8 @@ export default class DomViewer extends Component<IOptions> {
     )
     $tag.addClass(c('expanded'))
     this.$children.rmClass(c('hidden'))
-
-    this.renderChildNodes()
   }
-  collapse() {
-    if (!this.isExpandable() || !this.isExpanded) {
-      return
-    }
-    this.isExpanded = false
-
+  private renderCollapseTag() {
     const { $tag, c } = this
     const { node } = this.options
 
@@ -145,20 +192,6 @@ export default class DomViewer extends Component<IOptions> {
       })
     )
     $tag.rmClass(c('expanded'))
-  }
-  toggle = () => {
-    if (this.isExpanded) {
-      this.collapse()
-    } else {
-      this.expand()
-    }
-  }
-  destroy() {
-    if (this.observer) {
-      this.observer.disconnect()
-    }
-    this.childNodeDomViewers = []
-    super.destroy()
   }
   private initObserver() {
     this.observer = new MutationObserver((mutations) => {
@@ -184,17 +217,11 @@ export default class DomViewer extends Component<IOptions> {
         ) {
           return
         }
-        this.isChildNodesRendered = false
+        this.renderChildNodes()
       }
 
       if (this.isExpandable()) {
-        if (this.isExpanded) {
-          this.isExpanded = false
-          this.expand()
-        } else {
-          this.isExpanded = true
-          this.collapse()
-        }
+        this.isExpanded ? this.renderExpandTag() : this.renderCollapseTag()
       } else {
         this.$children.addClass(c('hidden'))
         $tag.html(
@@ -296,32 +323,55 @@ export default class DomViewer extends Component<IOptions> {
   }
   private renderChildNodes() {
     const node = this.options.node as HTMLElement
-    if (this.isChildNodesRendered) {
-      return
-    }
-    this.isChildNodesRendered = true
 
-    this.destroySubComponents()
     const { rootContainer, ignore, rootDomViewer } = this.options
     const $container = this.$children
     const container = $container.get(0)
+    const oldChildNodes = this.childNodes
+    const oldChildNodeDomViewers = this.childNodeDomViewers
+
+    each(oldChildNodeDomViewers, (domViewer) => {
+      domViewer.detach()
+      this.removeSubComponent(domViewer)
+    })
+    if (this.endTagDomViewer) {
+      this.endTagDomViewer.detach()
+    }
 
     const childNodes = this.getChildNodes()
+    this.childNodes = childNodes
+    const childNodeDomViewers: DomViewer[] = []
+    this.childNodeDomViewers = childNodeDomViewers
     each(childNodes, (node, idx) => {
-      const domViewer = new DomViewer(container as HTMLElement, {
-        node,
-        parent: this,
-        rootContainer,
-        rootDomViewer,
-        ignore,
-      })
-      this.childNodeDomViewers[idx] = domViewer
+      const pos = oldChildNodes.indexOf(node)
+      let domViewer: DomViewer
+      if (pos > -1) {
+        domViewer = oldChildNodeDomViewers[pos]
+      } else {
+        domViewer = new DomViewer(container as HTMLElement, {
+          node,
+          parent: this,
+          rootContainer,
+          rootDomViewer,
+          ignore,
+        })
+      }
+      domViewer.attach()
+      childNodeDomViewers[idx] = domViewer
       this.addSubComponent(domViewer)
     })
 
+    each(oldChildNodeDomViewers, (domViewer) => {
+      if (!domViewer.isAttached()) {
+        domViewer.destroy()
+      }
+    })
+
     if (node) {
-      this.addSubComponent(
-        new DomViewer(container as HTMLElement, {
+      if (this.endTagDomViewer) {
+        this.endTagDomViewer.attach()
+      } else {
+        this.endTagDomViewer = new DomViewer(container as HTMLElement, {
           node,
           parent: this,
           isEndTag: true,
@@ -329,7 +379,8 @@ export default class DomViewer extends Component<IOptions> {
           rootDomViewer,
           ignore,
         })
-      )
+        this.addSubComponent(this.endTagDomViewer)
+      }
     }
   }
   private renderHtmlTag(data: IHtmlTagData) {

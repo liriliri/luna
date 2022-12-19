@@ -1,6 +1,6 @@
 {
   "name": "dom-viewer",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Dom tree navigator",
   "luna": {
     "icon": true

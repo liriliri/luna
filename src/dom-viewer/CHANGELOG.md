@@ -1,3 +1,7 @@
+## 1.2.3 (20 Dec 2022)
+
+* fix: element selected when scrolling by touch
+
 ## 1.2.2 (20 Dec 2022)
 
 * fix: select node

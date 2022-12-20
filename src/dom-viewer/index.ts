@@ -14,7 +14,7 @@ import types from 'licia/types'
 import escape from 'licia/escape'
 import trim from 'licia/trim'
 import every from 'licia/every'
-import { exportCjs, drag, getPlatform } from '../share/util'
+import { exportCjs, getPlatform, hasTouchSupport } from '../share/util'
 
 const emptyHighlightStyle = {
   comment: '',
@@ -253,7 +253,11 @@ export default class DomViewer extends Component<IOptions> {
       })
     }
 
-    $tag.on(drag('start'), () => this.select())
+    if (hasTouchSupport) {
+      $tag.on('click', () => this.select())
+    } else {
+      $tag.on('mousedown', () => this.select())
+    }
   }
   private isExpandable() {
     const { node } = this.options
@@ -291,7 +295,7 @@ export default class DomViewer extends Component<IOptions> {
     if (isEndTag) {
       $tag.html(
         c(
-          `<span class="html-tag" style="margin-left: -12px;">&lt;<span class="tag-name">/${(
+          `<span class="html-tag" style="margin-left: -15px;">&lt;<span class="tag-name">/${(
             node as HTMLElement
           ).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
         )

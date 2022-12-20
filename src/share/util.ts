@@ -59,7 +59,7 @@ function traverseTree(tree: any[], handler: any) {
   }
 }
 
-const hasTouchSupport = 'ontouchstart' in root
+export const hasTouchSupport = 'ontouchstart' in root
 const touchEvents: any = {
   start: 'touchstart',
   move: 'touchmove',

@@ -225,11 +225,11 @@
   },
   "syntax-highlighter": {
     "install": true,
-    "icon": true,
+    "dependencies": ["text-viewer"],
     "version": "1.0.0",
     "style": true,
-    "test": true,
-    "dependencies": []
+    "icon": false,
+    "test": true
   },
   "tab": {
     "version": "0.1.2",

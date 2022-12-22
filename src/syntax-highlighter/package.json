@@ -7,6 +7,8 @@
   },
   "luna": {
     "install": true,
-    "icon": true
+    "dependencies": [
+      "text-viewer"
+    ]
   }
 }

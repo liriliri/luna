@@ -3,15 +3,11 @@ import hljs from 'highlight.js/lib/core'
 import javascript from 'highlight.js/lib/languages/javascript'
 import xml from 'highlight.js/lib/languages/xml'
 import css from 'highlight.js/lib/languages/css'
-import $ from 'licia/$'
-import last from 'licia/last'
-import trim from 'licia/trim'
 import isEmpty from 'licia/isEmpty'
-import each from 'licia/each'
 import types from 'licia/types'
 import startWith from 'licia/startWith'
-import throttle from 'licia/throttle'
-import copy from 'licia/copy'
+import LunaTextViewer from 'luna-text-viewer'
+import { exportCjs } from '../share/util'
 
 hljs.configure({
   classPrefix: 'luna-syntax-highlighter-',
@@ -43,9 +39,7 @@ export interface IOptions extends IComponentOptions {
  * })
  */
 export default class SyntaxHighlighter extends Component {
-  private render: types.AnyFn
-  private $code: $.$
-  private $copy: $.$
+  private textViewer: LunaTextViewer
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'syntax-highlighter' }, options)
 
@@ -69,94 +63,32 @@ export default class SyntaxHighlighter extends Component {
       wrapLongLines: true,
     })
 
-    this.render = throttle(() => this._render(), 16)
-
-    this.initTpl()
-    this.$code = this.find('.code')
-    this.$copy = this.find('.copy')
-
-    if (this.options.code) {
-      this.render()
-    }
+    this.textViewer = new LunaTextViewer(container, {
+      text: this.getHighlightCode(this.options.code),
+      escape: false,
+      showLineNumbers: this.options.showLineNumbers,
+      wrapLongLines: this.options.wrapLongLines,
+    })
+    this.addSubComponent(this.textViewer)
 
     this.bindEvent()
   }
-  destroy() {
-    this.$container.off('scroll', this.updateCopyPos)
-    super.destroy()
-  }
-  private initTpl() {
-    this.$container.html(
-      this.c(
-        `<code class="code"></code><div class="copy"><span class="icon icon-copy"></span></div>`
-      )
-    )
-  }
   private bindEvent() {
-    this.on('optionChange', () => this.render())
-    this.$container.on('scroll', this.updateCopyPos)
-    this.$copy.on('click', this.copy)
-  }
-  private copy = () => {
-    const { c } = this
-
-    copy(this.options.code)
-    const $icon = this.$copy.find(c('.icon'))
-    $icon.addClass(c('icon-check')).rmClass(c('icon-copy'))
-    setTimeout(() => {
-      $icon.rmClass(c('icon-check')).addClass(c('icon-copy'))
-    }, 1000)
-  }
-  private updateCopyPos = () => {
-    const { container } = this
-
-    this.$copy.css({
-      top: container.scrollTop + 5,
-      right: -container.scrollLeft + 5,
+    this.on('optionChange', (name, val) => {
+      switch (name) {
+        case 'code':
+          val = this.getHighlightCode(val)
+          this.textViewer.setOption('text', val)
+          break
+        case 'showLineNumbers':
+        case 'wrapLongLines':
+          this.textViewer.setOption(name, val)
+          break
+      }
     })
   }
-  private _render() {
-    const { c, $copy, $code } = this
-    const { code, language, showLineNumbers, wrapLongLines } = this.options
-
-    if (wrapLongLines) {
-      $code.addClass(c('wrap-long-lines'))
-    } else {
-      $code.rmClass(c('wrap-long-lines'))
-    }
-
-    const highlightCode = hljs.highlight(code, { language }).value
-    if (!showLineNumbers) {
-      $code.rmClass(c('line-numbers'))
-      return this.$code.html(highlightCode)
-    }
-
-    $code.addClass(c('line-numbers'))
-    let lines = getLines(highlightCode)
-    if (isEmpty(lines)) {
-      lines = ['&nbsp;']
-    }
-    if (lines.length > 3) {
-      $copy.show()
-    } else {
-      $copy.hide()
-    }
-
-    if (!trim(last(lines))) {
-      lines.pop()
-    }
-    let body = ''
-    each(lines, (line, idx) => {
-      body += `<div class="${c('table-row')}"><div class="${c(
-        'line-number'
-      )}">${idx + 1}</div><div class="${c('line-code')}">${
-        line || ' '
-      }</div></div>`
-    })
-
-    $code.html(`<div class="${c('table')}">${body}</div>`)
-
-    this.updateCopyPos()
+  private getHighlightCode(code: string) {
+    return hljs.highlight(code, { language: this.options.language }).value
   }
   /**
    * Highlight.js registerLanguage.
@@ -174,14 +106,6 @@ export default class SyntaxHighlighter extends Component {
   }
 }
 
-const regBreakLine = /\r\n|\r|\n/g
-function getLines(code: string) {
-  if (code.length === 0) {
-    return []
-  }
-
-  return code.split(regBreakLine)
+if (typeof module !== 'undefined') {
+  exportCjs(module, SyntaxHighlighter)
 }
-
-module.exports = SyntaxHighlighter
-module.exports.default = SyntaxHighlighter

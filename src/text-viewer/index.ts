@@ -8,6 +8,7 @@ import types from 'licia/types'
 import throttle from 'licia/throttle'
 import copy from 'licia/copy'
 import escape from 'licia/escape'
+import stripHtmlTag from 'licia/stripHtmlTag'
 import { exportCjs } from '../share/util'
 
 /** IOptions */
@@ -75,8 +76,9 @@ export default class TextViewer extends Component {
   }
   private copy = () => {
     const { c } = this
+    const { text, escape } = this.options
 
-    copy(this.options.text)
+    copy(escape ? text : stripHtmlTag(text))
     const $icon = this.$copy.find(c('.icon'))
     $icon.addClass(c('icon-check')).rmClass(c('icon-copy'))
     setTimeout(() => {

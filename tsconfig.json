@@ -45,7 +45,8 @@
       "luna-retro-handheld": ["src/retro-handheld/index"],
       "luna-keyboard": ["src/keyboard/index"],
       "luna-markdown-editor": ["src/markdown-editor/index"],
-      "luna-tab": ["src/tab/index"]
+      "luna-tab": ["src/tab/index"],
+      "luna-text-viewer": ["src/text-viewer/index"]
     }
   }
 }

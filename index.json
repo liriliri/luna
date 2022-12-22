@@ -239,6 +239,14 @@
     "install": false,
     "dependencies": []
   },
+  "text-viewer": {
+    "icon": true,
+    "version": "0.0.1",
+    "style": true,
+    "test": true,
+    "install": false,
+    "dependencies": []
+  },
   "video-player": {
     "icon": true,
     "version": "0.1.0",

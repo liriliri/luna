@@ -1,0 +1,95 @@
+@import '../share/variable';
+
+.luna-text-viewer {
+  padding: 0;
+  unicode-bidi: embed;
+  position: relative;
+  overflow: auto;
+  border: 1px solid $border-color;
+  background: $background-color;
+  color: $foreground-color;
+  &.theme-dark {
+    color: #d9d9d9;
+    border-color: $border-color-dark;
+    background: $background-color-dark;
+  }
+  &:hover {
+    .copy {
+      opacity: 1;
+    }
+  }
+}
+
+.table {
+  display: table;
+  .line-number,
+  .line-code {
+    padding: 0;
+  }
+}
+
+.table-row {
+  display: table-row;
+}
+
+.line-number {
+  display: table-cell;
+  padding: 0 3px 0 8px !important;
+  text-align: right;
+  vertical-align: top;
+  user-select: none;
+  border-right: 1px solid $border-color;
+}
+
+.line-code {
+  display: table-cell;
+  padding-left: 4px !important;
+}
+
+.copy {
+  background: $background-color;
+  opacity: 0;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  line-height: 25px;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  .icon-check {
+    color: $success-color;
+  }
+}
+
+.text {
+  padding: 4px;
+  &.line-numbers {
+    padding: 0;
+  }
+  &.wrap-long-lines {
+    white-space: pre-wrap;
+  }
+  font-size: $font-size-s;
+  font-family: $font-family-code;
+  box-sizing: border-box;
+  white-space: pre;
+  display: block;
+}
+
+.theme-dark {
+  color-scheme: dark;
+  .copy,
+  .line-number {
+    border-color: $border-color-dark;
+  }
+  .copy .icon-check {
+    color: $success-color-dark;
+  }
+  .copy {
+    background-color: $background-color-dark;
+  }
+}

@@ -23,7 +23,7 @@
 .table {
   display: table;
   .line-number,
-  .line-code {
+  .line-text {
     padding: 0;
   }
 }
@@ -41,7 +41,7 @@
   border-right: 1px solid $border-color;
 }
 
-.line-code {
+.line-text {
   display: table-cell;
   padding-left: 4px !important;
 }

@@ -127,7 +127,7 @@ export default class TextViewer extends Component {
     each(lines, (line, idx) => {
       body += `<div class="${c('table-row')}"><div class="${c(
         'line-number'
-      )}">${idx + 1}</div><div class="${c('line-code')}">${
+      )}">${idx + 1}</div><div class="${c('line-text')}">${
         options.escape ? escape(line) : line || ' '
       }</div></div>`
     })

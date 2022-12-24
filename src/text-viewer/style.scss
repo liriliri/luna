@@ -59,7 +59,7 @@
   text-align: center;
   line-height: 25px;
   cursor: pointer;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s, top 0.3s;
   .icon-check {
     color: $success-color;
   }
@@ -72,6 +72,9 @@
   }
   &.wrap-long-lines {
     white-space: pre-wrap;
+    .line-text {
+      word-break: break-all;
+    }
   }
   font-size: $font-size-s;
   font-family: $font-family-code;

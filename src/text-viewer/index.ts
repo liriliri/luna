@@ -6,11 +6,12 @@ import isEmpty from 'licia/isEmpty'
 import each from 'licia/each'
 import types from 'licia/types'
 import throttle from 'licia/throttle'
+import debounce from 'licia/debounce'
 import copy from 'licia/copy'
 import escape from 'licia/escape'
 import unescape from 'licia/unescape'
 import stripHtmlTag from 'licia/stripHtmlTag'
-import { exportCjs } from '../share/util'
+import { exportCjs, hasTouchSupport } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -35,6 +36,7 @@ export interface IOptions extends IComponentOptions {
  */
 export default class TextViewer extends Component {
   private render: types.AnyFn
+  private updateCopyPos: types.AnyFn
   private $text: $.$
   private $copy: $.$
   constructor(container: HTMLElement, options: IOptions = {}) {
@@ -48,10 +50,15 @@ export default class TextViewer extends Component {
     })
 
     this.render = throttle(() => this._render(), 16)
+    this.updateCopyPos = debounce(() => this._updateCopyPos(), 300)
 
     this.initTpl()
     this.$text = this.find('.text')
     this.$copy = this.find('.copy')
+
+    if (hasTouchSupport) {
+      this.$copy.css('opacity', '1')
+    }
 
     if (this.options.text) {
       this.render()
@@ -86,7 +93,7 @@ export default class TextViewer extends Component {
       $icon.rmClass(c('icon-check')).addClass(c('icon-copy'))
     }, 1000)
   }
-  private updateCopyPos = () => {
+  private _updateCopyPos = () => {
     const { container } = this
 
     this.$copy.css({

@@ -26,6 +26,8 @@ export interface IOptions extends IComponentOptions {
   showLineNumbers?: boolean
   /** Wrap lone lines. */
   wrapLongLines?: boolean
+  /** Max viewer height. */
+  maxHeight?: number
 }
 
 /**
@@ -61,6 +63,7 @@ export default class SyntaxHighlighter extends Component {
       language,
       showLineNumbers: true,
       wrapLongLines: true,
+      maxHeight: Infinity,
     })
 
     this.textViewer = new LunaTextViewer(container, {
@@ -68,6 +71,7 @@ export default class SyntaxHighlighter extends Component {
       escape: false,
       showLineNumbers: this.options.showLineNumbers,
       wrapLongLines: this.options.wrapLongLines,
+      maxHeight: this.options.maxHeight,
     })
     this.addSubComponent(this.textViewer)
 
@@ -82,6 +86,7 @@ export default class SyntaxHighlighter extends Component {
           break
         case 'showLineNumbers':
         case 'wrapLongLines':
+        case 'maxHeight':
           this.textViewer.setOption(name, val)
           break
       }

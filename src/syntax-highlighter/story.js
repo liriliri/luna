@@ -3,15 +3,12 @@ import SyntaxHighlighter from 'luna-syntax-highlighter.js'
 import readme from './README.md'
 import changelog from './CHANGELOG.md'
 import story from '../share/story'
-import { text, boolean, optionsKnob } from '@storybook/addon-knobs'
+import { text, boolean, optionsKnob, number } from '@storybook/addon-knobs'
 import componentCode from '!!raw-loader!./index'
-import $ from 'licia/$'
 
 const def = story(
   'syntax-highlighter',
   (container) => {
-    $(container).css({ maxHeight: window.innerHeight - 50 })
-
     const code = text('Code', componentCode)
     const language = optionsKnob(
       'Language',
@@ -25,12 +22,18 @@ const def = story(
     )
     const showLineNumbers = boolean('Show Line Numbers', true)
     const wrapLongLines = boolean('Wrap Long Lines', true)
+    const maxHeight = number('Max Height', 400, {
+      range: true,
+      min: 50,
+      max: 2000,
+    })
 
     const syntaxHighlighter = new SyntaxHighlighter(container, {
       code,
       language,
       showLineNumbers,
       wrapLongLines,
+      maxHeight,
     })
 
     return syntaxHighlighter

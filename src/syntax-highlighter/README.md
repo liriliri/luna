@@ -43,6 +43,7 @@ syntaxHighlighter.setOption({
 
 * code(string): Code to highlight.
 * language(string): Language to highlight code in.
+* maxHeight(number): Max viewer height.
 * showLineNumbers(boolean): Show line numbers.
 * wrapLongLines(boolean): Wrap lone lines.
 

@@ -23,6 +23,8 @@ export interface IOptions extends IComponentOptions {
   showLineNumbers?: boolean
   /** Wrap lone lines. */
   wrapLongLines?: boolean
+  /** Max viewer height. */
+  maxHeight?: number
 }
 
 /**
@@ -31,7 +33,7 @@ export interface IOptions extends IComponentOptions {
  * @example
  * const textViewer = new LunaTextViewer(container)
  * textViewer.setOption({
- *   text: 'const a = 1;',
+ *   text: 'Luna Text Viewer',
  * })
  */
 export default class TextViewer extends Component {
@@ -39,6 +41,7 @@ export default class TextViewer extends Component {
   private updateCopyPos: types.AnyFn
   private $text: $.$
   private $copy: $.$
+  private lineNum = 0
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'text-viewer' }, options)
 
@@ -47,6 +50,7 @@ export default class TextViewer extends Component {
       escape: true,
       showLineNumbers: true,
       wrapLongLines: true,
+      maxHeight: Infinity,
     })
 
     this.render = throttle(() => this._render(), 16)
@@ -65,10 +69,56 @@ export default class TextViewer extends Component {
     }
 
     this.bindEvent()
+    this.updateHeight()
+  }
+  /** Append text. */
+  append(text: string) {
+    const { options, $copy, c, $text } = this
+    const { showLineNumbers } = options
+    this.options.text += text
+
+    if (!showLineNumbers) {
+      return this.$text.append(options.escape ? escape(text) : text)
+    }
+
+    let lines = getLines(text)
+    if (isEmpty(lines)) {
+      lines = ['&nbsp;']
+    }
+
+    if (!trim(last(lines))) {
+      lines.pop()
+    }
+    let body = ''
+    each(lines, (line, idx) => {
+      this.lineNum += 1
+      body += `<div class="${c('table-row')}"><div class="${c(
+        'line-number'
+      )}">${this.lineNum}</div><div class="${c('line-text')}">${
+        options.escape ? escape(line) : line || ' '
+      }</div></div>`
+    })
+
+    $text.find(c('.table')).append(body)
+
+    $copy.hide()
+    if ($text.offset().height > 40) {
+      $copy.show()
+    }
+
+    this.updateCopyPos()
   }
   destroy() {
     this.$container.off('scroll', this.updateCopyPos)
     super.destroy()
+  }
+  private updateHeight() {
+    const { maxHeight } = this.options
+    if (maxHeight > 0 && maxHeight !== Infinity) {
+      this.$text.css('max-height', maxHeight)
+    } else {
+      this.$text.css('max-height', 'none')
+    }
   }
   private initTpl() {
     this.$container.html(
@@ -78,7 +128,16 @@ export default class TextViewer extends Component {
     )
   }
   private bindEvent() {
-    this.on('optionChange', () => this.render())
+    this.on('optionChange', (name) => {
+      switch (name) {
+        case 'maxHeight':
+          this.updateHeight()
+          break
+        default:
+          this.render()
+          break
+      }
+    })
     this.$container.on('scroll', this.updateCopyPos)
     this.$copy.on('click', this.copy)
   }
@@ -102,8 +161,8 @@ export default class TextViewer extends Component {
     })
   }
   private _render() {
-    const { c, $copy, $text, options } = this
-    const { text, showLineNumbers, wrapLongLines } = options
+    const { c, $text, options } = this
+    const { text, wrapLongLines, showLineNumbers } = options
 
     if (wrapLongLines) {
       $text.addClass(c('wrap-long-lines'))
@@ -113,35 +172,13 @@ export default class TextViewer extends Component {
 
     if (!showLineNumbers) {
       $text.rmClass(c('line-numbers'))
-      return this.$text.html(options.escape ? escape(text) : text)
-    }
-
-    $text.addClass(c('line-numbers'))
-    let lines = getLines(text)
-    if (isEmpty(lines)) {
-      lines = ['&nbsp;']
-    }
-    if (lines.length > 3) {
-      $copy.show()
     } else {
-      $copy.hide()
+      $text.addClass(c('line-numbers'))
     }
 
-    if (!trim(last(lines))) {
-      lines.pop()
-    }
-    let body = ''
-    each(lines, (line, idx) => {
-      body += `<div class="${c('table-row')}"><div class="${c(
-        'line-number'
-      )}">${idx + 1}</div><div class="${c('line-text')}">${
-        options.escape ? escape(line) : line || ' '
-      }</div></div>`
-    })
-
-    $text.html(`<div class="${c('table')}">${body}</div>`)
-
-    this.updateCopyPos()
+    $text.html(`<div class="${c('table')}"></div>`)
+    this.lineNum = 0
+    this.append(text)
   }
 }
 

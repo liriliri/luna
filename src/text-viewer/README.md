@@ -31,13 +31,20 @@ import LunaTextViewer from 'luna-text-viewer'
 ```javascript
 const textViewer = new LunaTextViewer(container)
 textViewer.setOption({
-  text: 'const a = 1;',
+  text: 'Luna Text Viewer',
 })
 ```
 
 ## Configuration
 
 * escape(boolean): Whether to escape text or not.
+* maxHeight(number): Max viewer height.
 * showLineNumbers(boolean): Show line numbers.
 * text(string): Text to view.
 * wrapLongLines(boolean): Wrap lone lines.
+
+## Api
+
+### append(text: string): undefined | $
+
+Append text.

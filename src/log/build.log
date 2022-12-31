@@ -1,0 +1,26 @@
+Browserslist: caniuse-lite is outdated. Please run:
+  npx browserslist@latest --update-db
+  Why you should do it regularly: https://github.com/browserslist/browserslist#browsers-data-updating
+Hash: [1m769fc2e17fda24d6a10f[39m[22m
+Version: webpack [1m4.46.0[39m[22m
+Time: [1m8996[39m[22mms
+Built at: 2022/12/31 [1m22:20:33[39m[22m
+           [1mAsset[39m[22m       [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m                 [1m[39m[22m[1mChunk Names[39m[22m
+    [1m[32mluna-log.css[39m[22m   41 bytes       [1m0[39m[22m  [1m[32m[emitted][39m[22m        main
+[1m[32mluna-log.css.map[39m[22m  109 bytes       [1m0[39m[22m  [1m[32m[emitted] [dev][39m[22m  main
+     [1m[32mluna-log.js[39m[22m   29.5 KiB       [1m0[39m[22m  [1m[32m[emitted][39m[22m        main
+ [1m[32mluna-log.js.map[39m[22m    111 KiB       [1m0[39m[22m  [1m[32m[emitted] [dev][39m[22m  main
+Entrypoint [1mmain[39m[22m = [1m[32mluna-log.css[39m[22m [1m[32mluna-log.js[39m[22m [1m[32mluna-log.css.map[39m[22m [1m[32mluna-log.js.map[39m[22m
+[28] [1m./src/share/util.ts[39m[22m 5.11 KiB {[1m[33m0[39m[22m}[1m[32m [built][39m[22m
+[31] [1mmulti ./src/log/style.scss ./src/log/index.ts[39m[22m 40 bytes {[1m[33m0[39m[22m}[1m[32m [built][39m[22m
+[32] [1m./src/log/style.scss[39m[22m 39 bytes {[1m[33m0[39m[22m}[1m[32m [built][39m[22m
+[33] [1m./src/log/index.ts[39m[22m 2.57 KiB {[1m[33m0[39m[22m}[1m[32m [built][39m[22m
+[34] [1m(webpack)/buildin/module.js[39m[22m 497 bytes {[1m[33m0[39m[22m}[1m[32m [built][39m[22m
+[35] [1m./src/share/Component.ts[39m[22m 4.44 KiB {[1m[33m0[39m[22m}[1m[32m [built][39m[22m
+[76] [1m(webpack)/buildin/global.js[39m[22m 472 bytes {[1m[33m0[39m[22m}[1m[32m [built][39m[22m
+[91] [1mexternal {"root":"LunaTextViewer","commonjs":"luna-text-viewer","commonjs2":"luna-text-viewer","amd":"luna-text-viewer"}[39m[22m 42 bytes {[1m[33m0[39m[22m}[1m[32m [built][39m[22m
+    + 85 hidden modules
+Child [1mmini-css-extract-plugin node_modules/css-loader/dist/cjs.js!node_modules/postcss-loader/src/index.js??ref--5-2!node_modules/sass-loader/dist/cjs.js!src/log/style.scss[39m[22m:
+    Entrypoint [1mmini-css-extract-plugin[39m[22m = [1m[32m*[39m[22m
+    [0] [1m./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/src??ref--5-2!./node_modules/sass-loader/dist/cjs.js!./src/log/style.scss[39m[22m 235 bytes {[1m[33m0[39m[22m}[1m[32m [built][39m[22m
+        + 1 hidden module

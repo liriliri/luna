@@ -1,0 +1,11 @@
+{
+  "name": "log",
+  "version": "0.1.0",
+  "description": "Terminal log viewer",
+  "luna": {
+    "dependencies": [
+      "text-viewer"
+    ],
+    "style": false
+  }
+}

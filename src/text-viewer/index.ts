@@ -178,6 +178,7 @@ export default class TextViewer extends Component {
 
     $text.html(`<div class="${c('table')}"></div>`)
     this.lineNum = 0
+    this.options.text = ''
     this.append(text)
   }
 }

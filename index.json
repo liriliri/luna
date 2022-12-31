@@ -111,6 +111,14 @@
     "install": false,
     "dependencies": []
   },
+  "log": {
+    "dependencies": ["text-viewer"],
+    "style": false,
+    "version": "0.1.0",
+    "icon": false,
+    "test": true,
+    "install": false
+  },
   "markdown-editor": {
     "dependencies": ["markdown-viewer"],
     "icon": true,

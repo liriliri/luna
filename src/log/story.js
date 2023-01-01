@@ -1,4 +1,3 @@
-import 'luna-log.css'
 import Log from 'luna-log.js'
 import readme from './README.md'
 import story from '../share/story'

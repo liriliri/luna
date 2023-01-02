@@ -5,7 +5,7 @@ import toEl from 'licia/toEl'
 import Console from 'luna-console.js'
 import readme from './README.md'
 import changelog from './CHANGELOG.md'
-import { button, number, boolean, text } from '@storybook/addon-knobs'
+import { button, number, boolean, text, array } from '@storybook/addon-knobs'
 import story from '../share/story'
 
 const def = story(
@@ -30,6 +30,8 @@ const def = story(
       step: 100,
     })
 
+    const filter = text('Filter', '')
+    const level = array('Level', ['verbose', 'info', 'warning', 'error'])
     const asyncRender = boolean('Asynchronous Rendering', true)
     const showHeader = boolean('Show Log Time and From', false)
     const unenumerable = boolean('Show Unenumerable', true)
@@ -43,6 +45,8 @@ const def = story(
       accessGetter,
       unenumerable,
       lazyEvaluation,
+      filter,
+      level,
     })
 
     function logMessage() {

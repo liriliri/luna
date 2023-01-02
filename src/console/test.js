@@ -139,33 +139,7 @@ test('console', (container) => {
     console.log(obj)
     expect(logs().length).to.equal(1)
 
-    console.setOption('filter', 'all')
-  })
-
-  it('filter all error warn log', function () {
-    console.log('log')
-    console.error('error')
-    console.warn('warn')
-    console.debug('debug')
-    expect(logs().length).to.equal(4)
-
-    console.setOption('filter', 'log')
-    expect(logs().length).to.equal(1)
-    expect(log(0).get(0).log.type).to.equal('log')
-
-    console.setOption('filter', 'error')
-    expect(logs().length).to.equal(1)
-    expect(log(0).get(0).log.type).to.equal('error')
-
-    console.setOption('filter', 'warn')
-    expect(logs().length).to.equal(1)
-    expect(log(0).get(0).log.type).to.equal('warn')
-
-    console.setOption('filter', 'debug')
-    expect(logs().length).to.equal(1)
-    expect(log(0).get(0).log.type).to.equal('debug')
-
-    console.setOption('filter', 'all')
+    console.setOption('filter', '')
   })
 
   it('filter regex', function () {
@@ -177,7 +151,33 @@ test('console', (container) => {
     expect(logs().length).to.equal(1)
     expect(logContent(0).text()).to.include('test2')
 
-    console.setOption('filter', 'all')
+    console.setOption('filter', '')
+  })
+
+  it('level', function () {
+    console.log('log')
+    console.error('error')
+    console.warn('warn')
+    console.debug('debug')
+    expect(logs().length).to.equal(4)
+
+    console.setOption('level', 'info')
+    expect(logs().length).to.equal(1)
+    expect(log(0).get(0).log.type).to.equal('log')
+
+    console.setOption('level', 'error')
+    expect(logs().length).to.equal(1)
+    expect(log(0).get(0).log.type).to.equal('error')
+
+    console.setOption('level', 'warning')
+    expect(logs().length).to.equal(1)
+    expect(log(0).get(0).log.type).to.equal('warn')
+
+    console.setOption('level', 'verbose')
+    expect(logs().length).to.equal(1)
+    expect(log(0).get(0).log.type).to.equal('debug')
+
+    console.setOption('level', ['verbose', 'info', 'warning', 'error'])
   })
 
   it('options max number', function () {

@@ -51,6 +51,7 @@ console.log('luna')
 * asyncRender(boolean): Asynchronous rendering.
 * filter(string | RegExp | AnyFn): Log filter.
 * lazyEvaluation(boolean): Lazy evaluation for objects.
+* level(string | string[]): Log level, verbose, info, warning and error.
 * maxNum(number): Max log number, zero means infinite.
 * showHeader(boolean): Show time and from.
 * unenumerable(boolean): Show unenumerable properties.

@@ -27,6 +27,7 @@ import types from 'licia/types'
 import isNull from 'licia/isNull'
 import Component, { IComponentOptions } from '../share/Component'
 import raf from 'licia/raf'
+import trim from 'licia/trim'
 import { exportCjs } from '../share/util'
 
 const u = navigator.userAgent
@@ -57,6 +58,8 @@ export interface IOptions extends IComponentOptions {
   lazyEvaluation?: boolean
   /** Log filter. */
   filter?: string | RegExp | types.AnyFn
+  /** Log level, verbose, info, warning and error. */
+  level?: string | string[]
 }
 
 /**
@@ -107,7 +110,8 @@ export default class Console extends Component<IOptions> {
       maxNum: 0,
       asyncRender: true,
       showHeader: false,
-      filter: 'all',
+      filter: '',
+      level: ['verbose', 'info', 'warning', 'error'],
       accessGetter: false,
       unenumerable: true,
       lazyEvaluation: true,
@@ -586,23 +590,27 @@ export default class Console extends Component<IOptions> {
     return ret
   }
   private filterLog(log: Log) {
-    const { filter } = this.options
-
-    if (filter === 'all') return true
+    const { filter, level } = this.options
 
     if (log.ignoreFilter) {
       return true
     }
 
-    if (isFn(filter)) {
-      return (filter as types.AnyFn)(log)
+    if (!contain(level, log.level)) {
+      return false
     }
 
-    if (isRegExp(filter)) {
-      return (filter as RegExp).test(lowerCase(log.text()))
+    if (filter) {
+      if (isFn(filter)) {
+        return (filter as types.AnyFn)(log)
+      } else if (isRegExp(filter)) {
+        return (filter as RegExp).test(lowerCase(log.text()))
+      } else if (isStr(filter) && trim(filter as string) !== '') {
+        return contain(log.text(), filter)
+      }
     }
 
-    return log.type === filter
+    return true
   }
   private collapseGroup(log: Log) {
     const { targetGroup } = log
@@ -665,6 +673,10 @@ export default class Console extends Component<IOptions> {
           }
           break
         case 'filter':
+          this.render()
+          break
+        case 'level':
+          this.options.level = toArr(val)
           this.render()
           break
       }

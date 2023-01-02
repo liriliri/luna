@@ -1,3 +1,8 @@
+## 1.3.0 (2 Jan 2022)
+
+* feat: support log level
+* fix: element dir name
+
 ## 1.2.0 (12 Dec 2022)
 
 * feat: support bigint

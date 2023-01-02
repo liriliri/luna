@@ -92,6 +92,7 @@ export default class Log extends Emitter {
   container: HTMLElement = h('div')
   id: number
   type: string
+  level: string
   group?: IGroup
   targetGroup?: IGroup
   args: any[]
@@ -148,6 +149,20 @@ export default class Log extends Emitter {
     this.accessGetter = accessGetter
     this.unenumerable = unenumerable
     this.lazyEvaluation = lazyEvaluation
+
+    let level = 'info'
+    switch (type) {
+      case 'debug':
+        level = 'verbose'
+        break
+      case 'error':
+        level = 'error'
+        break
+      case 'warn':
+        level = 'warning'
+        break
+    }
+    this.level = level
 
     this.resizeSensor = new ResizeSensor(this.container)
     this.onResize = debounce(() => {

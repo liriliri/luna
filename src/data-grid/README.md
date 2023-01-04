@@ -52,6 +52,7 @@ dataGrid.append({
 ## Configuration
 
 * columns(IColumn[]): Table columns.
+* filter(string | RegExp | AnyFn): Data filter.
 * height(number): Table height.
 * maxHeight(number): Max table height.
 * minHeight(number): Min table height.

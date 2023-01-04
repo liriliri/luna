@@ -590,7 +590,8 @@ export default class Console extends Component<IOptions> {
     return ret
   }
   private filterLog(log: Log) {
-    const { filter, level } = this.options
+    const { level } = this.options
+    let { filter } = this.options
 
     if (log.ignoreFilter) {
       return true
@@ -605,8 +606,11 @@ export default class Console extends Component<IOptions> {
         return (filter as types.AnyFn)(log)
       } else if (isRegExp(filter)) {
         return (filter as RegExp).test(lowerCase(log.text()))
-      } else if (isStr(filter) && trim(filter as string) !== '') {
-        return contain(log.text(), filter)
+      } else if (isStr(filter)) {
+        filter = trim(filter as string)
+        if (filter) {
+          return contain(lowerCase(log.text()), lowerCase(filter))
+        }
       }
     }
 

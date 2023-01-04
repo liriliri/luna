@@ -4,7 +4,7 @@ import story from '../share/story'
 import readme from './README.md'
 import each from 'licia/each'
 import toEl from 'licia/toEl'
-import { object, number, button } from '@storybook/addon-knobs'
+import { object, number, button, text } from '@storybook/addon-knobs'
 
 const def = story(
   'data-grid',
@@ -30,7 +30,7 @@ const def = story(
 
     const minHeight = number('Min Height', 80, {
       range: true,
-      min: 21,
+      min: 23,
       max: 500,
     })
 
@@ -39,11 +39,13 @@ const def = story(
       min: 50,
       max: 1000,
     })
+    const filter = text('Filter', '')
 
     const dataGrid = new DataGrid(container, {
       columns,
       maxHeight,
       minHeight,
+      filter,
     })
 
     const data = [

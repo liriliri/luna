@@ -13,6 +13,12 @@ import throttle from 'licia/throttle'
 import defaults from 'licia/defaults'
 import startWith from 'licia/startWith'
 import isNull from 'licia/isNull'
+import isFn from 'licia/isFn'
+import isRegExp from 'licia/isRegExp'
+import isStr from 'licia/isStr'
+import trim from 'licia/trim'
+import contain from 'licia/contain'
+import lowerCase from 'licia/lowerCase'
 import { exportCjs } from '../share/util'
 
 /** IColumn */
@@ -39,6 +45,8 @@ export interface IOptions extends IComponentOptions {
   maxHeight?: number
   /** Min table height. */
   minHeight?: number
+  /** Data filter. */
+  filter?: string | RegExp | types.AnyFn
 }
 
 /** IDataGridNodeOptions */
@@ -103,6 +111,7 @@ export default class DataGrid extends Component<IOptions> {
     this.initOptions(options, {
       minHeight: 41,
       maxHeight: Infinity,
+      filter: '',
     })
     const { columns, minHeight, maxHeight } = this.options
     each(columns, (column) => {
@@ -159,8 +168,10 @@ export default class DataGrid extends Component<IOptions> {
     if (this.sortId) {
       this.sortNodes(this.sortId, this.isAscending)
     } else {
-      this.tableBody.insertBefore(node.container, this.fillerRow)
-      this.updateHeight()
+      if (this.filterNode(node)) {
+        this.tableBody.insertBefore(node.container, this.fillerRow)
+        this.updateHeight()
+      }
     }
 
     return node
@@ -185,7 +196,7 @@ export default class DataGrid extends Component<IOptions> {
     }
     maxHeight -= 23
 
-    let height = this.nodes.length * 20
+    let height = ((this.$dataContainer.find('tr') as any).length - 1) * 20
 
     if (height > minHeight) {
       $fillerRow.hide()
@@ -256,6 +267,8 @@ export default class DataGrid extends Component<IOptions> {
         case 'minHeight':
         case 'maxHeight':
           this.updateHeight()
+        case 'filter':
+          this.renderData()
           break
       }
     })
@@ -338,10 +351,33 @@ export default class DataGrid extends Component<IOptions> {
 
     each(nodes, (node) => node.detach())
     each(nodes, (node) => {
-      tableBody.insertBefore(node.container, fillerRow)
+      if (this.filterNode(node)) {
+        tableBody.insertBefore(node.container, fillerRow)
+      }
     })
+    if (this.selectedNode && !this.filterNode(this.selectedNode)) {
+      this.selectNode(null)
+    }
 
     this.updateHeight()
+  }
+  private filterNode(node: DataGridNode) {
+    let { filter } = this.options
+
+    if (filter) {
+      if (isFn(filter)) {
+        return (filter as types.AnyFn)(node)
+      } else if (isRegExp(filter)) {
+        return (filter as RegExp).test(node.text())
+      } else if (isStr(filter)) {
+        filter = trim(filter as string)
+        if (filter) {
+          return contain(lowerCase(node.text()), lowerCase(filter))
+        }
+      }
+    }
+
+    return true
   }
   private renderHeader() {
     const { c } = this
@@ -408,6 +444,9 @@ export class DataGridNode {
     }
 
     this.render()
+  }
+  text() {
+    return this.$container.text()
   }
   detach() {
     this.$container.remove()

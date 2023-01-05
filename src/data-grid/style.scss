@@ -92,6 +92,22 @@
   }
 }
 
+.resizer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  z-index: 500;
+  cursor: col-resize;
+}
+
+.resizing {
+  cursor: col-resize !important;
+  .luna-data-grid * {
+    cursor: col-resize !important;
+  }
+}
+
 .theme-dark {
   color-scheme: dark;
   th,

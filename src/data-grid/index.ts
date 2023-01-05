@@ -250,7 +250,6 @@ export default class DataGrid extends Component<IOptions> {
     e = e.origEvent
     this.resizeStartX = eventClient('x', e)
     this.resizeStartLeft = pxToNum($resizers.eq(resizeIdx).css('left'))
-    console.log(this.resizeStartLeft)
 
     $(document.body).addClass(c('resizing'))
     $document.on(drag('move'), this.onResizeColMove)

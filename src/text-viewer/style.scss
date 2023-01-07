@@ -1,13 +1,13 @@
 @import '../share/variable';
+@import '../share/mixin';
 
 .luna-text-viewer {
+  @include component();
   padding: 0;
   unicode-bidi: embed;
   position: relative;
   overflow: auto;
   border: 1px solid $border-color;
-  background: $background-color;
-  color: $foreground-color;
   &.theme-dark {
     color: #d9d9d9;
     border-color: $border-color-dark;
@@ -44,6 +44,7 @@
 .line-text {
   display: table-cell;
   padding-left: 4px !important;
+  user-select: text;
 }
 
 .copy {

@@ -9,6 +9,13 @@ const def = story(
     const setting = new Setting(container)
 
     setting.appendTitle('Console')
+    setting.appendCheckbox(
+      'consoleTimestampsEnabled',
+      'Timestamp',
+      'Show timestamps'
+    )
+
+    setting.appendSeparator()
 
     setting.appendTitle('Element')
 

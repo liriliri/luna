@@ -9,9 +9,53 @@
   &:hover {
     background: $darker-background-color;
   }
+  .title {
+    line-height: 1.4em;
+    font-weight: 600;
+  }
+  .description,
+  .control {
+    font-size: $font-size-s;
+  }
+  .control {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .item-title {
   padding: 10px 10px 10px 15px;
   font-size: 18px;
+  font-weight: 600;
+}
+
+.item-checkbox {
+  input {
+    width: 12px;
+    height: 12px;
+    margin-left: 0;
+    margin-right: 8px;
+  }
+}
+
+.item-checkbox {
+  padding: 12px 14px 18px;
+}
+
+.item-separator {
+  border-bottom: 1px solid $border-color;
+}
+
+.theme-dark {
+  color-scheme: dark;
+  color: $foreground-color-dark;
+  background: $background-color-dark;
+  .item {
+    &:hover {
+      background: $darker-background-color-dark;
+    }
+  }
+  .item-separator {
+    border-color: $border-color-dark;
+  }
 }

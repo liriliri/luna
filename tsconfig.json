@@ -47,7 +47,8 @@
       "luna-markdown-editor": ["src/markdown-editor/index"],
       "luna-tab": ["src/tab/index"],
       "luna-text-viewer": ["src/text-viewer/index"],
-      "luna-log": ["src/log/index"]
+      "luna-log": ["src/log/index"],
+      "luna-setting": ["src/setting/index"]
     }
   }
 }

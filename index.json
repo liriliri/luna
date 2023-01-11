@@ -223,6 +223,14 @@
     "install": false,
     "dependencies": []
   },
+  "setting": {
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
+  },
   "shader-toy-player": {
     "icon": true,
     "test": false,

@@ -1,0 +1,17 @@
+@import '../share/mixin';
+@import '../share/variable';
+
+.luna-setting {
+  @include component();
+}
+
+.item {
+  &:hover {
+    background: $darker-background-color;
+  }
+}
+
+.item-title {
+  padding: 10px 10px 10px 15px;
+  font-size: 18px;
+}

@@ -3,6 +3,7 @@
 
 .luna-setting {
   @include component();
+  min-width: 320px;
 }
 
 .item {
@@ -31,13 +32,22 @@
 
 .item-title,
 .item-checkbox,
-.item-select {
+.item-select,
+.item-input,
+.item-button {
   padding: 10px;
 }
 
 .item-title {
   font-size: 18px;
   font-weight: 600;
+}
+
+.item-input {
+  input {
+    @include input();
+    width: 100%;
+  }
 }
 
 .item-checkbox {
@@ -52,6 +62,15 @@
 .item-select {
   .select {
     @include select();
+    select {
+      width: 300px;
+    }
+  }
+}
+
+.item-button {
+  button {
+    @include button();
   }
 }
 
@@ -71,6 +90,11 @@
   .item-separator {
     border-color: $border-color-dark;
   }
+  .item-input {
+    input {
+      @include input(true);
+    }
+  }
   .item-checkbox {
     input {
       @include checkbox(true);
@@ -79,6 +103,11 @@
   .item-select {
     .select {
       @include select(true);
+    }
+  }
+  .item-button {
+    button {
+      @include button(true);
     }
   }
 }

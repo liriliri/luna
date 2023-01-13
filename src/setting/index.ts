@@ -26,8 +26,14 @@ export default class Setting extends Component {
 
     return settingSeparator
   }
-  appendInput(key: string, title: string) {
-    const settingInput = new SettingInput(this, key, title)
+  appendButton(handler: types.AnyFn, title: string, description?: string) {
+    const settingButton = new SettingButton(this, handler, title, description)
+    this.append(settingButton)
+
+    return settingButton
+  }
+  appendInput(key: string, value: string, title: string, description?: string) {
+    const settingInput = new SettingInput(this, key, value, title, description)
     this.append(settingInput)
 
     return settingInput
@@ -111,14 +117,27 @@ class SettingSeparator extends SettingItem {
 }
 
 class SettingInput extends SettingItem {
-  constructor(setting: Setting, key: string, title: string) {
-    super(setting, key, '', 'input')
+  constructor(
+    setting: Setting,
+    key: string,
+    value: string,
+    title: string,
+    description: string = ''
+  ) {
+    super(setting, key, value, 'input')
+
     this.$container.html(
-      setting.c(`<div class="title">
-      ${escape(title)}
-    </div>
-    <div class="item-description"></div>`)
+      setting.c(`<div class="title">${escape(title)}</div>
+      <div class="description">${escape(description)}</div>
+      <div class="control">
+        <input type="text"></input>
+      </div>`)
     )
+
+    const $input = this.$container.find('input')
+    $input.val(value)
+
+    $input.on('change', () => this.onChange($input.val()))
   }
 }
 
@@ -140,9 +159,7 @@ class SettingCheckbox extends SettingItem {
     const id = uniqId(setting.c('checkbox-'))
 
     this.$container.html(
-      setting.c(`<div class="title">
-        ${escape(title)}
-      </div>
+      setting.c(`<div class="title">${escape(title)}</div>
       <div class="control">
         <input type="checkbox" id="${id}"></input>
         <label for="${id}">${escape(description)}</label>
@@ -169,12 +186,8 @@ class SettingSelect extends SettingItem {
     super(setting, key, value, 'select')
 
     this.$container.html(
-      setting.c(`<div class="title">
-        ${escape(title)}
-      </div>
-      <div class="description">
-        ${escape(description)}
-      </div>
+      setting.c(`<div class="title">${escape(title)}</div>
+      <div class="description">${escape(description)}</div>
       <div class="control">
         <div class="select">
           <select>
@@ -186,12 +199,38 @@ class SettingSelect extends SettingItem {
                 }>${escape(key)}</option>`
             ).join('')}
           </select>
-        </div>  
+        </div>
       </div>`)
     )
 
     const $select = this.$container.find('select')
     $select.on('change', () => this.onChange($select.val()))
+  }
+}
+
+class SettingButton extends SettingItem {
+  constructor(
+    setting: Setting,
+    handler: types.AnyFn,
+    title: string,
+    description?: string
+  ) {
+    super(setting, '', '', 'button')
+
+    if (!description) {
+      description = title
+      title = ''
+    }
+
+    this.$container.html(
+      setting.c(`<div class="title">${escape(title)}</div>
+      <div class="control">
+        <button>${description}</button>
+      </div>`)
+    )
+
+    const $button = this.$container.find('button')
+    $button.on('click', handler)
   }
 }
 

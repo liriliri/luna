@@ -45,6 +45,17 @@ const def = story(
 
     setting.appendTitle('Element')
 
+    setting.appendInput(
+      'searchKeyword',
+      'div',
+      'Search Keyword',
+      'Find by string, selector, or XPath'
+    )
+
+    setting.appendButton(function () {
+      console.log('Restore defaults and reload')
+    }, 'Restore defaults and reload')
+
     return setting
   },
   {

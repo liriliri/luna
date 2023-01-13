@@ -7,13 +7,39 @@ const def = story(
   'setting',
   (container) => {
     const setting = new Setting(container)
+    setting.on('change', (key, val, oldVal) => {
+      console.log(key, val, oldVal)
+    })
+
+    setting.appendTitle('Appearance')
+    setting.appendSelect(
+      'theme',
+      'light',
+      'Theme',
+      'Specifies the color theme.',
+      { 'System preference': 'system', Light: 'light', Dark: 'dark' }
+    )
+
+    setting.appendSeparator()
 
     setting.appendTitle('Console')
     setting.appendCheckbox(
+      'selectedContextFilterEnabled',
+      false,
+      'Selected context only'
+    )
+    setting.appendCheckbox(
       'consoleTimestampsEnabled',
+      false,
       'Timestamp',
       'Show timestamps'
     )
+    setting.appendCheckbox(
+      'consoleHistoryAutocomplete',
+      true,
+      'Autocomplete from history'
+    )
+    setting.appendCheckbox('consoleGroupSimilar', true, 'Group similar')
 
     setting.appendSeparator()
 

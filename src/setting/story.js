@@ -19,6 +19,17 @@ const def = story(
       'Specifies the color theme.',
       { 'System preference': 'system', Light: 'light', Dark: 'dark' }
     )
+    setting.appendNumber('transparency', 0.5, 'Transparency', {
+      min: 0.1,
+      max: 1,
+      step: 0.1,
+    })
+    setting.appendNumber('height', 50, 'Height', 'Set devtools height.', {
+      range: true,
+      min: 40,
+      max: 100,
+      step: 1,
+    })
 
     setting.appendSeparator()
 

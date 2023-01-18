@@ -40,6 +40,7 @@
 * [retro-emulator](./src/retro-emulator/README.md): Retro emulator using libretro.
 * [retro-handheld](./src/retro-handheld/README.md): Retro emulator with controls ui.
 * [scrollbar](./src/scrollbar/README.md): Custom scrollbar.
+* [setting](./src/setting/README.md): Settings panel.
 * [shader-toy-player](./src/shader-toy-player/README.md): Shader toy player.
 * [syntax-highlighter](./src/syntax-highlighter/README.md): Syntax highlighter using highlightjs.
 * [tab](./src/tab/README.md): Easy tabs.

@@ -22,7 +22,7 @@ export interface IOptions extends IComponentOptions {
  *   log: 'npm install',
  * })
  */
-export default class Log extends Component {
+export default class Log extends Component<IOptions> {
   private textViewer: LunaTextViewer
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'log' }, options)

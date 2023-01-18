@@ -8,8 +8,14 @@ import defaults from 'licia/defaults'
 import map from 'licia/map'
 import toNum from 'licia/toNum'
 import toStr from 'licia/toStr'
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs } from '../share/util'
+
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Whether to collapse separator or not. */
+  separatorCollapse?: boolean
+}
 
 /**
  * Settings panel.
@@ -20,9 +26,14 @@ import { exportCjs } from '../share/util'
  * setting.appendSeparator()
  * title.detach()
  */
-export default class Setting extends Component {
-  constructor(container: HTMLElement) {
-    super(container, { compName: 'setting' })
+export default class Setting extends Component<IOptions> {
+  private lastItem?: SettingItem
+  constructor(container: HTMLElement, options: IOptions = {}) {
+    super(container, { compName: 'setting' }, options)
+
+    this.initOptions(options, {
+      separatorCollapse: true,
+    })
   }
   /** Append title. */
   appendTitle(title: string) {
@@ -33,6 +44,12 @@ export default class Setting extends Component {
   }
   /** Append separator. */
   appendSeparator() {
+    const { lastItem } = this
+    const { separatorCollapse } = this.options
+    if (separatorCollapse && lastItem instanceof SettingSeparator) {
+      return lastItem
+    }
+
     const settingSeparator = new SettingSeparator(this)
     this.append(settingSeparator)
 
@@ -110,7 +127,12 @@ export default class Setting extends Component {
 
     return settingSelect
   }
+  /** Clear all settings. */
+  clear() {
+    this.$container.text('')
+  }
   private append(item: SettingItem) {
+    this.lastItem = item
     this.$container.append(item.container)
   }
 }

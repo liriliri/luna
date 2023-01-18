@@ -35,6 +35,10 @@ setting.appendSeparator()
 title.detach()
 ```
 
+## Configuration
+
+* separatorCollapse(boolean): Whether to collapse separator or not.
+
 ## Api
 
 ### appendButton(handler: AnyFn, title: string, description?: string): SettingButton
@@ -64,6 +68,10 @@ Append separator.
 ### appendTitle(title: string): SettingTitle
 
 Append title.
+
+### clear(): void
+
+Clear all settings.
 
 ## Types
 

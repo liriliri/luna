@@ -8,6 +8,7 @@ import defaults from 'licia/defaults'
 import map from 'licia/map'
 import toNum from 'licia/toNum'
 import toStr from 'licia/toStr'
+import isFn from 'licia/isFn'
 import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs } from '../share/util'
 
@@ -61,14 +62,32 @@ export default class Setting extends Component<IOptions> {
     value: number,
     title: string,
     description: string,
+    options: INumberOptions
+  ): SettingNumber
+  appendNumber(
+    key: string,
+    value: number,
+    title: string,
+    options: INumberOptions
+  ): SettingNumber
+  appendNumber(
+    key: string,
+    value: number,
+    title: string,
+    description: string | INumberOptions,
     options?: INumberOptions
   ) {
+    if (isObj(description)) {
+      options = description as INumberOptions
+      description = ''
+    }
+
     const settingNumber = new SettingNumber(
       this,
       key,
       value,
       title,
-      description,
+      description as string,
       options
     )
     this.append(settingNumber)
@@ -76,14 +95,39 @@ export default class Setting extends Component<IOptions> {
     return settingNumber
   }
   /** Append button. */
-  appendButton(handler: types.AnyFn, title: string, description?: string) {
-    const settingButton = new SettingButton(this, handler, title, description)
+  appendButton(
+    title: string,
+    description: string,
+    handler: types.AnyFn
+  ): SettingButton
+  appendButton(description: string, handler: types.AnyFn): SettingButton
+  appendButton(
+    title: string,
+    description: string | types.AnyFn,
+    handler?: types.AnyFn
+  ) {
+    if (isFn(description)) {
+      handler = description as types.AnyFn
+      description = ''
+    }
+
+    const settingButton = new SettingButton(
+      this,
+      title,
+      description as string,
+      handler as types.AnyFn
+    )
     this.append(settingButton)
 
     return settingButton
   }
   /** Append text input setting. */
-  appendInput(key: string, value: string, title: string, description?: string) {
+  appendInput(
+    key: string,
+    value: string,
+    title: string,
+    description: string = ''
+  ) {
     const settingInput = new SettingInput(this, key, value, title, description)
     this.append(settingInput)
 
@@ -96,6 +140,11 @@ export default class Setting extends Component<IOptions> {
     title: string,
     description?: string
   ) {
+    if (!description) {
+      description = title
+      title = ''
+    }
+
     const settingCheckbox = new SettingCheckbox(
       this,
       key,
@@ -114,14 +163,32 @@ export default class Setting extends Component<IOptions> {
     title: string,
     description: string,
     options: types.PlainObj<string>
+  ): SettingSelect
+  appendSelect(
+    key: string,
+    value: string,
+    title: string,
+    options: types.PlainObj<string>
+  ): SettingSelect
+  appendSelect(
+    key: string,
+    value: string,
+    title: string,
+    description: string | types.PlainObj<string>,
+    options?: types.PlainObj<string>
   ) {
+    if (isObj(description)) {
+      options = description as types.PlainObj<string>
+      description = ''
+    }
+
     const settingSelect = new SettingSelect(
       this,
       key,
       value,
       title,
-      description,
-      options
+      description as string,
+      options as types.PlainObj<string>
     )
     this.append(settingSelect)
 
@@ -180,7 +247,7 @@ class SettingInput extends SettingItem {
     key: string,
     value: string,
     title: string,
-    description: string = ''
+    description: string
   ) {
     super(setting, key, value, 'input')
 
@@ -221,11 +288,6 @@ class SettingNumber extends SettingItem {
     options: INumberOptions = {}
   ) {
     super(setting, key, value, 'number')
-
-    if (isObj(description)) {
-      options = description as INumberOptions
-      description = ''
-    }
 
     defaults(options, {
       min: 0,
@@ -292,14 +354,9 @@ class SettingCheckbox extends SettingItem {
     key: string,
     value: boolean,
     title: string,
-    description?: string
+    description: string
   ) {
     super(setting, key, value, 'checkbox')
-
-    if (!description) {
-      description = title
-      title = ''
-    }
 
     const id = uniqId(setting.c('checkbox-'))
 
@@ -356,9 +413,9 @@ class SettingSelect extends SettingItem {
 class SettingButton extends SettingItem {
   constructor(
     setting: Setting,
-    handler: types.AnyFn,
     title: string,
-    description?: string
+    description: string,
+    handler: types.AnyFn
   ) {
     super(setting, '', '', 'button')
 

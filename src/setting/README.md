@@ -41,7 +41,7 @@ title.detach()
 
 ## Api
 
-### appendButton(handler: AnyFn, title: string, description?: string): SettingButton
+### appendButton(title: string, description: string, handler: AnyFn): SettingButton
 
 Append button.
 
@@ -53,7 +53,7 @@ Append checkbox setting.
 
 Append text input setting.
 
-### appendNumber(key: string, value: number, title: string, description: string, options?: INumberOptions): SettingNumber
+### appendNumber(key: string, value: number, title: string, description: string, options: INumberOptions): SettingNumber
 
 Append number setting.
 

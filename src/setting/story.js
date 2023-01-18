@@ -69,9 +69,9 @@ const def = story(
       'Find by string, selector, or XPath'
     )
 
-    setting.appendButton(function () {
+    setting.appendButton('Restore defaults and reload', function () {
       console.log('Restore defaults and reload')
-    }, 'Restore defaults and reload')
+    })
 
     return setting
   },

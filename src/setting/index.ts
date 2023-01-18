@@ -13,23 +13,32 @@ import { exportCjs } from '../share/util'
 
 /**
  * Settings panel.
+ *
+ * @example
+ * const setting = new LunaSetting(container)
+ * const title = setting.appendTitle('Title')
+ * setting.appendSeparator()
+ * title.detach()
  */
 export default class Setting extends Component {
   constructor(container: HTMLElement) {
     super(container, { compName: 'setting' })
   }
+  /** Append title. */
   appendTitle(title: string) {
     const settingTitle = new SettingTitle(this, title)
     this.append(settingTitle)
 
     return settingTitle
   }
+  /** Append separator. */
   appendSeparator() {
     const settingSeparator = new SettingSeparator(this)
     this.append(settingSeparator)
 
     return settingSeparator
   }
+  /** Append number setting. */
   appendNumber(
     key: string,
     value: number,
@@ -49,18 +58,21 @@ export default class Setting extends Component {
 
     return settingNumber
   }
+  /** Append button. */
   appendButton(handler: types.AnyFn, title: string, description?: string) {
     const settingButton = new SettingButton(this, handler, title, description)
     this.append(settingButton)
 
     return settingButton
   }
+  /** Append text input setting. */
   appendInput(key: string, value: string, title: string, description?: string) {
     const settingInput = new SettingInput(this, key, value, title, description)
     this.append(settingInput)
 
     return settingInput
   }
+  /** Append checkbox setting. */
   appendCheckbox(
     key: string,
     value: boolean,
@@ -78,6 +90,7 @@ export default class Setting extends Component {
 
     return settingCheckbox
   }
+  /** Append select setting. */
   appendSelect(
     key: string,
     value: string,
@@ -164,10 +177,15 @@ class SettingInput extends SettingItem {
   }
 }
 
-interface INumberOptions {
+/** INumberOptions */
+export interface INumberOptions {
+  /** Min value. */
   min?: number
+  /** Max value. */
   max?: number
+  /** Interval between legal numbers. */
   step?: number
+  /** Use slider control or not. */
   range?: boolean
 }
 

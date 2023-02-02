@@ -403,18 +403,18 @@ class SettingNumber extends SettingItem {
       (val, key) => ` ${key}="${val}"`
     )}></input>`
     if (range) {
-      input = `${min}<div class="range-container">
-        <div class="range-track">
-          <div class="range-track-bar">
-            <div class="range-track-progress" style="width: ${progress(
-              value,
-              min,
-              max
-            )}%;"></div>
+      input = `${min}<div class="${c('range-container')}">
+        <div class="${c('range-track')}">
+          <div class="${c('range-track-bar')}">
+            <div class="${c('range-track-progress')}" style="width: ${progress(
+        value,
+        min,
+        max
+      )}%;"></div>
           </div>
         </div>
         ${input}
-      </div><span class="value">${value}</span>/${max}`
+      </div><span class="${c('value')}">${value}</span>/${max}`
     }
 
     $container.html(
@@ -423,9 +423,9 @@ class SettingNumber extends SettingItem {
       <div class="${c('control')}">${input}</div>`
     )
 
-    const $value = $container.find(setting.c('.value'))
+    const $value = $container.find(c('.value'))
     const $input = $container.find('input')
-    const $trackProgress = $container.find(setting.c('.range-track-progress'))
+    const $trackProgress = $container.find(c('.range-track-progress'))
 
     $input.val(toStr(value))
     $input.on('change', () => {

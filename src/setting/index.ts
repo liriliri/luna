@@ -17,6 +17,7 @@ import contain from 'licia/contain'
 import lowerCase from 'licia/lowerCase'
 import isNull from 'licia/isNull'
 import each from 'licia/each'
+import { micromark } from 'micromark'
 import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs } from '../share/util'
 
@@ -346,14 +347,13 @@ class SettingInput extends SettingItem {
     description: string
   ) {
     super(setting, key, value, 'input')
+    const { c } = setting
 
-    this.$container.html(
-      setting.c(`<div class="title">${escape(title)}</div>
-      <div class="description">${escape(description)}</div>
-      <div class="control">
+    this.$container.html(`<div class="${c('title')}">${escape(title)}</div>
+      <div class="${c('description')}">${micromark(description)}</div>
+      <div class="${c('control')}">
         <input type="text"></input>
       </div>`)
-    )
 
     const $input = this.$container.find('input')
     $input.val(value)
@@ -392,6 +392,7 @@ class SettingNumber extends SettingItem {
     })
 
     const { $container } = this
+    const { c } = setting
     const range = !!options.range
     delete options.range
     const min = options.min as number
@@ -402,7 +403,6 @@ class SettingNumber extends SettingItem {
       (val, key) => ` ${key}="${val}"`
     )}></input>`
     if (range) {
-      console.log(value, min, max)
       input = `${min}<div class="range-container">
         <div class="range-track">
           <div class="range-track-bar">
@@ -418,9 +418,9 @@ class SettingNumber extends SettingItem {
     }
 
     $container.html(
-      setting.c(`<div class="title">${escape(title)}</div>
-      <div class="description">${escape(description)}</div>
-      <div class="control">${input}</div>`)
+      `<div class="${c('title')}">${escape(title)}</div>
+      <div class="${c('description')}">${micromark(description)}</div>
+      <div class="${c('control')}">${input}</div>`
     )
 
     const $value = $container.find(setting.c('.value'))
@@ -454,14 +454,15 @@ class SettingCheckbox extends SettingItem {
   ) {
     super(setting, key, value, 'checkbox')
 
+    const { c } = setting
     const id = uniqId(setting.c('checkbox-'))
 
     this.$container.html(
-      setting.c(`<div class="title">${escape(title)}</div>
-      <div class="control">
+      `<div class="${c('title')}">${escape(title)}</div>
+      <div class="${c('control')}">
         <input type="checkbox" id="${id}"></input>
-        <label for="${id}">${escape(description)}</label>
-      </div>`)
+        <label for="${id}">${micromark(description)}</label>
+      </div>`
     )
 
     const $input = this.$container.find('input')
@@ -482,12 +483,13 @@ class SettingSelect extends SettingItem {
     options: types.PlainObj<string>
   ) {
     super(setting, key, value, 'select')
+    const { c } = setting
 
     this.$container.html(
-      setting.c(`<div class="title">${escape(title)}</div>
-      <div class="description">${escape(description)}</div>
-      <div class="control">
-        <div class="select">
+      `<div class="${c('title')}">${escape(title)}</div>
+      <div class="${c('description')}">${micromark(description)}</div>
+      <div class="${c('control')}">
+        <div class="${c('select')}">
           <select>
             ${map(
               options,
@@ -498,7 +500,7 @@ class SettingSelect extends SettingItem {
             ).join('')}
           </select>
         </div>
-      </div>`)
+      </div>`
     )
 
     const $select = this.$container.find('select')
@@ -523,7 +525,7 @@ class SettingButton extends SettingItem {
     this.$container.html(
       setting.c(`<div class="title">${escape(title)}</div>
       <div class="control">
-        <button>${description}</button>
+        <button>${escape(description)}</button>
       </div>`)
     )
 

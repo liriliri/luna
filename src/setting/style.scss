@@ -20,6 +20,17 @@
   }
   .description {
     line-height: 1.4em;
+    * {
+      margin: 0;
+    }
+    strong {
+      font-weight: 600;
+    }
+    a {
+      background-color: transparent;
+      color: #0969da;
+      text-decoration: none;
+    }
   }
   .description,
   .control {
@@ -120,8 +131,13 @@
 .item-checkbox {
   input {
     @include checkbox();
+    align-self: flex-start;
+    flex-shrink: 0;
   }
   label {
+    * {
+      margin: 0;
+    }
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 }
@@ -153,6 +169,12 @@
     &:hover,
     &.selected {
       background: $darker-background-color-dark;
+    }
+    .description {
+      a {
+        background-color: transparent;
+        color: #58a6ff;
+      }
     }
   }
   .item-separator {

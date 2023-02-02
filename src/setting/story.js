@@ -68,7 +68,7 @@ const def = story(
       'searchKeyword',
       'div',
       'Search Keyword',
-      'Find by string, selector, or XPath'
+      'Find by **string**, **selector**, or **XPath**'
     )
 
     setting.appendButton('Restore defaults and reload', function () {

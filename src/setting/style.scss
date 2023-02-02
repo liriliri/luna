@@ -7,8 +7,12 @@
 }
 
 .item {
-  &:hover {
+  &:hover,
+  &.selected {
     background: $darker-background-color;
+  }
+  &.selected:focus {
+    outline: 1px solid $primary-color;
   }
   .title {
     line-height: 1.4em;
@@ -146,7 +150,8 @@
   color: $foreground-color-dark;
   background: $background-color-dark;
   .item {
-    &:hover {
+    &:hover,
+    &.selected {
       background: $darker-background-color-dark;
     }
   }

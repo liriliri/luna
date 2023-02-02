@@ -15,6 +15,7 @@ import isStr from 'licia/isStr'
 import trim from 'licia/trim'
 import contain from 'licia/contain'
 import lowerCase from 'licia/lowerCase'
+import isNull from 'licia/isNull'
 import each from 'licia/each'
 import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs } from '../share/util'
@@ -38,6 +39,7 @@ export interface IOptions extends IComponentOptions {
  */
 export default class Setting extends Component<IOptions> {
   private items: SettingItem[] = []
+  private selectedItem: SettingItem | null = null
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'setting' }, options)
 
@@ -214,11 +216,26 @@ export default class Setting extends Component<IOptions> {
     if (pos > -1) {
       item.detach()
       items.splice(pos, 1)
+      if (item === this.selectedItem) {
+        this.selectItem(null)
+      }
     }
   }
   /** Clear all settings. */
   clear() {
-    this.$container.text('')
+    each(this.items, (item) => item.detach())
+    this.items = []
+    this.selectItem(null)
+  }
+  private selectItem(item: SettingItem | null) {
+    if (this.selectedItem) {
+      this.selectedItem.deselect()
+      this.selectedItem = null
+    }
+    if (!isNull(item)) {
+      this.selectedItem = item
+      this.selectedItem?.select()
+    }
   }
   private renderSettings() {
     const { items } = this
@@ -230,12 +247,19 @@ export default class Setting extends Component<IOptions> {
     })
   }
   private bindEvent() {
+    const { c } = this
+
     this.on('optionChange', (name) => {
       switch (name) {
         case 'filter':
           this.renderSettings()
           break
       }
+    })
+
+    const self = this
+    this.$container.on('click', c('.item'), function (this: any) {
+      self.selectItem(this.settingItem)
     })
   }
   private filterItem(item: SettingItem) {
@@ -265,19 +289,28 @@ export default class Setting extends Component<IOptions> {
 }
 
 class SettingItem {
-  container: HTMLElement = h('div')
+  container: HTMLElement = h('div', {
+    tabindex: '0',
+  })
   $container: $.$
   key: string
   value: any
   setting: Setting
   constructor(setting: Setting, key: string, value: any, type: string) {
     this.setting = setting
+    ;(this.container as any).settingItem = this
     this.$container = $(this.container)
     this.$container
       .addClass(setting.c('item'))
       .addClass(setting.c(`item-${type}`))
     this.key = key
     this.value = value
+  }
+  select() {
+    this.$container.addClass(this.setting.c('selected'))
+  }
+  deselect() {
+    this.$container.rmClass(this.setting.c('selected'))
   }
   detach() {
     this.$container.remove()

@@ -37,6 +37,7 @@ title.detach()
 
 ## Configuration
 
+* filter(string | RegExp | AnyFn): Setting filter.
 * separatorCollapse(boolean): Whether to collapse separator or not.
 
 ## Api
@@ -72,6 +73,10 @@ Append title.
 ### clear(): void
 
 Clear all settings.
+
+### remove(item: SettingItem): void
+
+Remove setting.
 
 ## Types
 

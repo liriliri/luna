@@ -2,15 +2,17 @@ import 'luna-setting.css'
 import Setting from 'luna-setting.js'
 import story from '../share/story'
 import readme from './README.md'
-import { boolean } from '@storybook/addon-knobs'
+import { boolean, text } from '@storybook/addon-knobs'
 
 const def = story(
   'setting',
   (container) => {
     const separatorCollapse = boolean('Separator Collapse', true)
+    const filter = text('Filter', '')
 
     const setting = new Setting(container, {
       separatorCollapse,
+      filter,
     })
     setting.on('change', (key, val, oldVal) => {
       console.log(key, val, oldVal)

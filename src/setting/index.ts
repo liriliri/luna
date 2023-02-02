@@ -9,6 +9,13 @@ import map from 'licia/map'
 import toNum from 'licia/toNum'
 import toStr from 'licia/toStr'
 import isFn from 'licia/isFn'
+import last from 'licia/last'
+import isRegExp from 'licia/isRegExp'
+import isStr from 'licia/isStr'
+import trim from 'licia/trim'
+import contain from 'licia/contain'
+import lowerCase from 'licia/lowerCase'
+import each from 'licia/each'
 import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs } from '../share/util'
 
@@ -16,6 +23,8 @@ import { exportCjs } from '../share/util'
 export interface IOptions extends IComponentOptions {
   /** Whether to collapse separator or not. */
   separatorCollapse?: boolean
+  /** Setting filter. */
+  filter?: string | RegExp | types.AnyFn
 }
 
 /**
@@ -28,13 +37,16 @@ export interface IOptions extends IComponentOptions {
  * title.detach()
  */
 export default class Setting extends Component<IOptions> {
-  private lastItem?: SettingItem
+  private items: SettingItem[] = []
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'setting' }, options)
 
     this.initOptions(options, {
       separatorCollapse: true,
+      filter: '',
     })
+
+    this.bindEvent()
   }
   /** Append title. */
   appendTitle(title: string) {
@@ -45,8 +57,9 @@ export default class Setting extends Component<IOptions> {
   }
   /** Append separator. */
   appendSeparator() {
-    const { lastItem } = this
+    const { items } = this
     const { separatorCollapse } = this.options
+    const lastItem: SettingItem = last(items)
     if (separatorCollapse && lastItem instanceof SettingSeparator) {
       return lastItem
     }
@@ -194,13 +207,60 @@ export default class Setting extends Component<IOptions> {
 
     return settingSelect
   }
+  /** Remove setting. */
+  remove(item: SettingItem) {
+    const { items } = this
+    const pos = items.indexOf(item)
+    if (pos > -1) {
+      item.detach()
+      items.splice(pos, 1)
+    }
+  }
   /** Clear all settings. */
   clear() {
     this.$container.text('')
   }
+  private renderSettings() {
+    const { items } = this
+    each(items, (item) => item.detach())
+    each(items, (item) => {
+      if (this.filterItem(item)) {
+        this.$container.append(item.container)
+      }
+    })
+  }
+  private bindEvent() {
+    this.on('optionChange', (name) => {
+      switch (name) {
+        case 'filter':
+          this.renderSettings()
+          break
+      }
+    })
+  }
+  private filterItem(item: SettingItem) {
+    let { filter } = this.options
+
+    if (filter) {
+      if (isFn(filter)) {
+        return (filter as types.AnyFn)(item)
+      } else if (isRegExp(filter)) {
+        return (filter as RegExp).test(item.text())
+      } else if (isStr(filter)) {
+        filter = trim(filter as string)
+        if (filter) {
+          return contain(lowerCase(item.text()), lowerCase(filter))
+        }
+      }
+    }
+
+    return true
+  }
   private append(item: SettingItem) {
-    this.lastItem = item
-    this.$container.append(item.container)
+    this.items.push(item)
+    if (this.filterItem(item)) {
+      this.$container.append(item.container)
+    }
   }
 }
 
@@ -221,6 +281,9 @@ class SettingItem {
   }
   detach() {
     this.$container.remove()
+  }
+  text() {
+    return this.$container.text()
   }
   protected onChange(value: any) {
     this.setting.emit('change', this.key, value, this.value)

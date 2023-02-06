@@ -261,7 +261,7 @@ export default class Console extends Component<IOptions> {
   info(...args: any[]) {
     if (isEmpty(args)) return
 
-    this.insert('log', args)
+    this.insert('info', args)
   }
   error(...args: any[]) {
     if (isEmpty(args)) return

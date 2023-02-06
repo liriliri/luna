@@ -428,6 +428,7 @@ export default class Log extends Emitter {
     switch (type) {
       case 'log':
       case 'warn':
+      case 'info':
       case 'debug':
       case 'output':
       case 'table':
@@ -462,8 +463,7 @@ export default class Log extends Emitter {
 
     switch (type) {
       case 'log':
-        msg = this.formatCommon(args)
-        break
+      case 'info':
       case 'debug':
         msg = this.formatCommon(args)
         break

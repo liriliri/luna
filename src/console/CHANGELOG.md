@@ -1,4 +1,9 @@
-## 1.3.0 (2 Jan 2022)
+## 1.3.1 (6 Feb 2023)
+
+* fix: filter ingore case
+* fix: keep info type
+
+## 1.3.0 (2 Jan 2023)
 
 * feat: support log level
 * fix: element dir name

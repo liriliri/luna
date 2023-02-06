@@ -342,6 +342,7 @@ export default class DataGrid extends Component<IOptions> {
         case 'minHeight':
         case 'maxHeight':
           this.updateHeight()
+          break
         case 'filter':
           this.renderData()
           break

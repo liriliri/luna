@@ -48,7 +48,8 @@
       "luna-tab": ["src/tab/index"],
       "luna-text-viewer": ["src/text-viewer/index"],
       "luna-log": ["src/log/index"],
-      "luna-setting": ["src/setting/index"]
+      "luna-setting": ["src/setting/index"],
+      "luna-box-model": ["src/box-model/index"]
     }
   }
 }

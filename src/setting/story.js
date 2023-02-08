@@ -71,6 +71,20 @@ const def = story(
       'Find by **string**, **selector**, or **XPath**'
     )
 
+    setting.appendSeparator()
+
+    setting.appendTitle('Sources')
+
+    setting.appendHtml(`<div style="padding:10px;">
+      <div class="luna-setting-title">Default indentation</div>
+      <div class="luna-setting-description">The number of spaces used for indentation</div>
+      <a style="font-size:12px;color:#0969da;cursor:pointer;" 
+        onmouseover="this.style.textDecoration='underline';"
+        onmouseout="this.style.textDecoration='none';">
+        Edit in settings.json
+      </a>
+    </div>`)
+
     setting.appendButton('Restore defaults and reload', function () {
       console.log('Restore defaults and reload')
     })

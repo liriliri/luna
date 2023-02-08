@@ -50,6 +50,10 @@ Append button.
 
 Append checkbox setting.
 
+### appendHtml(html: string | HTMLElement): SettingHtml
+
+Append html setting.
+
 ### appendInput(key: string, value: string, title: string, description?: string): SettingInput
 
 Append text input setting.

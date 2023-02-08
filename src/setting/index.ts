@@ -137,6 +137,12 @@ export default class Setting extends Component<IOptions> {
 
     return settingButton
   }
+  /** Append html setting. */
+  appendHtml(html: string | HTMLElement) {
+    const settingHtml = new SettingHtml(this, html)
+    this.append(settingHtml)
+    return settingHtml
+  }
   /** Append text input setting. */
   appendInput(
     key: string,
@@ -531,6 +537,13 @@ class SettingButton extends SettingItem {
 
     const $button = this.$container.find('button')
     $button.on('click', handler)
+  }
+}
+
+class SettingHtml extends SettingItem {
+  constructor(setting: Setting, html: string | HTMLElement) {
+    super(setting, '', '', 'html')
+    this.$container.append(html)
   }
 }
 

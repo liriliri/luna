@@ -18,7 +18,8 @@ const def = story(
       console.log(key, val, oldVal)
     })
 
-    setting.appendTitle('Appearance')
+    setting.appendTitle('Configuration')
+    setting.appendTitle('Appearance', 2)
     setting.appendSelect(
       'theme',
       'light',

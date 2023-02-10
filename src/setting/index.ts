@@ -52,8 +52,8 @@ export default class Setting extends Component<IOptions> {
     this.bindEvent()
   }
   /** Append title. */
-  appendTitle(title: string) {
-    const settingTitle = new SettingTitle(this, title)
+  appendTitle(title: string, level: number = 1) {
+    const settingTitle = new SettingTitle(this, title, level)
     this.append(settingTitle)
 
     return settingTitle
@@ -332,8 +332,9 @@ class SettingItem {
 }
 
 class SettingTitle extends SettingItem {
-  constructor(setting: Setting, title: string) {
+  constructor(setting: Setting, title: string, level: number) {
     super(setting, '', '', 'title')
+    this.$container.addClass(setting.c(`level-${level}`))
     this.$container.text(title)
   }
 }

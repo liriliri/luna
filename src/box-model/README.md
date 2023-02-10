@@ -25,3 +25,14 @@ npm install luna-box-model --save
 import 'luna-box-model/luna-box-model.css'
 import LunaBoxModel from 'luna-box-model'
 ```
+
+## Usage
+
+```javascript
+const boxModel = new LunaBoxModel(container)
+boxModel.setOption('element', document.getElementById('target'))
+```
+
+## Configuration
+
+* element(HTMLElement): Target element.

@@ -1,0 +1,59 @@
+@import '../share/mixin';
+
+.luna-box-model {
+  @include component();
+  display: inline-block;
+  color: #222;
+  font-size: $font-size-s;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.label {
+  position: absolute;
+  margin-left: 3px;
+  padding: 0 2px;
+}
+.top,
+.left,
+.right,
+.bottom {
+  display: inline-block;
+}
+.left,
+.right {
+  vertical-align: middle;
+}
+.position,
+.margin,
+.border,
+.padding,
+.content {
+  position: relative;
+  background: #fff;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  padding: 3px;
+  margin: 3px;
+}
+.position {
+  border: 1px grey dotted;
+}
+.margin {
+  border: 1px dashed;
+  background: rgba(246, 178, 107, 0.66);
+}
+.border {
+  border: 1px #000 solid;
+  background: rgba(255, 229, 153, 0.66);
+}
+.padding {
+  border: 1px grey dashed;
+  background: rgba(147, 196, 125, 0.55);
+}
+.content {
+  border: 1px grey solid;
+  min-width: 100px;
+  background: rgba(111, 168, 220, 0.66);
+}

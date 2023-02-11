@@ -30,7 +30,6 @@
 .padding,
 .content {
   position: relative;
-  background: #fff;
   display: inline-block;
   text-align: center;
   vertical-align: middle;
@@ -41,18 +40,22 @@
   border: 1px grey dotted;
 }
 .margin {
+  color: $foreground-color;
   border: 1px dashed;
   background: rgba(246, 178, 107, 0.66);
 }
 .border {
+  color: $foreground-color;
   border: 1px #000 solid;
   background: rgba(255, 229, 153, 0.66);
 }
 .padding {
+  color: $foreground-color;
   border: 1px grey dashed;
   background: rgba(147, 196, 125, 0.55);
 }
 .content {
+  color: $foreground-color;
   border: 1px grey solid;
   min-width: 100px;
   background: rgba(111, 168, 220, 0.66);

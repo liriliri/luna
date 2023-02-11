@@ -33,6 +33,10 @@
   * {
     box-sizing: border-box;
   }
+  &.theme-dark {
+    color: $foreground-color-dark;
+    background-color: $background-color-dark;
+  }
 }
 
 @mixin clear-float {

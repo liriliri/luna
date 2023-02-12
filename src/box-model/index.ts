@@ -43,27 +43,25 @@ export default class BoxModel extends Component<IOptions> {
     const boxModel = this.getBoxModelData()
 
     // prettier-ignore
-    this.$container.html([`<div class="${c('box-model')}">`,
-      boxModel.position ? `<div class="${c('position')}">` : '',
-        boxModel.position ? `<div class="${c('label')}">position</div><div class="${c('top')}">${boxModel.position.top}</div><br><div class="${c('left')}">${boxModel.position.left}</div>` : '',
-        `<div class="${c('margin')}">`,
-          `<div class="${c('label')}">margin</div><div class="${c('top')}">${boxModel.margin.top}</div><br><div class="${c('left')}">${boxModel.margin.left}</div>`,
-          `<div class="${c('border')}">`,
-            `<div class="${c('label')}">border</div><div class="${c('top')}">${boxModel.border.top}</div><br><div class="${c('left')}">${boxModel.border.left}</div>`,
-            `<div class="${c('padding')}">`,
-              `<div class="${c('label')}">padding</div><div class="${c('top')}">${boxModel.padding.top}</div><br><div class="${c('left')}">${boxModel.padding.left}</div>`,
-              `<div class="${c('content')}">`,
-                `<span>${boxModel.content.width}</span>&nbsp;×&nbsp;<span>${boxModel.content.height}</span>`,
-              '</div>',
-              `<div class="${c('right')}">${boxModel.padding.right}</div><br><div class="${c('bottom')}">${boxModel.padding.bottom}</div>`,
+    this.$container.html([boxModel.position ? `<div class="${c('position')}">` : '',
+      boxModel.position ? `<div class="${c('label')}">position</div><div class="${c('top')}">${boxModel.position.top}</div><br><div class="${c('left')}">${boxModel.position.left}</div>` : '',
+      `<div class="${c('margin')}">`,
+        `<div class="${c('label')}">margin</div><div class="${c('top')}">${boxModel.margin.top}</div><br><div class="${c('left')}">${boxModel.margin.left}</div>`,
+        `<div class="${c('border')}">`,
+          `<div class="${c('label')}">border</div><div class="${c('top')}">${boxModel.border.top}</div><br><div class="${c('left')}">${boxModel.border.left}</div>`,
+          `<div class="${c('padding')}">`,
+            `<div class="${c('label')}">padding</div><div class="${c('top')}">${boxModel.padding.top}</div><br><div class="${c('left')}">${boxModel.padding.left}</div>`,
+            `<div class="${c('content')}">`,
+              `<span>${boxModel.content.width}</span>&nbsp;×&nbsp;<span>${boxModel.content.height}</span>`,
             '</div>',
-            `<div class="${c('right')}">${boxModel.border.right}</div><br><div class="${c('bottom')}">${boxModel.border.bottom}</div>`,
+            `<div class="${c('right')}">${boxModel.padding.right}</div><br><div class="${c('bottom')}">${boxModel.padding.bottom}</div>`,
           '</div>',
-          `<div class="${c('right')}">${boxModel.margin.right}</div><br><div class="${c('bottom')}">${boxModel.margin.bottom}</div>`,
+          `<div class="${c('right')}">${boxModel.border.right}</div><br><div class="${c('bottom')}">${boxModel.border.bottom}</div>`,
         '</div>',
-        boxModel.position ? `<div class="${c('right')}">${boxModel.position.right}</div><br><div class="${c('bottom')}">${boxModel.position.bottom}</div>` : '',
-      boxModel.position ? '</div>' : '',
-    '</div>'].join(''))
+        `<div class="${c('right')}">${boxModel.margin.right}</div><br><div class="${c('bottom')}">${boxModel.margin.bottom}</div>`,
+      '</div>',
+      boxModel.position ? `<div class="${c('right')}">${boxModel.position.right}</div><br><div class="${c('bottom')}">${boxModel.position.bottom}</div>` : '',
+    boxModel.position ? '</div>' : ''].join(''))
   }
   private getBoxModelData() {
     const { element } = this.options

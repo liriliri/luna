@@ -14,6 +14,7 @@
 
 ## Components
 
+* [box-model](./src/box-model/README.md): Css box model metrics.
 * [carousel](./src/carousel/README.md): Lightweight carousel.
 * [chart](./src/chart/README.md): HTML5 charts.
 * [command-palette](./src/command-palette/README.md): Command palette.

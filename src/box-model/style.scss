@@ -3,7 +3,6 @@
 .luna-box-model {
   @include component();
   display: inline-block;
-  color: #222;
   font-size: $font-size-s;
   text-align: center;
   white-space: nowrap;

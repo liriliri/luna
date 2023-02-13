@@ -263,6 +263,14 @@
     "install": false,
     "dependencies": []
   },
+  "tag-input": {
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
+  },
   "text-viewer": {
     "icon": true,
     "version": "0.2.1",

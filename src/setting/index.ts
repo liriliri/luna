@@ -143,17 +143,23 @@ export default class Setting extends Component<IOptions> {
     this.append(settingHtml)
     return settingHtml
   }
+  /** Append markdown description. */
+  appendMarkdown(markdown: string) {
+    const settingMarkdown = new SettingMarkdown(this, markdown)
+    this.append(settingMarkdown)
+    return settingMarkdown
+  }
   /** Append text input setting. */
-  appendInput(
+  appendText(
     key: string,
     value: string,
     title: string,
     description: string = ''
   ) {
-    const settingInput = new SettingInput(this, key, value, title, description)
-    this.append(settingInput)
+    const settingText = new SettingText(this, key, value, title, description)
+    this.append(settingText)
 
-    return settingInput
+    return settingText
   }
   /** Append checkbox setting. */
   appendCheckbox(
@@ -339,13 +345,20 @@ class SettingTitle extends SettingItem {
   }
 }
 
+class SettingMarkdown extends SettingItem {
+  constructor(setting: Setting, markdown: string) {
+    super(setting, '', '', 'markdown')
+    this.$container.html(micromark(markdown))
+  }
+}
+
 class SettingSeparator extends SettingItem {
   constructor(setting: Setting) {
     super(setting, '', '', 'separator')
   }
 }
 
-class SettingInput extends SettingItem {
+class SettingText extends SettingItem {
   constructor(
     setting: Setting,
     key: string,

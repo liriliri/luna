@@ -54,9 +54,9 @@ Append checkbox setting.
 
 Append html setting.
 
-### appendInput(key: string, value: string, title: string, description?: string): SettingInput
+### appendMarkdown(markdown: string): SettingMarkdown
 
-Append text input setting.
+Append markdown description.
 
 ### appendNumber(key: string, value: number, title: string, description: string, options: INumberOptions): SettingNumber
 
@@ -70,7 +70,11 @@ Append select setting.
 
 Append separator.
 
-### appendTitle(title: string): SettingTitle
+### appendText(key: string, value: string, title: string, description?: string): SettingText
+
+Append text input setting.
+
+### appendTitle(title: string, level?: number): SettingTitle
 
 Append title.
 

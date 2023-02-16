@@ -18,7 +18,8 @@
     line-height: 1.4em;
     font-weight: 600;
   }
-  .description {
+  .description,
+  &.item-markdown {
     line-height: 1.4em;
     * {
       margin: 0;
@@ -50,6 +51,7 @@
 .item-select,
 .item-input,
 .item-button,
+.item-markdown,
 .item-number {
   padding: 10px;
 }

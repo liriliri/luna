@@ -19,6 +19,9 @@ const def = story(
     })
 
     setting.appendTitle('Configuration')
+    setting.appendMarkdown(
+      'Click [here](https://github.com/liriliri/luna/blob/master/src/setting/README.md) to see the documentation.'
+    )
     setting.appendTitle('Appearance', 2)
     setting.appendSelect(
       'theme',

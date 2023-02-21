@@ -48,13 +48,12 @@ export default class Tab extends Component<IOptions> {
     })
 
     this.initTpl()
-    this.find('.tabs-container').css('height', this.options.height + 'px')
     this.$tabs = this.find('.tabs')
     this.tabs = this.$tabs.get(0) as HTMLElement
     this.$slider = this.find('.slider')
 
     this.bindEvent()
-    this.hideScrollbar()
+    this.updateHeight()
   }
   get length() {
     return (this.$tabs.find(this.c('.item')) as any).length
@@ -169,8 +168,27 @@ export default class Tab extends Component<IOptions> {
       left: selected.offsetLeft - $tabs.get(0).scrollLeft,
     })
   }
+  private updateHeight() {
+    const { height } = this.options
+    const itemHeight = height - 1
+
+    this.find('.tabs-container').css('height', height + 'px')
+    this.find('.item').css({
+      height: itemHeight,
+      lineHeight: itemHeight,
+    })
+    this.hideScrollbar()
+  }
   private bindEvent() {
     const { tabs, c } = this
+
+    this.on('optionChange', (name) => {
+      switch (name) {
+        case 'height':
+          this.updateHeight()
+          break
+      }
+    })
 
     const self = this
     this.$tabs

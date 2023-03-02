@@ -1,0 +1,36 @@
+@import '../share/mixin';
+@import '../share/variable';
+
+.luna-qrcode-generator {
+  @include component();
+  border: 1px solid $border-color;
+  display: flex;
+  height: 250px;
+}
+
+.controller {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.setting {
+  flex-grow: 1;
+}
+
+.input {
+  height: 25%;
+  textarea {
+    width: 100%;
+    height: 100%;
+    resize: none;
+  }
+}
+
+.preview {
+  width: 25%;
+  .qrcode {
+    text-align: center;
+  }
+}

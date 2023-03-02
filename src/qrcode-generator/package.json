@@ -1,0 +1,11 @@
+{
+  "name": "qrcode-generator",
+  "version": "0.1.0",
+  "description": "QR code generator",
+  "dependencies": {
+    "qrcode": "^1.5.1"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.0"
+  }
+}

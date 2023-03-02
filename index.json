@@ -207,6 +207,14 @@
     "install": false,
     "dependencies": []
   },
+  "qrcode-generator": {
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
+  },
   "retro-emulator": {
     "icon": true,
     "version": "0.1.1",
@@ -256,7 +264,7 @@
     "test": true
   },
   "tab": {
-    "version": "0.1.2",
+    "version": "0.1.3",
     "style": true,
     "icon": false,
     "test": true,

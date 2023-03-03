@@ -199,14 +199,15 @@ export default class DataGrid extends Component<IOptions> {
     this.updateHeight()
   }
   private updateHeight() {
-    const { $fillerRow, c } = this
+    const { $fillerRow, c, $container } = this
     let { maxHeight, minHeight } = this.options
 
     this.$dataContainer.css({ height: 'auto' })
 
     const headerHeight = this.$headerRow.offset().height
-    const borderWidth = pxToNum(this.$container.css('border-width') || '0px')
-    const minusHeight = headerHeight + borderWidth * 2
+    const borderTopWidth = pxToNum($container.css('border-top-width'))
+    const borderBottomWidth = pxToNum($container.css('border-bottom-width'))
+    const minusHeight = headerHeight + borderTopWidth + borderBottomWidth
 
     minHeight -= minusHeight
     if (minHeight < 0) {

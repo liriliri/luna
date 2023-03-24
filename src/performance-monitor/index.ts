@@ -10,6 +10,8 @@ import throttle from 'licia/throttle'
 import now from 'licia/now'
 import dateFormat from 'licia/dateFormat'
 import Color from 'licia/Color'
+import isHidden from 'licia/isHidden'
+import { exportCjs } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -140,6 +142,9 @@ export default class PerformanceMonitor extends Component<IOptions> {
     this.$value.text(data + this.options.unit)
   }
   private onResize = () => {
+    if (isHidden(this.container)) {
+      return
+    }
     const { canvas } = this
     this.width = canvas.offsetWidth
     canvas.width = Math.round(this.width * window.devicePixelRatio)
@@ -332,5 +337,6 @@ function getLightColor(color: string, opacity: number) {
   return new Color(rgbColorObj).toRgb()
 }
 
-module.exports = PerformanceMonitor
-module.exports.default = PerformanceMonitor
+if (typeof module !== 'undefined') {
+  exportCjs(module, PerformanceMonitor)
+}

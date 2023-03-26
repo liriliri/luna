@@ -77,13 +77,9 @@ export default class PerformanceMonitor extends Component<IOptions> {
       max: 0,
     })
 
-    const { color } = this.options
-
-    this.fillColor = getLightColor(color, 0.2)
-
     this.initTpl()
     this.$value = this.find('.value')
-    this.$value.css('color', color)
+    this.updateColor()
 
     const canvas = document.createElement('canvas')
     $(canvas).addClass(this.c('chart'))
@@ -118,6 +114,12 @@ export default class PerformanceMonitor extends Component<IOptions> {
     clearInterval(this.pollTimer)
     raf.cancel.call(window, this.animationId)
   }
+  private updateColor() {
+    const { color } = this.options
+
+    this.fillColor = getLightColor(color, 0.2)
+    this.$value.css('color', color)
+  }
   private get gridColor() {
     return this.options.theme === 'dark'
       ? 'rgb(255 255 255 / 8%)'
@@ -125,6 +127,12 @@ export default class PerformanceMonitor extends Component<IOptions> {
   }
   private bindEvent() {
     this.resizeSensor.addListener(throttle(() => this.onResize(), 16))
+
+    this.on('optionChange', (name, val) => {
+      if (name === 'color') {
+        this.updateColor()
+      }
+    })
   }
   private poll = () => {
     const { metricBuffer } = this

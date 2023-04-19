@@ -1,3 +1,7 @@
+## 1.2.4 (19 Apr 2023)
+
+* fix: module is not defined [#11](https://github.com/liriliri/luna/issues/11)
+
 ## 1.2.3 (20 Dec 2022)
 
 * fix: element selected when scrolling by touch

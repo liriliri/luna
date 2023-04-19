@@ -630,7 +630,7 @@ export default class Log extends Emitter {
       let val = args[i]
 
       if (isEl(val)) {
-        args[i] = this.formatEl(val)
+        args[i] = this.formatEl(val as HTMLElement)
       } else if (isFn(val)) {
         args[i] = this.formatFn(val)
       } else if (isRegExp(val)) {
@@ -702,7 +702,7 @@ export default class Log extends Emitter {
     } else if (type === 'RegExp') {
       type = toStr(obj)
     } else if (isEl(obj)) {
-      type = this.formatElName(obj)
+      type = this.formatElName(obj as HTMLElement)
     }
 
     return (
@@ -756,7 +756,7 @@ export default class Log extends Emitter {
             break
           case 'o':
             if (isEl(arg)) {
-              newStr += this.formatEl(arg)
+              newStr += this.formatEl(arg as HTMLElement)
             } else if (isObj(arg)) {
               newStr += this.formatPreview(arg)
             }

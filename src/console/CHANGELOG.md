@@ -1,3 +1,7 @@
+## 1.3.2 (19 Apr 2023)
+
+* fix: position fixed not working [#9](https://github.com/liriliri/luna/issues/9)
+
 ## 1.3.1 (6 Feb 2023)
 
 * fix: filter ingore case

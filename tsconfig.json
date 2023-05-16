@@ -51,7 +51,8 @@
       "luna-setting": ["src/setting/index"],
       "luna-box-model": ["src/box-model/index"],
       "luna-tag-input": ["src/tag-input/index"],
-      "luna-qrcode-generator": ["src/qrcode-generator/index"]
+      "luna-qrcode-generator": ["src/qrcode-generator/index"],
+      "luna-toolbar": ["src/toolbar/index"]
     }
   }
 }

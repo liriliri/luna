@@ -1,0 +1,5 @@
+@import '../share/mixin';
+
+.luna-toobar {
+  @include component();
+}

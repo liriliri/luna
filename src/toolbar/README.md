@@ -47,3 +47,11 @@ Append separator.
 ### appendText(text: string): ToolbarText
 
 Append text.
+
+### clear(): void
+
+Clear all.
+
+### remove(item: ToolbarItem): void
+
+Remove item.

@@ -24,6 +24,9 @@
   @include select();
   margin-top: 4px;
   margin-bottom: 4px;
+  select {
+    max-width: 200px;
+  }
 }
 
 .item-text {

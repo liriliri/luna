@@ -2,6 +2,7 @@ import h from 'licia/h'
 import $ from 'licia/$'
 import isObj from 'licia/isObj'
 import map from 'licia/map'
+import each from 'licia/each'
 import escape from 'licia/escape'
 import types, { PlainObj } from 'licia/types'
 import Component from '../share/Component'
@@ -11,8 +12,23 @@ import { exportCjs } from '../share/util'
  * Application toolbar.
  */
 export default class Toolbar extends Component {
+  private items: ToolbarItem[] = []
   constructor(container: HTMLElement) {
     super(container, { compName: 'toolbar' })
+  }
+  /** Remove item. */
+  remove(item: ToolbarItem) {
+    const { items } = this
+    const pos = items.indexOf(item)
+    if (pos > -1) {
+      item.detach()
+      items.splice(pos, 1)
+    }
+  }
+  /** Clear all. */
+  clear() {
+    each(this.items, (item) => item.detach())
+    this.items = []
   }
   /** Append text. */
   appendText(text: string) {

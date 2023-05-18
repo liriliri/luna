@@ -87,6 +87,7 @@ export default class Toolbar extends Component {
     return toolbarInput
   }
   private append(item: ToolbarItem) {
+    this.items.push(item)
     this.$container.append(item.container)
   }
 }

@@ -48,4 +48,9 @@
   .item-select {
     @include select(true);
   }
+  .item-input {
+    input {
+      @include input(true);
+    }
+  }
 }

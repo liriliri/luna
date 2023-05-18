@@ -11,7 +11,15 @@ const def = story(
       console.log(key, val, oldVal)
     })
 
-    toolbar.appendSelect('throttling', 'online', 'Throttling', {
+    const toolbarSelect = toolbar.appendSelect(
+      'throttling',
+      'online',
+      'Throttling',
+      {
+        Online: 'online',
+      }
+    )
+    toolbarSelect.setOptions({
       Online: 'online',
       '3G': '3g',
       Offline: 'offline',

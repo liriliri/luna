@@ -25,3 +25,25 @@ npm install luna-toolbar --save
 import 'luna-toolbar/luna-toolbar.css'
 import LunaToolbar from 'luna-toolbar'
 ```
+
+## Api
+
+### appendHtml(html: string | HTMLElement): ToolbarHtml
+
+Append html.
+
+### appendInput(key: string, value: string, placeholder?: string): ToolbarInput
+
+Append text input.
+
+### appendSelect(key: string, value: string, options: PlainObj<string>): ToolbarSelect
+
+Append select.
+
+### appendSeparator(): ToolbarSeparator
+
+Append separator.
+
+### appendText(text: string): ToolbarText
+
+Append text.

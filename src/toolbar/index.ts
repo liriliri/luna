@@ -21,6 +21,13 @@ export default class Toolbar extends Component {
 
     return toolbarText
   }
+  /** Append html. */
+  appendHtml(html: string | HTMLElement) {
+    const toolbarHtml = new ToolbarHtml(this, html)
+    this.append(toolbarHtml)
+
+    return toolbarHtml
+  }
   /** Append select. */
   appendSelect(
     key: string,
@@ -94,6 +101,7 @@ class ToolbarItem {
 }
 
 class ToolbarSelect extends ToolbarItem {
+  private $select: $.$
   constructor(
     toolbar: Toolbar,
     key: string,
@@ -105,18 +113,24 @@ class ToolbarSelect extends ToolbarItem {
 
     this.$container.html(
       `<select title="${escape(title)}">
-        ${map(
-          options,
-          (val, key) =>
-            `<option value="${escape(val)}"${
-              val === value ? ' selected' : ''
-            }>${escape(key)}</option>`
-        ).join('')}
+        
       </select>`
     )
-
     const $select = this.$container.find('select')
+    this.$select = $select
+    this.setOptions(options)
     $select.on('change', () => this.onChange($select.val()))
+  }
+  setOptions(options: types.PlainObj<string>) {
+    this.$select.html(
+      map(
+        options,
+        (val, key) =>
+          `<option value="${escape(val)}"${
+            val === this.value ? ' selected' : ''
+          }>${escape(key)}</option>`
+      ).join('')
+    )
   }
 }
 
@@ -147,7 +161,17 @@ class ToolbarSeparator extends ToolbarItem {
 class ToolbarText extends ToolbarItem {
   constructor(toolbar: Toolbar, text: string) {
     super(toolbar, '', '', 'text')
+    this.setText(text)
+  }
+  setText(text: string) {
     this.$container.text(text)
+  }
+}
+
+class ToolbarHtml extends ToolbarItem {
+  constructor(toolbar: Toolbar, html: string | HTMLElement) {
+    super(toolbar, '', '', 'html')
+    this.$container.append(html)
   }
 }
 

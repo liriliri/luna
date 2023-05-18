@@ -53,6 +53,12 @@ export default class Toolbar extends Component {
   appendSelect(
     key: string,
     value: string,
+    title: string,
+    options: types.PlainObj<string>
+  ): ToolbarSelect
+  appendSelect(
+    key: string,
+    value: string,
     title: string | types.PlainObj<string>,
     options?: PlainObj<string>
   ) {

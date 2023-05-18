@@ -7,6 +7,20 @@ const def = story(
   'toolbar',
   (container) => {
     const toolbar = new Toolbar(container)
+    toolbar.on('change', (key, val, oldVal) => {
+      console.log(key, val, oldVal)
+    })
+
+    toolbar.appendSelect('throttling', 'online', 'Throttling', {
+      Online: 'online',
+      '3G': '3g',
+      Offline: 'offline',
+    })
+
+    toolbar.appendSeparator()
+
+    toolbar.appendInput('filter', '', 'Filter')
+    toolbar.appendText('Status: OK')
 
     return toolbar
   },

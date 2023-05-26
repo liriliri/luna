@@ -1,0 +1,23 @@
+@import '../share/mixin';
+@import '../share/variable';
+
+.luna-image-viewer {
+  @include component();
+  overflow: hidden;
+  border: 1px solid $border-color;
+}
+
+.image {
+  height: auto;
+  margin: 15px auto;
+  width: auto;
+  display: block;
+}
+
+.image-transition {
+  transition: all 0.3s;
+}
+
+.theme-dark {
+  border: 1px solid $border-color-dark;
+}

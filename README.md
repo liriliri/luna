@@ -25,6 +25,7 @@
 * [dom-viewer](./src/dom-viewer/README.md): Dom tree navigator.
 * [editor](./src/editor/README.md): Wysiwyg editor.
 * [gallery](./src/gallery/README.md): Lightweight gallery.
+* [image-viewer](./src/image-viewer/README.md): Single image viewer.
 * [json-editor](./src/json-editor/README.md): JSON editor.
 * [keyboard](./src/keyboard/README.md): Virtual keyboard.
 * [log](./src/log/README.md): Terminal log viewer.

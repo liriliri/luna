@@ -103,6 +103,14 @@
     "test": true,
     "install": false
   },
+  "image-viewer": {
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "dependencies": []
+  },
   "json-editor": {
     "icon": true,
     "version": "0.1.0",

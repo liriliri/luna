@@ -173,9 +173,12 @@ export default class ImageViewer extends Component {
     $document.off(drag('end'), this.onMoveEnd)
   }
   private setImage(image: string) {
-    const { c } = this
-    this.$image.addClass(c('hidden')).rmClass(c('image-transition'))
-    this.$image.attr('src', image)
+    const { c, $image } = this
+
+    $image.rmClass(c('image-transition'))
+    nextTick(() => {
+      $image.addClass(c('hidden')).attr('src', image)
+    })
   }
   private bindEvent() {
     const { image } = this
@@ -193,6 +196,14 @@ export default class ImageViewer extends Component {
     this.resizeSensor.addListener(this.reset)
 
     this.$container.on(drag('start'), this.onMoveStart)
+
+    this.on('optionChange', (name, val) => {
+      switch (name) {
+        case 'image':
+          this.setImage(val)
+          break
+      }
+    })
   }
   private render() {
     const { imageData } = this

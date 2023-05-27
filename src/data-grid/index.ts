@@ -282,7 +282,7 @@ export default class DataGrid extends Component<IOptions> {
       $cols.eq(resizeIdx + 1).css('width', rightColWidth - deltaX + 'px')
     })
     this.resizeDeltaX = deltaX
-    let newLeft = this.resizeStartLeft + deltaX
+    const newLeft = this.resizeStartLeft + deltaX
 
     $resizers.eq(resizeIdx).css('left', `${newLeft}px`)
   }
@@ -534,7 +534,7 @@ export default class DataGrid extends Component<IOptions> {
 export class DataGridNode {
   container: HTMLElement = h('tr')
   data: types.PlainObj<string | HTMLElement>
-  selectable: boolean = false
+  selectable = false
   private $container: $.$
   private dataGrid: DataGrid
   constructor(

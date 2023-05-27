@@ -128,7 +128,7 @@ export default class PerformanceMonitor extends Component<IOptions> {
   private bindEvent() {
     this.resizeSensor.addListener(throttle(() => this.onResize(), 16))
 
-    this.on('optionChange', (name, val) => {
+    this.on('optionChange', (name) => {
       if (name === 'color') {
         this.updateColor()
       }

@@ -52,7 +52,7 @@ export default class Setting extends Component<IOptions> {
     this.bindEvent()
   }
   /** Append title. */
-  appendTitle(title: string, level: number = 1) {
+  appendTitle(title: string, level = 1) {
     const settingTitle = new SettingTitle(this, title, level)
     this.append(settingTitle)
 
@@ -150,12 +150,7 @@ export default class Setting extends Component<IOptions> {
     return settingMarkdown
   }
   /** Append text input setting. */
-  appendText(
-    key: string,
-    value: string,
-    title: string,
-    description: string = ''
-  ) {
+  appendText(key: string, value: string, title: string, description = '') {
     const settingText = new SettingText(this, key, value, title, description)
     this.append(settingText)
 

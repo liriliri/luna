@@ -90,7 +90,7 @@ export default class TextViewer extends Component {
       lines.pop()
     }
     let body = ''
-    each(lines, (line, idx) => {
+    each(lines, (line) => {
       this.lineNum += 1
       body += `<div class="${c('table-row')}"><div class="${c(
         'line-number'

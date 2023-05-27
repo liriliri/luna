@@ -86,7 +86,7 @@ export default class Toolbar extends Component {
     return toolbarSeparator
   }
   /** Append text input. */
-  appendInput(key: string, value: string, placeholder: string = '') {
+  appendInput(key: string, value: string, placeholder = '') {
     const toolbarInput = new ToolbarInput(this, key, value, placeholder)
     this.append(toolbarInput)
 

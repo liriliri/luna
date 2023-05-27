@@ -174,7 +174,7 @@
 
 .color-swatch-inner {
   flex: auto;
-  border: 1px solid rgb(128, 128, 128 / 60%);
+  border: 1px solid rgba(128, 128, 128, 0.6);
 }
 
 .element-layout-type {
@@ -229,7 +229,7 @@
   text-align: center;
   line-height: 16px;
   margin-right: 8px;
-  border: 1px solid rgb(0, 0, 0 / 10%);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 0 1px;
 }
 

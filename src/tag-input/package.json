@@ -1,5 +1,8 @@
 {
   "name": "tag-input",
   "version": "0.1.0",
-  "description": "Lightweight tags input"
+  "description": "Lightweight tags input",
+  "luna": {
+    "test": false
+  }
 }

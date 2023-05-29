@@ -61,13 +61,15 @@ export default class Toolbar extends Component {
       title = ''
     }
 
-    return this.append(new ToolbarSelect(
-      this,
-      key,
-      value,
-      title as string,
-      options as types.PlainObj<string>
-    ))
+    return this.append(
+      new ToolbarSelect(
+        this,
+        key,
+        value,
+        title as string,
+        options as types.PlainObj<string>
+      )
+    )
   }
   /** Append separator. */
   appendSeparator() {

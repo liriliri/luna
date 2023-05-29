@@ -27,7 +27,9 @@ const def = story(
 
     toolbar.appendSeparator()
 
-    toolbar.appendInput('filter', '', 'Filter')
+    const filter = toolbar.appendInput('filter', '', 'Filter')
+    filter.disable()
+    toolbar.appendSpace()
     toolbar.appendText('Status: OK')
 
     return toolbar

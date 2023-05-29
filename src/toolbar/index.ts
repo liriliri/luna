@@ -32,17 +32,11 @@ export default class Toolbar extends Component {
   }
   /** Append text. */
   appendText(text: string) {
-    const toolbarText = new ToolbarText(this, text)
-    this.append(toolbarText)
-
-    return toolbarText
+    return this.append(new ToolbarText(this, text))
   }
   /** Append html. */
   appendHtml(html: string | HTMLElement) {
-    const toolbarHtml = new ToolbarHtml(this, html)
-    this.append(toolbarHtml)
-
-    return toolbarHtml
+    return this.append(new ToolbarHtml(this, html))
   }
   /** Append select. */
   appendSelect(
@@ -67,34 +61,30 @@ export default class Toolbar extends Component {
       title = ''
     }
 
-    const toolbarSelect = new ToolbarSelect(
+    return this.append(new ToolbarSelect(
       this,
       key,
       value,
       title as string,
       options as types.PlainObj<string>
-    )
-    this.append(toolbarSelect)
-
-    return toolbarSelect
+    ))
   }
   /** Append separator. */
   appendSeparator() {
-    const toolbarSeparator = new ToolbarSeparator(this)
-    this.append(toolbarSeparator)
-
-    return toolbarSeparator
+    return this.append(new ToolbarSeparator(this))
+  }
+  /** Append item that fills the remaining space. */
+  appendSpace() {
+    return this.append(new ToolbarSpace(this))
   }
   /** Append text input. */
   appendInput(key: string, value: string, placeholder = '') {
-    const toolbarInput = new ToolbarInput(this, key, value, placeholder)
-    this.append(toolbarInput)
-
-    return toolbarInput
+    return this.append(new ToolbarInput(this, key, value, placeholder))
   }
-  private append(item: ToolbarItem) {
+  private append<T extends ToolbarItem>(item: T): T {
     this.items.push(item)
     this.$container.append(item.container)
+    return item
   }
 }
 
@@ -116,6 +106,12 @@ class ToolbarItem {
   }
   detach() {
     this.$container.remove()
+  }
+  disable() {
+    this.$container.addClass(this.toolbar.c('disabled'))
+  }
+  enable() {
+    this.$container.rmClass(this.toolbar.c('disabled'))
   }
   protected onChange(value: any) {
     this.toolbar.emit('change', this.key, value, this.value)
@@ -195,6 +191,12 @@ class ToolbarHtml extends ToolbarItem {
   constructor(toolbar: Toolbar, html: string | HTMLElement) {
     super(toolbar, '', '', 'html')
     this.$container.append(html)
+  }
+}
+
+class ToolbarSpace extends ToolbarItem {
+  constructor(toolbar: Toolbar) {
+    super(toolbar, '', '', 'space')
   }
 }
 

@@ -43,6 +43,15 @@
   }
 }
 
+.item-space {
+  flex-grow: 1;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
 .theme-dark {
   border-bottom-color: $border-color-dark;
   .item-separator {

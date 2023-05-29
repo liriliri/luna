@@ -44,6 +44,10 @@ Append select.
 
 Append separator.
 
+### appendSpace(): ToolbarSpace
+
+Append item that fills the remaining space.
+
 ### appendText(text: string): ToolbarText
 
 Append text.

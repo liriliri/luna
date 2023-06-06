@@ -32,11 +32,14 @@ import LunaGallery from 'luna-gallery'
 ## Usage
 
 ```javascript
-const container = document.getElementById('container')
 const gallery = new LunaGallery(container)
 gallery.append('https://res.liriliri.io/luna/pic1.jpg', 'pic1.jpg')
 gallery.show()
 ```
+
+## Configuration
+
+* inline(boolean): Enable inline mode.
 
 ## Api
 

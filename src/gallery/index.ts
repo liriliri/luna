@@ -1,5 +1,5 @@
 import stripIndent from 'licia/stripIndent'
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import LunaCarousel from 'luna-carousel'
 import h from 'licia/h'
 import $ from 'licia/$'
@@ -8,16 +8,21 @@ import throttle from 'licia/throttle'
 import each from 'licia/each'
 import fullscreen from 'licia/fullscreen'
 
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Enable inline mode. */
+  inline?: boolean
+}
+
 /**
  * Lightweight gallery.
  *
  * @example
- * const container = document.getElementById('container')
  * const gallery = new LunaGallery(container)
  * gallery.append('https://res.liriliri.io/luna/pic1.jpg', 'pic1.jpg')
  * gallery.show()
  */
-export default class Gallery extends Component {
+export default class Gallery extends Component<IOptions> {
   private onResize: () => void
   private carousel: LunaCarousel
   private images: Image[] = []
@@ -26,8 +31,15 @@ export default class Gallery extends Component {
   private $counter: $.$
   private $playIcon: $.$
   private isCycling = false
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'gallery' })
+    this.initOptions(options, {
+      inline: false,
+    })
+
+    if (!this.options.inline) {
+      this.$container.addClass(this.c('full'))
+    }
 
     this.initTpl()
 
@@ -217,24 +229,25 @@ class Image {
     }
 
     const padding = 38
-    const winHeight = window.innerHeight
-    const winWidth = window.innerWidth
+    const offset = this.gallery.$container.offset()
+    const containerHeight = offset.height
+    const containerWidth = offset.width
     const ratio = width / height
 
-    if (width > winWidth) {
-      width = winWidth
+    if (width > containerWidth) {
+      width = containerWidth
       height = width / ratio
     }
-    if (height > winHeight - padding * 2) {
-      height = winHeight - padding * 2
+    if (height > containerHeight - padding * 2) {
+      height = containerHeight - padding * 2
       width = height * ratio
     }
 
     $image.css({
       width,
       height,
-      top: (winHeight - height) / 2,
-      left: (winWidth - width) / 2,
+      top: (containerHeight - height) / 2,
+      left: (containerWidth - width) / 2,
     })
   }
   private initTpl() {

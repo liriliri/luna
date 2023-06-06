@@ -33,7 +33,7 @@ interface IImageData {
  * })
  * imageViewer.zoom(0.1)
  */
-export default class ImageViewer extends Component {
+export default class ImageViewer extends Component<IOptions> {
   private imageData: IImageData = {
     left: 0,
     top: 0,

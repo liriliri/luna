@@ -1,13 +1,25 @@
 import 'luna-gallery.css'
 import Gallery from 'luna-gallery.js'
+import $ from 'licia/$'
 import readme from './README.md'
 import story from '../share/story'
-import { button } from '@storybook/addon-knobs'
+import { button, boolean } from '@storybook/addon-knobs'
 
 const def = story(
   'gallery',
   (container) => {
-    const gallery = new Gallery(container)
+    $(container).css({
+      width: '100%',
+      maxWidth: 640,
+      height: 360,
+      margin: '0 auto',
+    })
+
+    const inline = boolean('Inline Mode', false)
+
+    const gallery = new Gallery(container, {
+      inline,
+    })
     gallery.show()
 
     gallery.append('https://res.liriliri.io/luna/pic1.jpg', 'pic1.jpg')

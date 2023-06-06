@@ -5,6 +5,7 @@ import each from 'licia/each'
 import extend from 'licia/extend'
 import defaults from 'licia/defaults'
 import remove from 'licia/remove'
+import startWith from 'licia/startWith'
 
 interface IOptions {
   compName: string
@@ -56,12 +57,14 @@ export default class Component<
   }
   destroy() {
     this.destroySubComponents()
-    const { c } = this
-    this.$container
-      .rmClass(`luna-${this.compName}`)
-      .rmClass(c(`platform-${getPlatform()}`))
-      .rmClass(c(`theme-${this.options.theme}`))
-    this.$container.html('')
+    const { $container } = this
+    const classes = $container.attr('class')
+    each(classes.split(/\s+/), (c) => {
+      if (startWith(c, `luna-${this.compName}`)) {
+        $container.rmClass(c)
+      }
+    })
+    $container.html('')
     this.emit('destroy')
     this.removeAllListeners()
   }

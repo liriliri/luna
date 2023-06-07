@@ -68,7 +68,7 @@ export default class Component<
     this.emit('destroy')
     this.removeAllListeners()
   }
-  setOption(name: string | Options, val?: any) {
+  setOption(name: string | Partial<Options>, val?: any) {
     const options: any = this.options
     let newOptions: any = {}
     if (typeof name === 'string') {

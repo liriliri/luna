@@ -752,6 +752,8 @@ export default class Log extends Emitter {
           case 'O':
             if (isObj(arg)) {
               newStr += this.formatPreview(arg)
+            } else {
+              newStr += toStr(arg)
             }
             break
           case 'o':
@@ -759,6 +761,8 @@ export default class Log extends Emitter {
               newStr += this.formatEl(arg as HTMLElement)
             } else if (isObj(arg)) {
               newStr += this.formatPreview(arg)
+            } else {
+              newStr += toStr(arg)
             }
             break
           case 'c':

@@ -1,3 +1,7 @@
+## 1.3.3 (12 June 2023)
+
+* fix: print string with %o
+
 ## 1.3.2 (19 Apr 2023)
 
 * fix: position fixed not working [#9](https://github.com/liriliri/luna/issues/9)

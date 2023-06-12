@@ -4,7 +4,7 @@ import $ from 'licia/$'
 import each from 'licia/each'
 import clone from 'licia/clone'
 import ResizeSensor from 'licia/ResizeSensor'
-import { measuredScrollbarWidth, drag } from '../share/util'
+import { measuredScrollbarWidth, drag, exportCjs } from '../share/util'
 
 const $document = $(document as any)
 
@@ -256,5 +256,6 @@ export default class Scrollbar extends Component {
   }
 }
 
-module.exports = Scrollbar
-module.exports.default = Scrollbar
+if (typeof module !== 'undefined') {
+  exportCjs(module, Scrollbar)
+}

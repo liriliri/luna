@@ -68,7 +68,7 @@ const def = story(
 
     setting.appendTitle('Element')
 
-    setting.appendInput(
+    setting.appendText(
       'searchKeyword',
       'div',
       'Search Keyword',

@@ -323,6 +323,12 @@ class SettingItem {
   detach() {
     this.$container.remove()
   }
+  disable() {
+    this.$container.addClass(this.setting.c('disabled'))
+  }
+  enable() {
+    this.$container.rmClass(this.setting.c('disabled'))
+  }
   text() {
     return this.$container.text()
   }
@@ -354,6 +360,7 @@ class SettingSeparator extends SettingItem {
 }
 
 class SettingText extends SettingItem {
+  private $input: $.$
   constructor(
     setting: Setting,
     key: string,
@@ -374,6 +381,15 @@ class SettingText extends SettingItem {
     $input.val(value)
 
     $input.on('change', () => this.onChange($input.val()))
+    this.$input = $input
+  }
+  disable() {
+    super.disable()
+    this.$input.attr('disabled', '')
+  }
+  enable() {
+    super.enable()
+    this.$input.rmAttr('disabled')
   }
 }
 
@@ -390,6 +406,7 @@ export interface INumberOptions {
 }
 
 class SettingNumber extends SettingItem {
+  private $input: $.$
   constructor(
     setting: Setting,
     key: string,
@@ -452,6 +469,16 @@ class SettingNumber extends SettingItem {
       $trackProgress.css('width', progress(val, min, max) + '%')
       $value.text(toStr(val))
     })
+
+    this.$input = $input
+  }
+  disable() {
+    super.disable()
+    this.$input.attr('disabled', '')
+  }
+  enable() {
+    super.enable()
+    this.$input.rmAttr('disabled')
   }
 }
 
@@ -460,6 +487,7 @@ const progress = (val: number, min: number, max: number) => {
 }
 
 class SettingCheckbox extends SettingItem {
+  private $input: $.$
   constructor(
     setting: Setting,
     key: string,
@@ -485,10 +513,20 @@ class SettingCheckbox extends SettingItem {
     input.checked = value
 
     $input.on('change', () => this.onChange(input.checked))
+    this.$input = $input
+  }
+  disable() {
+    super.disable()
+    this.$input.attr('disabled', '')
+  }
+  enable() {
+    super.enable()
+    this.$input.rmAttr('disabled')
   }
 }
 
 class SettingSelect extends SettingItem {
+  private $select: $.$
   constructor(
     setting: Setting,
     key: string,
@@ -520,6 +558,15 @@ class SettingSelect extends SettingItem {
 
     const $select = this.$container.find('select')
     $select.on('change', () => this.onChange($select.val()))
+    this.$select = $select
+  }
+  disable() {
+    super.disable()
+    this.$select.attr('disabled', '')
+  }
+  enable() {
+    super.enable()
+    this.$select.rmAttr('disabled')
   }
 }
 

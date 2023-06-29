@@ -249,7 +249,7 @@
   },
   "setting": {
     "install": true,
-    "version": "0.7.0",
+    "version": "0.8.0",
     "style": true,
     "icon": false,
     "test": true,

@@ -70,6 +70,11 @@
 }
 
 .item-input {
+  &.disabled {
+    input {
+      opacity: 0.6;
+    }
+  }
   input {
     @include input();
     width: 100%;
@@ -77,6 +82,15 @@
 }
 
 .item-number {
+  &.disabled {
+    input,
+    .range-container {
+      opacity: 0.6;
+    }
+    .range-container input {
+      opacity: 1;
+    }
+  }
   input[type='number'] {
     @include input();
     width: 200px;
@@ -139,6 +153,11 @@
 }
 
 .item-checkbox {
+  &.disabled {
+    .control {
+      opacity: 0.6;
+    }
+  }
   input {
     @include checkbox();
     align-self: flex-start;
@@ -153,6 +172,11 @@
 }
 
 .item-select {
+  &.disabled {
+    .select {
+      opacity: 0.6;
+    }
+  }
   .select {
     @include select();
     select {

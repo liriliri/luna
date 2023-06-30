@@ -27,6 +27,16 @@ module.exports = {
       },
     },
   ],
+  babel: async (options) => {
+    options.presets.push([
+      '@babel/preset-react',
+      {
+        runtime: 'automatic',
+      },
+    ])
+
+    return options
+  },
   webpackFinal: (config) => {
     const rules = config.module.rules
 

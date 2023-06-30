@@ -12,13 +12,21 @@ import { addReadme } from 'storybook-readme/html'
 import each from 'licia/each'
 import addons from '@storybook/addons'
 import now from 'licia/now'
+import ReactDOM from 'react-dom'
 import * as registerKnobs from '@storybook/addon-knobs/dist/registerKnobs'
 import { optionsKnob } from '@storybook/addon-knobs'
 
 export default function story(
   name,
   storyFn,
-  { readme, changelog = '', source, layout = 'padded', themes = {} } = {}
+  {
+    readme,
+    changelog = '',
+    source,
+    layout = 'padded',
+    themes = {},
+    ReactComponent = false,
+  } = {}
 ) {
   const container = h('div')
 
@@ -26,7 +34,7 @@ export default function story(
     readme += `\n## Changelog\n${changelog.replace(/## /g, '### ')}`
   }
 
-  return {
+  const ret = {
     title: map(spaceCase(name).split(' '), upperFirst).join(' '),
     decorators: [withKnobs, addReadme],
     parameters: {
@@ -42,19 +50,7 @@ export default function story(
       layout,
     },
     [camelCase(name)]: () => {
-      if (window.components) {
-        const lastComponentName = window.componentName
-        if (upperFirst(camelCase(name)) !== lastComponentName) {
-          // Fix knobs not reset when story changed.
-          const knobStore = registerKnobs.manager.knobStore
-          knobStore.reset()
-          addons.getChannel().emit('storybookjs/knobs/set', {
-            knobs: knobStore.getAll(),
-            timestamp: now(),
-          })
-        }
-        each(window.components, (component) => component.destroy())
-      }
+      fixKnobs(name)
 
       waitUntil(() => container.parentElement).then(() => {
         const theme = optionsKnob(
@@ -91,5 +87,39 @@ export default function story(
 
       return container
     },
+  }
+
+  if (ReactComponent) {
+    const container = h('div')
+
+    ret.react = function () {
+      fixKnobs(`react-${name}`)
+
+      window.components = []
+      delete window.component
+      window.componentName = upperFirst(camelCase(`react-${name}`))
+
+      ReactDOM.render(<ReactComponent />, container)
+
+      return container
+    }
+  }
+
+  return ret
+}
+
+function fixKnobs(name) {
+  if (window.components) {
+    const lastComponentName = window.componentName
+    if (upperFirst(camelCase(name)) !== lastComponentName) {
+      // Fix knobs not reset when story changed.
+      const knobStore = registerKnobs.manager.knobStore
+      knobStore.reset()
+      addons.getChannel().emit('storybookjs/knobs/set', {
+        knobs: knobStore.getAll(),
+        timestamp: now(),
+      })
+    }
+    each(window.components, (component) => component.destroy())
   }
 }

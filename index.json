@@ -168,6 +168,7 @@
     "install": false
   },
   "modal": {
+    "react": true,
     "icon": true,
     "version": "1.0.0",
     "style": true,

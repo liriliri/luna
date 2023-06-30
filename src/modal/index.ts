@@ -66,7 +66,7 @@ export default class Modal extends Component<IOptions> {
     this.$container.rmClass(this.c('hidden'))
   }
   /** Hide the modal. */
-  hide = () => {
+  hide() {
     this.$container.addClass(this.c('hidden'))
   }
   destroy() {
@@ -189,7 +189,7 @@ export default class Modal extends Component<IOptions> {
     globalContainer = container
   }
   private bindEvent() {
-    this.$body.on('click', this.c('.icon-close'), this.hide)
+    this.$body.on('click', this.c('.icon-close'), () => this.hide())
     this.on('optionChange', this.render)
   }
   private render = () => {

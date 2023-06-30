@@ -31,7 +31,6 @@ module.exports = function (
   if (hasStyle) {
     entry.unshift(`./src/${name}/style.scss`)
   }
-
   if (useIcon) {
     entry.unshift(`./src/${name}/icon.css`)
   }

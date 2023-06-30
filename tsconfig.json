@@ -12,6 +12,7 @@
     "sourceMap": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
+    "jsx": "react-jsx",
     "paths": {
       "luna-menu": ["src/menu/index"],
       "luna-carousel": ["src/carousel/index"],

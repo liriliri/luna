@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Create modal dialogs",
   "luna": {
+    "react": true,
     "icon": true
   }
 }

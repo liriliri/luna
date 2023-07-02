@@ -1,5 +1,8 @@
 {
   "name": "toolbar",
   "version": "0.3.1",
-  "description": "Application toolbar"
+  "description": "Application toolbar",
+  "luna": {
+    "react": true
+  }
 }

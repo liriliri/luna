@@ -58,9 +58,11 @@ const LunaModal: FC<PropsWithChildren<IModalProps>> = (props) => {
     }
   }, [props.width])
 
-  return <div ref={modalRef}>
-    {createPortal(<>{props.children}</>, content.current)}
-  </div>
+  return (
+    <div ref={modalRef}>
+      {createPortal(<>{props.children}</>, content.current)}
+    </div>
+  )
 }
 
 export default LunaModal

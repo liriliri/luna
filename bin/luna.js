@@ -17,7 +17,7 @@ const build = require('../lib/build')
 const format = wrap(async function (component) {
   await runScript('lsla', [
     'prettier',
-    `src/${component}/**/*.{ts,js,html,json,css,scss}`,
+    `src/${component}/**/*.{ts,tsx,js,html,json,css,scss}`,
     '--write',
   ])
 })

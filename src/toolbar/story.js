@@ -2,6 +2,12 @@ import 'luna-toolbar.css'
 import Toolbar from 'luna-toolbar.js'
 import readme from './README.md'
 import story from '../share/story'
+import LunaToolbar, {
+  LunaToolbarText,
+  LunaToolbarSelect,
+  LunaToolbarSeparator,
+  LunaToolbarSpace,
+} from './react'
 
 const def = story(
   'toolbar',
@@ -37,9 +43,28 @@ const def = story(
   {
     readme,
     source: __STORY__,
+    ReactComponent() {
+      return (
+        <LunaToolbar>
+          <LunaToolbarSelect
+            key="throttling"
+            value="online"
+            title="Throttling"
+            options={{
+              Online: 'online',
+              '3G': '3g',
+              Offline: 'offline',
+            }}
+          />
+          <LunaToolbarSeparator />
+          <LunaToolbarSpace />
+          <LunaToolbarText text="Status: OK" />
+        </LunaToolbar>
+      )
+    },
   }
 )
 
 export default def
 
-export const { toolbar } = def
+export const { toolbar: html, react } = def

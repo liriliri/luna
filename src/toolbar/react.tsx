@@ -77,6 +77,22 @@ export const LunaToolbarSelect: FC<IToolbarSelectProps> = (props) => {
   return null
 }
 
+interface IToolbarInputProps extends IToolbarItemProps {
+  key: string
+  value: string
+  placeholder?: string
+}
+
+export const LunaToolbarInput: FC<IToolbarInputProps> = (props) => {
+  useEffect(() => {
+    if (props.toolbar) {
+      props.toolbar.appendInput(props.key, props.value, props.placeholder)
+    }
+  }, [props.toolbar])
+
+  return null
+}
+
 export const LunaToolbarSeparator: FC<IToolbarItemProps> = (props) => {
   useEffect(() => {
     if (props.toolbar) {

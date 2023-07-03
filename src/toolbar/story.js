@@ -7,6 +7,7 @@ import LunaToolbar, {
   LunaToolbarSelect,
   LunaToolbarSeparator,
   LunaToolbarSpace,
+  LunaToolbarInput,
 } from './react'
 
 const def = story(
@@ -57,6 +58,7 @@ const def = story(
             }}
           />
           <LunaToolbarSeparator />
+          <LunaToolbarInput key="filter" value="" placeholder="Filter" />
           <LunaToolbarSpace />
           <LunaToolbarText text="Status: OK" />
         </LunaToolbar>

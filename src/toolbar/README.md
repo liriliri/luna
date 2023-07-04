@@ -26,6 +26,13 @@ import 'luna-toolbar/luna-toolbar.css'
 import LunaToolbar from 'luna-toolbar'
 ```
 
+## Usage
+
+```javascript
+const toolbar = new LunaToolbar(container)
+toolbar.appendText('Test')
+```
+
 ## Api
 
 ### appendHtml(html: string | HTMLElement): ToolbarHtml

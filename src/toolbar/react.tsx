@@ -8,8 +8,10 @@ import {
   ReactElement,
   useState,
 } from 'react'
+import h from 'licia/h'
 import types from 'licia/types'
 import Toolbar from './index'
+import { createPortal } from 'react-dom'
 
 interface IToolbarProps {}
 
@@ -111,6 +113,19 @@ export const LunaToolbarSpace: FC<IToolbarItemProps> = (props) => {
   }, [props.toolbar])
 
   return null
+}
+
+export const LunaToolbarHtml: FC<IToolbarItemProps> = (props) => {
+  const html = useRef(h('div') as HTMLDivElement)
+  document.createDocumentFragment()
+
+  useEffect(() => {
+    if (props.toolbar) {
+      props.toolbar.appendHtml(html.current)
+    }
+  }, [props.toolbar])
+
+  return createPortal(<>{props.children}</>, html.current)
 }
 
 export default LunaToolbar

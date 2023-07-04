@@ -5,6 +5,8 @@
   @include component();
   height: 31px;
   display: flex;
+  white-space: nowrap;
+  overflow-x: hidden;
   border-bottom: 1px solid $border-color;
 }
 

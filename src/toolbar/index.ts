@@ -10,6 +10,10 @@ import { exportCjs } from '../share/util'
 
 /**
  * Application toolbar.
+ *
+ * @example
+ * const toolbar = new LunaToolbar(container)
+ * toolbar.appendText('Test')
  */
 export default class Toolbar extends Component {
   private items: ToolbarItem[] = []

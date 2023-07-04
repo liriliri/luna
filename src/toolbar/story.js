@@ -8,6 +8,7 @@ import LunaToolbar, {
   LunaToolbarSeparator,
   LunaToolbarSpace,
   LunaToolbarInput,
+  LunaToolbarHtml,
 } from './react'
 
 const def = story(
@@ -37,6 +38,9 @@ const def = story(
     const filter = toolbar.appendInput('filter', '', 'Filter')
     filter.disable()
     toolbar.appendSpace()
+    toolbar.appendHtml(
+      '<span style="color:green;line-height:30px;">Loading</span>'
+    )
     toolbar.appendText('Status: OK')
 
     return toolbar
@@ -60,6 +64,16 @@ const def = story(
           <LunaToolbarSeparator />
           <LunaToolbarInput key="filter" value="" placeholder="Filter" />
           <LunaToolbarSpace />
+          <LunaToolbarHtml>
+            <span
+              style={{
+                color: 'green',
+                lineHeight: '30px',
+              }}
+            >
+              Loading
+            </span>
+          </LunaToolbarHtml>
           <LunaToolbarText text="Status: OK" />
         </LunaToolbar>
       )

@@ -50,9 +50,13 @@ const def = story(
     source: __STORY__,
     ReactComponent() {
       return (
-        <LunaToolbar>
+        <LunaToolbar
+          onChange={(key, val, oldVal) => {
+            console.log(key, val, oldVal)
+          }}
+        >
           <LunaToolbarSelect
-            key="throttling"
+            keyName="throttling"
             value="online"
             title="Throttling"
             options={{
@@ -62,7 +66,7 @@ const def = story(
             }}
           />
           <LunaToolbarSeparator />
-          <LunaToolbarInput key="filter" value="" placeholder="Filter" />
+          <LunaToolbarInput keyName="filter" value="" placeholder="Filter" />
           <LunaToolbarSpace />
           <LunaToolbarHtml>
             <span

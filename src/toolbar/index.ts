@@ -16,12 +16,12 @@ import { exportCjs } from '../share/util'
  * toolbar.appendText('Test')
  */
 export default class Toolbar extends Component {
-  private items: ToolbarItem[] = []
+  private items: LunaToolbarItem[] = []
   constructor(container: HTMLElement) {
     super(container, { compName: 'toolbar' })
   }
   /** Remove item. */
-  remove(item: ToolbarItem) {
+  remove(item: LunaToolbarItem) {
     const { items } = this
     const pos = items.indexOf(item)
     if (pos > -1) {
@@ -36,24 +36,24 @@ export default class Toolbar extends Component {
   }
   /** Append text. */
   appendText(text: string) {
-    return this.append(new ToolbarText(this, text))
+    return this.append(new LunaToolbarText(this, text))
   }
   /** Append html. */
   appendHtml(html: string | HTMLElement) {
-    return this.append(new ToolbarHtml(this, html))
+    return this.append(new LunaToolbarHtml(this, html))
   }
   /** Append select. */
   appendSelect(
     key: string,
     value: string,
     options: types.PlainObj<string>
-  ): ToolbarSelect
+  ): LunaToolbarSelect
   appendSelect(
     key: string,
     value: string,
     title: string,
     options: types.PlainObj<string>
-  ): ToolbarSelect
+  ): LunaToolbarSelect
   appendSelect(
     key: string,
     value: string,
@@ -66,7 +66,7 @@ export default class Toolbar extends Component {
     }
 
     return this.append(
-      new ToolbarSelect(
+      new LunaToolbarSelect(
         this,
         key,
         value,
@@ -87,14 +87,14 @@ export default class Toolbar extends Component {
   appendInput(key: string, value: string, placeholder = '') {
     return this.append(new ToolbarInput(this, key, value, placeholder))
   }
-  private append<T extends ToolbarItem>(item: T): T {
+  private append<T extends LunaToolbarItem>(item: T): T {
     this.items.push(item)
     this.$container.append(item.container)
     return item
   }
 }
 
-class ToolbarItem {
+export class LunaToolbarItem {
   container: HTMLElement = h('div')
   $container: $.$
   key: string
@@ -125,7 +125,7 @@ class ToolbarItem {
   }
 }
 
-class ToolbarSelect extends ToolbarItem {
+export class LunaToolbarSelect extends LunaToolbarItem {
   private $select: $.$
   constructor(
     toolbar: Toolbar,
@@ -136,11 +136,7 @@ class ToolbarSelect extends ToolbarItem {
   ) {
     super(toolbar, key, value, 'select')
 
-    this.$container.html(
-      `<select title="${escape(title)}">
-        
-      </select>`
-    )
+    this.$container.html(`<select title="${escape(title)}"></select>`)
     const $select = this.$container.find('select')
     this.$select = $select
     this.setOptions(options)
@@ -159,7 +155,7 @@ class ToolbarSelect extends ToolbarItem {
   }
 }
 
-class ToolbarInput extends ToolbarItem {
+class ToolbarInput extends LunaToolbarItem {
   constructor(
     toolbar: Toolbar,
     key: string,
@@ -177,13 +173,13 @@ class ToolbarInput extends ToolbarItem {
   }
 }
 
-class ToolbarSeparator extends ToolbarItem {
+class ToolbarSeparator extends LunaToolbarItem {
   constructor(toolbar: Toolbar) {
     super(toolbar, '', '', 'separator')
   }
 }
 
-class ToolbarText extends ToolbarItem {
+export class LunaToolbarText extends LunaToolbarItem {
   constructor(toolbar: Toolbar, text: string) {
     super(toolbar, '', '', 'text')
     this.setText(text)
@@ -193,14 +189,14 @@ class ToolbarText extends ToolbarItem {
   }
 }
 
-class ToolbarHtml extends ToolbarItem {
+export class LunaToolbarHtml extends LunaToolbarItem {
   constructor(toolbar: Toolbar, html: string | HTMLElement) {
     super(toolbar, '', '', 'html')
     this.$container.append(html)
   }
 }
 
-class ToolbarSpace extends ToolbarItem {
+class ToolbarSpace extends LunaToolbarItem {
   constructor(toolbar: Toolbar) {
     super(toolbar, '', '', 'space')
   }

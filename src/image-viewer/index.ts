@@ -2,7 +2,7 @@ import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs, drag, eventPage } from '../share/util'
 import ResizeSensor from 'licia/ResizeSensor'
 import $ from 'licia/$'
-import nextTick from 'licia/nextTick'
+import isHidden from 'licia/isHidden'
 
 const $document = $(document as any)
 
@@ -101,6 +101,10 @@ export default class ImageViewer extends Component<IOptions> {
   }
   /** Reset image to initial state. */
   reset = () => {
+    if (isHidden(this.container)) {
+      return
+    }
+
     const { image, $container } = this
     const { initialCoverage } = this.options
     const { width: viewerWidth, height: viewerHeight } = $container.offset()
@@ -176,9 +180,7 @@ export default class ImageViewer extends Component<IOptions> {
     const { c, $image } = this
 
     $image.rmClass(c('image-transition'))
-    nextTick(() => {
-      $image.addClass(c('hidden')).attr('src', image)
-    })
+    $image.addClass(c('hidden')).attr('src', image)
   }
   private bindEvent() {
     const { image } = this
@@ -186,8 +188,8 @@ export default class ImageViewer extends Component<IOptions> {
     image.onload = () => {
       const { c, $image } = this
       $image.rmClass(c('hidden'))
-      nextTick(() => $image.addClass(c('image-transition')))
       this.reset()
+      setTimeout(() => $image.addClass(c('image-transition')), 0)
     }
     image.onerror = (err) => {
       this.emit('error', err)

@@ -4,6 +4,7 @@ import readme from './README.md'
 import story from '../share/story'
 import $ from 'licia/$'
 import { text, number, button } from '@storybook/addon-knobs'
+import LunaImageViewer from './react'
 
 const def = story(
   'image-viewer',
@@ -15,13 +16,7 @@ const def = story(
       margin: '0 auto',
     })
 
-    const image = text('Image', 'https://res.liriliri.io/luna/pic1.jpg')
-    const initialCoverage = number('Initial Coverage', 0.9, {
-      range: true,
-      min: 0.1,
-      max: 1,
-      step: 0.1,
-    })
+    const { image, initialCoverage } = createKnobs()
 
     const imageViewer = new ImageViewer(container, {
       image,
@@ -58,9 +53,43 @@ const def = story(
   {
     readme,
     source: __STORY__,
+    ReactComponent() {
+      const { image, initialCoverage } = createKnobs()
+
+      return (
+        <LunaImageViewer
+          style={{
+            width: '100%',
+            maxWidth: 640,
+            height: 360,
+            margin: '0 auto',
+          }}
+          onCreate={(imageViewer) => {
+            console.log(imageViewer)
+          }}
+          image={image}
+          initialCoverage={initialCoverage}
+        />
+      )
+    },
   }
 )
 
+function createKnobs() {
+  const image = text('Image', 'https://res.liriliri.io/luna/pic1.jpg')
+  const initialCoverage = number('Initial Coverage', 0.9, {
+    range: true,
+    min: 0.1,
+    max: 1,
+    step: 0.1,
+  })
+
+  return {
+    image,
+    initialCoverage,
+  }
+}
+
 export default def
 
-export const { imageViewer } = def
+export const { imageViewer: html, react } = def

@@ -280,11 +280,11 @@
   },
   "setting": {
     "install": true,
-    "version": "0.8.0",
+    "react": true,
+    "version": "0.9.0",
     "style": true,
     "icon": false,
     "test": true,
-    "react": false,
     "dependencies": []
   },
   "shader-toy-player": {

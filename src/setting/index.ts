@@ -39,8 +39,8 @@ export interface IOptions extends IComponentOptions {
  * title.detach()
  */
 export default class Setting extends Component<IOptions> {
-  private items: SettingItem[] = []
-  private selectedItem: SettingItem | null = null
+  private items: LunaSettingItem[] = []
+  private selectedItem: LunaSettingItem | null = null
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'setting' }, options)
 
@@ -53,7 +53,7 @@ export default class Setting extends Component<IOptions> {
   }
   /** Append title. */
   appendTitle(title: string, level = 1) {
-    const settingTitle = new SettingTitle(this, title, level)
+    const settingTitle = new LunaSettingTitle(this, title, level)
     this.append(settingTitle)
 
     return settingTitle
@@ -62,12 +62,12 @@ export default class Setting extends Component<IOptions> {
   appendSeparator() {
     const { items } = this
     const { separatorCollapse } = this.options
-    const lastItem: SettingItem = last(items)
-    if (separatorCollapse && lastItem instanceof SettingSeparator) {
+    const lastItem: LunaSettingItem = last(items)
+    if (separatorCollapse && lastItem instanceof LunaSettingSeparator) {
       return lastItem
     }
 
-    const settingSeparator = new SettingSeparator(this)
+    const settingSeparator = new LunaSettingSeparator(this)
     this.append(settingSeparator)
 
     return settingSeparator
@@ -79,13 +79,13 @@ export default class Setting extends Component<IOptions> {
     title: string,
     description: string,
     options: INumberOptions
-  ): SettingNumber
+  ): LunaSettingNumber
   appendNumber(
     key: string,
     value: number,
     title: string,
     options: INumberOptions
-  ): SettingNumber
+  ): LunaSettingNumber
   appendNumber(
     key: string,
     value: number,
@@ -98,7 +98,7 @@ export default class Setting extends Component<IOptions> {
       description = ''
     }
 
-    const settingNumber = new SettingNumber(
+    const settingNumber = new LunaSettingNumber(
       this,
       key,
       value,
@@ -115,8 +115,8 @@ export default class Setting extends Component<IOptions> {
     title: string,
     description: string,
     handler: types.AnyFn
-  ): SettingButton
-  appendButton(description: string, handler: types.AnyFn): SettingButton
+  ): LunaSettingButton
+  appendButton(description: string, handler: types.AnyFn): LunaSettingButton
   appendButton(
     title: string,
     description: string | types.AnyFn,
@@ -127,7 +127,7 @@ export default class Setting extends Component<IOptions> {
       description = ''
     }
 
-    const settingButton = new SettingButton(
+    const settingButton = new LunaSettingButton(
       this,
       title,
       description as string,
@@ -139,19 +139,25 @@ export default class Setting extends Component<IOptions> {
   }
   /** Append html setting. */
   appendHtml(html: string | HTMLElement) {
-    const settingHtml = new SettingHtml(this, html)
+    const settingHtml = new LunaSettingHtml(this, html)
     this.append(settingHtml)
     return settingHtml
   }
   /** Append markdown description. */
   appendMarkdown(markdown: string) {
-    const settingMarkdown = new SettingMarkdown(this, markdown)
+    const settingMarkdown = new LunaSettingMarkdown(this, markdown)
     this.append(settingMarkdown)
     return settingMarkdown
   }
   /** Append text input setting. */
   appendText(key: string, value: string, title: string, description = '') {
-    const settingText = new SettingText(this, key, value, title, description)
+    const settingText = new LunaSettingText(
+      this,
+      key,
+      value,
+      title,
+      description
+    )
     this.append(settingText)
 
     return settingText
@@ -168,7 +174,7 @@ export default class Setting extends Component<IOptions> {
       title = ''
     }
 
-    const settingCheckbox = new SettingCheckbox(
+    const settingCheckbox = new LunaSettingCheckbox(
       this,
       key,
       value,
@@ -186,13 +192,13 @@ export default class Setting extends Component<IOptions> {
     title: string,
     description: string,
     options: types.PlainObj<string>
-  ): SettingSelect
+  ): LunaSettingSelect
   appendSelect(
     key: string,
     value: string,
     title: string,
     options: types.PlainObj<string>
-  ): SettingSelect
+  ): LunaSettingSelect
   appendSelect(
     key: string,
     value: string,
@@ -205,7 +211,7 @@ export default class Setting extends Component<IOptions> {
       description = ''
     }
 
-    const settingSelect = new SettingSelect(
+    const settingSelect = new LunaSettingSelect(
       this,
       key,
       value,
@@ -218,7 +224,7 @@ export default class Setting extends Component<IOptions> {
     return settingSelect
   }
   /** Remove setting. */
-  remove(item: SettingItem) {
+  remove(item: LunaSettingItem) {
     const { items } = this
     const pos = items.indexOf(item)
     if (pos > -1) {
@@ -235,7 +241,7 @@ export default class Setting extends Component<IOptions> {
     this.items = []
     this.selectItem(null)
   }
-  private selectItem(item: SettingItem | null) {
+  private selectItem(item: LunaSettingItem | null) {
     if (this.selectedItem) {
       this.selectedItem.deselect()
       this.selectedItem = null
@@ -270,7 +276,7 @@ export default class Setting extends Component<IOptions> {
       self.selectItem(this.settingItem)
     })
   }
-  private filterItem(item: SettingItem) {
+  private filterItem(item: LunaSettingItem) {
     let { filter } = this.options
 
     if (filter) {
@@ -288,7 +294,7 @@ export default class Setting extends Component<IOptions> {
 
     return true
   }
-  private append(item: SettingItem) {
+  private append(item: LunaSettingItem) {
     this.items.push(item)
     if (this.filterItem(item)) {
       this.$container.append(item.container)
@@ -296,7 +302,7 @@ export default class Setting extends Component<IOptions> {
   }
 }
 
-class SettingItem {
+export class LunaSettingItem {
   container: HTMLElement = h('div', {
     tabindex: '0',
   })
@@ -338,7 +344,7 @@ class SettingItem {
   }
 }
 
-class SettingTitle extends SettingItem {
+export class LunaSettingTitle extends LunaSettingItem {
   constructor(setting: Setting, title: string, level: number) {
     super(setting, '', '', 'title')
     this.$container.addClass(setting.c(`level-${level}`))
@@ -346,20 +352,20 @@ class SettingTitle extends SettingItem {
   }
 }
 
-class SettingMarkdown extends SettingItem {
+export class LunaSettingMarkdown extends LunaSettingItem {
   constructor(setting: Setting, markdown: string) {
     super(setting, '', '', 'markdown')
     this.$container.html(micromark(markdown))
   }
 }
 
-class SettingSeparator extends SettingItem {
+export class LunaSettingSeparator extends LunaSettingItem {
   constructor(setting: Setting) {
     super(setting, '', '', 'separator')
   }
 }
 
-class SettingText extends SettingItem {
+export class LunaSettingText extends LunaSettingItem {
   private $input: $.$
   constructor(
     setting: Setting,
@@ -405,7 +411,7 @@ export interface INumberOptions {
   range?: boolean
 }
 
-class SettingNumber extends SettingItem {
+export class LunaSettingNumber extends LunaSettingItem {
   private $input: $.$
   constructor(
     setting: Setting,
@@ -486,7 +492,7 @@ const progress = (val: number, min: number, max: number) => {
   return (((val - min) / (max - min)) * 100).toFixed(2)
 }
 
-class SettingCheckbox extends SettingItem {
+export class LunaSettingCheckbox extends LunaSettingItem {
   private $input: $.$
   constructor(
     setting: Setting,
@@ -525,7 +531,7 @@ class SettingCheckbox extends SettingItem {
   }
 }
 
-class SettingSelect extends SettingItem {
+export class LunaSettingSelect extends LunaSettingItem {
   private $select: $.$
   constructor(
     setting: Setting,
@@ -543,22 +549,26 @@ class SettingSelect extends SettingItem {
       <div class="${c('description')}">${micromark(description)}</div>
       <div class="${c('control')}">
         <div class="${c('select')}">
-          <select>
-            ${map(
-              options,
-              (val, key) =>
-                `<option value="${escape(val)}"${
-                  val === value ? ' selected' : ''
-                }>${escape(key)}</option>`
-            ).join('')}
-          </select>
+          <select></select>
         </div>
       </div>`
     )
 
     const $select = this.$container.find('select')
-    $select.on('change', () => this.onChange($select.val()))
     this.$select = $select
+    this.setOptions(options)
+    $select.on('change', () => this.onChange($select.val()))
+  }
+  setOptions(options: types.PlainObj<string>) {
+    this.$select.html(
+      map(
+        options,
+        (val, key) =>
+          `<option value="${escape(val)}"${
+            val === this.value ? ' selected' : ''
+          }>${escape(key)}</option>`
+      ).join('')
+    )
   }
   disable() {
     super.disable()
@@ -570,7 +580,7 @@ class SettingSelect extends SettingItem {
   }
 }
 
-class SettingButton extends SettingItem {
+export class LunaSettingButton extends LunaSettingItem {
   constructor(
     setting: Setting,
     title: string,
@@ -596,7 +606,7 @@ class SettingButton extends SettingItem {
   }
 }
 
-class SettingHtml extends SettingItem {
+export class LunaSettingHtml extends LunaSettingItem {
   constructor(setting: Setting, html: string | HTMLElement) {
     super(setting, '', '', 'html')
     this.$container.append(html)

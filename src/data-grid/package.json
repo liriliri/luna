@@ -1,5 +1,8 @@
 {
   "name": "data-grid",
   "version": "0.4.3",
-  "description": "Grid for displaying datasets"
+  "description": "Grid for displaying datasets",
+  "luna": {
+    "react": true
+  }
 }

@@ -5,6 +5,7 @@ import each from 'licia/each'
 
 interface IDataGridProps {
   columns: IColumn[]
+  className?: string
   data?: any[]
   height?: number
   maxHeight?: number
@@ -39,12 +40,12 @@ const LunaDataGrid: FC<IDataGridProps> = (props) => {
   )
   useEffect(() => setOption(dataGrid, 'filter', props.filter), [props.filter])
 
-  return <div ref={dataGridRef}></div>
+  return <div className={props.className || ''} ref={dataGridRef}></div>
 }
 
 function setData(
   dataGrid: React.MutableRefObject<DataGrid | undefined>,
-  data: any
+  data: any = []
 ) {
   if (dataGrid.current) {
     dataGrid.current.clear()

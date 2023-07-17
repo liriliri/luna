@@ -68,6 +68,7 @@
 
 .text {
   padding: 4px;
+  user-select: text;
   &.line-numbers {
     padding: 0;
   }

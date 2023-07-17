@@ -53,7 +53,7 @@ export default class Log extends Component<IOptions> {
     this.on('optionChange', (name, val) => {
       switch (name) {
         case 'log':
-          this.textViewer.setOption('text', val)
+          this.textViewer.setOption('text', ansiToHtml(val))
           break
         case 'wrapLongLines':
         case 'maxHeight':

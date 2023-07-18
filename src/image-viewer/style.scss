@@ -4,6 +4,7 @@
 .luna-image-viewer {
   @include component();
   overflow: hidden;
+  touch-action: none;
   border: 1px solid $border-color;
 }
 

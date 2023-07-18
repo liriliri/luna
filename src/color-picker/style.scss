@@ -3,6 +3,7 @@
 
 .luna-color-picker {
   @include component();
+  touch-action: none;
   width: 225px;
   box-shadow: $box-shadow;
 }

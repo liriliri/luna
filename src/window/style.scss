@@ -53,9 +53,11 @@
 
 .resizer {
   @include fill-window;
+  touch-action: none;
 }
 
 .title-bar {
+  touch-action: none;
   height: 30px;
   cursor: default;
   user-select: none;

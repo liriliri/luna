@@ -71,6 +71,7 @@
 }
 
 .controller-left {
+  touch-action: none;
   margin: 0 0 0 5px;
   padding: 6px 0;
   flex: 1;
@@ -154,6 +155,7 @@
 }
 
 .volume-controller {
+  touch-action: none;
   height: 0;
   position: absolute;
   bottom: 15px;

@@ -150,7 +150,7 @@ export const LunaToolbarSpace: FC<IToolbarItemProps> = (props) => {
   return null
 }
 
-export const LunaToolbarHtml: FC<IToolbarItemProps> = (props) => {
+export const LunaToolbarHtml: FC<PropsWithChildren<IToolbarItemProps>> = (props) => {
   const toolbarHtml = useRef<ToolbarHtml>()
   const forceUpdate = useForceUpdate()
 

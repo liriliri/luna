@@ -280,7 +280,7 @@ export const LunaSettingText: FC<ISettingTextProps> = (props) => {
   return null
 }
 
-export const LunaSettingHtml: FC<ISettingItemProps> = (props) => {
+export const LunaSettingHtml: FC<PropsWithChildren<ISettingItemProps>> = (props) => {
   const settingHtml = useRef<SettingHtml>()
   const forceUpdate = useForceUpdate()
 

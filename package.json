@@ -15,7 +15,8 @@
     "format": "lsla prettier \"src/share/*.{ts,js,scss}\" \"*.{json,js}\" \"bin/*.js\" \".storybook/*.js\" \"lib/*.js\" --write && luna format",
     "dev": "start-storybook -p 8080",
     "dev:no-cache": "start-storybook -p 8080 --no-manager-cache",
-    "build:storybook": "build-storybook -o .storybook/out"
+    "build:storybook": "build-storybook -o .storybook/out",
+    "genTheme": "lsla genTheme --input src/share/theme.json --output src/share/theme.scss && lsla prettier src/share/theme.scss --write"
   },
   "repository": {
     "type": "git",

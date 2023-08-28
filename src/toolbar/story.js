@@ -78,6 +78,7 @@ const def = story(
               Loading
             </span>
           </LunaToolbarHtml>
+          {null}
           <LunaToolbarText text="Status: OK" />
         </LunaToolbar>
       )

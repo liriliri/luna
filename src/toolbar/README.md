@@ -35,7 +35,7 @@ toolbar.appendText('Test')
 
 ## Api
 
-### appendHtml(html: string | HTMLElement): ToolbarHtml
+### appendHtml(html: string | HTMLElement): LunaToolbarHtml
 
 Append html.
 
@@ -43,7 +43,7 @@ Append html.
 
 Append text input.
 
-### appendSelect(key: string, value: string, options: PlainObj<string>): ToolbarSelect
+### appendSelect(key: string, value: string, options: PlainObj<string>): LunaToolbarSelect
 
 Append select.
 
@@ -55,7 +55,7 @@ Append separator.
 
 Append item that fills the remaining space.
 
-### appendText(text: string): ToolbarText
+### appendText(text: string): LunaToolbarText
 
 Append text.
 
@@ -63,6 +63,6 @@ Append text.
 
 Clear all.
 
-### remove(item: ToolbarItem): void
+### remove(item: LunaToolbarItem): void
 
 Remove item.

@@ -6,6 +6,7 @@ import {
   cloneElement,
   Children,
   ReactElement,
+  isValidElement,
 } from 'react'
 import types from 'licia/types'
 import Toolbar, {
@@ -39,11 +40,13 @@ const LunaToolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
 
   return (
     <div className={props.className || ''} ref={toolbarRef}>
-      {Children.map(props.children, (child) =>
-        cloneElement(child as ReactElement, {
-          toolbar: toolbar.current,
-        })
-      )}
+      {Children.map(props.children, (child) => {
+        if (isValidElement(child)) {
+          return cloneElement(child as ReactElement, {
+            toolbar: toolbar.current,
+          })
+        }
+      })}
     </div>
   )
 }
@@ -150,7 +153,9 @@ export const LunaToolbarSpace: FC<IToolbarItemProps> = (props) => {
   return null
 }
 
-export const LunaToolbarHtml: FC<PropsWithChildren<IToolbarItemProps>> = (props) => {
+export const LunaToolbarHtml: FC<PropsWithChildren<IToolbarItemProps>> = (
+  props
+) => {
   const toolbarHtml = useRef<ToolbarHtml>()
   const forceUpdate = useForceUpdate()
 

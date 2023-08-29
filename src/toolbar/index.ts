@@ -142,6 +142,10 @@ export class LunaToolbarSelect extends LunaToolbarItem {
     this.setOptions(options)
     $select.on('change', () => this.onChange($select.val()))
   }
+  setValue(value: string) {
+    this.$select.val(value)
+    this.value = value
+  }
   setOptions(options: types.PlainObj<string>) {
     this.$select.html(
       map(

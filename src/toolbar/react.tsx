@@ -110,6 +110,12 @@ export const LunaToolbarSelect: FC<IToolbarSelectProps> = (props) => {
 
   useEffect(() => {
     if (toolbarSelect.current) {
+      toolbarSelect.current.setValue(props.value)
+    }
+  }, [props.value])
+
+  useEffect(() => {
+    if (toolbarSelect.current) {
       toolbarSelect.current.setOptions(props.options)
     }
   }, [props.options])

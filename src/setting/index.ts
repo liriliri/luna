@@ -494,6 +494,7 @@ const progress = (val: number, min: number, max: number) => {
 
 export class LunaSettingCheckbox extends LunaSettingItem {
   private $input: $.$
+  private input: HTMLInputElement
   constructor(
     setting: Setting,
     key: string,
@@ -520,6 +521,11 @@ export class LunaSettingCheckbox extends LunaSettingItem {
 
     $input.on('change', () => this.onChange(input.checked))
     this.$input = $input
+    this.input = input
+  }
+  setValue(value: boolean) {
+    this.input.checked = value
+    this.value = value
   }
   disable() {
     super.disable()
@@ -558,6 +564,10 @@ export class LunaSettingSelect extends LunaSettingItem {
     this.$select = $select
     this.setOptions(options)
     $select.on('change', () => this.onChange($select.val()))
+  }
+  setValue(value: string) {
+    this.$select.val(value)
+    this.value = value
   }
   setOptions(options: types.PlainObj<string>) {
     this.$select.html(

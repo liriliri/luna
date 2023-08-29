@@ -4,6 +4,7 @@ import {
   PropsWithChildren,
   ReactElement,
   cloneElement,
+  isValidElement,
   useEffect,
   useRef,
 } from 'react'
@@ -51,11 +52,13 @@ const LunaSetting: FC<PropsWithChildren<ISettingProps>> = (props) => {
 
   return (
     <div className={props.className || ''} ref={settingRef}>
-      {Children.map(props.children, (child) =>
-        cloneElement(child as ReactElement, {
-          setting: setting.current,
-        })
-      )}
+      {Children.map(props.children, (child) => {
+        if (isValidElement(child)) {
+          return cloneElement(child as ReactElement, {
+            setting: setting.current,
+          })
+        }
+      })}
     </div>
   )
 }
@@ -143,6 +146,12 @@ export const LunaSettingSelect: FC<ISettingSelectProps> = (props) => {
     () => setDisabled(settingSelect.current, props.disabled),
     [props.disabled]
   )
+
+  useEffect(() => {
+    if (settingSelect.current) {
+      settingSelect.current.setValue(props.value)
+    }
+  }, [props.value])
 
   useEffect(() => {
     if (settingSelect.current) {
@@ -246,6 +255,12 @@ export const LunaSettingCheckbox: FC<ISettingCheckboxProps> = (props) => {
     [props.disabled]
   )
 
+  useEffect(() => {
+    if (settingCheckbox.current) {
+      settingCheckbox.current.setValue(props.value)
+    }
+  }, [props.value])
+
   return null
 }
 
@@ -280,7 +295,9 @@ export const LunaSettingText: FC<ISettingTextProps> = (props) => {
   return null
 }
 
-export const LunaSettingHtml: FC<PropsWithChildren<ISettingItemProps>> = (props) => {
+export const LunaSettingHtml: FC<PropsWithChildren<ISettingItemProps>> = (
+  props
+) => {
   const settingHtml = useRef<SettingHtml>()
   const forceUpdate = useForceUpdate()
 

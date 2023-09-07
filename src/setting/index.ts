@@ -495,9 +495,6 @@ export class LunaSettingNumber extends LunaSettingItem {
     this.$input.rmAttr('disabled')
   }
   private renderRange = () => {
-    if (!this.options.range) {
-      return
-    }
     const value = toNum(this.$input.val())
     const { options } = this
 

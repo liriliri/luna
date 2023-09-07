@@ -281,7 +281,7 @@
   "setting": {
     "install": true,
     "react": true,
-    "version": "0.9.3",
+    "version": "0.9.4",
     "style": true,
     "icon": false,
     "test": true,

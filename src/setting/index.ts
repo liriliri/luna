@@ -477,22 +477,14 @@ export class LunaSettingNumber extends LunaSettingItem {
       const val = toNum($input.val())
       this.onChange(val)
     })
-    $input.on('input', () => {
-      this.setValue(toNum($input.val()))
-    })
+    $input.on('input', this.renderRange)
 
     this.$input = $input
   }
   setValue(value: number) {
-    const { options } = this
-
     this.$input.val(toStr(value))
-    this.$trackProgress.css(
-      'width',
-      progress(value, options.min!, options.max!) + '%'
-    )
-    this.$value.text(toStr(value))
     this.value = value
+    this.renderRange()
   }
   disable() {
     super.disable()
@@ -501,6 +493,19 @@ export class LunaSettingNumber extends LunaSettingItem {
   enable() {
     super.enable()
     this.$input.rmAttr('disabled')
+  }
+  private renderRange = () => {
+    if (!this.options.range) {
+      return
+    }
+    const value = toNum(this.$input.val())
+    const { options } = this
+
+    this.$trackProgress.css(
+      'width',
+      progress(value, options.min!, options.max!) + '%'
+    )
+    this.$value.text(toStr(value))
   }
 }
 

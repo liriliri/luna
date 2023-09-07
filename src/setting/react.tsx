@@ -204,6 +204,12 @@ export const LunaSettingNumber: FC<ISettingNumberProps> = (props) => {
     [props.disabled]
   )
 
+  useEffect(() => {
+    if (settingNumber.current) {
+      settingNumber.current.setValue(props.value)
+    }
+  }, [props.value])
+
   return null
 }
 

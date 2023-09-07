@@ -339,8 +339,10 @@ export class LunaSettingItem {
     return this.$container.text()
   }
   protected onChange(value: any) {
-    this.setting.emit('change', this.key, value, this.value)
-    this.value = value
+    if (this.value !== value) {
+      this.setting.emit('change', this.key, value, this.value)
+      this.value = value
+    }
   }
 }
 
@@ -413,6 +415,9 @@ export interface INumberOptions {
 
 export class LunaSettingNumber extends LunaSettingItem {
   private $input: $.$
+  private $trackProgress: $.$
+  private $value: $.$
+  private options: INumberOptions
   constructor(
     setting: Setting,
     key: string,
@@ -428,6 +433,8 @@ export class LunaSettingNumber extends LunaSettingItem {
       max: 10,
       step: 1,
     })
+
+    this.options = options
 
     const { $container } = this
     const { c } = setting
@@ -461,9 +468,9 @@ export class LunaSettingNumber extends LunaSettingItem {
       <div class="${c('control')}">${input}</div>`
     )
 
-    const $value = $container.find(c('.value'))
     const $input = $container.find('input')
-    const $trackProgress = $container.find(c('.range-track-progress'))
+    this.$value = $container.find(c('.value'))
+    this.$trackProgress = $container.find(c('.range-track-progress'))
 
     $input.val(toStr(value))
     $input.on('change', () => {
@@ -471,12 +478,21 @@ export class LunaSettingNumber extends LunaSettingItem {
       this.onChange(val)
     })
     $input.on('input', () => {
-      const val = toNum($input.val())
-      $trackProgress.css('width', progress(val, min, max) + '%')
-      $value.text(toStr(val))
+      this.setValue(toNum($input.val()))
     })
 
     this.$input = $input
+  }
+  setValue(value: number) {
+    const { options } = this
+
+    this.$input.val(toStr(value))
+    this.$trackProgress.css(
+      'width',
+      progress(value, options.min!, options.max!) + '%'
+    )
+    this.$value.text(toStr(value))
+    this.value = value
   }
   disable() {
     super.disable()

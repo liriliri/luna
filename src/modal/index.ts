@@ -38,12 +38,12 @@ export default class Modal extends Component<IOptions> {
   static i18n = new I18n(navigator.language !== 'zh-CN' ? 'en-US' : 'zh-CN', {
     'en-US': {
       ok: 'OK',
-      cancel: 'Cancel'
+      cancel: 'Cancel',
     },
     'zh-CN': {
       ok: '确定',
-      cancel: '取消'
-    }
+      cancel: '取消',
+    },
   })
   private $title: $.$
   private $body: $.$

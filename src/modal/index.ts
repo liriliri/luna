@@ -5,6 +5,7 @@ import h from 'licia/h'
 import types from 'licia/types'
 import map from 'licia/map'
 import { exportCjs } from '../share/util'
+import I18n from 'licia/I18n'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -34,6 +35,16 @@ export interface IOptions extends IComponentOptions {
  * LunaModal.alert('This is the alert content.')
  */
 export default class Modal extends Component<IOptions> {
+  static i18n = new I18n(navigator.language !== 'zh-CN' ? 'en-US' : 'zh-CN', {
+    'en-US': {
+      ok: 'OK',
+      cancel: 'Cancel'
+    },
+    'zh-CN': {
+      ok: '确定',
+      cancel: '取消'
+    }
+  })
   private $title: $.$
   private $body: $.$
   private $content: $.$
@@ -86,7 +97,7 @@ export default class Modal extends Component<IOptions> {
       width: getDefaultWidth(),
       footer: createButtons(
         {
-          OK: {
+          [Modal.i18n.t('ok')]: {
             type: 'primary',
             onclick() {
               modal.hide()
@@ -112,14 +123,14 @@ export default class Modal extends Component<IOptions> {
         width: getDefaultWidth(),
         footer: createButtons(
           {
-            Cancel: {
+            [Modal.i18n.t('cancel')]: {
               type: 'secondary',
               onclick() {
                 modal.hide()
                 resolve(false)
               },
             },
-            OK: {
+            [Modal.i18n.t('ok')]: {
               type: 'primary',
               onclick() {
                 modal.hide()
@@ -160,14 +171,14 @@ export default class Modal extends Component<IOptions> {
         width: getDefaultWidth(),
         footer: createButtons(
           {
-            Cancel: {
+            [Modal.i18n.t('cancel')]: {
               type: 'secondary',
               onclick() {
                 modal.hide()
                 resolve(null)
               },
             },
-            OK: {
+            [Modal.i18n.t('ok')]: {
               type: 'primary',
               onclick: ok,
             },

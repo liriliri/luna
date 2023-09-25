@@ -1,3 +1,7 @@
+## 1.2.0 (25 Sep 2023)
+
+* feat: i18n
+
 ## 1.1.1 (5 Aug 2023)
 
 * fix: es import

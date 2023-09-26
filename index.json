@@ -234,12 +234,12 @@
     "dependencies": []
   },
   "performance-monitor": {
+    "react": true,
     "version": "0.3.0",
     "style": true,
     "icon": false,
     "test": true,
     "install": false,
-    "react": false,
     "dependencies": []
   },
   "qrcode-generator": {

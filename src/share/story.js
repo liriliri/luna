@@ -53,21 +53,7 @@ export default function story(
       fixKnobs(name)
 
       waitUntil(() => container.parentElement).then(() => {
-        const theme = optionsKnob(
-          'Theme',
-          extend(
-            {
-              Light: 'light',
-              Dark: 'dark',
-            },
-            themes
-          ),
-          'light',
-          {
-            display: 'select',
-          }
-        )
-
+        const { theme } = createKnobs()
         const story = storyFn(container)
         if (isArr(story)) {
           window.components = story
@@ -95,13 +81,35 @@ export default function story(
     ret.react = function () {
       fixKnobs(`react-${name}`)
 
+      const { theme } = createKnobs()
       window.components = []
       delete window.component
       window.componentName = upperFirst(camelCase(`react-${name}`))
 
-      ReactDOM.render(<ReactComponent />, container)
+      ReactDOM.render(<ReactComponent theme={theme} />, container)
 
       return container
+    }
+  }
+
+  function createKnobs() {
+    const theme = optionsKnob(
+      'Theme',
+      extend(
+        {
+          Light: 'light',
+          Dark: 'dark',
+        },
+        themes
+      ),
+      'light',
+      {
+        display: 'select',
+      }
+    )
+
+    return {
+      theme,
     }
   }
 

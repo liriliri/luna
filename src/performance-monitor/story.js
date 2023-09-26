@@ -9,6 +9,7 @@ import now from 'licia/now'
 import random from 'licia/random'
 import each from 'licia/each'
 import { button } from '@storybook/addon-knobs'
+import LunaPerformanceMonitor from './react'
 
 const def = story(
   'performance-monitor',
@@ -100,9 +101,23 @@ const def = story(
   {
     readme,
     source: __STORY__,
+    ReactComponent({ theme }) {
+      return (
+        <LunaPerformanceMonitor
+          title="Used JS heap size"
+          theme={theme}
+          unit="MB"
+          color="#614d82"
+          smooth={false}
+          data={() => {
+            return (performance.memory.usedJSHeapSize / 1024 / 1024).toFixed(1)
+          }}
+        />
+      )
+    },
   }
 )
 
 export default def
 
-export const { performanceMonitor } = def
+export const { performanceMonitor: html, react } = def

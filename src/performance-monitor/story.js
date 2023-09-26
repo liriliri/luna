@@ -107,7 +107,7 @@ const def = story(
           title="Used JS heap size"
           theme={theme}
           unit="MB"
-          color="#614d82"
+          // color="#614d82"
           smooth={false}
           data={() => {
             return (performance.memory.usedJSHeapSize / 1024 / 1024).toFixed(1)

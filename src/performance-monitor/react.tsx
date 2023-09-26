@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef } from 'react'
 import PerformanceMonitor, { IOptions } from './index'
+import { useNonInitialEffect } from '../share/hooks'
 
 const LunaPerformanceMonitor: FC<IOptions> = (props) => {
   const performanceMonitorRef = useRef<HTMLDivElement>(null)
@@ -17,13 +18,13 @@ const LunaPerformanceMonitor: FC<IOptions> = (props) => {
     return () => performanceMonitor.current?.destroy()
   }, [])
 
-  useEffect(() => {
+  useNonInitialEffect(() => {
     if (performanceMonitor.current) {
       performanceMonitor.current.setOption('theme', props.theme)
     }
   }, [props.theme])
 
-  useEffect(() => {
+  useNonInitialEffect(() => {
     if (performanceMonitor.current) {
       performanceMonitor.current.setOption('color', props.color)
     }

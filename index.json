@@ -235,7 +235,7 @@
   },
   "performance-monitor": {
     "react": true,
-    "version": "0.3.0",
+    "version": "0.4.1",
     "style": true,
     "icon": false,
     "test": true,

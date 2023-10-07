@@ -88,26 +88,29 @@ export default class Modal extends Component<IOptions> {
    * Like `window.alert`.
    * @static
    */
-  static alert(msg: string) {
-    const modal = getGlobalModal()
-    const { c } = modal
-    modal.setOption({
-      title: '',
-      content: msg,
-      width: getDefaultWidth(),
-      footer: createButtons(
-        {
-          [Modal.i18n.t('ok')]: {
-            type: 'primary',
-            onclick() {
-              modal.hide()
+  static alert(msg: string): Promise<void> {
+    return new Promise((resolve) => {
+      const modal = getGlobalModal()
+      const { c } = modal
+      modal.setOption({
+        title: '',
+        content: msg,
+        width: getDefaultWidth(),
+        footer: createButtons(
+          {
+            [Modal.i18n.t('ok')]: {
+              type: 'primary',
+              onclick() {
+                modal.hide()
+                resolve()
+              },
             },
           },
-        },
-        c
-      ),
+          c
+        ),
+      })
+      modal.show()
     })
-    modal.show()
   }
   /**
    * Like `window.confirm`.

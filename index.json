@@ -191,7 +191,7 @@
   "modal": {
     "react": true,
     "icon": true,
-    "version": "1.2.0",
+    "version": "1.2.1",
     "style": true,
     "test": true,
     "install": false,

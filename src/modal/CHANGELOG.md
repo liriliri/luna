@@ -1,3 +1,7 @@
+## 1.2.1 (7 Oct 2023)
+
+* fix: alert promise
+
 ## 1.2.0 (25 Sep 2023)
 
 * feat: i18n

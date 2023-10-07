@@ -57,7 +57,7 @@ Hide the modal.
 
 Show the modal.
 
-### static alert(msg: string): void
+### static alert(msg: string): Promise<void>
 
 Like `window.alert`.
 

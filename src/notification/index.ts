@@ -3,6 +3,7 @@ import uniqId from 'licia/uniqId'
 import find from 'licia/find'
 import h from 'licia/h'
 import Component, { IComponentOptions } from '../share/Component'
+import { exportCjs } from '../share/util'
 
 /** IPosition */
 export interface IPosition {
@@ -148,5 +149,6 @@ class NotificationItem {
   }
 }
 
-module.exports = Notification
-module.exports.default = Notification
+if (typeof module !== 'undefined') {
+  exportCjs(module, Notification)
+}

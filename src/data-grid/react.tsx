@@ -1,10 +1,12 @@
 import { FC, useEffect, useRef } from 'react'
-import DataGrid, { IColumn } from './index'
+import DataGrid, { IColumn, DataGridNode } from './index'
 import types from 'licia/types'
 import each from 'licia/each'
 
 interface IDataGridProps {
   columns: IColumn[]
+  onSelect?: (node: DataGridNode) => void
+  onDeselect?: () => void
   className?: string
   data?: any[]
   height?: number
@@ -25,6 +27,12 @@ const LunaDataGrid: FC<IDataGridProps> = (props) => {
       minHeight: props.minHeight,
       filter: props.filter,
     })
+    if (props.onSelect) {
+      dataGrid.current.on('select', props.onSelect)
+    }
+    if (props.onDeselect) {
+      dataGrid.current.on('deselect', props.onDeselect)
+    }
     setData(dataGrid, props.data)
   }, [])
 

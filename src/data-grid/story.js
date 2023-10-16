@@ -46,6 +46,12 @@ const def = story(
 
       return (
         <LunaDataGrid
+          onSelect={(node) => {
+            console.log('select', node)
+          }}
+          onDeselect={() => {
+            console.log('deselect')
+          }}
           columns={columns}
           minHeight={minHeight}
           maxHeight={maxHeight}

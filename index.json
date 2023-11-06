@@ -306,12 +306,12 @@
     "react": false
   },
   "tab": {
+    "react": true,
     "version": "0.1.3",
     "style": true,
     "icon": false,
     "test": true,
     "install": false,
-    "react": false,
     "dependencies": []
   },
   "tag-input": {

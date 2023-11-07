@@ -12,6 +12,7 @@ import Tab from './index'
 import { useForceUpdate, useNonInitialEffect } from '../share/hooks'
 
 interface ITabProps {
+  className?: string
   height?: number
   onSelect?: (id: string) => void
   onDeselect?: () => void
@@ -44,7 +45,7 @@ const LunaTab: FC<PropsWithChildren<ITabProps>> = (props) => {
   }, [props.height])
 
   return (
-    <div ref={tabRef}>
+    <div className={props.className || ''} ref={tabRef}>
       {Children.map(props.children, (child) => {
         if (isValidElement(child)) {
           return cloneElement(child as ReactElement, {

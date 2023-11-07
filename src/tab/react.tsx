@@ -9,7 +9,7 @@ import {
   useRef,
 } from 'react'
 import Tab from './index'
-import { useForceUpdate } from '../share/hooks'
+import { useForceUpdate, useNonInitialEffect } from '../share/hooks'
 
 interface ITabProps {
   height?: number
@@ -37,7 +37,7 @@ const LunaTab: FC<PropsWithChildren<ITabProps>> = (props) => {
     return () => tab.current?.destroy()
   }, [])
 
-  useEffect(() => {
+  useNonInitialEffect(() => {
     if (tab.current) {
       tab.current.setOption('height', props.height)
     }

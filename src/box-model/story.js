@@ -41,7 +41,6 @@ const def = story(
           height: size.height,
           color: '#fff',
           lineHeight: 150,
-          padding: 20,
           fontSize: 30,
           border,
           textAlign: 'center',

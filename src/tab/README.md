@@ -53,6 +53,10 @@ tab.on('select', id => {
 
 Append tab.
 
+### deselect(): void
+
+Deselect tabs.
+
 ### insert(pos: number, tab: ITab): void
 
 Insert tab at given position.

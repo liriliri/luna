@@ -121,6 +121,17 @@ export default class Tab extends Component<IOptions> {
       }
     })
   }
+  /** Deselect tabs. */
+  deselect() {
+    const { c } = this
+
+    this.$tabs.find(c('.item')).each(function (this: HTMLElement) {
+      $(this).rmClass(c('selected'))
+    })
+
+    this.emit('deselect')
+    this.updateSlider()
+  }
   private scrollToSelected() {
     const { $tabs, tabs, c } = this
     const item = $tabs.find(c('.selected')).get(0) as HTMLElement

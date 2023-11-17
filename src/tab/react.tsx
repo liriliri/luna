@@ -16,6 +16,7 @@ interface ITabProps {
   height?: number
   onSelect?: (id: string) => void
   onDeselect?: () => void
+  onCreate?: (tab: Tab) => void
 }
 
 const LunaTab: FC<PropsWithChildren<ITabProps>> = (props) => {
@@ -27,6 +28,8 @@ const LunaTab: FC<PropsWithChildren<ITabProps>> = (props) => {
     tab.current = new Tab(tabRef.current!, {
       height: props.height,
     })
+    props.onCreate && props.onCreate(tab.current)
+
     if (props.onSelect) {
       tab.current.on('select', props.onSelect)
     }

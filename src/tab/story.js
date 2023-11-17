@@ -56,7 +56,11 @@ const def = story(
       const { height } = createKnobs()
 
       return (
-        <LunaTab height={height} onSelect={(id) => console.log('select', id)}>
+        <LunaTab
+          height={height}
+          onSelect={(id) => console.log('select', id)}
+          onCreate={(tab) => console.log(tab)}
+        >
           <LunaTabItem id="console" title="Console" selected={true} />
           <LunaTabItem id="elements" title="Elements" />
           <LunaTabItem id="network" title="Network" />

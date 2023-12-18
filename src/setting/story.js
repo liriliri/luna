@@ -10,7 +10,7 @@ import LunaSetting, {
   LunaSettingNumber,
   LunaSettingSeparator,
   LunaSettingCheckbox,
-  LunaSettingText,
+  LunaSettingInput,
   LunaSettingHtml,
   LunaSettingButton,
 } from './react'
@@ -183,7 +183,7 @@ const def = story(
           />
           <LunaSettingSeparator />
           <LunaSettingTitle title="Element" />
-          <LunaSettingText
+          <LunaSettingInput
             keyName="searchKeyword"
             value="div"
             title="Search Keyword"

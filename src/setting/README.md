@@ -42,39 +42,39 @@ title.detach()
 
 ## Api
 
-### appendButton(title: string, description: string, handler: AnyFn): SettingButton
+### appendButton(title: string, description: string, handler: AnyFn): LunaSettingButton
 
 Append button.
 
-### appendCheckbox(key: string, value: boolean, title: string, description?: string): SettingCheckbox
+### appendCheckbox(key: string, value: boolean, title: string, description?: string): LunaSettingCheckbox
 
 Append checkbox setting.
 
-### appendHtml(html: string | HTMLElement): SettingHtml
+### appendHtml(html: string | HTMLElement): LunaSettingHtml
 
 Append html setting.
 
-### appendMarkdown(markdown: string): SettingMarkdown
-
-Append markdown description.
-
-### appendNumber(key: string, value: number, title: string, description: string, options: INumberOptions): SettingNumber
-
-Append number setting.
-
-### appendSelect(key: string, value: string, title: string, description: string, options: PlainObj<string>): SettingSelect
-
-Append select setting.
-
-### appendSeparator(): SettingSeparator
-
-Append separator.
-
-### appendText(key: string, value: string, title: string, description?: string): SettingText
+### appendInput(key: string, value: string, title: string, description?: string): LunaSettingInput
 
 Append text input setting.
 
-### appendTitle(title: string, level?: number): SettingTitle
+### appendMarkdown(markdown: string): LunaSettingMarkdown
+
+Append markdown description.
+
+### appendNumber(key: string, value: number, title: string, description: string, options: INumberOptions): LunaSettingNumber
+
+Append number setting.
+
+### appendSelect(key: string, value: string, title: string, description: string, options: PlainObj<string>): LunaSettingSelect
+
+Append select setting.
+
+### appendSeparator(): LunaSettingSeparator
+
+Append separator.
+
+### appendTitle(title: string, level?: number): LunaSettingTitle
 
 Append title.
 
@@ -82,7 +82,7 @@ Append title.
 
 Clear all settings.
 
-### remove(item: SettingItem): void
+### remove(item: LunaSettingItem): void
 
 Remove setting.
 

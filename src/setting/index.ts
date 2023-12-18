@@ -150,17 +150,17 @@ export default class Setting extends Component<IOptions> {
     return settingMarkdown
   }
   /** Append text input setting. */
-  appendText(key: string, value: string, title: string, description = '') {
-    const settingText = new LunaSettingText(
+  appendInput(key: string, value: string, title: string, description = '') {
+    const settingInput = new LunaSettingInput(
       this,
       key,
       value,
       title,
       description
     )
-    this.append(settingText)
+    this.append(settingInput)
 
-    return settingText
+    return settingInput
   }
   /** Append checkbox setting. */
   appendCheckbox(
@@ -367,7 +367,7 @@ export class LunaSettingSeparator extends LunaSettingItem {
   }
 }
 
-export class LunaSettingText extends LunaSettingItem {
+export class LunaSettingInput extends LunaSettingItem {
   private $input: $.$
   constructor(
     setting: Setting,

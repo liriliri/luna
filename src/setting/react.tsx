@@ -16,7 +16,7 @@ import Setting, {
   LunaSettingNumber as SettingNumber,
   LunaSettingSeparator as SettingSeparator,
   LunaSettingCheckbox as SettingCheckbox,
-  LunaSettingText as SettingText,
+  LunaSettingInput as SettingInput,
   LunaSettingHtml as SettingHtml,
   LunaSettingButton as SettingButton,
   LunaSettingItem,
@@ -277,25 +277,25 @@ interface ISettingTextProps extends ISettingItemProps {
   description?: string
 }
 
-export const LunaSettingText: FC<ISettingTextProps> = (props) => {
-  const settingText = useRef<SettingText>()
+export const LunaSettingInput: FC<ISettingTextProps> = (props) => {
+  const settingInput = useRef<SettingInput>()
 
   useEffect(() => {
     if (props.setting) {
-      settingText.current = props.setting.appendText(
+      settingInput.current = props.setting.appendInput(
         props.keyName,
         props.value,
         props.title,
         props.description
       )
-      setDisabled(settingText.current, props.disabled)
+      setDisabled(settingInput.current, props.disabled)
     }
 
-    return () => settingText.current?.detach()
+    return () => settingInput.current?.detach()
   }, [props.setting])
 
   useEffect(() => {
-    setDisabled(settingText.current, props.disabled)
+    setDisabled(settingInput.current, props.disabled)
   }, [props.disabled])
 
   return null

@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/liriliri/luna#readme",
   "dependencies": {
-    "licia": "^1.38.1"
+    "licia": "^1.39.2"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",

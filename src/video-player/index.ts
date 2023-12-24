@@ -9,6 +9,7 @@ import stripIndent from 'licia/stripIndent'
 import toStr from 'licia/toStr'
 import durationFormat from 'licia/durationFormat'
 import fullscreen from 'licia/fullscreen'
+import hotkey from 'licia/hotkey'
 import { eventPage, drag } from '../share/util'
 import Component, { IComponentOptions } from '../share/Component'
 
@@ -17,6 +18,7 @@ const isIos = detectBrowser(navigator.userAgent).name === 'ios'
 
 interface IOptions extends IComponentOptions {
   url?: string
+  hotkey?: boolean
 }
 
 const videoEvents = [
@@ -77,6 +79,7 @@ export default class VideoPlayer extends Component<IOptions> {
 
     this.initOptions(options, {
       url: '',
+      hotkey: true,
     })
 
     const { video } = this
@@ -201,7 +204,7 @@ export default class VideoPlayer extends Component<IOptions> {
     }, 3000)
   }
   private bindEvent() {
-    const { c } = this
+    const { c, container, $container } = this
 
     this.$controller
       .on('click', c('.play'), this.togglePlay)
@@ -231,6 +234,11 @@ export default class VideoPlayer extends Component<IOptions> {
     this.on('pause', this.onPause)
     this.on('canplay', this.onLoaded)
     this.on('progress', this.onLoaded)
+
+    if (this.options.hotkey) {
+      $container.attr('tabindex', '-1')
+      hotkey.on('space', { element: container }, this.togglePlay)
+    }
   }
   private toggleFullscreen = () => {
     const { video } = this as any

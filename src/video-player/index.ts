@@ -16,8 +16,11 @@ import Component, { IComponentOptions } from '../share/Component'
 const $document = $(document as any)
 const isIos = detectBrowser(navigator.userAgent).name === 'ios'
 
-interface IOptions extends IComponentOptions {
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Video url. */
   url?: string
+  /** Enable hotkey. */
   hotkey?: boolean
 }
 
@@ -109,6 +112,7 @@ export default class VideoPlayer extends Component<IOptions> {
       this.video.src = options.url
     }
   }
+  /** Play video. */
   play() {
     if (!this.video.src) {
       return
@@ -116,6 +120,7 @@ export default class VideoPlayer extends Component<IOptions> {
 
     return this.video.play()
   }
+  /** Pause video. */
   pause() {
     if (!this.video.src) {
       return
@@ -128,6 +133,7 @@ export default class VideoPlayer extends Component<IOptions> {
     this.$container.off('mousemove', this.onMouseMove)
     super.destroy()
   }
+  /** Seek to specified time. */
   seek(time: number) {
     if (!this.video.src) {
       return
@@ -138,6 +144,7 @@ export default class VideoPlayer extends Component<IOptions> {
 
     this.video.currentTime = time
   }
+  /** Set video volume. */
   volume(percentage: number) {
     percentage = clamp(percentage, 0, 1)
     this.video.volume = percentage
@@ -237,7 +244,20 @@ export default class VideoPlayer extends Component<IOptions> {
 
     if (this.options.hotkey) {
       $container.attr('tabindex', '-1')
-      hotkey.on('space', { element: container }, this.togglePlay)
+      const options = { element: container }
+      hotkey.on('space', options, this.togglePlay)
+      hotkey.on('left', options, () => {
+        this.seek(this.video.currentTime - 5)
+      })
+      hotkey.on('right', options, () => {
+        this.seek(this.video.currentTime + 5)
+      })
+      hotkey.on('up', options, () => {
+        this.volume(this.video.volume + 0.1)
+      })
+      hotkey.on('down', options, () => {
+        this.volume(this.video.volume - 0.1)
+      })
     }
   }
   private toggleFullscreen = () => {

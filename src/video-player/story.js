@@ -2,8 +2,8 @@ import 'luna-video-player.css'
 import story from '../share/story'
 import VideoPlayer from 'luna-video-player.js'
 import $ from 'licia/$'
-import h from 'licia/h'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 import { text } from '@storybook/addon-knobs'
 
 const def = story(
@@ -30,6 +30,7 @@ const def = story(
   },
   {
     readme,
+    changelog,
     source: __STORY__,
   }
 )

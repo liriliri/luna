@@ -36,3 +36,26 @@ const videoPlayer = new LunaVideoPlayer(container, {
 
 videoPlayer.play()
 ```
+
+## Configuration
+
+* hotkey(boolean): Enable hotkey.
+* url(string): Video url.
+
+## Api
+
+### pause(): void
+
+Pause video.
+
+### play(): undefined | Promise<void>
+
+Play video.
+
+### seek(time: number): void
+
+Seek to specified time.
+
+### volume(percentage: number): void
+
+Set video volume.

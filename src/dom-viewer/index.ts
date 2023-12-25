@@ -10,10 +10,12 @@ import MutationObserver from 'licia/MutationObserver'
 import contain from 'licia/contain'
 import highlight from 'licia/highlight'
 import truncate from 'licia/truncate'
+import last from 'licia/last'
 import types from 'licia/types'
 import escape from 'licia/escape'
 import trim from 'licia/trim'
 import every from 'licia/every'
+import hotkey from 'licia/hotkey'
 import { exportCjs, getPlatform, hasTouchSupport } from '../share/util'
 
 const emptyHighlightStyle = {
@@ -30,6 +32,8 @@ export interface IOptions extends IComponentOptions {
   node?: ChildNode
   /** Predicate function which removes the matching child nodes. */
   ignore?: types.AnyFn
+  /** Enable hotkey. */
+  hotkey?: boolean
   parent?: DomViewer | null
   isEndTag?: boolean
   rootContainer?: HTMLElement
@@ -45,13 +49,13 @@ export interface IOptions extends IComponentOptions {
  * domViewer.expand()
  */
 export default class DomViewer extends Component<IOptions> {
+  isExpanded = false
+  childNodes: ChildNode[] = []
+  childNodeDomViewers: DomViewer[] = []
+  endTagDomViewer?: DomViewer
   private $tag: $.$
   private $children: $.$
-  private isExpanded = false
   private observer: MutationObserver
-  private childNodes: ChildNode[] = []
-  private childNodeDomViewers: DomViewer[] = []
-  private endTagDomViewer?: DomViewer
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'dom-viewer' }, options)
 
@@ -62,6 +66,7 @@ export default class DomViewer extends Component<IOptions> {
       rootContainer: container,
       rootDomViewer: this,
       ignore: () => false,
+      hotkey: true,
     })
 
     this.initTpl()
@@ -121,7 +126,7 @@ export default class DomViewer extends Component<IOptions> {
       this.$children.remove()
     }
   }
-  expand() {
+  expand = () => {
     if (!this.isExpandable() || this.isExpanded) {
       return
     }
@@ -131,7 +136,7 @@ export default class DomViewer extends Component<IOptions> {
 
     this.renderChildNodes()
   }
-  collapse() {
+  collapse = () => {
     if (!this.isExpandable() || !this.isExpanded) {
       return
     }
@@ -257,6 +262,92 @@ export default class DomViewer extends Component<IOptions> {
       $tag.on('click', () => this.select())
     } else {
       $tag.on('mousedown', () => this.select())
+    }
+
+    if (this.options.hotkey) {
+      const options = { element: $tag.get(0) as HTMLElement }
+      hotkey.on('right', options, this.onKeyRight)
+      hotkey.on('left', options, this.onKeyLeft)
+      hotkey.on('down', options, this.onKeyDown)
+      hotkey.on('up', options, this.onKeyUp)
+    }
+  }
+  private onKeyRight = () => {
+    if (this.isExpanded) {
+      this.childNodeDomViewers[0].select()
+    } else {
+      this.expand()
+    }
+  }
+  private onKeyLeft = () => {
+    if (this.isExpanded) {
+      this.collapse()
+    } else {
+      this.options.parent?.select()
+    }
+  }
+  private onKeyDown = () => {
+    const { options } = this
+
+    if (this.isExpanded) {
+      this.childNodeDomViewers[0].select()
+      return
+    }
+
+    let { parent } = options
+    if (!parent) {
+      return
+    }
+
+    if (options.isEndTag) {
+      parent = parent.getOption('parent')
+      if (!parent) {
+        return
+      }
+
+      const { childNodes, childNodeDomViewers, endTagDomViewer } = parent
+      const idx = childNodes.indexOf(options.node)
+      if (childNodes[idx + 1]) {
+        childNodeDomViewers[idx + 1].select()
+      } else if (endTagDomViewer) {
+        endTagDomViewer.select()
+      }
+    } else {
+      const { childNodeDomViewers, endTagDomViewer } = parent
+      const idx = childNodeDomViewers.indexOf(this)
+      if (childNodeDomViewers[idx + 1]) {
+        childNodeDomViewers[idx + 1].select()
+      } else if (endTagDomViewer) {
+        endTagDomViewer.select()
+      }
+    }
+  }
+  private onKeyUp = () => {
+    const { options } = this
+
+    const parent = options.parent
+    if (!parent) {
+      return
+    }
+
+    let domViewer
+    if (options.isEndTag) {
+      domViewer = last(parent.childNodeDomViewers)
+    } else {
+      const idx = parent.childNodeDomViewers.indexOf(this)
+      if (idx < 1) {
+        parent.select()
+      } else {
+        domViewer = parent.childNodeDomViewers[idx - 1]
+      }
+    }
+
+    if (domViewer) {
+      if (domViewer.isExpanded) {
+        domViewer.endTagDomViewer?.select()
+      } else {
+        domViewer.select()
+      }
     }
   }
   private isExpandable() {

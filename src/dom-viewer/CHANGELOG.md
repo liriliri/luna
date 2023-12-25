@@ -1,3 +1,7 @@
+## 1.3.0 (25 Dec 2023)
+
+* feat: hotkey for navigation
+
 ## 1.2.4 (19 Apr 2023)
 
 * fix: module is not defined [#11](https://github.com/liriliri/luna/issues/11)

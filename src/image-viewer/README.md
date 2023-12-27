@@ -54,10 +54,17 @@ Rotate image with a relative degree.
 
 Rotate image to an absolute degree.
 
-### zoom(ratio: number): void
+### zoom(ratio: number, pivot?: IPivot): void
 
 Zoom image with a relative ratio.
 
-### zoomTo(ratio: number): void
+### zoomTo(ratio: number, pivot?: IPivot): void
 
 Zoom image to an absolute ratio.
+
+## Types
+
+### IPivot
+
+* x(number): Pivot point x.
+* y(number): Pivot point y.

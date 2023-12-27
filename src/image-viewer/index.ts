@@ -26,6 +26,14 @@ interface IImageData {
   naturalHeight: number
 }
 
+/** Pivot point coordinate for zooming. */
+export interface IPivot {
+  /** Pivot point x. */
+  x: number
+  /** Pivot point y. */
+  y: number
+}
+
 /**
  * Single image viewer.
  *
@@ -50,6 +58,7 @@ export default class ImageViewer extends Component<IOptions> {
   private image: HTMLImageElement
   private startX = 0
   private startY = 0
+  private isWheeling = false
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'image-viewer' })
     this.initOptions(options, {
@@ -77,15 +86,15 @@ export default class ImageViewer extends Component<IOptions> {
     this.imageData.rotate = degree
   }
   /** Zoom image with a relative ratio. */
-  zoom(ratio: number) {
+  zoom(ratio: number, pivot?: IPivot) {
     const { imageData } = this
 
     ratio = ratio < 0 ? 1 / (1 - ratio) : 1 + ratio
 
-    this.zoomTo((imageData.width * ratio) / imageData.naturalWidth)
+    this.zoomTo((imageData.width * ratio) / imageData.naturalWidth, pivot)
   }
   /** Zoom image to an absolute ratio. */
-  zoomTo(ratio: number) {
+  zoomTo(ratio: number, pivot?: IPivot) {
     const { imageData } = this
     const { naturalWidth, naturalHeight, width, height } = imageData
 
@@ -96,8 +105,13 @@ export default class ImageViewer extends Component<IOptions> {
 
     imageData.width = newWidth
     imageData.height = newHeight
-    imageData.left -= offsetWidth / 2
-    imageData.top -= offsetHeight / 2
+    if (pivot) {
+      imageData.left -= offsetWidth * ((pivot.x - imageData.left) / width)
+      imageData.top -= offsetHeight * ((pivot.y - imageData.top) / height)
+    } else {
+      imageData.left -= offsetWidth / 2
+      imageData.top -= offsetHeight / 2
+    }
 
     this.render()
   }
@@ -194,7 +208,9 @@ export default class ImageViewer extends Component<IOptions> {
 
     this.resizeSensor.addListener(this.reset)
 
-    this.$container.on(drag('start'), this.onMoveStart)
+    this.$container
+      .on(drag('start'), this.onMoveStart)
+      .on('wheel', this.onWheel)
 
     this.on('optionChange', (name, val) => {
       switch (name) {
@@ -202,6 +218,23 @@ export default class ImageViewer extends Component<IOptions> {
           this.setImage(val)
           break
       }
+    })
+  }
+  private onWheel = (e: any) => {
+    if (this.isWheeling) {
+      return
+    }
+
+    this.isWheeling = true
+    setTimeout(() => (this.isWheeling = false), 50)
+
+    e = e.origEvent
+    const delta = e.deltaY > 0 ? 1 : -1
+
+    const offset = this.$container.offset()
+    this.zoom(-delta * 0.1, {
+      x: e.pageX - offset.left,
+      y: e.pageY - offset.top,
     })
   }
   private render() {

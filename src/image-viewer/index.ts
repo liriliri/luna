@@ -221,6 +221,8 @@ export default class ImageViewer extends Component<IOptions> {
     })
   }
   private onWheel = (e: any) => {
+    e.preventDefault()
+
     if (this.isWheeling) {
       return
     }

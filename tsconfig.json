@@ -54,7 +54,8 @@
       "luna-tag-input": ["src/tag-input/index"],
       "luna-qrcode-generator": ["src/qrcode-generator/index"],
       "luna-toolbar": ["src/toolbar/index"],
-      "luna-image-viewer": ["src/image-viewer/index"]
+      "luna-image-viewer": ["src/image-viewer/index"],
+      "luna-painter": ["src/painter/index"]
     }
   }
 }

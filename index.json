@@ -233,6 +233,15 @@
     "react": false,
     "dependencies": []
   },
+  "painter": {
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "react": false,
+    "dependencies": []
+  },
   "performance-monitor": {
     "react": true,
     "version": "0.4.1",

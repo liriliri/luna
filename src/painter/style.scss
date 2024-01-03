@@ -1,7 +1,40 @@
 @import '../share/mixin';
+@import '../share/theme';
 
 .luna-painter {
   @include component();
+  position: relative;
+  padding-left: 40px;
+}
+
+.tools {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 100%;
+  border: 1px solid $color-border;
+}
+
+.tool {
+  width: 30px;
+  margin: 5px auto;
+  text-align: center;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  padding: 2px 0;
+  &:hover {
+    background: $color-fill-tertiary;
+    border-color: $color-border;
+  }
+  &.selected {
+    background: $color-fill-secondary;
+    border-color: $color-border;
+  }
+  .icon {
+    position: relative;
+    top: 2px;
+  }
 }
 
 .viewport {

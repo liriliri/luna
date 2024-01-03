@@ -17,6 +17,7 @@ const def = story(
     const painter = new Painter(container, {
       width: 512,
       height: 512,
+      tool: 'pencil',
     })
 
     return painter

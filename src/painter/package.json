@@ -1,5 +1,8 @@
 {
   "name": "painter",
   "version": "0.1.0",
-  "description": "Simple drawing tool"
+  "description": "Simple drawing tool",
+  "luna": {
+    "icon": true
+  }
 }

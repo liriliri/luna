@@ -25,6 +25,8 @@ export interface IOptions extends IComponentOptions {
   position?: IPosition
   /** Default duration, 0 means infinite. */
   duration?: number
+  /** Enable inline mode. */
+  inline?: boolean
 }
 
 /**
@@ -53,8 +55,13 @@ export default class Notification extends Component<IOptions> {
         x: 'right',
         y: 'bottom',
       },
+      inline: false,
       duration: 2000,
     })
+
+    if (!this.options.inline) {
+      this.$container.addClass(this.c('full'))
+    }
 
     this.initTpl()
   }

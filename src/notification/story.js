@@ -1,8 +1,9 @@
 import 'luna-notification.css'
 import Notification from 'luna-notification.js'
 import readme from './README.md'
-import { select, text, number, button } from '@storybook/addon-knobs'
+import { select, text, number, button, boolean } from '@storybook/addon-knobs'
 import story from '../share/story'
+import $ from 'licia/$'
 
 const def = story(
   'notification',
@@ -10,12 +11,24 @@ const def = story(
     const x = select('X', ['left', 'center', 'right'], 'center')
     const y = select('Y', ['top', 'bottom'], 'top')
 
+    const inline = boolean('Inline Mode', false)
+
     const notification = new Notification(container, {
       position: {
         x,
         y,
       },
+      inline,
     })
+
+    if (inline) {
+      $(container).css({
+        width: '100%',
+        maxWidth: 640,
+        height: 360,
+        border: '1px solid #eee',
+      })
+    }
 
     const content = text('Content', 'Luna Notification')
     const duration = number('Duration', 5000, {

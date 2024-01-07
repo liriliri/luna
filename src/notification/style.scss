@@ -1,26 +1,30 @@
-@import '../share/variable';
+@import '../share/mixin';
+@import '../share/theme';
 
 .luna-notification {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  @include component();
+  position: relative;
   padding: 20px;
-  box-sizing: border-box;
   pointer-events: none;
   display: flex;
   flex-direction: column;
-  font-size: 14px;
-  font-family: $font-family;
+  overflow: hidden;
+  background: transparent;
+  &.full {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .item {
   display: flex;
-  box-shadow: $box-shadow;
+  border: 1px solid $color-border;
   padding: 10px 16px;
-  color: $foreground-color;
-  background: $background-color;
+  color: $color-text;
+  background: $color-bg-container;
 }
 
 .lower {
@@ -33,8 +37,9 @@
 
 .theme-dark {
   .item {
+    border-color: $color-border-dark;
     box-shadow: $box-shadow-dark;
-    color: $foreground-color-dark;
-    background: $background-color-dark;
+    color: $color-text-dark;
+    background: $color-bg-container-dark;
   }
 }

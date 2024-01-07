@@ -45,6 +45,7 @@ notification.dismissAll()
 ## Configuration
 
 * duration(number): Default duration, 0 means infinite.
+* inline(boolean): Enable inline mode.
 * position(IPosition): Notification position.
 
 ## Api

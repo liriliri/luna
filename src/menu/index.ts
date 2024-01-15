@@ -3,7 +3,12 @@ import $ from 'licia/$'
 import h from 'licia/h'
 import defaults from 'licia/defaults'
 import each from 'licia/each'
-import { measuredScrollbarWidth, hasVerticalScrollbar } from '../share/util'
+import nextTick from 'licia/nextTick'
+import {
+  measuredScrollbarWidth,
+  hasVerticalScrollbar,
+  exportCjs,
+} from '../share/util'
 
 /**
  * Simple menu.
@@ -71,7 +76,10 @@ export default class Menu extends Component {
     $glassPane.append(this.container)
     $glassPane.show()
 
-    this.positionContent(x, y, parent)
+    // Delay a little to make sure height calculation is correct.
+    nextTick(() => {
+      this.positionContent(x, y, parent)
+    })
   }
   destroy() {
     this.hide()
@@ -134,7 +142,7 @@ export default class Menu extends Component {
   private showSubMenu(subMenu: Menu, $el: $.$) {
     const { left, width, top } = $el.offset()
 
-    let x = left + width
+    let x = left + width + 1
     if (hasVerticalScrollbar(this.container)) {
       x += measuredScrollbarWidth()
     }
@@ -229,9 +237,6 @@ export default class Menu extends Component {
   }
 }
 
-module.exports = Menu
-module.exports.default = Menu
-
 /** IMenuItemOptions */
 export interface IMenuItemOptions {
   /** Menu type. */
@@ -242,4 +247,8 @@ export interface IMenuItemOptions {
   submenu?: Menu
   /** Click event handler. */
   click?: () => void
+}
+
+if (typeof module !== 'undefined') {
+  exportCjs(module, Menu)
 }

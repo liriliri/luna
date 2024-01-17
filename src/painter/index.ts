@@ -2,7 +2,6 @@ import Component, { IComponentOptions } from '../share/Component'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import each from 'licia/each'
-import types from 'licia/types'
 import { exportCjs, drag } from '../share/util'
 import { Brush, Pencil, Tool } from './tools'
 
@@ -28,14 +27,13 @@ export interface IOptions extends IComponentOptions {
 export default class Painter extends Component<IOptions> {
   private $tools: $.$
   private $canvas: $.$
+  private $viewport: $.$
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
   private layers: Layer[] = []
   private currentTool: Tool
-  private tools: types.PlainObj<Tool> = {
-    brush: new Brush(this),
-    pencil: new Pencil(this),
-  }
+  private brush: Brush
+  private pencil: Pencil
   private activeLayer: Layer
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'painter' }, options)
@@ -50,6 +48,7 @@ export default class Painter extends Component<IOptions> {
 
     this.$tools = this.find('.tools')
     this.$canvas = this.find('.main-canvas')
+    this.$viewport = this.find('.viewport')
     this.canvas = this.$canvas.get(0) as HTMLCanvasElement
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
 
@@ -58,7 +57,10 @@ export default class Painter extends Component<IOptions> {
 
     this.bindEvent()
 
-    this.use(this.options.tool)
+    this.brush = new Brush(this)
+    this.pencil = new Pencil(this)
+
+    this.useTool(this.options.tool)
   }
   /** Add layer. */
   addLayer() {
@@ -70,14 +72,25 @@ export default class Painter extends Component<IOptions> {
   getActiveLayer() {
     return this.activeLayer
   }
-  /** Set tool. */
-  use(name: string) {
+  /** Use tool. */
+  useTool(name: string) {
     const { c, $tools } = this
 
-    if (this.tools[name]) {
-      this.currentTool = this.tools[name]
+    const tool = this.getTool(name)
+
+    if (tool) {
+      this.currentTool = tool
       $tools.find(c('.tool')).rmClass(c('selected'))
       $tools.find(`${c('.tool')}[data-tool="${name}"]`).addClass(c('selected'))
+    }
+  }
+  /** Get tool. */
+  getTool(name: string) {
+    switch (name) {
+      case 'brush':
+        return this.brush
+      case 'pencil':
+        return this.pencil
     }
   }
   getCanvas() {
@@ -115,28 +128,28 @@ export default class Painter extends Component<IOptions> {
     )
   }
   private bindEvent() {
-    const { $canvas, $tools, c } = this
+    const { $viewport, $tools, c } = this
 
-    $canvas.on(drag('start'), this.onCanvasDragStart)
+    $viewport.on(drag('start'), this.onViewportDragStart)
 
     const self = this
     $tools.on('click', c('.tool'), function (this: HTMLDivElement) {
       const $this = $(this)
-      self.use($this.data('tool'))
+      self.useTool($this.data('tool'))
     })
   }
-  private onCanvasDragStart = (e: any) => {
+  private onViewportDragStart = (e: any) => {
     this.currentTool.onDragStart(e.origEvent)
-    $document.on(drag('move'), this.onCanvasDragMove)
-    $document.on(drag('end'), this.onCanvasDragEnd)
+    $document.on(drag('move'), this.onViewportDragMove)
+    $document.on(drag('end'), this.onViewportDragEnd)
   }
-  private onCanvasDragMove = (e: any) => {
+  private onViewportDragMove = (e: any) => {
     this.currentTool.onDragMove(e.origEvent)
   }
-  private onCanvasDragEnd = (e: any) => {
+  private onViewportDragEnd = (e: any) => {
     this.currentTool.onDragEnd(e.origEvent)
-    $document.off(drag('move'), this.onCanvasDragMove)
-    $document.off(drag('end'), this.onCanvasDragEnd)
+    $document.off(drag('move'), this.onViewportDragMove)
+    $document.off(drag('end'), this.onViewportDragEnd)
   }
 }
 

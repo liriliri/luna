@@ -3,7 +3,7 @@ import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import each from 'licia/each'
 import { exportCjs, drag } from '../share/util'
-import { Brush, Pencil, Tool } from './tools'
+import { Brush, Pencil, Hand, Tool } from './tools'
 
 const $document = $(document as any)
 
@@ -34,6 +34,7 @@ export default class Painter extends Component<IOptions> {
   private currentTool: Tool
   private brush: Brush
   private pencil: Pencil
+  private hand: Hand
   private activeLayer: Layer
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'painter' }, options)
@@ -59,6 +60,7 @@ export default class Painter extends Component<IOptions> {
 
     this.brush = new Brush(this)
     this.pencil = new Pencil(this)
+    this.hand = new Hand(this)
 
     this.useTool(this.options.tool)
   }
@@ -91,6 +93,8 @@ export default class Painter extends Component<IOptions> {
         return this.brush
       case 'pencil':
         return this.pencil
+      case 'hand':
+        return this.hand
     }
   }
   getCanvas() {
@@ -115,6 +119,9 @@ export default class Painter extends Component<IOptions> {
           </div>
           <div class="tool" data-tool="pencil">
             <span class="icon icon-pencil"></span>
+          </div>
+          <div class="tool" data-tool="hand">
+            <span class="icon icon-hand"></span>
           </div>
         </div>
         <div class="viewport">

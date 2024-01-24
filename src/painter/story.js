@@ -2,6 +2,7 @@ import 'luna-painter.css'
 import Painter from 'luna-painter.js'
 import story from '../share/story'
 import readme from './README.md'
+import { number } from '@storybook/addon-knobs'
 import $ from 'licia/$'
 
 const def = story(
@@ -14,9 +15,23 @@ const def = story(
       margin: '0 auto',
     })
 
+    const width = number('Width', 512, {
+      range: true,
+      min: 128,
+      max: 2048,
+      step: 2,
+    })
+
+    const height = number('Height', 512, {
+      range: true,
+      min: 128,
+      max: 2048,
+      step: 2,
+    })
+
     const painter = new Painter(container, {
-      width: 512,
-      height: 512,
+      width,
+      height,
       tool: 'pencil',
     })
 

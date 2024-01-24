@@ -1,7 +1,7 @@
 import Painter from './index'
 import $ from 'licia/$'
 import types from 'licia/types'
-import { eventPage } from '../share/util'
+import { eventPage, eventClient } from '../share/util'
 
 export class Tool {
   protected painter: Painter
@@ -29,8 +29,8 @@ export class Tool {
     const pageX = eventPage('x', e)
     const pageY = eventPage('y', e)
 
-    let x = Math.floor(((pageX - offset.left) / offset.width) * canvas.width)
-    let y = Math.floor(((pageY - offset.top) / offset.height) * canvas.height)
+    const x = Math.floor(((pageX - offset.left) / offset.width) * canvas.width)
+    const y = Math.floor(((pageY - offset.top) / offset.height) * canvas.height)
 
     this.lastX = this.x
     this.x = x
@@ -85,7 +85,32 @@ export class Pencil extends Tool {
 }
 
 export class Hand extends Tool {
+  private $viewport: $.$
+  private viewport: HTMLDivElement
+  private startX = 0
+  private startY = 0
+  private startScrollLeft = 0
+  private startScrollTop = 0
+  constructor(painter: Painter) {
+    super(painter)
+
+    this.$viewport = painter.$container.find(painter.c('.viewport'))
+    this.viewport = this.$viewport.get(0) as HTMLDivElement
+  }
+  onDragStart(e: any) {
+    const { viewport } = this
+
+    this.startX = eventClient('x', e)
+    this.startY = eventClient('y', e)
+    this.startScrollLeft = viewport.scrollLeft
+    this.startScrollTop = viewport.scrollTop
+  }
   onDragMove(e: any) {
-    super.onDragMove(e)
+    const { viewport } = this
+
+    const deltaX = eventClient('x', e) - this.startX
+    const deltaY = eventClient('y', e) - this.startY
+    viewport.scrollLeft = this.startScrollLeft - deltaX
+    viewport.scrollTop = this.startScrollTop - deltaY
   }
 }

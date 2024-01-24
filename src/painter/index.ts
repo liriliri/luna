@@ -4,7 +4,7 @@ import $ from 'licia/$'
 import each from 'licia/each'
 import ResizeSensor from 'licia/ResizeSensor'
 import { exportCjs, drag, measuredScrollbarWidth } from '../share/util'
-import { Brush, Pencil, Hand, Tool } from './tools'
+import { Brush, Pencil, Hand, Zoom, Tool } from './tools'
 
 const $document = $(document as any)
 
@@ -38,6 +38,7 @@ export default class Painter extends Component<IOptions> {
   private brush: Brush
   private pencil: Pencil
   private hand: Hand
+  private zoom: Zoom
   private activeLayer: Layer
   private resizeSensor: ResizeSensor
   constructor(container: HTMLElement, options: IOptions = {}) {
@@ -72,6 +73,7 @@ export default class Painter extends Component<IOptions> {
     this.brush = new Brush(this)
     this.pencil = new Pencil(this)
     this.hand = new Hand(this)
+    this.zoom = new Zoom(this)
 
     this.useTool(this.options.tool)
   }
@@ -110,6 +112,8 @@ export default class Painter extends Component<IOptions> {
         return this.pencil
       case 'hand':
         return this.hand
+      case 'zoom':
+        return this.zoom
     }
   }
   getCanvas() {
@@ -137,6 +141,9 @@ export default class Painter extends Component<IOptions> {
           </div>
           <div class="tool" data-tool="hand">
             <span class="icon icon-hand"></span>
+          </div>
+          <div class="tool" data-tool="zoom">
+            <span class="icon icon-zoom"></span>
           </div>
         </div>
         <div class="viewport">

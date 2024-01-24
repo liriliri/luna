@@ -114,3 +114,5 @@ export class Hand extends Tool {
     viewport.scrollTop = this.startScrollTop - deltaY
   }
 }
+
+export class Zoom extends Tool {}

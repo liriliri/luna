@@ -41,6 +41,7 @@ export default class Painter extends Component<IOptions> {
   private zoom: Zoom
   private activeLayer: Layer
   private resizeSensor: ResizeSensor
+  private canvasResizeSenor: ResizeSensor
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'painter' }, options)
 
@@ -61,6 +62,7 @@ export default class Painter extends Component<IOptions> {
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
 
     this.resizeSensor = new ResizeSensor(container)
+    this.canvasResizeSenor = new ResizeSensor(this.canvas)
 
     this.resetViewport()
     this.centerCanvas()
@@ -80,6 +82,7 @@ export default class Painter extends Component<IOptions> {
   destroy() {
     super.destroy()
     this.resizeSensor.destroy()
+    this.canvasResizeSenor.destroy()
   }
   /** Add layer. */
   addLayer() {
@@ -162,6 +165,7 @@ export default class Painter extends Component<IOptions> {
     const { $viewport, $tools, c } = this
 
     $viewport.on(drag('start'), this.onViewportDragStart)
+    $viewport.on('click', this.onViewportClick)
 
     const self = this
     $tools.on('click', c('.tool'), function (this: HTMLDivElement) {
@@ -170,6 +174,7 @@ export default class Painter extends Component<IOptions> {
     })
 
     this.resizeSensor.addListener(this.onResize)
+    this.canvasResizeSenor.addListener(this.resetViewport)
   }
   private onViewportDragStart = (e: any) => {
     this.currentTool.onDragStart(e.origEvent)
@@ -184,6 +189,9 @@ export default class Painter extends Component<IOptions> {
     $document.off(drag('move'), this.onViewportDragMove)
     $document.off(drag('end'), this.onViewportDragEnd)
   }
+  private onViewportClick = (e: any) => {
+    this.currentTool.onClick(e.origEvent)
+  }
   private onResize = () => {
     this.resetViewport()
 
@@ -195,7 +203,7 @@ export default class Painter extends Component<IOptions> {
       this.centerCanvas()
     }
   }
-  private resetViewport() {
+  private resetViewport = () => {
     const { $body, $canvas } = this
     const { width: canvasWidth, height: canvasHeight } = $canvas.offset()
     const { width: viewportWidth, height: viewportHeight } =

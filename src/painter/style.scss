@@ -60,6 +60,10 @@
   font-size: 0;
 }
 
+.main-canvas {
+  transition: width 0.3s, height 0.3s;
+}
+
 .theme-dark {
   color-scheme: dark;
   border-color: $color-border-dark;

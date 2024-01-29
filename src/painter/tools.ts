@@ -3,6 +3,11 @@ import $ from 'licia/$'
 import types from 'licia/types'
 import { eventPage, eventClient } from '../share/util'
 
+interface IPivot {
+  x: number
+  y: number
+}
+
 export class Tool {
   protected painter: Painter
   protected x = -1
@@ -10,8 +15,20 @@ export class Tool {
   protected y = -1
   protected lastY = -1
   protected ctx: CanvasRenderingContext2D
+  protected $viewport: $.$
+  protected viewport: HTMLDivElement
+  protected $canvas: $.$
+  protected canvas: HTMLCanvasElement
   constructor(painter: Painter) {
     this.painter = painter
+
+    this.viewport = painter.$container
+      .find(painter.c('.viewport'))
+      .get(0) as HTMLDivElement
+    this.$viewport = $(this.viewport)
+
+    this.canvas = this.painter.getCanvas()
+    this.$canvas = $(this.canvas)
   }
   onDragStart(e: any) {
     this.getXY(e)
@@ -23,6 +40,8 @@ export class Tool {
   onDragEnd(e: any) {
     this.getXY(e)
   }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
+  onClick(e: any) {}
   private getXY(e: any) {
     const canvas = this.painter.getCanvas()
     const offset = $(canvas).offset()
@@ -85,18 +104,10 @@ export class Pencil extends Tool {
 }
 
 export class Hand extends Tool {
-  private $viewport: $.$
-  private viewport: HTMLDivElement
   private startX = 0
   private startY = 0
   private startScrollLeft = 0
   private startScrollTop = 0
-  constructor(painter: Painter) {
-    super(painter)
-
-    this.$viewport = painter.$container.find(painter.c('.viewport'))
-    this.viewport = this.$viewport.get(0) as HTMLDivElement
-  }
   onDragStart(e: any) {
     const { viewport } = this
 
@@ -115,4 +126,29 @@ export class Hand extends Tool {
   }
 }
 
-export class Zoom extends Tool {}
+export class Zoom extends Tool {
+  onClick(e: any) {
+    const offset = this.$viewport.offset()
+
+    this.zoom(e.altKey ? -0.1 : 0.1, {
+      x: eventPage('x', e) - offset.left,
+      y: eventPage('y', e) - offset.top,
+    })
+  }
+  zoom(ratio: number, pivot?: IPivot) {
+    ratio = ratio < 0 ? 1 / (1 - ratio) : 1 + ratio
+    const offset = this.$canvas.offset()
+    this.zoomTo((offset.width * ratio) / this.canvas.width, pivot)
+  }
+  zoomTo(ratio: number, pivot?: IPivot) {
+    const { canvas } = this
+
+    const width = canvas.width * ratio
+    const height = canvas.height * ratio
+
+    this.$canvas.css({
+      width,
+      height,
+    })
+  }
+}

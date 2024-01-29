@@ -13,6 +13,8 @@ import Toolbar, {
   LunaToolbarText as ToolbarText,
   LunaToolbarSelect as ToolbarSelect,
   LunaToolbarHtml as ToolbarHtml,
+  LunaToolbarInput as ToolbarInput,
+  LunaToolbarButton as ToolbarButton,
   LunaToolbarItem,
 } from './index'
 import { useForceUpdate } from '../share/hooks'
@@ -74,6 +76,28 @@ export const LunaToolbarText: FC<IToolbarTextProps> = (props) => {
   return null
 }
 
+interface IToolbarButtonProps extends IToolbarItemProps {
+  title: string
+  onClick: () => void
+}
+
+export const LunaToolbarButton: FC<IToolbarButtonProps> = (props) => {
+  const toolbarButton = useRef<ToolbarButton>()
+
+  useEffect(() => {
+    if (props.toolbar) {
+      toolbarButton.current = props.toolbar.appendButton(
+        props.title,
+        props.onClick
+      )
+    }
+
+    return () => toolbarButton.current?.detach()
+  }, [props.toolbar])
+
+  return null
+}
+
 interface IToolbarSelectProps extends IToolbarItemProps {
   keyName: string
   value: string
@@ -130,11 +154,23 @@ interface IToolbarInputProps extends IToolbarItemProps {
 }
 
 export const LunaToolbarInput: FC<IToolbarInputProps> = (props) => {
+  const toolbarInput = useRef<ToolbarInput>()
+
   useEffect(() => {
     if (props.toolbar) {
-      props.toolbar.appendInput(props.keyName, props.value, props.placeholder)
+      toolbarInput.current = props.toolbar.appendInput(
+        props.keyName,
+        props.value,
+        props.placeholder
+      )
+      setDisabled(toolbarInput.current, props.disabled)
     }
   }, [props.toolbar])
+
+  useEffect(
+    () => setDisabled(toolbarInput.current, props.disabled),
+    [props.disabled]
+  )
 
   return null
 }

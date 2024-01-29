@@ -247,21 +247,21 @@
 
 @mixin button($dark: false) {
   @if $dark {
-    background: $background-color-dark;
-    border-color: $border-color-dark;
+    background: $color-bg-container-dark;
+    border-color: $color-border-dark;
     &:hover,
     &:active {
       background: $darker-background-color-dark;
     }
     &:active {
-      border: 1px solid $primary-color;
+      border: 1px solid $color-primary;
     }
   } @else {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    background: $background-color;
-    border: 1px solid $border-color;
+    background: $color-bg-container;
+    border: 1px solid $color-border;
     padding: 2px 8px;
-    color: $primary-color;
+    color: $color-primary;
     font-size: $font-size;
     border-radius: 2px;
     &:hover,
@@ -269,7 +269,7 @@
       background: $darker-background-color;
     }
     &:active {
-      border: 1px solid $primary-color;
+      border: 1px solid $color-primary;
     }
   }
 }

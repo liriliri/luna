@@ -8,6 +8,7 @@ import LunaToolbar, {
   LunaToolbarSeparator,
   LunaToolbarSpace,
   LunaToolbarInput,
+  LunaToolbarButton,
   LunaToolbarHtml,
 } from './react'
 
@@ -37,6 +38,11 @@ const def = story(
 
     const filter = toolbar.appendInput('filter', '', 'Filter')
     filter.disable()
+
+    toolbar.appendButton('Trigger', () => {
+      console.log('trigger')
+    })
+
     toolbar.appendSpace()
     toolbar.appendHtml(
       '<span style="color:green;line-height:30px;">Loading</span>'
@@ -66,7 +72,16 @@ const def = story(
             }}
           />
           <LunaToolbarSeparator />
-          <LunaToolbarInput keyName="filter" value="" placeholder="Filter" />
+          <LunaToolbarInput
+            keyName="filter"
+            value=""
+            placeholder="Filter"
+            disabled={true}
+          />
+          <LunaToolbarButton
+            title="Trigger"
+            onClick={() => console.log('trigger')}
+          />
           <LunaToolbarSpace />
           <LunaToolbarHtml>
             <span

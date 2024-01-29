@@ -38,6 +38,10 @@ export default class Toolbar extends Component {
   appendText(text: string) {
     return this.append(new LunaToolbarText(this, text))
   }
+  /** Append button. */
+  appendButton(title: string, handler: types.AnyFn) {
+    return this.append(new LunaToolbarButton(this, title, handler))
+  }
   /** Append html. */
   appendHtml(html: string | HTMLElement) {
     return this.append(new LunaToolbarHtml(this, html))
@@ -85,7 +89,7 @@ export default class Toolbar extends Component {
   }
   /** Append text input. */
   appendInput(key: string, value: string, placeholder = '') {
-    return this.append(new ToolbarInput(this, key, value, placeholder))
+    return this.append(new LunaToolbarInput(this, key, value, placeholder))
   }
   private append<T extends LunaToolbarItem>(item: T): T {
     this.items.push(item)
@@ -159,7 +163,7 @@ export class LunaToolbarSelect extends LunaToolbarItem {
   }
 }
 
-class ToolbarInput extends LunaToolbarItem {
+export class LunaToolbarInput extends LunaToolbarItem {
   constructor(
     toolbar: Toolbar,
     key: string,
@@ -190,6 +194,17 @@ export class LunaToolbarText extends LunaToolbarItem {
   }
   setText(text: string) {
     this.$container.text(text)
+  }
+}
+
+export class LunaToolbarButton extends LunaToolbarItem {
+  constructor(toolbar: Toolbar, title: string, handler: types.AnyFn) {
+    super(toolbar, '', '', 'button')
+
+    this.$container.html(`<button>${escape(title)}</button>`)
+
+    const $button = this.$container.find('button')
+    $button.on('click', handler)
   }
 }
 

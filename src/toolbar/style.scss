@@ -45,6 +45,16 @@
   }
 }
 
+.item-button {
+  button {
+    @include button();
+    color: $color-text;
+    height: 22px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+}
+
 .item-space {
   flex-grow: 1;
 }
@@ -58,6 +68,12 @@
   border-bottom-color: $border-color-dark;
   .item-separator {
     background: $border-color-dark;
+  }
+  .item-button {
+    button {
+      @include button(true);
+      color: $color-text-dark;
+    }
   }
   .item-select {
     @include select(true);

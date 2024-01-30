@@ -105,13 +105,16 @@ export default class ImageViewer extends Component<IOptions> {
 
     imageData.width = newWidth
     imageData.height = newHeight
-    if (pivot) {
-      imageData.left -= offsetWidth * ((pivot.x - imageData.left) / width)
-      imageData.top -= offsetHeight * ((pivot.y - imageData.top) / height)
-    } else {
-      imageData.left -= offsetWidth / 2
-      imageData.top -= offsetHeight / 2
+
+    if (!pivot) {
+      pivot = {
+        x: width / 2 + imageData.left,
+        y: height / 2 + imageData.top,
+      }
     }
+
+    imageData.left -= offsetWidth * ((pivot.x - imageData.left) / width)
+    imageData.top -= offsetHeight * ((pivot.y - imageData.top) / height)
 
     this.render()
   }

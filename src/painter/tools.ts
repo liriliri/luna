@@ -1,6 +1,7 @@
 import Painter from './index'
 import $ from 'licia/$'
 import types from 'licia/types'
+import Tween from 'licia/Tween'
 import { eventPage, eventClient } from '../share/util'
 
 interface IPivot {
@@ -40,11 +41,13 @@ export class Tool {
   onDragEnd(e: any) {
     this.getXY(e)
   }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onUse() {}
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   onClick(e: any) {}
   private getXY(e: any) {
-    const canvas = this.painter.getCanvas()
-    const offset = $(canvas).offset()
+    const { canvas, $canvas } = this
+    const offset = $canvas.offset()
     const pageX = eventPage('x', e)
     const pageY = eventPage('y', e)
 
@@ -97,7 +100,8 @@ export class Pencil extends Tool {
 
     const { ctx } = this
     const { size } = this.options
-    ctx.fillStyle = 'black'
+    const color = 'rgb(0,0,0)'
+    ctx.fillStyle = color
     ctx.fillRect(x, y, size, size)
     this.painter.updateCanvas()
   }
@@ -124,13 +128,37 @@ export class Hand extends Tool {
     viewport.scrollLeft = this.startScrollLeft - deltaX
     viewport.scrollTop = this.startScrollTop - deltaY
   }
+  centerCanvas() {
+    const { viewport } = this
+    const { width: viewportWidth, height: viewportHeight } =
+      this.painter.getViewportSize()
+    viewport.scrollLeft = (viewport.scrollWidth - viewportWidth) / 2
+    viewport.scrollTop = (viewport.scrollHeight - viewportHeight) / 2
+  }
 }
 
 export class Zoom extends Tool {
+  private isZooming = false
+  constructor(painter: Painter) {
+    super(painter)
+
+    this.bindEvent()
+  }
+  onUse() {
+    const { $canvas } = this
+
+    if (!$canvas.attr('style')) {
+      const { width, height } = $canvas.offset()
+      $canvas.css({
+        width,
+        height,
+      })
+    }
+  }
   onClick(e: any) {
     const offset = this.$viewport.offset()
 
-    this.zoom(e.altKey ? -0.1 : 0.1, {
+    this.zoom(e.altKey ? -0.3 : 0.3, {
       x: eventPage('x', e) - offset.left,
       y: eventPage('y', e) - offset.top,
     })
@@ -141,14 +169,97 @@ export class Zoom extends Tool {
     this.zoomTo((offset.width * ratio) / this.canvas.width, pivot)
   }
   zoomTo(ratio: number, pivot?: IPivot) {
-    const { canvas } = this
+    if (this.isZooming) {
+      return
+    }
+    this.isZooming = true
 
-    const width = canvas.width * ratio
-    const height = canvas.height * ratio
+    const { canvas, viewport, $canvas } = this
 
-    this.$canvas.css({
+    const newWidth = canvas.width * ratio
+    const newHeight = canvas.height * ratio
+    const offset = this.$canvas.offset()
+    const { width, height } = offset
+    let { left, top } = offset
+    const deltaWidth = newWidth - width
+    const deltaHeight = newHeight - height
+    const { scrollLeft, scrollTop } = viewport
+    const viewportOffset = this.$viewport.offset()
+    left -= viewportOffset.left
+    top -= viewportOffset.top
+    const { scrollWidth, scrollHeight } = viewport
+    const marginLeft = (scrollWidth - width) / 2
+    const marginTop = (scrollHeight - height) / 2
+
+    if (!pivot) {
+      pivot = {
+        x: width / 2 + left,
+        y: height / 2 + top,
+      }
+    }
+
+    const { width: viewportWidth, height: viewportHeight } =
+      this.painter.getViewportSize()
+    const newMarginLeft = viewportWidth - Math.min(newWidth, 100)
+    const newMarginTop = viewportHeight - Math.min(newHeight, 100)
+    const deltaMarginLeft = newMarginLeft - marginLeft
+    const deltaMarginTop = newMarginTop - marginTop
+
+    const newScrollLeft =
+      scrollLeft + deltaMarginLeft + deltaWidth * ((pivot.x - left) / width)
+    const newScrollTop =
+      scrollTop + deltaMarginTop + deltaHeight * ((pivot.y - top) / height)
+
+    const tween = new Tween({
+      scrollLeft,
+      scrollTop,
       width,
       height,
+    })
+
+    tween
+      .on('update', (target) => {
+        $canvas.css({
+          width: target.width,
+          height: target.height,
+        })
+        viewport.scrollLeft = target.scrollLeft
+        viewport.scrollTop = target.scrollTop
+      })
+      .on('end', () => {
+        this.isZooming = false
+      })
+
+    tween
+      .to(
+        {
+          scrollLeft: newScrollLeft,
+          scrollTop: newScrollTop,
+          width: newWidth,
+          height: newHeight,
+        },
+        300,
+        'linear'
+      )
+      .play()
+  }
+  private bindEvent() {
+    this.$viewport.on('wheel', this.onWheel)
+  }
+  private onWheel = (e: any) => {
+    e.preventDefault()
+
+    e = e.origEvent
+    if (!e.altKey) {
+      return
+    }
+
+    const delta = e.deltaY > 0 ? 1 : -1
+
+    const offset = this.$viewport.offset()
+    this.zoom(-delta * 0.5, {
+      x: eventPage('x', e) - offset.left,
+      y: eventPage('y', e) - offset.top,
     })
   }
 }

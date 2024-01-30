@@ -61,7 +61,7 @@
 }
 
 .main-canvas {
-  transition: width 0.3s, height 0.3s;
+  image-rendering: pixelated;
 }
 
 .theme-dark {

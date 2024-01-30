@@ -29,7 +29,6 @@ export default class Painter extends Component<IOptions> {
   private $tools: $.$
   private $canvas: $.$
   private $viewport: $.$
-  private viewport: HTMLDivElement
   private $body: $.$
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
@@ -56,16 +55,12 @@ export default class Painter extends Component<IOptions> {
     this.$tools = this.find('.tools')
     this.$canvas = this.find('.main-canvas')
     this.$viewport = this.find('.viewport')
-    this.viewport = this.$viewport.get(0) as HTMLDivElement
     this.$body = this.find('.body')
     this.canvas = this.$canvas.get(0) as HTMLCanvasElement
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
 
     this.resizeSensor = new ResizeSensor(container)
     this.canvasResizeSenor = new ResizeSensor(this.canvas)
-
-    this.resetViewport()
-    this.centerCanvas()
 
     this.addLayer()
     this.activeLayer = this.layers[0]
@@ -76,6 +71,9 @@ export default class Painter extends Component<IOptions> {
     this.pencil = new Pencil(this)
     this.hand = new Hand(this)
     this.zoom = new Zoom(this)
+
+    this.resetViewport()
+    this.hand.centerCanvas()
 
     this.useTool(this.options.tool)
   }
@@ -102,6 +100,7 @@ export default class Painter extends Component<IOptions> {
 
     if (tool) {
       this.currentTool = tool
+      tool.onUse()
       $tools.find(c('.tool')).rmClass(c('selected'))
       $tools.find(`${c('.tool')}[data-tool="${name}"]`).addClass(c('selected'))
     }
@@ -200,7 +199,7 @@ export default class Painter extends Component<IOptions> {
     const { width: viewportWidth, height: viewportHeight } =
       this.getViewportSize()
     if (canvasWidth < viewportWidth && canvasHeight < viewportHeight) {
-      this.centerCanvas()
+      this.hand.centerCanvas()
     }
   }
   private resetViewport = () => {
@@ -216,14 +215,7 @@ export default class Painter extends Component<IOptions> {
       height,
     })
   }
-  private centerCanvas() {
-    const { viewport } = this
-    const { width: viewportWidth, height: viewportHeight } =
-      this.getViewportSize()
-    viewport.scrollLeft = (viewport.scrollWidth - viewportWidth) / 2
-    viewport.scrollTop = (viewport.scrollHeight - viewportHeight) / 2
-  }
-  private getViewportSize() {
+  getViewportSize() {
     let { width, height } = this.$viewport.offset()
     const scrollbarSize = measuredScrollbarWidth()
     width -= scrollbarSize

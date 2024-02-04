@@ -4,6 +4,9 @@ import isObj from 'licia/isObj'
 import map from 'licia/map'
 import each from 'licia/each'
 import escape from 'licia/escape'
+import defaults from 'licia/defaults'
+import toStr from 'licia/toStr'
+import toNum from 'licia/toNum'
 import types, { PlainObj } from 'licia/types'
 import Component from '../share/Component'
 import { exportCjs } from '../share/util'
@@ -78,6 +81,10 @@ export default class Toolbar extends Component {
         options as types.PlainObj<string>
       )
     )
+  }
+  /** Append number. */
+  appendNumber(key: string, value: number, options?: INumberOptions) {
+    return this.append(new LunaToolbarNumber(this, key, value, options))
   }
   /** Append separator. */
   appendSeparator() {
@@ -178,6 +185,47 @@ export class LunaToolbarInput extends LunaToolbarItem {
     $input.val(value)
 
     $input.on('change', () => this.onChange($input.val()))
+  }
+}
+
+/** INumberOptions */
+export interface INumberOptions {
+  /** Min value. */
+  min?: number
+  /** Max value. */
+  max?: number
+  /** Interval between legal numbers. */
+  step?: number
+}
+
+export class LunaToolbarNumber extends LunaToolbarItem {
+  constructor(
+    toolbar: Toolbar,
+    key: string,
+    value: number,
+    options: INumberOptions = {}
+  ) {
+    super(toolbar, key, value, 'number')
+
+    defaults(options, {
+      min: 0,
+      max: 10,
+      step: 1,
+    })
+
+    this.$container.html(
+      `<input type="number" ${map(
+        options as any,
+        (val, key) => ` ${key}="${val}"`
+      )}></input>`
+    )
+
+    const $input = this.$container.find('input')
+    $input.val(toStr(value))
+    $input.on('change', () => {
+      const val = toNum($input.val())
+      this.onChange(val)
+    })
   }
 }
 

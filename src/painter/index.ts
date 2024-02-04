@@ -5,6 +5,7 @@ import each from 'licia/each'
 import ResizeSensor from 'licia/ResizeSensor'
 import { exportCjs, drag } from '../share/util'
 import { Brush, Pencil, Hand, Zoom, Tool } from './tools'
+import LunaToolbar from 'luna-toolbar'
 
 const $document = $(document as any)
 
@@ -59,7 +60,7 @@ export default class Painter extends Component<IOptions> {
     this.viewport = this.$viewport.get(0) as HTMLDivElement
     this.$body = this.find('.body')
     this.canvas = this.$canvas.get(0) as HTMLCanvasElement
-    this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
+    this.ctx = this.canvas.getContext('2d')!
 
     this.resizeSensor = new ResizeSensor(container)
     this.canvasResizeSenor = new ResizeSensor(this.canvas)
@@ -101,6 +102,9 @@ export default class Painter extends Component<IOptions> {
     const tool = this.getTool(name)
 
     if (tool) {
+      if (this.currentTool) {
+        this.currentTool.onUnuse()
+      }
       this.currentTool = tool
       tool.onUse()
       $tools.find(c('.tool')).rmClass(c('selected'))
@@ -131,11 +135,15 @@ export default class Painter extends Component<IOptions> {
       ctx.drawImage(layer.getCanvas(), 0, 0)
     })
   }
+  addToolbar(toolbar: LunaToolbar) {
+    this.addSubComponent(toolbar)
+  }
   private initTpl() {
     const { width, height } = this.options
 
     this.$container.html(
       this.c(stripIndent`
+        <div class="toolbar"></div>
         <div class="tools">
           <div class="tool" data-tool="brush">
             <span class="icon icon-brush"></span>
@@ -227,8 +235,7 @@ class Layer {
     canvas.width = width
     canvas.height = height
     this.canvas = canvas
-
-    this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+    this.ctx = canvas.getContext('2d')!
   }
   getContext() {
     return this.ctx

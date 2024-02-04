@@ -35,6 +35,7 @@ $z-index-popup-base: 1000;
 $opacity-image: 1;
 $wireframe: false;
 $motion: true;
+$box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07), 0 1px 5px 0 rgba(0, 0, 0, 0.1);
 $blue-1: #e6f4ff;
 $blue-2: #bae0ff;
 $blue-3: #91caff;
@@ -311,8 +312,6 @@ $margin-m-d: 20;
 $margin-l-g: 24;
 $margin-x-l: 32;
 $margin-x-x-l: 48;
-$box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
-  0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 $box-shadow-secondary: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
   0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 $box-shadow-tertiary: 0 1px 2px 0 rgba(0, 0, 0, 0.03),
@@ -359,6 +358,8 @@ $color-info-dark: #1668dc;
 $color-link-dark: #1668dc;
 $color-text-base-dark: #fff;
 $color-bg-base-dark: #000;
+$box-shadow-dark: 0 2px 2px 0 rgba(0, 0, 0, 0.07),
+  0 1px 5px 0 rgba(0, 0, 0, 0.1);
 $blue-1-dark: #111a2c;
 $blue-2-dark: #112545;
 $blue-3-dark: #15325b;
@@ -571,8 +572,6 @@ $color-icon-dark: rgba(255, 255, 255, 0.45);
 $color-icon-hover-dark: rgba(255, 255, 255, 0.85);
 $color-error-outline-dark: rgba(238, 38, 56, 0.11);
 $color-warning-outline-dark: rgba(173, 107, 0, 0.15);
-$box-shadow-dark: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
-  0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 $box-shadow-secondary-dark: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
   0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 $box-shadow-tertiary-dark: 0 1px 2px 0 rgba(0, 0, 0, 0.03),

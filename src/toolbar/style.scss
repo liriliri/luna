@@ -45,6 +45,17 @@
   }
 }
 
+.item-number {
+  input[type='number'] {
+    @include input();
+    width: 60px;
+    padding: 2px;
+    height: 22px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+}
+
 .item-button {
   button {
     @include button();
@@ -80,6 +91,11 @@
   }
   .item-input {
     input {
+      @include input(true);
+    }
+  }
+  .item-number {
+    input[type='number'] {
       @include input(true);
     }
   }

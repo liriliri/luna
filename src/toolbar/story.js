@@ -43,6 +43,13 @@ const def = story(
       console.log('trigger')
     })
 
+    toolbar.appendText('Size:')
+    toolbar.appendNumber('size', 50, {
+      min: 1,
+      max: 1000,
+      step: 1,
+    })
+
     toolbar.appendSpace()
     toolbar.appendHtml(
       '<span style="color:green;line-height:30px;">Loading</span>'

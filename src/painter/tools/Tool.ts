@@ -8,11 +8,12 @@ export default class Tool {
   protected lastX = -1
   protected y = -1
   protected lastY = -1
-  protected ctx: CanvasRenderingContext2D
   protected $viewport: $.$
   protected viewport: HTMLDivElement
   protected $canvas: $.$
+  protected ctx: CanvasRenderingContext2D
   protected canvas: HTMLCanvasElement
+  protected $toolbar: $.$
   constructor(painter: Painter) {
     this.painter = painter
 
@@ -21,12 +22,14 @@ export default class Tool {
       .get(0) as HTMLDivElement
     this.$viewport = $(this.viewport)
 
-    this.canvas = this.painter.getCanvas()
+    this.canvas = painter.getCanvas()
+    this.ctx = this.canvas.getContext('2d')!
     this.$canvas = $(this.canvas)
+
+    this.$toolbar = painter.$container.find(painter.c('.toolbar'))
   }
   onDragStart(e: any) {
     this.getXY(e)
-    this.ctx = this.painter.getActiveLayer().getContext()
   }
   onDragMove(e: any) {
     this.getXY(e)
@@ -36,6 +39,8 @@ export default class Tool {
   }
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onUse() {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onUnuse() {}
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   onClick(e: any) {}
   private getXY(e: any) {

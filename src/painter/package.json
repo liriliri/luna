@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Simple drawing tool",
   "luna": {
+    "dependencies": [
+      "toolbar"
+    ],
     "icon": true
   }
 }

@@ -116,12 +116,12 @@ export default class Zoom extends Tool {
     this.$viewport.on('wheel', this.onWheel)
   }
   private onWheel = (e: any) => {
-    e.preventDefault()
-
     e = e.origEvent
     if (!e.altKey) {
       return
     }
+
+    e.preventDefault()
 
     const delta = e.deltaY > 0 ? 1 : -1
 

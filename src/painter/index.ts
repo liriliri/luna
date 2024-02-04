@@ -3,7 +3,7 @@ import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import each from 'licia/each'
 import ResizeSensor from 'licia/ResizeSensor'
-import { exportCjs, drag, measuredScrollbarWidth } from '../share/util'
+import { exportCjs, drag } from '../share/util'
 import { Brush, Pencil, Hand, Zoom, Tool } from './tools'
 
 const $document = $(document as any)
@@ -30,6 +30,7 @@ export default class Painter extends Component<IOptions> {
   private $canvas: $.$
   private $viewport: $.$
   private $body: $.$
+  private viewport: HTMLDivElement
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
   private layers: Layer[] = []
@@ -55,6 +56,7 @@ export default class Painter extends Component<IOptions> {
     this.$tools = this.find('.tools')
     this.$canvas = this.find('.main-canvas')
     this.$viewport = this.find('.viewport')
+    this.viewport = this.$viewport.get(0) as HTMLDivElement
     this.$body = this.find('.body')
     this.canvas = this.$canvas.get(0) as HTMLCanvasElement
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
@@ -194,36 +196,26 @@ export default class Painter extends Component<IOptions> {
   private onResize = () => {
     this.resetViewport()
 
-    const { $canvas } = this
+    const { $canvas, viewport } = this
     const { width: canvasWidth, height: canvasHeight } = $canvas.offset()
-    const { width: viewportWidth, height: viewportHeight } =
-      this.getViewportSize()
-    if (canvasWidth < viewportWidth && canvasHeight < viewportHeight) {
+    if (
+      canvasWidth < viewport.clientWidth &&
+      canvasHeight < viewport.clientHeight
+    ) {
       this.hand.centerCanvas()
     }
   }
   private resetViewport = () => {
-    const { $body, $canvas } = this
+    const { $body, $canvas, viewport } = this
     const { width: canvasWidth, height: canvasHeight } = $canvas.offset()
-    const { width: viewportWidth, height: viewportHeight } =
-      this.getViewportSize()
-    const width = (viewportWidth - Math.min(canvasWidth, 100)) * 2 + canvasWidth
+    const width =
+      (viewport.clientWidth - Math.min(canvasWidth, 100)) * 2 + canvasWidth
     const height =
-      (viewportHeight - Math.min(canvasHeight, 100)) * 2 + canvasHeight
+      (viewport.clientHeight - Math.min(canvasHeight, 100)) * 2 + canvasHeight
     $body.css({
       width,
       height,
     })
-  }
-  getViewportSize() {
-    let { width, height } = this.$viewport.offset()
-    const scrollbarSize = measuredScrollbarWidth()
-    width -= scrollbarSize
-    height -= scrollbarSize
-    return {
-      width,
-      height,
-    }
   }
 }
 

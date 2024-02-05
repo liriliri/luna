@@ -1,4 +1,4 @@
-import Painter from '../index'
+import Painter, { Layer } from '../'
 import Tool from './Tool'
 import types from 'licia/types'
 import h from 'licia/h'
@@ -7,8 +7,11 @@ import LunaToolbar from 'luna-toolbar'
 export default class Pencil extends Tool {
   private drawCtx: CanvasRenderingContext2D
   private drawCanvas: HTMLCanvasElement
+  private brushCavnas: HTMLCanvasElement
+  private brushCtx: CanvasRenderingContext2D
+  private isDrawing = false
   private options: types.PlainObj<any> = {
-    size: 1,
+    size: 4,
     opacity: 100,
     hardness: 100,
   }
@@ -22,12 +25,17 @@ export default class Pencil extends Tool {
 
     this.toolbar.on('change', (key, val) => {
       this.options[key] = val
+      this.generateBrush()
     })
 
-    painter.addToolbar(toolbar)
+    painter.addSubComponent(toolbar)
 
     this.drawCanvas = document.createElement('canvas')
     this.drawCtx = this.drawCanvas.getContext('2d')!
+
+    this.brushCavnas = document.createElement('canvas')
+    this.brushCtx = this.brushCavnas.getContext('2d')!
+    this.generateBrush()
   }
   onUse() {
     this.$toolbar.append(this.toolbar.container)
@@ -37,6 +45,7 @@ export default class Pencil extends Tool {
   }
   setOption(name: string, val: any) {
     this.options[name] = val
+    this.generateBrush()
 
     this.renderToolbar()
   }
@@ -47,6 +56,9 @@ export default class Pencil extends Tool {
     drawCanvas.width = canvas.width
     drawCanvas.height = canvas.height
     drawCtx.clearRect(0, 0, canvas.width, canvas.height)
+
+    this.isDrawing = true
+    this.draw(this.x, this.y)
   }
   onDragMove(e: any) {
     super.onDragMove(e)
@@ -56,6 +68,7 @@ export default class Pencil extends Tool {
       x: x - lastX,
       y: y - lastY,
     }
+
     if (Math.abs(delta.x) > 1 || Math.abs(delta.y) > 1) {
       const steps = Math.max(Math.abs(delta.x), Math.abs(delta.y))
       delta.x /= steps
@@ -67,29 +80,34 @@ export default class Pencil extends Tool {
       }
     }
 
-    this.draw(this.x, this.y)
+    this.draw(x, y)
   }
   onDragEnd(e: any) {
     super.onDragEnd(e)
 
     const { painter } = this
 
+    this.isDrawing = false
     this.commitDraw(painter.getActiveLayer().getContext())
-    painter.updateCanvas()
+    painter.renderCanvas()
   }
   draw(x: number, y: number) {
     const { canvas, drawCtx } = this
+    const { size } = this.options
 
     if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) {
       return
     }
 
-    const { size } = this.options
-    const color = 'rgb(0,0,0)'
-    drawCtx.fillStyle = color
-    drawCtx.fillRect(x, y, size, size)
-    this.painter.updateCanvas()
-    this.commitDraw(this.ctx)
+    const centerX = size > 1 ? x - Math.floor((size - 1) / 2) : x
+    const centerY = size > 1 ? y - Math.floor((size - 1) / 2) : y
+    drawCtx.drawImage(this.brushCavnas, centerX, centerY)
+    this.painter.renderCanvas()
+  }
+  onAfterRenderLayer(layer: Layer) {
+    if (layer === this.painter.getActiveLayer() && this.isDrawing) {
+      this.commitDraw(this.ctx)
+    }
   }
   private commitDraw(ctx: CanvasRenderingContext2D) {
     const { drawCanvas } = this
@@ -119,5 +137,28 @@ export default class Pencil extends Tool {
       max: 100,
       step: 1,
     })
+  }
+  private generateBrush() {
+    const { brushCavnas, brushCtx } = this
+    const { size, hardness } = this.options
+
+    brushCavnas.width = size
+    brushCavnas.height = size
+    brushCtx.clearRect(0, 0, size, size)
+    brushCtx.fillStyle = 'rgb(0,0,0)'
+
+    const center = size / 2
+    let radius = size / 2
+    const opacityStep = 1 / radius / ((105 - hardness) / 25)
+    let opacity = opacityStep
+    for (; radius > 0; radius--) {
+      brushCtx.globalAlpha = Math.min(opacity, 1)
+      brushCtx.beginPath()
+      brushCtx.ellipse(center, center, radius, radius, 0, 0, 2 * Math.PI)
+      brushCtx.fill()
+      opacity += opacityStep
+    }
+
+    brushCtx.globalAlpha = 1
   }
 }

@@ -5,7 +5,6 @@ import each from 'licia/each'
 import ResizeSensor from 'licia/ResizeSensor'
 import { exportCjs, drag } from '../share/util'
 import { Brush, Pencil, Hand, Zoom, Tool } from './tools'
-import LunaToolbar from 'luna-toolbar'
 
 const $document = $(document as any)
 
@@ -127,16 +126,14 @@ export default class Painter extends Component<IOptions> {
   getCanvas() {
     return this.canvas
   }
-  updateCanvas() {
+  renderCanvas() {
     const { ctx, canvas, layers } = this
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     each(layers, (layer) => {
       ctx.drawImage(layer.getCanvas(), 0, 0)
+      this.currentTool.onAfterRenderLayer(layer)
     })
-  }
-  addToolbar(toolbar: LunaToolbar) {
-    this.addSubComponent(toolbar)
   }
   private initTpl() {
     const { width, height } = this.options
@@ -227,7 +224,7 @@ export default class Painter extends Component<IOptions> {
   }
 }
 
-class Layer {
+export class Layer {
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
   constructor(width: number, height: number) {

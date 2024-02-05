@@ -1,4 +1,4 @@
-import Painter from '../index'
+import Painter, { Layer } from '../'
 import Tool from './Tool'
 import types from 'licia/types'
 import h from 'licia/h'
@@ -7,6 +7,7 @@ import LunaToolbar from 'luna-toolbar'
 export default class Pencil extends Tool {
   private drawCtx: CanvasRenderingContext2D
   private drawCanvas: HTMLCanvasElement
+  private isDrawing = false
   private options: types.PlainObj<any> = {
     size: 1,
     opacity: 100,
@@ -23,7 +24,7 @@ export default class Pencil extends Tool {
       this.options[key] = val
     })
 
-    painter.addToolbar(toolbar)
+    painter.addSubComponent(toolbar)
 
     this.drawCanvas = document.createElement('canvas')
     this.drawCtx = this.drawCanvas.getContext('2d')!
@@ -46,6 +47,9 @@ export default class Pencil extends Tool {
     drawCanvas.width = canvas.width
     drawCanvas.height = canvas.height
     drawCtx.clearRect(0, 0, canvas.width, canvas.height)
+
+    this.isDrawing = true
+    this.draw(this.x, this.y)
   }
   onDragMove(e: any) {
     super.onDragMove(e)
@@ -66,15 +70,16 @@ export default class Pencil extends Tool {
       }
     }
 
-    this.draw(this.x, this.y)
+    this.draw(x, y)
   }
   onDragEnd(e: any) {
     super.onDragEnd(e)
+    this.isDrawing = false
 
     const { painter } = this
 
     this.commitDraw(painter.getActiveLayer().getContext())
-    painter.updateCanvas()
+    painter.renderCanvas()
   }
   draw(x: number, y: number) {
     const { canvas, drawCtx } = this
@@ -86,9 +91,15 @@ export default class Pencil extends Tool {
     const { size } = this.options
     const color = 'rgb(0,0,0)'
     drawCtx.fillStyle = color
-    drawCtx.fillRect(x, y, size, size)
-    this.painter.updateCanvas()
-    this.commitDraw(this.ctx)
+    const centerX = size > 1 ? x - Math.floor((size - 1) / 2) : x
+    const centerY = size > 1 ? y - Math.floor((size - 1) / 2) : y
+    drawCtx.fillRect(centerX, centerY, size, size)
+    this.painter.renderCanvas()
+  }
+  onAfterRenderLayer(layer: Layer) {
+    if (layer === this.painter.getActiveLayer() && this.isDrawing) {
+      this.commitDraw(this.ctx)
+    }
   }
   private commitDraw(ctx: CanvasRenderingContext2D) {
     const { drawCanvas } = this

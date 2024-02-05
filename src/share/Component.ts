@@ -85,14 +85,14 @@ export default class Component<
   getOption(name: string) {
     return (this.options as any)[name]
   }
-  protected addSubComponent(component: Component) {
+  addSubComponent(component: Component) {
     component.setOption('theme', this.options.theme)
     this.subComponents.push(component)
   }
-  protected removeSubComponent(component: Component) {
+  removeSubComponent(component: Component) {
     remove(this.subComponents, (com) => com === component)
   }
-  protected destroySubComponents() {
+  destroySubComponents() {
     each(this.subComponents, (component) => component.destroy())
     this.subComponents = []
   }

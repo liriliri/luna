@@ -1,4 +1,4 @@
-import Painter from '../index'
+import Painter, { Layer } from '../'
 import $ from 'licia/$'
 import { eventPage } from '../../share/util'
 
@@ -28,6 +28,7 @@ export default class Tool {
 
     this.$toolbar = painter.$container.find(painter.c('.toolbar'))
   }
+  /* eslint-disable @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars */
   onDragStart(e: any) {
     this.getXY(e)
   }
@@ -37,11 +38,9 @@ export default class Tool {
   onDragEnd(e: any) {
     this.getXY(e)
   }
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onUse() {}
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onUnuse() {}
-  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
+  onAfterRenderLayer(layer: Layer) {}
   onClick(e: any) {}
   private getXY(e: any) {
     const { canvas, $canvas } = this

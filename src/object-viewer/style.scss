@@ -1,12 +1,11 @@
 @import '../share/mixin';
-@import '../share/variable';
 
 .luna-object-viewer {
   @include overflow-auto(x);
   overflow-y: hidden;
   cursor: default;
   font-family: $font-family-code;
-  font-size: 12px;
+  font-size: #{$font-size-s-m}px;
   line-height: 1.2;
   min-height: 100%;
   color: #333;

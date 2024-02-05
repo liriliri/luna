@@ -1,6 +1,8 @@
-@import '../share/variable';
+@import '../share/mixin';
 
 .luna-json-editor {
+  @include component();
+  background: transparent;
   position: relative;
   margin-left: 12px;
   font-family: $font-family-code;
@@ -9,7 +11,7 @@
   cursor: default;
   color: #727272;
   white-space: nowrap;
-  -webkit-user-select: none;
+  user-select: none;
   & > div {
     display: inline-block;
   }
@@ -28,6 +30,7 @@
     display: none;
   }
   &.theme-dark {
+    background: transparent;
     color: #fff;
   }
 }

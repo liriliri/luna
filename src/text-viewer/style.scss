@@ -1,4 +1,3 @@
-@import '../share/variable';
 @import '../share/mixin';
 
 .luna-text-viewer {
@@ -7,12 +6,7 @@
   unicode-bidi: embed;
   position: relative;
   overflow: auto;
-  border: 1px solid $border-color;
-  &.theme-dark {
-    color: #d9d9d9;
-    border-color: $border-color-dark;
-    background: $background-color-dark;
-  }
+  border: 1px solid $color-border;
   &:hover {
     .copy {
       opacity: 1;
@@ -38,7 +32,7 @@
   text-align: right;
   vertical-align: top;
   user-select: none;
-  border-right: 1px solid $border-color;
+  border-right: 1px solid $color-border;
 }
 
 .line-text {
@@ -48,12 +42,12 @@
 }
 
 .copy {
-  background: $background-color;
+  background: $color-bg-container;
   opacity: 0;
   position: absolute;
   right: 5px;
   top: 5px;
-  border: 1px solid $border-color;
+  border: 1px solid $color-border;
   border-radius: 4px;
   width: 25px;
   height: 25px;
@@ -62,7 +56,7 @@
   cursor: pointer;
   transition: opacity 0.3s, top 0.3s;
   .icon-check {
-    color: $success-color;
+    color: $color-success-text;
   }
 }
 
@@ -78,7 +72,7 @@
       word-break: break-all;
     }
   }
-  font-size: $font-size-s;
+  font-size: #{$font-size-s-m}px;
   font-family: $font-family-code;
   box-sizing: border-box;
   white-space: pre;
@@ -86,15 +80,16 @@
 }
 
 .theme-dark {
-  color-scheme: dark;
+  color: #d9d9d9;
+  border-color: $color-border-dark;
   .copy,
   .line-number {
-    border-color: $border-color-dark;
+    border-color: $color-border-dark;
   }
   .copy .icon-check {
-    color: $success-color-dark;
+    color: $color-success-text-dark;
   }
   .copy {
-    background-color: $background-color-dark;
+    background-color: $color-bg-container-dark;
   }
 }

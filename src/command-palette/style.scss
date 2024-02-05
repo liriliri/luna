@@ -1,7 +1,7 @@
-@import '../share/variable.scss';
+@import '../share/mixin';
 
 .luna-command-palette {
-  font-family: $font-family;
+  @include component();
   position: fixed;
   top: 0;
   left: 0;
@@ -12,13 +12,14 @@
   align-items: flex-start;
   padding-top: 10px;
   overflow: hidden;
+  background: transparent !important;
 }
 
 .body {
   max-width: 100%;
   box-shadow: $box-shadow;
   font-size: 12px;
-  background: $background-color;
+  background: $color-bg-container;
 }
 
 .input {
@@ -26,9 +27,9 @@
   outline: none;
   width: 100%;
   border: none;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid $color-border;
   padding: 10px 4px;
-  color: $foreground-color;
+  color: $color-text;
 }
 
 .list {
@@ -42,11 +43,11 @@
     cursor: pointer;
     display: flex;
     &:hover {
-      background: $darker-background-color;
+      background: $color-fill-secondary;
     }
     &.active {
-      color: $select-foreground-color;
-      background: $primary-color;
+      color: $color-white;
+      background: $color-primary;
     }
     .title {
       flex: 1;
@@ -57,4 +58,23 @@
 
 .hidden {
   display: none;
+}
+
+.theme-dark {
+  .body {
+    background: $color-bg-container-dark;
+  }
+  .input {
+    background: $color-bg-container-dark;
+    border-color: $color-border-dark;
+  }
+  li {
+    &:hover {
+      background: $color-fill-secondary-dark;
+    }
+    &.active {
+      color: $color-white;
+      background: $color-primary;
+    }
+  }
 }

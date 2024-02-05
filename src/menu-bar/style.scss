@@ -1,10 +1,8 @@
-@import '../share/variable';
 @import '../share/mixin';
 
 .luna-menu-bar {
   @include component();
-  background: $background-color;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid $color-border;
 }
 
 .menu-list {
@@ -13,14 +11,18 @@
 }
 
 .menu-item {
-  font-size: $font-size-s;
+  font-size: #{$font-size-s-m}px;
   padding: 2px 6px;
   cursor: default;
   display: block;
   float: left;
   user-select: none;
   &:hover {
-    color: $foreground-color;
-    background: $darker-background-color;
+    color: $color-text;
+    background: $color-fill-secondary;
   }
+}
+
+.theme-dark {
+  border-color: $color-border-dark;
 }

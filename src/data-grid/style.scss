@@ -3,16 +3,10 @@
 .luna-data-grid {
   @include component();
   position: relative;
-  font-size: $font-size-s;
-  border: 1px solid $border-color;
+  font-size: #{$font-size-s-m}px;
+  border: 1px solid $color-border;
   overflow: hidden;
   outline: none;
-
-  &.theme-dark {
-    color: $foreground-color-dark;
-    background: $background-color-dark;
-    border-color: $border-color-dark;
-  }
 
   table {
     width: 100%;
@@ -25,7 +19,7 @@
   th,
   td {
     padding: 1px 4px;
-    border-left: 1px solid $border-color;
+    border-left: 1px solid $color-border;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -36,9 +30,9 @@
 
   th {
     font-weight: normal;
-    border-bottom: 1px solid $border-color;
+    border-bottom: 1px solid $color-border;
     text-align: left;
-    background: $darker-background-color;
+    background: $color-fill-secondary;
     &.sortable {
       &:hover,
       &:active {
@@ -110,13 +104,13 @@
 }
 
 .theme-dark {
-  color-scheme: dark;
+  border-color: $color-border-dark;
   th,
   td {
-    border-color: $border-color-dark;
+    border-color: $color-border-dark;
   }
   th {
-    background: $darker-background-color-dark;
+    background: $color-fill-secondary-dark;
     &.sortable {
       &:hover {
         background: #303030;

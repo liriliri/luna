@@ -1,4 +1,3 @@
-@import '../share/variable';
 @import '../share/mixin';
 
 .luna-video-player {
@@ -46,7 +45,7 @@
   width: 8px;
   height: 8px;
   display: inline-block;
-  background: $primary-color;
+  background: $color-primary;
   border-radius: 50%;
 }
 
@@ -72,7 +71,7 @@
 }
 
 .bar-played {
-  background: $primary-color;
+  background: $color-primary;
 }
 
 .play,
@@ -116,7 +115,7 @@
 }
 
 .volume-bar-fill {
-  background: $primary-color;
+  background: $color-primary;
   position: absolute;
   top: 0;
   left: 0;
@@ -125,6 +124,6 @@
 
 .time {
   color: #eee;
-  font-size: $font-size-s;
+  font-size: #{$font-size-s-m}px;
   line-height: 38px;
 }

@@ -1,22 +1,15 @@
-@import '../share/variable';
 @import '../share/mixin';
 
 .luna-music-player {
   @include component();
   min-width: 375px;
-  font-family: $font-family;
   box-shadow: $box-shadow;
-  background: $background-color;
   font-size: 14px;
   cursor: default;
-  &.theme-dark {
-    box-shadow: $box-shadow-dark;
-    background-color: $background-color-dark;
-  }
 }
 
 .body-left {
-  background: $primary-color;
+  background: $color-primary;
   width: 90px;
   height: 90px;
   float: left;
@@ -32,7 +25,7 @@
   position: absolute;
   width: 30px;
   height: 30px;
-  border: 2px solid $select-foreground-color;
+  border: 2px solid $color-white;
   border-radius: 50%;
   bottom: 50%;
   right: 50%;
@@ -42,7 +35,7 @@
   .icon {
     cursor: pointer;
     position: absolute;
-    color: $select-foreground-color;
+    color: $color-white;
     top: 5px;
   }
   .icon-play {
@@ -57,13 +50,13 @@
   margin-left: 90px;
   height: 90px;
   padding: 10px 7px 0;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid $color-border;
 }
 
 .info {
   height: 22px;
   margin: 0 0 35px 5px;
-  color: $foreground-color;
+  color: $color-text;
 }
 
 .controller {
@@ -118,7 +111,7 @@
   width: 8px;
   height: 8px;
   display: inline-block;
-  background: $primary-color;
+  background: $color-primary;
   border-radius: 50%;
 }
 
@@ -137,7 +130,7 @@
 }
 
 .bar-played {
-  background: $primary-color;
+  background: $color-primary;
 }
 
 .volume {
@@ -177,7 +170,7 @@
 }
 
 .volume-bar-fill {
-  background: $primary-color;
+  background: $color-primary;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -195,19 +188,19 @@
   line-height: 32px;
   padding: 0 15px;
   font-size: 12px;
-  border-top: 1px solid $border-color;
+  border-top: 1px solid $color-border;
   margin: 0;
-  transition: background 0.3s;
-  color: $foreground-color;
+  transition: background-color 0.3s;
+  color: $color-text;
   &:first-child {
     border-top: none;
   }
   &.active,
   &:hover {
-    background: $darker-background-color;
+    background: $color-fill-secondary;
   }
   &.active {
-    color: $primary-color;
+    color: $color-primary;
   }
 }
 
@@ -220,14 +213,22 @@
 }
 
 .theme-dark {
+  box-shadow: $box-shadow-dark;
   .body-right {
-    border-bottom-color: $border-color-dark;
+    border-bottom-color: $color-border-dark;
   }
   .info {
-    color: $foreground-color-dark;
+    color: $color-text-dark;
   }
   .list-item {
-    border-top-color: $border-color-dark;
-    color: $foreground-color-dark;
+    border-top-color: $color-border-dark;
+    color: $color-text-dark;
+    &.active,
+    &:hover {
+      background: $color-fill-secondary-dark;
+    }
+    &.active {
+      color: $color-primary;
+    }
   }
 }

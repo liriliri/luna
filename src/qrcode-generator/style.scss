@@ -1,9 +1,8 @@
 @import '../share/mixin';
-@import '../share/variable';
 
 .luna-qrcode-generator {
   @include component();
-  border: 1px solid $border-color;
+  border: 1px solid $color-border;
   display: flex;
   height: 250px;
 }
@@ -33,4 +32,8 @@
   .qrcode {
     text-align: center;
   }
+}
+
+.theme-dark {
+  border-color: $color-border-dark;
 }

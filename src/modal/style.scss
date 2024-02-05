@@ -1,5 +1,4 @@
-@import '../share/variable.scss';
-@import '../share/mixin.scss';
+@import '../share/mixin';
 
 .luna-modal {
   @include component();
@@ -24,7 +23,7 @@
 
 .body {
   position: relative;
-  background: $background-color;
+  background: $color-bg-container;
   max-height: 100%;
   display: flex;
   flex-direction: column;
@@ -82,14 +81,14 @@
   position: relative;
   user-select: none;
   margin: 0 4px;
-  font-size: $font-size-s;
+  font-size: #{$font-size-s-m}px;
   border-radius: 4px;
   overflow: hidden;
   height: 28px;
   line-height: 28px;
   &:active {
     &::before {
-      background: $primary-color;
+      background: $color-primary;
       content: '';
       opacity: 0.4;
       position: absolute;
@@ -101,13 +100,13 @@
     }
   }
   &.secondary {
-    color: $primary-color;
-    border: 1px solid $border-color;
+    color: $color-primary;
+    border: 1px solid $color-border;
     background: #fff;
   }
   &.primary {
     color: #fff;
-    background: $primary-color;
+    background: $color-primary;
   }
 }
 
@@ -117,14 +116,14 @@
   width: 100%;
   font-size: 16px;
   padding: 6px 12px;
-  border: 1px solid $border-color;
+  border: 1px solid $color-border;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
 .theme-dark {
-  color: $foreground-color-dark;
   .body {
-    background: $background-color-dark;
+    background: $color-bg-container-dark;
+    border: 1px solid $color-border-dark;
   }
 }

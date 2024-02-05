@@ -1,5 +1,4 @@
 @import '../share/mixin';
-@import '../share/variable';
 
 .luna-toolbar {
   @include component();
@@ -7,7 +6,7 @@
   display: flex;
   white-space: nowrap;
   overflow-x: hidden;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid $color-border;
 }
 
 .item {
@@ -16,7 +15,7 @@
 }
 
 .item-separator {
-  background: $border-color;
+  background: $color-border;
   width: 1px;
   height: 22px;
   margin-top: 4px;
@@ -76,9 +75,9 @@
 }
 
 .theme-dark {
-  border-bottom-color: $border-color-dark;
+  border-bottom-color: $color-border-dark;
   .item-separator {
-    background: $border-color-dark;
+    background: $color-border-dark;
   }
   .item-button {
     button {

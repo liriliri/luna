@@ -1,18 +1,17 @@
-@import '../share/variable.scss';
+@import '../share/mixin';
 
 .luna-window {
+  @include component();
   position: absolute;
   pointer-events: all;
   display: flex;
   flex-flow: column;
-  background: $background-color;
-  border: 1px solid $border-color;
+  border: 1px solid $color-border;
   overflow: hidden;
   box-shadow: $box-shadow;
-  box-sizing: border-box;
   &.active {
     .title-bar {
-      background: $darker-background-color;
+      background: $color-fill-secondary;
     }
     .resizer {
       position: static;
@@ -229,6 +228,6 @@
   pointer-events: all;
   &:hover,
   &.active {
-    background: $primary-color;
+    background: $color-primary;
   }
 }

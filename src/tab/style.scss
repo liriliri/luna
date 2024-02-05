@@ -1,5 +1,4 @@
 @import '../share/mixin';
-@import '../share/variable';
 
 .luna-tab {
   @include component();
@@ -9,7 +8,7 @@
 }
 
 .tabs-container {
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid $color-border;
 }
 
 .tabs {
@@ -30,11 +29,11 @@
   cursor: pointer;
   display: inline-block;
   padding: 0 10px;
-  font-size: $font-size-s;
+  font-size: #{$font-size-s-m}px;
   text-align: center;
   text-transform: capitalize;
   &:hover {
-    background: $darker-background-color;
+    background: $color-fill-secondary;
   }
 }
 
@@ -45,4 +44,15 @@
   position: absolute;
   bottom: 0;
   left: 0;
+}
+
+.theme-dark {
+  .tabs-container {
+    border-color: $color-border-dark;
+  }
+  .item {
+    &:hover {
+      background: $color-fill-secondary-dark;
+    }
+  }
 }

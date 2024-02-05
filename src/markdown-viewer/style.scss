@@ -1,10 +1,16 @@
+@import '../share/mixin';
+
 // https://github.com/sindresorhus/github-markdown-css
 .luna-markdown-viewer {
+  @include component();
+  background: transparent;
+  &.theme-dark {
+    background: transparent;
+  }
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   margin: 0;
   color: #24292f;
-  background-color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
   font-size: 16px;
@@ -357,8 +363,6 @@
 }
 
 .theme-dark {
-  color: #c9d1d9;
-  background-color: #0d1117;
   a {
     background-color: transparent;
     color: #58a6ff;

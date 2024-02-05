@@ -1,15 +1,10 @@
 @import '../share/mixin';
-@import '../share/variable';
 
 .luna-markdown-editor {
   @include component();
-  border: 1px solid $border-color;
-  background: $background-color;
+  border: 1px solid $color-border;
   display: flex;
   flex-direction: column;
-  &.theme-dark {
-    border-color: $border-color-dark;
-  }
   &.fullscreen {
     position: fixed;
     width: 100% !important;
@@ -25,7 +20,7 @@
 }
 
 .toolbar {
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid $color-border;
   font-size: 0;
 }
 
@@ -34,15 +29,15 @@
   width: 30px;
   height: 30px;
   text-align: center;
-  color: $foreground-color;
+  color: $color-text;
   border: none;
-  background: $background-color;
+  background: $color-bg-container;
   cursor: pointer;
   &:hover {
-    background: $darker-background-color;
+    background: $color-fill-secondary;
   }
   &.active {
-    color: $primary-color;
+    color: $color-primary;
   }
 }
 
@@ -62,7 +57,7 @@
   min-height: 100px;
   height: 300px;
   font-family: inherit;
-  color: $foreground-color;
+  color: $color-text;
 }
 
 .preview-container {
@@ -73,25 +68,26 @@
   height: 100%;
   overflow-y: auto;
   padding: 8px;
-  background: $background-color;
+  background: $color-bg-container;
 }
 
 .theme-dark {
+  border-color: $color-border-dark;
   .toolbar {
-    border-color: $border-color-dark;
+    border-color: $color-border-dark;
   }
   .toolbar,
   .button {
-    background: $background-color-dark;
+    background: $color-bg-container-dark;
   }
   .button {
-    color: $foreground-color-dark;
+    color: $color-text-dark;
   }
   .textarea {
-    color: $foreground-color-dark;
+    color: $color-text-dark;
   }
   .textarea,
   .preview-container {
-    background: #0d1117;
+    background: $color-bg-container-dark;
   }
 }

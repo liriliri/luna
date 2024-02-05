@@ -1,8 +1,6 @@
 @import '../share/mixin';
-@import '../share/variable';
 
 $padding: 10px;
-$font-size: 12px;
 $border: #ccc;
 $foreground: #333;
 $darker-background: #f3f3f3;
@@ -30,16 +28,16 @@ $console-selected-background-dark: #29323d;
 $console-selected-border-dark: #4173b4;
 
 .luna-console {
-  background: $background-color;
+  background: $color-bg-container;
   @include overflow-auto(y);
   height: 100%;
   position: relative;
   will-change: scroll-position;
   cursor: default;
-  font-size: $font-size;
+  font-size: #{$font-size-s-m}px;
   font-family: $font-family-code;
   &.theme-dark {
-    background-color: $background-color-dark;
+    background-color: $color-bg-container-dark;
   }
 }
 
@@ -129,7 +127,7 @@ $console-selected-border-dark: #4173b4;
     margin: 0 -6px 0 $padding;
     .icon {
       line-height: 20px;
-      font-size: $font-size;
+      font-size: #{$font-size-s-m}px;
       color: $foreground;
       position: relative;
     }
@@ -152,7 +150,7 @@ $console-selected-border-dark: #4173b4;
     color: #fff;
     padding: 2px 4px;
     border-radius: 10px;
-    font-size: $font-size;
+    font-size: #{$font-size-s-m}px;
     float: left;
     margin: 1px -6px 0 $padding;
   }
@@ -244,7 +242,7 @@ $console-selected-border-dark: #4173b4;
     display: block;
     .icon {
       position: relative;
-      font-size: $font-size-s;
+      font-size: #{$font-size-s-m}px;
     }
     .icon-caret-down {
       top: 2px;

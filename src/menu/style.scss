@@ -1,21 +1,14 @@
-@import '../share/variable';
 @import '../share/mixin';
 
 .luna-menu {
   @include component();
   position: absolute;
   padding: 4px 0;
-  background: $darker-background-color;
   box-shadow: $box-shadow;
-  color: $foreground-color;
-  border: 1px solid $border-color;
+  border: 1px solid $color-border;
   padding: 4px 0;
-  box-sizing: border-box;
   z-index: 4000;
   overflow-y: auto;
-  * {
-    box-sizing: border-box;
-  }
 }
 
 .glass-pane {
@@ -36,8 +29,8 @@
   width: 100%;
   font-size: 12px;
   &.active {
-    color: $select-foreground-color;
-    background: $primary-color;
+    color: $color-white;
+    background: $color-primary;
   }
   .icon-arrow-right {
     margin-left: auto;
@@ -50,6 +43,13 @@
 
 .separator {
   height: 1px;
-  background-color: $border-color;
+  background-color: $color-border;
   margin: 5px 1px;
+}
+
+.theme-dark {
+  border-color: $color-border-dark;
+  .separator {
+    background-color: $color-border-dark;
+  }
 }

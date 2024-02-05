@@ -1,11 +1,8 @@
 @import '../share/mixin';
-@import '../share/variable';
 
 .luna-editor {
-  border: 1px solid $border-color;
-  * {
-    box-sizing: border-box;
-  }
+  @include component();
+  border: 1px solid $color-border;
   &.fullscreen {
     position: fixed;
     width: 100% !important;
@@ -17,10 +14,10 @@
 }
 
 .toolbar {
-  background: $background-color;
+  background: $color-bg-container;
   padding: 0 6px;
   font-size: 0;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid $color-border;
 }
 
 .button {
@@ -28,15 +25,15 @@
   width: 30px;
   height: 30px;
   text-align: center;
-  background: $background-color;
+  background: $color-bg-container;
   cursor: pointer;
   border: none;
-  color: $foreground-color;
+  color: $color-text;
   &:hover {
-    background: $darker-background-color;
+    background: $color-fill-secondary;
   }
   &.active {
-    color: $primary-color;
+    color: $color-primary;
   }
   &:active,
   &:focus {
@@ -50,7 +47,7 @@
 }
 
 .body {
-  background: $background-color;
+  background: $color-bg-container;
   height: 300px;
 }
 
@@ -65,7 +62,22 @@
   blockquote {
     margin: 10px 0;
     padding: 5px 10px;
-    border-left: 8px solid $primary-color;
-    background: $darker-background-color;
+    border-left: 8px solid $color-primary;
+    background: $color-fill-secondary;
+  }
+}
+
+.theme-dark {
+  border-color: $color-border-dark;
+  .toolbar {
+    background: $color-bg-container-dark;
+    border-color: $color-border-dark;
+  }
+  .button {
+    background: $color-bg-container-dark;
+    color: $color-text-dark;
+  }
+  .body {
+    background: $color-bg-container-dark;
   }
 }

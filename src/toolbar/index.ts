@@ -42,8 +42,12 @@ export default class Toolbar extends Component {
     return this.append(new LunaToolbarText(this, text))
   }
   /** Append button. */
-  appendButton(title: string, handler: types.AnyFn) {
-    return this.append(new LunaToolbarButton(this, title, handler))
+  appendButton(
+    content: string | HTMLElement,
+    handler: types.AnyFn,
+    state?: IButtonState
+  ) {
+    return this.append(new LunaToolbarButton(this, content, handler, state))
   }
   /** Append html. */
   appendHtml(html: string | HTMLElement) {
@@ -245,14 +249,33 @@ export class LunaToolbarText extends LunaToolbarItem {
   }
 }
 
+export type IButtonState = '' | 'hover' | 'active'
+
 export class LunaToolbarButton extends LunaToolbarItem {
-  constructor(toolbar: Toolbar, title: string, handler: types.AnyFn) {
+  private $button: $.$
+  constructor(
+    toolbar: Toolbar,
+    content: string | HTMLElement,
+    handler: types.AnyFn,
+    state: IButtonState = ''
+  ) {
     super(toolbar, '', '', 'button')
 
-    this.$container.html(`<button>${escape(title)}</button>`)
+    this.$container.html(`<button></button>`)
 
     const $button = this.$container.find('button')
+    $button.append(content)
     $button.on('click', handler)
+    this.$button = $button
+
+    this.setState(state)
+  }
+  setState(state: IButtonState) {
+    const { $button } = this
+    $button.rmAttr('class')
+    if (state) {
+      $button.addClass(this.toolbar.c(state))
+    }
   }
 }
 

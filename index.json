@@ -234,13 +234,13 @@
     "dependencies": []
   },
   "painter": {
+    "dependencies": ["toolbar"],
     "icon": true,
     "version": "0.1.0",
     "style": true,
     "test": true,
     "install": false,
-    "react": false,
-    "dependencies": []
+    "react": false
   },
   "performance-monitor": {
     "react": true,
@@ -343,7 +343,7 @@
   },
   "toolbar": {
     "react": true,
-    "version": "0.4.3",
+    "version": "0.5.0",
     "style": true,
     "icon": false,
     "test": true,

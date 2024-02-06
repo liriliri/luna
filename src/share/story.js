@@ -88,6 +88,10 @@ export default function story(
 
       ReactDOM.render(<ReactComponent theme={theme} />, container)
 
+      document.documentElement.style.background = contain(theme, 'dark')
+          ? '#000'
+          : '#fff'
+
       return container
     }
   }

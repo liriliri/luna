@@ -16,11 +16,13 @@ import Toolbar, {
   LunaToolbarInput as ToolbarInput,
   LunaToolbarButton as ToolbarButton,
   LunaToolbarItem,
+  IButtonState,
 } from './index'
 import { useForceUpdate } from '../share/hooks'
+import { IComponentOptions } from '../share/Component'
 import { createPortal } from 'react-dom'
 
-interface IToolbarProps {
+interface IToolbarProps extends IComponentOptions {
   className?: string
   onChange?: (key: string, val: any, oldVal: any) => void
 }
@@ -39,6 +41,12 @@ const LunaToolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
 
     return () => toolbar.current?.destroy()
   }, [])
+
+  useEffect(() => {
+    if (toolbar.current) {
+      toolbar.current.setOption('theme', props.theme)
+    }
+  }, [props.theme])
 
   return (
     <div className={props.className || ''} ref={toolbarRef}>
@@ -77,8 +85,9 @@ export const LunaToolbarText: FC<IToolbarTextProps> = (props) => {
 }
 
 interface IToolbarButtonProps extends IToolbarItemProps {
-  title: string
+  content: string | HTMLElement
   onClick: () => void
+  state?: IButtonState
 }
 
 export const LunaToolbarButton: FC<IToolbarButtonProps> = (props) => {
@@ -87,13 +96,20 @@ export const LunaToolbarButton: FC<IToolbarButtonProps> = (props) => {
   useEffect(() => {
     if (props.toolbar) {
       toolbarButton.current = props.toolbar.appendButton(
-        props.title,
-        props.onClick
+        props.content,
+        props.onClick,
+        props.state
       )
     }
 
     return () => toolbarButton.current?.detach()
   }, [props.toolbar])
+
+  useEffect(() => {
+    if (toolbarButton.current && props.state) {
+      toolbarButton.current.setState(props.state)
+    }
+  }, [props.state])
 
   return null
 }

@@ -57,11 +57,23 @@
 
 .item-button {
   button {
-    @include button();
     color: $color-text;
     height: 22px;
     margin-top: 4px;
     margin-bottom: 4px;
+    border: none;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: #{$border-radius-x-s}px;
+    &:hover,
+    &.hover {
+      background: $color-fill-tertiary;
+      border-color: $color-border;
+    }
+    &:active,
+    &.active {
+      background: $color-fill-secondary;
+    }
   }
 }
 
@@ -81,8 +93,16 @@
   }
   .item-button {
     button {
-      @include button(true);
       color: $color-text-dark;
+      &:hover,
+      &.hover {
+        background: $color-fill-secondary-dark;
+        border-color: $color-border-dark;
+      }
+      &:active,
+      &.active {
+        background: $color-fill-tertiary-dark;
+      }
     }
   }
   .item-select {

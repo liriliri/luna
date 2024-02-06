@@ -39,9 +39,13 @@ const def = story(
     const filter = toolbar.appendInput('filter', '', 'Filter')
     filter.disable()
 
-    toolbar.appendButton('Trigger', () => {
-      console.log('trigger')
-    })
+    toolbar.appendButton(
+      'Trigger',
+      () => {
+        console.log('trigger')
+      },
+      'hover'
+    )
 
     toolbar.appendText('Size:')
     toolbar.appendNumber('size', 50, {
@@ -61,12 +65,13 @@ const def = story(
   {
     readme,
     source: __STORY__,
-    ReactComponent() {
+    ReactComponent({ theme }) {
       return (
         <LunaToolbar
           onChange={(key, val, oldVal) => {
             console.log(key, val, oldVal)
           }}
+          theme={theme}
         >
           <LunaToolbarSelect
             keyName="throttling"
@@ -86,8 +91,9 @@ const def = story(
             disabled={true}
           />
           <LunaToolbarButton
-            title="Trigger"
+            content="Trigger"
             onClick={() => console.log('trigger')}
+            state="hover"
           />
           <LunaToolbarSpace />
           <LunaToolbarHtml>

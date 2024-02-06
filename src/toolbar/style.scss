@@ -11,7 +11,7 @@
 
 .item {
   display: flex;
-  margin: 0 5px;
+  margin: 0 #{$margin-x-x-s}px;
 }
 
 .item-separator {
@@ -57,6 +57,10 @@
 
 .item-button {
   button {
+    display: flex;
+    align-items: center;
+    font-size: #{$font-size-s-m}px;
+    padding: 0 2px;
     color: $color-text;
     height: 22px;
     margin-top: 4px;
@@ -72,6 +76,7 @@
     }
     &:active,
     &.active {
+      border-color: $color-border;
       background: $color-fill-secondary;
     }
   }
@@ -101,6 +106,7 @@
       }
       &:active,
       &.active {
+        border-color: $color-border-dark;
         background: $color-fill-tertiary-dark;
       }
     }

@@ -1,34 +1,20 @@
 import Painter, { Layer } from '../'
 import Tool from './Tool'
-import types from 'licia/types'
-import h from 'licia/h'
-import LunaToolbar from 'luna-toolbar'
 
-export default class Pencil extends Tool {
+export default class Brush extends Tool {
   private drawCtx: CanvasRenderingContext2D
   private drawCanvas: HTMLCanvasElement
   private brushCavnas: HTMLCanvasElement
   private brushCtx: CanvasRenderingContext2D
   private isDrawing = false
-  private options: types.PlainObj<any> = {
-    size: 4,
-    opacity: 100,
-    hardness: 100,
-  }
-  private toolbar: LunaToolbar
   constructor(painter: Painter) {
     super(painter)
 
-    const toolbar = new LunaToolbar(h('div'))
-    this.toolbar = toolbar
-    this.renderToolbar()
-
-    this.toolbar.on('change', (key, val) => {
-      this.options[key] = val
-      this.generateBrush()
-    })
-
-    painter.addSubComponent(toolbar)
+    this.options = {
+      size: 4,
+      opacity: 100,
+      hardness: 100,
+    }
 
     this.drawCanvas = document.createElement('canvas')
     this.drawCtx = this.drawCanvas.getContext('2d')!
@@ -36,18 +22,6 @@ export default class Pencil extends Tool {
     this.brushCavnas = document.createElement('canvas')
     this.brushCtx = this.brushCavnas.getContext('2d')!
     this.generateBrush()
-  }
-  onUse() {
-    this.$toolbar.append(this.toolbar.container)
-  }
-  onUnuse() {
-    this.toolbar.$container.remove()
-  }
-  setOption(name: string, val: any) {
-    this.options[name] = val
-    this.generateBrush()
-
-    this.renderToolbar()
   }
   onDragStart(e: any) {
     super.onDragStart(e)
@@ -91,7 +65,12 @@ export default class Pencil extends Tool {
     this.commitDraw(painter.getActiveLayer().getContext())
     painter.renderCanvas()
   }
-  draw(x: number, y: number) {
+  onAfterRenderLayer(layer: Layer) {
+    if (layer === this.painter.getActiveLayer() && this.isDrawing) {
+      this.commitDraw(this.ctx)
+    }
+  }
+  private draw(x: number, y: number) {
     const { canvas, drawCtx } = this
     const { size } = this.options
 
@@ -104,21 +83,11 @@ export default class Pencil extends Tool {
     drawCtx.drawImage(this.brushCavnas, centerX, centerY)
     this.painter.renderCanvas()
   }
-  onAfterRenderLayer(layer: Layer) {
-    if (layer === this.painter.getActiveLayer() && this.isDrawing) {
-      this.commitDraw(this.ctx)
-    }
-  }
-  private commitDraw(ctx: CanvasRenderingContext2D) {
-    const { drawCanvas } = this
-    ctx.globalAlpha = this.options.opacity / 100
-    ctx.drawImage(drawCanvas, 0, 0)
-    ctx.globalAlpha = 1
-  }
-  private renderToolbar() {
+  protected renderToolbar() {
+    super.renderToolbar()
+
     const { toolbar, options } = this
 
-    toolbar.clear()
     toolbar.appendText('Size:')
     toolbar.appendNumber('size', options.size, {
       min: 1,
@@ -137,6 +106,12 @@ export default class Pencil extends Tool {
       max: 100,
       step: 1,
     })
+  }
+  private commitDraw(ctx: CanvasRenderingContext2D) {
+    const { drawCanvas } = this
+    ctx.globalAlpha = this.options.opacity / 100
+    ctx.drawImage(drawCanvas, 0, 0)
+    ctx.globalAlpha = 1
   }
   private generateBrush() {
     const { brushCavnas, brushCtx } = this

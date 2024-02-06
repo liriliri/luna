@@ -1,6 +1,9 @@
 import Painter, { Layer } from '../'
 import $ from 'licia/$'
+import h from 'licia/h'
+import types from 'licia/types'
 import { eventPage } from '../../share/util'
+import LunaToolbar from 'luna-toolbar'
 
 export default class Tool {
   protected painter: Painter
@@ -14,6 +17,8 @@ export default class Tool {
   protected ctx: CanvasRenderingContext2D
   protected canvas: HTMLCanvasElement
   protected $toolbar: $.$
+  protected toolbar: LunaToolbar
+  protected options: types.PlainObj<any> = {}
   constructor(painter: Painter) {
     this.painter = painter
 
@@ -27,6 +32,18 @@ export default class Tool {
     this.$canvas = $(this.canvas)
 
     this.$toolbar = painter.$container.find(painter.c('.toolbar'))
+
+    const toolbar = new LunaToolbar(h('div'))
+    this.toolbar = toolbar
+    toolbar.on('change', (key, val) => {
+      this.options[key] = val
+    })
+    painter.addSubComponent(toolbar)
+  }
+  setOption(name: string, val: any) {
+    this.options[name] = val
+
+    this.renderToolbar()
   }
   /* eslint-disable @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars */
   onDragStart(e: any) {
@@ -38,10 +55,19 @@ export default class Tool {
   onDragEnd(e: any) {
     this.getXY(e)
   }
-  onUse() {}
-  onUnuse() {}
+  onUse() {
+    this.renderToolbar()
+
+    this.$toolbar.append(this.toolbar.container)
+  }
+  onUnuse() {
+    this.toolbar.$container.remove()
+  }
   onAfterRenderLayer(layer: Layer) {}
   onClick(e: any) {}
+  protected renderToolbar() {
+    this.toolbar.clear()
+  }
   private getXY(e: any) {
     const { canvas, $canvas } = this
     const offset = $canvas.offset()

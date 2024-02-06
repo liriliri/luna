@@ -13,9 +13,15 @@ export default class Zoom extends Tool {
   constructor(painter: Painter) {
     super(painter)
 
+    this.options = {
+      zoomIn: true,
+    }
+
     this.bindEvent()
   }
   onUse() {
+    super.onUse()
+
     const { $canvas } = this
 
     if (!$canvas.attr('style')) {
@@ -29,7 +35,11 @@ export default class Zoom extends Tool {
   onClick(e: any) {
     const offset = this.$viewport.offset()
 
-    this.zoom(e.altKey ? -0.3 : 0.3, {
+    let ratio = this.options.zoomIn ? 0.3 : -0.3
+    if (e.altKey) {
+      ratio = -ratio
+    }
+    this.zoom(ratio, {
       x: eventPage('x', e) - offset.left,
       y: eventPage('y', e) - offset.top,
     })
@@ -111,6 +121,29 @@ export default class Zoom extends Tool {
         'linear'
       )
       .play()
+  }
+  protected renderToolbar() {
+    super.renderToolbar()
+
+    const { toolbar, painter, options } = this
+    toolbar.appendButton(
+      painter.c('<span class="icon icon-zoom-in"></span>'),
+      () => {
+        if (!options.zoomIn) {
+          this.setOption('zoomIn', true)
+        }
+      },
+      options.zoomIn ? 'active' : ''
+    )
+    toolbar.appendButton(
+      painter.c('<span class="icon icon-zoom-out"></span>'),
+      () => {
+        if (options.zoomIn) {
+          this.setOption('zoomIn', false)
+        }
+      },
+      options.zoomIn ? '' : 'active'
+    )
   }
   private bindEvent() {
     this.$viewport.on('wheel', this.onWheel)

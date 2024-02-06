@@ -1,44 +1,20 @@
 import Painter, { Layer } from '../'
 import Tool from './Tool'
-import types from 'licia/types'
-import h from 'licia/h'
-import LunaToolbar from 'luna-toolbar'
 
 export default class Pencil extends Tool {
   private drawCtx: CanvasRenderingContext2D
   private drawCanvas: HTMLCanvasElement
   private isDrawing = false
-  private options: types.PlainObj<any> = {
-    size: 1,
-    opacity: 100,
-  }
-  private toolbar: LunaToolbar
   constructor(painter: Painter) {
     super(painter)
 
-    const toolbar = new LunaToolbar(h('div'))
-    this.toolbar = toolbar
-    this.renderToolbar()
-
-    this.toolbar.on('change', (key, val) => {
-      this.options[key] = val
-    })
-
-    painter.addSubComponent(toolbar)
+    this.options = {
+      size: 1,
+      opacity: 100,
+    }
 
     this.drawCanvas = document.createElement('canvas')
     this.drawCtx = this.drawCanvas.getContext('2d')!
-  }
-  onUse() {
-    this.$toolbar.append(this.toolbar.container)
-  }
-  onUnuse() {
-    this.toolbar.$container.remove()
-  }
-  setOption(name: string, val: any) {
-    this.options[name] = val
-
-    this.renderToolbar()
   }
   onDragStart(e: any) {
     super.onDragStart(e)
@@ -81,7 +57,29 @@ export default class Pencil extends Tool {
     this.commitDraw(painter.getActiveLayer().getContext())
     painter.renderCanvas()
   }
-  draw(x: number, y: number) {
+  onAfterRenderLayer(layer: Layer) {
+    if (layer === this.painter.getActiveLayer() && this.isDrawing) {
+      this.commitDraw(this.ctx)
+    }
+  }
+  protected renderToolbar() {
+    super.renderToolbar()
+    const { toolbar, options } = this
+
+    toolbar.appendText('Size:')
+    toolbar.appendNumber('size', options.size, {
+      min: 1,
+      max: 1000,
+      step: 1,
+    })
+    toolbar.appendText('Opacity:')
+    toolbar.appendNumber('opacity', options.opacity, {
+      min: 1,
+      max: 100,
+      step: 1,
+    })
+  }
+  private draw(x: number, y: number) {
     const { canvas, drawCtx } = this
 
     if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) {
@@ -96,32 +94,10 @@ export default class Pencil extends Tool {
     drawCtx.fillRect(centerX, centerY, size, size)
     this.painter.renderCanvas()
   }
-  onAfterRenderLayer(layer: Layer) {
-    if (layer === this.painter.getActiveLayer() && this.isDrawing) {
-      this.commitDraw(this.ctx)
-    }
-  }
   private commitDraw(ctx: CanvasRenderingContext2D) {
     const { drawCanvas } = this
     ctx.globalAlpha = this.options.opacity / 100
     ctx.drawImage(drawCanvas, 0, 0)
     ctx.globalAlpha = 1
-  }
-  private renderToolbar() {
-    const { toolbar, options } = this
-
-    toolbar.clear()
-    toolbar.appendText('Size:')
-    toolbar.appendNumber('size', options.size, {
-      min: 1,
-      max: 1000,
-      step: 1,
-    })
-    toolbar.appendText('Opacity:')
-    toolbar.appendNumber('opacity', options.opacity, {
-      min: 1,
-      max: 100,
-      step: 1,
-    })
   }
 }

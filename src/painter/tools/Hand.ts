@@ -32,9 +32,13 @@ export default class Hand extends Tool {
     super.renderToolbar()
 
     const { toolbar } = this
-    toolbar.appendButton('100%', () => {
-      const zoom = this.painter.getTool('zoom') as Zoom
-      zoom.zoomTo(1)
-    }, 'hover')
+    toolbar.appendButton(
+      '100%',
+      () => {
+        const zoom = this.painter.getTool('zoom') as Zoom
+        zoom.zoomTo(1)
+      },
+      'hover'
+    )
   }
 }

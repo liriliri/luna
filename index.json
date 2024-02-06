@@ -343,7 +343,7 @@
   },
   "toolbar": {
     "react": true,
-    "version": "0.5.1",
+    "version": "0.5.2",
     "style": true,
     "icon": false,
     "test": true,

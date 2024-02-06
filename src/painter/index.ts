@@ -4,7 +4,7 @@ import $ from 'licia/$'
 import each from 'licia/each'
 import ResizeSensor from 'licia/ResizeSensor'
 import { exportCjs, drag } from '../share/util'
-import { Brush, Pencil, Hand, Zoom, PaintBucket, Tool } from './tools'
+import { Brush, Pencil, Hand, Zoom, PaintBucket, Eraser, Tool } from './tools'
 
 const $document = $(document as any)
 
@@ -40,6 +40,7 @@ export default class Painter extends Component<IOptions> {
   private hand: Hand
   private zoom: Zoom
   private paintBucket: PaintBucket
+  private eraser: Eraser
   private activeLayer: Layer
   private resizeSensor: ResizeSensor
   private canvasResizeSenor: ResizeSensor
@@ -75,6 +76,7 @@ export default class Painter extends Component<IOptions> {
     this.hand = new Hand(this)
     this.zoom = new Zoom(this)
     this.paintBucket = new PaintBucket(this)
+    this.eraser = new Eraser(this)
 
     this.resetViewport()
     this.hand.centerCanvas()
@@ -125,6 +127,8 @@ export default class Painter extends Component<IOptions> {
         return this.zoom
       case 'paintBucket':
         return this.paintBucket
+      case 'eraser':
+        return this.eraser
     }
   }
   getCanvas() {
@@ -151,6 +155,9 @@ export default class Painter extends Component<IOptions> {
           </div>
           <div class="tool" data-tool="pencil">
             <span class="icon icon-pencil"></span>
+          </div>
+          <div class="tool" data-tool="eraser">
+            <span class="icon icon-eraser"></span>
           </div>
           <div class="tool" data-tool="paintBucket">
             <span class="icon icon-paint-bucket"></span>

@@ -1,4 +1,5 @@
 import Tool from './Tool'
+import Zoom from './Zoom'
 import { eventClient } from '../../share/util'
 
 export default class Hand extends Tool {
@@ -26,5 +27,14 @@ export default class Hand extends Tool {
     const { viewport } = this
     viewport.scrollLeft = (viewport.scrollWidth - viewport.clientWidth) / 2
     viewport.scrollTop = (viewport.scrollHeight - viewport.clientHeight) / 2
+  }
+  protected renderToolbar() {
+    super.renderToolbar()
+
+    const { toolbar } = this
+    toolbar.appendButton('100%', () => {
+      const zoom = this.painter.getTool('zoom') as Zoom
+      zoom.zoomTo(1)
+    }, 'hover')
   }
 }

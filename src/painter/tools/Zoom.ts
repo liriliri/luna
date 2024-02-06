@@ -144,6 +144,14 @@ export default class Zoom extends Tool {
       },
       options.zoomIn ? '' : 'active'
     )
+    toolbar.appendSeparator()
+    toolbar.appendButton(
+      '100%',
+      () => {
+        this.zoomTo(1)
+      },
+      'hover'
+    )
   }
   private bindEvent() {
     this.$viewport.on('wheel', this.onWheel)

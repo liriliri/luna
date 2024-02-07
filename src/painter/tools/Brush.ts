@@ -1,5 +1,7 @@
 import Painter, { Layer } from '../'
+import defaults from 'licia/defaults'
 import Tool from './Tool'
+import nextTick from 'licia/nextTick'
 
 export default class Brush extends Tool {
   private drawCtx: CanvasRenderingContext2D
@@ -7,6 +9,12 @@ export default class Brush extends Tool {
   private brushCavnas: HTMLCanvasElement
   private brushCtx: CanvasRenderingContext2D
   private isDrawing = false
+  private drawOptions: Required<IDrawOptions> = {
+    color: 'rgb(0,0,0)',
+    size: 4,
+    opacity: 100,
+    hardness: 100,
+  }
   constructor(painter: Painter) {
     super(painter)
 
@@ -21,20 +29,33 @@ export default class Brush extends Tool {
 
     this.brushCavnas = document.createElement('canvas')
     this.brushCtx = this.brushCavnas.getContext('2d')!
-    this.generateBrush()
   }
-  onDragStart(e: any) {
+  onDragStart(e: any, drawOptions: IDrawOptions = {}) {
     super.onDragStart(e)
 
-    const { canvas, drawCanvas, drawCtx } = this
+    const { canvas, drawCanvas, drawCtx, options } = this
     drawCanvas.width = canvas.width
     drawCanvas.height = canvas.height
     drawCtx.clearRect(0, 0, canvas.width, canvas.height)
 
-    this.isDrawing = true
-    this.draw(this.x, this.y)
+    nextTick(() => {
+      this.isDrawing = true
+      defaults(drawOptions, {
+        color: 'rgb(0,0,0)',
+        size: options.size,
+        opacity: options.opacity,
+        hardness: options.hardness,
+      })
+      this.drawOptions = drawOptions as Required<IDrawOptions>
+      this.generateBrush()
+      this.draw(this.x, this.y)
+    })
   }
   onDragMove(e: any) {
+    if (!this.isDrawing) {
+      return
+    }
+
     super.onDragMove(e)
     const { x, y, lastX, lastY } = this
 
@@ -57,6 +78,10 @@ export default class Brush extends Tool {
     this.draw(x, y)
   }
   onDragEnd(e: any) {
+    if (!this.isDrawing) {
+      return
+    }
+
     super.onDragEnd(e)
 
     const { painter } = this
@@ -109,18 +134,23 @@ export default class Brush extends Tool {
   }
   private commitDraw(ctx: CanvasRenderingContext2D) {
     const { drawCanvas } = this
-    ctx.globalAlpha = this.options.opacity / 100
+    const { color, opacity } = this.drawOptions
+    ctx.globalAlpha = opacity / 100
+    if (color === 'transparent') {
+      ctx.globalCompositeOperation = 'destination-out'
+    }
     ctx.drawImage(drawCanvas, 0, 0)
+    ctx.globalCompositeOperation = 'source-over'
     ctx.globalAlpha = 1
   }
   private generateBrush() {
     const { brushCavnas, brushCtx } = this
-    const { size, hardness } = this.options
+    const { size, hardness, color } = this.drawOptions
 
     brushCavnas.width = size
     brushCavnas.height = size
     brushCtx.clearRect(0, 0, size, size)
-    brushCtx.fillStyle = 'rgb(0,0,0)'
+    brushCtx.fillStyle = color === 'transparent' ? 'black' : color
 
     const center = size / 2
     let radius = size / 2
@@ -136,4 +166,11 @@ export default class Brush extends Tool {
 
     brushCtx.globalAlpha = 1
   }
+}
+
+interface IDrawOptions {
+  color?: string
+  size?: number
+  hardness?: number
+  opacity?: number
 }

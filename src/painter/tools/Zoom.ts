@@ -14,7 +14,7 @@ export default class Zoom extends Tool {
     super(painter)
 
     this.options = {
-      zoomIn: true,
+      mode: 'in',
     }
 
     this.bindEvent()
@@ -35,7 +35,7 @@ export default class Zoom extends Tool {
   onClick(e: any) {
     const offset = this.$viewport.offset()
 
-    let ratio = this.options.zoomIn ? 0.3 : -0.3
+    let ratio = this.options.mode === 'in' ? 0.3 : -0.3
     if (e.altKey) {
       ratio = -ratio
     }
@@ -129,20 +129,20 @@ export default class Zoom extends Tool {
     toolbar.appendButton(
       painter.c('<span class="icon icon-zoom-in"></span>'),
       () => {
-        if (!options.zoomIn) {
-          this.setOption('zoomIn', true)
+        if (options.mode !== 'in') {
+          this.setOption('mode', 'in')
         }
       },
-      options.zoomIn ? 'active' : ''
+      options.mode === 'in' ? 'active' : ''
     )
     toolbar.appendButton(
       painter.c('<span class="icon icon-zoom-out"></span>'),
       () => {
-        if (options.zoomIn) {
-          this.setOption('zoomIn', false)
+        if (options.mode !== 'out') {
+          this.setOption('mode', 'out')
         }
       },
-      options.zoomIn ? '' : 'active'
+      options.mode === 'out' ? 'active' : ''
     )
     toolbar.appendSeparator()
     toolbar.appendButton(

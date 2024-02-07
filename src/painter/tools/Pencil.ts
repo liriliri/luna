@@ -1,10 +1,17 @@
 import Painter, { Layer } from '../'
 import Tool from './Tool'
+import defaults from 'licia/defaults'
+import nextTick from 'licia/nextTick'
 
 export default class Pencil extends Tool {
   private drawCtx: CanvasRenderingContext2D
   private drawCanvas: HTMLCanvasElement
   private isDrawing = false
+  private drawOptions: Required<IDrawOptions> = {
+    color: 'rgb(0,0,0)',
+    size: 1,
+    opacity: 100,
+  }
   constructor(painter: Painter) {
     super(painter)
 
@@ -16,18 +23,30 @@ export default class Pencil extends Tool {
     this.drawCanvas = document.createElement('canvas')
     this.drawCtx = this.drawCanvas.getContext('2d')!
   }
-  onDragStart(e: any) {
+  onDragStart(e: any, drawOptions: IDrawOptions = {}) {
     super.onDragStart(e)
 
-    const { canvas, drawCanvas, drawCtx } = this
+    const { canvas, drawCanvas, drawCtx, options } = this
     drawCanvas.width = canvas.width
     drawCanvas.height = canvas.height
     drawCtx.clearRect(0, 0, canvas.width, canvas.height)
 
-    this.isDrawing = true
-    this.draw(this.x, this.y)
+    nextTick(() => {
+      this.isDrawing = true
+      defaults(drawOptions, {
+        color: 'rgb(0,0,0)',
+        size: options.size,
+        opacity: options.opacity,
+      })
+      this.drawOptions = drawOptions as Required<IDrawOptions>
+      this.draw(this.x, this.y)
+    })
   }
   onDragMove(e: any) {
+    if (!this.isDrawing) {
+      return
+    }
+
     super.onDragMove(e)
     const { x, y, lastX, lastY } = this
 
@@ -49,6 +68,10 @@ export default class Pencil extends Tool {
     this.draw(x, y)
   }
   onDragEnd(e: any) {
+    if (!this.isDrawing) {
+      return
+    }
+
     super.onDragEnd(e)
     this.isDrawing = false
 
@@ -86,9 +109,8 @@ export default class Pencil extends Tool {
       return
     }
 
-    const { size } = this.options
-    const color = 'rgb(0,0,0)'
-    drawCtx.fillStyle = color
+    const { size, color } = this.drawOptions
+    drawCtx.fillStyle = color === 'transparent' ? 'black' : color
     const centerX = size > 1 ? x - Math.floor((size - 1) / 2) : x
     const centerY = size > 1 ? y - Math.floor((size - 1) / 2) : y
     drawCtx.fillRect(centerX, centerY, size, size)
@@ -96,8 +118,19 @@ export default class Pencil extends Tool {
   }
   private commitDraw(ctx: CanvasRenderingContext2D) {
     const { drawCanvas } = this
-    ctx.globalAlpha = this.options.opacity / 100
+    const { color, opacity } = this.drawOptions
+    ctx.globalAlpha = opacity / 100
+    if (color === 'transparent') {
+      ctx.globalCompositeOperation = 'destination-out'
+    }
     ctx.drawImage(drawCanvas, 0, 0)
+    ctx.globalCompositeOperation = 'source-over'
     ctx.globalAlpha = 1
   }
+}
+
+interface IDrawOptions {
+  color?: string
+  size?: number
+  opacity?: number
 }

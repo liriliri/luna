@@ -34,7 +34,7 @@ export default class Pencil extends Tool {
     nextTick(() => {
       this.isDrawing = true
       defaults(drawOptions, {
-        color: 'rgb(0,0,0)',
+        color: this.painter.getForegroundColor(),
         size: options.size,
         opacity: options.opacity,
       })

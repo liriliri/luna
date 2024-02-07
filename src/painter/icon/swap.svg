@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   t="1707290378760"
+   class="icon"
+   viewBox="0 0 1024 1024"
+   version="1.1"
+   p-id="52106"
+   width="200"
+   height="200"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <path
+     d="M 857.75471,735.59962 854.40247,455.59268 C 852.12883,265.67979 694.9347,163.22809 578.62413,163.96669 l -303.5201,2.38262 V 36.110463 L 15.18551,289.9892 273.17967,532.03913 V 392.49756 l 250.30667,-1.61928 c 48.75499,-0.3154 102.69954,38.61098 102.77118,93.76581 l 0.39249,250.95553 H 470.42182 L 748.89597,987.88954 998.5745,735.59962 Z"
+     fill="#000000"
+     p-id="52107"
+     id="path39"
+     sodipodi:nodetypes="csscccccssccccc"
+     style="stroke-width:0.937142" />
+</svg>

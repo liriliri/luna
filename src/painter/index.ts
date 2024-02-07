@@ -44,6 +44,8 @@ export default class Painter extends Component<IOptions> {
   private activeLayer: Layer
   private resizeSensor: ResizeSensor
   private canvasResizeSenor: ResizeSensor
+  private $foregroundColor: $.$
+  private $backgroundColor: $.$
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'painter' }, options)
 
@@ -60,6 +62,8 @@ export default class Painter extends Component<IOptions> {
     this.$viewport = this.find('.viewport')
     this.viewport = this.$viewport.get(0) as HTMLDivElement
     this.$body = this.find('.body')
+    this.$foregroundColor = this.find('.palette-foreground').find('input')
+    this.$backgroundColor = this.find('.palette-background').find('input')
     this.canvas = this.$canvas.get(0) as HTMLCanvasElement
     this.ctx = this.canvas.getContext('2d')!
 
@@ -131,6 +135,12 @@ export default class Painter extends Component<IOptions> {
         return this.eraser
     }
   }
+  getForegroundColor() {
+    return this.$foregroundColor.val()
+  }
+  getBackgroundColor() {
+    return this.$backgroundColor.val()
+  }
   getCanvas() {
     return this.canvas
   }
@@ -168,6 +178,20 @@ export default class Painter extends Component<IOptions> {
           <div class="tool" data-tool="zoom">
             <span class="icon icon-zoom"></span>
           </div>
+          <div class="palette">
+            <div class="palette-head">
+              <span class="icon icon-reset-color"></span>
+              <span class="icon icon-swap"></span>
+            </div>
+            <div class="palette-body">
+              <div class="palette-foreground">
+                <input type="color" value="#000000"></input>
+              </div>
+              <div class="palette-background">
+                <input type="color" value="#ffffff"></input>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="viewport">
           <div class="body">
@@ -182,16 +206,26 @@ export default class Painter extends Component<IOptions> {
     )
   }
   private bindEvent() {
-    const { $viewport, $tools, c } = this
+    const { $viewport, $tools, $foregroundColor, $backgroundColor, c } = this
 
     $viewport.on(drag('start'), this.onViewportDragStart)
     $viewport.on('click', this.onViewportClick)
 
     const self = this
-    $tools.on('click', c('.tool'), function (this: HTMLDivElement) {
-      const $this = $(this)
-      self.useTool($this.data('tool'))
-    })
+    $tools
+      .on('click', c('.tool'), function (this: HTMLDivElement) {
+        const $this = $(this)
+        self.useTool($this.data('tool'))
+      })
+      .on('click', c('.icon-reset-color'), () => {
+        $foregroundColor.val('#000000')
+        $backgroundColor.val('#ffffff')
+      })
+      .on('click', c('.icon-swap'), () => {
+        const foreground = $foregroundColor.val()
+        $foregroundColor.val($backgroundColor.val())
+        $backgroundColor.val(foreground)
+      })
 
     this.resizeSensor.addListener(this.onResize)
     this.canvasResizeSenor.addListener(this.resetViewport)

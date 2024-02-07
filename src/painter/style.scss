@@ -1,5 +1,4 @@
 @import '../share/mixin';
-@import '../share/theme';
 
 .luna-painter {
   @include component();
@@ -50,6 +49,63 @@
     position: relative;
     top: 2px;
   }
+}
+
+.palette {
+  width: 34px;
+  height: 50px;
+  margin: 3px auto;
+}
+
+.palette-head {
+  display: flex;
+  span {
+    flex: 1;
+    font-size: 12px;
+    text-align: center;
+  }
+}
+
+.palette-body {
+  position: relative;
+  margin-top: 4px;
+}
+
+.palette-foreground,
+.palette-background {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000;
+  input {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 1px solid $color-white;
+    &::-webkit-color-swatch-wrapper {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: none;
+    }
+    &::-webkit-color-swatch {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: none;
+    }
+  }
+}
+
+.palette-foreground {
+  left: 2px;
+  top: 0;
+  z-index: 5;
+}
+
+.palette-background {
+  left: 12px;
+  top: 10px;
 }
 
 .viewport {

@@ -64,7 +64,9 @@ export default class Tool {
     this.toolbar.$container.remove()
   }
   onAfterRenderLayer(layer: Layer) {}
-  onClick(e: any) {}
+  onClick(e: any) {
+    this.getXY(e)
+  }
   protected renderToolbar() {
     this.toolbar.clear()
   }

@@ -13,10 +13,13 @@ export default class Tool {
   protected lastY = -1
   protected $viewport: $.$
   protected viewport: HTMLDivElement
+  protected $viewportOverlay: $.$
   protected $canvas: $.$
   protected ctx: CanvasRenderingContext2D
   protected canvas: HTMLCanvasElement
   protected $toolbar: $.$
+  protected $cursor: $.$
+  protected cursor: HTMLDivElement
   protected toolbar: LunaToolbar
   protected options: types.PlainObj<any> = {}
   constructor(painter: Painter) {
@@ -27,25 +30,30 @@ export default class Tool {
       .get(0) as HTMLDivElement
     this.$viewport = $(this.viewport)
 
+    this.$viewportOverlay = painter.$container.find(
+      painter.c('.viewport-overlay')
+    )
+
     this.canvas = painter.getCanvas()
     this.ctx = this.canvas.getContext('2d')!
     this.$canvas = $(this.canvas)
 
     this.$toolbar = painter.$container.find(painter.c('.toolbar'))
-
     const toolbar = new LunaToolbar(h('div'))
     this.toolbar = toolbar
     toolbar.on('change', (key, val) => {
       this.options[key] = val
     })
     painter.addSubComponent(toolbar)
+
+    this.cursor = h(`div.${painter.c('cursor')}`) as HTMLDivElement
+    this.$cursor = $(this.cursor)
   }
   setOption(name: string, val: any) {
     this.options[name] = val
 
     this.renderToolbar()
   }
-  /* eslint-disable @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars */
   onDragStart(e: any) {
     this.getXY(e)
   }
@@ -59,14 +67,47 @@ export default class Tool {
     this.renderToolbar()
 
     this.$toolbar.append(this.toolbar.container)
+    this.$viewportOverlay.append(this.cursor)
   }
   onUnuse() {
     this.toolbar.$container.remove()
+    this.$cursor.remove()
   }
-  onAfterRenderLayer(layer: Layer) {}
   onClick(e: any) {
     this.getXY(e)
   }
+  onMouseMove(e: any) {
+    const { $cursor, $viewportOverlay } = this
+    const overlayOffset = $viewportOverlay.offset()
+    const offset = $cursor.offset()
+
+    const x = eventPage('x', e) - overlayOffset.left
+    const y = eventPage('y', e) - overlayOffset.top
+
+    if (x >= overlayOffset.width || y >= overlayOffset.height) {
+      $cursor.css({
+        opacity: 0,
+      })
+    } else {
+      $cursor.css({
+        left: x - offset.width / 2,
+        top: y - offset.height / 2,
+        opacity: 1,
+      })
+    }
+  }
+  /* eslint-disable @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars */
+  onMouseEnter(e: any) {
+    this.$cursor.css({
+      opacity: 1,
+    })
+  }
+  onMouseLeave(e: any) {
+    this.$cursor.css({
+      opacity: 0,
+    })
+  }
+  onAfterRenderLayer(layer: Layer) {}
   protected renderToolbar() {
     this.toolbar.clear()
   }

@@ -1,5 +1,6 @@
 import Tool from './Tool'
 import Zoom from './Zoom'
+import Painter from '../'
 import { eventClient } from '../../share/util'
 
 export default class Hand extends Tool {
@@ -7,6 +8,10 @@ export default class Hand extends Tool {
   private startY = 0
   private startScrollLeft = 0
   private startScrollTop = 0
+  constructor(painter: Painter) {
+    super(painter)
+    this.$cursor.html(painter.c(`<span class="icon icon-hand"></span>`))
+  }
   onDragStart(e: any) {
     const { viewport } = this
 

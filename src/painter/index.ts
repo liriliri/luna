@@ -3,7 +3,7 @@ import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import each from 'licia/each'
 import ResizeSensor from 'licia/ResizeSensor'
-import { exportCjs, drag } from '../share/util'
+import { exportCjs, drag, measuredScrollbarWidth } from '../share/util'
 import { Brush, Pencil, Hand, Zoom, PaintBucket, Eraser, Tool } from './tools'
 
 const $document = $(document as any)
@@ -61,6 +61,10 @@ export default class Painter extends Component<IOptions> {
     this.$canvas = this.find('.main-canvas')
     this.$viewport = this.find('.viewport')
     this.viewport = this.$viewport.get(0) as HTMLDivElement
+    this.find('.viewport-overlay').css({
+      right: measuredScrollbarWidth(),
+      bottom: measuredScrollbarWidth(),
+    })
     this.$body = this.find('.body')
     this.$foregroundColor = this.find('.palette-foreground').find('input')
     this.$backgroundColor = this.find('.palette-background').find('input')
@@ -193,14 +197,17 @@ export default class Painter extends Component<IOptions> {
             </div>
           </div>
         </div>
-        <div class="viewport">
-          <div class="body">
-            <div class="canvas-wrapper">
-              <div class="canvas-container">
-                <canvas class="main-canvas" width="${width}" height="${height}"></canvas>
+        <div class="viewport-wrapper">
+          <div class="viewport">
+            <div class="body">
+              <div class="canvas-wrapper">
+                <div class="canvas-container">
+                  <canvas class="main-canvas" width="${width}" height="${height}"></canvas>
+                </div>
               </div>
             </div>
           </div>
+          <div class="viewport-overlay"></div>
         </div>
       `)
     )
@@ -208,8 +215,12 @@ export default class Painter extends Component<IOptions> {
   private bindEvent() {
     const { $viewport, $tools, $foregroundColor, $backgroundColor, c } = this
 
-    $viewport.on(drag('start'), this.onViewportDragStart)
-    $viewport.on('click', this.onViewportClick)
+    $viewport
+      .on(drag('start'), this.onViewportDragStart)
+      .on('click', this.onViewportClick)
+      .on('mouseenter', this.onViewportMouseEnter)
+      .on('mousemove', this.onViewportMouseMove)
+      .on('mouseleave', this.onViewportMouseLeave)
 
     const self = this
     $tools
@@ -229,6 +240,15 @@ export default class Painter extends Component<IOptions> {
 
     this.resizeSensor.addListener(this.onResize)
     this.canvasResizeSenor.addListener(this.resetViewport)
+  }
+  private onViewportMouseEnter = (e: any) => {
+    this.currentTool.onMouseEnter(e.origEvent)
+  }
+  private onViewportMouseMove = (e: any) => {
+    this.currentTool.onMouseMove(e.origEvent)
+  }
+  private onViewportMouseLeave = (e: any) => {
+    this.currentTool.onMouseLeave(e.origEvent)
   }
   private onViewportDragStart = (e: any) => {
     this.currentTool.onDragStart(e.origEvent)

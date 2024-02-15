@@ -10,21 +10,32 @@ export default class PaintBucket extends Tool {
     this.options = {
       tolerance: 32,
     }
+
+    this.$cursor.html(painter.c(`<span class="icon icon-paint-bucket"></span>`))
+    this.$cursor.find(painter.c('.icon-paint-bucket')).css({
+      position: 'relative',
+      left: 0,
+      top: 0,
+    })
   }
   onClick(e: any) {
     super.onClick(e)
     const { x, y, painter } = this
-    const point = { x, y }
-
     const layer = painter.getActiveLayer()
     const canvas = layer.getCanvas()
     const ctx = layer.getContext()
+    const w = canvas.width
+    const h = canvas.height
+    const point = { x, y }
+
+    if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) {
+      return
+    }
+
     const foregroundColor = new Color(this.painter.getForegroundColor())
     const fillColor = Color.parse(foregroundColor.toRgb()).val
     fillColor[3] = 255
 
-    const w = canvas.width
-    const h = canvas.height
     const imageData = ctx.getImageData(0, 0, w, h)
     const { tolerance } = this.options
 

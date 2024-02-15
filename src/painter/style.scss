@@ -134,6 +134,11 @@
   opacity: 0;
   left: 0;
   top: 0;
+  .icon {
+    color: #000;
+    text-shadow: -1px -1px 0 $color-white, 1px -1px 0 $color-white,
+      -1px 1px 0 $color-white, 1px 1px 0 $color-white;
+  }
 }
 
 .body {

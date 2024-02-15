@@ -10,12 +10,15 @@ interface IPivot {
 
 export default class Zoom extends Tool {
   private isZooming = false
+  private isAltDown = false
   constructor(painter: Painter) {
     super(painter)
 
     this.options = {
       mode: 'in',
     }
+
+    this.$cursor.html(painter.c(`<span class="icon icon-zoom-in"></span>`))
 
     this.bindEvent()
   }
@@ -35,10 +38,7 @@ export default class Zoom extends Tool {
   onClick(e: any) {
     const offset = this.$viewport.offset()
 
-    let ratio = this.options.mode === 'in' ? 0.3 : -0.3
-    if (e.altKey) {
-      ratio = -ratio
-    }
+    const ratio = this.options.mode === 'in' ? 0.3 : -0.3
     this.zoom(ratio, {
       x: eventPage('x', e) - offset.left,
       y: eventPage('y', e) - offset.top,
@@ -122,6 +122,15 @@ export default class Zoom extends Tool {
       )
       .play()
   }
+  setOption(name: string, val: any) {
+    super.setOption(name, val)
+    if (name === 'mode') {
+      const { c } = this.painter
+      const $icon = this.$cursor.find(c('.icon'))
+      $icon.rmClass(c('icon-zoom-in')).rmClass(c('icon-zoom-out'))
+      $icon.addClass(c(`icon-zoom-${val}`))
+    }
+  }
   protected renderToolbar() {
     super.renderToolbar()
 
@@ -155,6 +164,21 @@ export default class Zoom extends Tool {
   }
   private bindEvent() {
     this.$viewport.on('wheel', this.onWheel)
+    document.addEventListener('keydown', (e: any) => {
+      if (e.altKey && this.isUsing) {
+        this.isAltDown = true
+        this.toggleMode()
+      }
+    })
+    document.addEventListener('keyup', () => {
+      if (this.isAltDown) {
+        this.isAltDown = false
+        this.toggleMode()
+      }
+    })
+  }
+  private toggleMode = () => {
+    this.setOption('mode', this.options.mode === 'in' ? 'out' : 'in')
   }
   private onWheel = (e: any) => {
     e = e.origEvent

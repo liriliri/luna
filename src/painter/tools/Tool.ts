@@ -22,6 +22,7 @@ export default class Tool {
   protected cursor: HTMLDivElement
   protected toolbar: LunaToolbar
   protected options: types.PlainObj<any> = {}
+  protected isUsing = false
   constructor(painter: Painter) {
     this.painter = painter
 
@@ -64,12 +65,14 @@ export default class Tool {
     this.getXY(e)
   }
   onUse() {
+    this.isUsing = true
     this.renderToolbar()
 
     this.$toolbar.append(this.toolbar.container)
     this.$viewportOverlay.append(this.cursor)
   }
   onUnuse() {
+    this.isUsing = false
     this.toolbar.$container.remove()
     this.$cursor.remove()
   }

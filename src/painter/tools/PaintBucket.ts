@@ -14,8 +14,8 @@ export default class PaintBucket extends Tool {
     this.$cursor.html(painter.c(`<span class="icon icon-paint-bucket"></span>`))
     this.$cursor.find(painter.c('.icon-paint-bucket')).css({
       position: 'relative',
-      left: 0,
-      top: 0,
+      left: -7,
+      top: -3,
     })
   }
   onClick(e: any) {

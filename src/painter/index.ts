@@ -4,7 +4,16 @@ import $ from 'licia/$'
 import each from 'licia/each'
 import ResizeSensor from 'licia/ResizeSensor'
 import { exportCjs, drag, measuredScrollbarWidth } from '../share/util'
-import { Brush, Pencil, Hand, Zoom, PaintBucket, Eraser, Tool } from './tools'
+import {
+  Brush,
+  Pencil,
+  Hand,
+  Zoom,
+  PaintBucket,
+  Eraser,
+  Eyedropper,
+  Tool,
+} from './tools'
 
 const $document = $(document as any)
 
@@ -42,6 +51,7 @@ export default class Painter extends Component<IOptions> {
   private zoom: Zoom
   private paintBucket: PaintBucket
   private eraser: Eraser
+  private eyedropper: Eyedropper
   private activeLayer: Layer
   private resizeSensor: ResizeSensor
   private $foregroundColor: $.$
@@ -82,6 +92,7 @@ export default class Painter extends Component<IOptions> {
     this.zoom = new Zoom(this)
     this.paintBucket = new PaintBucket(this)
     this.eraser = new Eraser(this)
+    this.eyedropper = new Eyedropper(this)
 
     this.bindEvent()
 
@@ -140,10 +151,15 @@ export default class Painter extends Component<IOptions> {
         return this.paintBucket
       case 'eraser':
         return this.eraser
+      case 'eyedropper':
+        return this.eyedropper
     }
   }
   getForegroundColor() {
     return this.$foregroundColor.val()
+  }
+  setForegroundColor(color: string) {
+    this.$foregroundColor.val(color)
   }
   getBackgroundColor() {
     return this.$backgroundColor.val()
@@ -167,6 +183,9 @@ export default class Painter extends Component<IOptions> {
       this.c(stripIndent`
         <div class="toolbar"></div>
         <div class="tools">
+          <div class="tool" data-tool="eyedropper">
+            <span class="icon icon-eyedropper"></span>
+          </div>
           <div class="tool" data-tool="brush">
             <span class="icon icon-brush"></span>
           </div>

@@ -2,6 +2,7 @@ import Tool from './Tool'
 import Brush from './Brush'
 import Pencil from './Pencil'
 import Painter, { Layer } from '../'
+import nextTick from 'licia/nextTick'
 import { CursorCircle } from './Pencil'
 
 export default class Eraser extends Tool {
@@ -33,7 +34,9 @@ export default class Eraser extends Tool {
     }
   }
   onDragStart(e: any) {
-    this.getTool().onDragStart(e, this.getOptions())
+    nextTick(() => {
+      this.getTool().onDragStart(e, this.getOptions())
+    })
   }
   onDragMove(e: any) {
     this.getTool().onDragMove(e)

@@ -2,6 +2,7 @@ import Painter, { Layer } from '../'
 import defaults from 'licia/defaults'
 import Tool from './Tool'
 import nextTick from 'licia/nextTick'
+import { CursorCircle } from './Pencil'
 
 export default class Brush extends Tool {
   private drawCtx: CanvasRenderingContext2D
@@ -9,6 +10,7 @@ export default class Brush extends Tool {
   private brushCavnas: HTMLCanvasElement
   private brushCtx: CanvasRenderingContext2D
   private isDrawing = false
+  private cursorCircle: CursorCircle
   private drawOptions: Required<IDrawOptions> = {
     color: 'rgb(0,0,0)',
     size: 4,
@@ -24,11 +26,23 @@ export default class Brush extends Tool {
       hardness: 100,
     }
 
+    this.cursorCircle = new CursorCircle(
+      this.cursor,
+      painter,
+      this.options.size
+    )
+
     this.drawCanvas = document.createElement('canvas')
     this.drawCtx = this.drawCanvas.getContext('2d')!
 
     this.brushCavnas = document.createElement('canvas')
     this.brushCtx = this.brushCavnas.getContext('2d')!
+  }
+  setOption(name: string, val: any, renderToolbar?: boolean) {
+    super.setOption(name, val, renderToolbar)
+    if (name === 'size') {
+      this.cursorCircle.setSize(val)
+    }
   }
   onDragStart(e: any, drawOptions: IDrawOptions = {}) {
     super.onDragStart(e)
@@ -95,17 +109,20 @@ export default class Brush extends Tool {
       this.commitDraw(this.ctx)
     }
   }
+  onZoom() {
+    this.cursorCircle.render()
+  }
   private draw(x: number, y: number) {
     const { canvas, drawCtx } = this
-    const { size } = this.options
+    const { size } = this.drawOptions
 
     if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) {
       return
     }
 
-    const centerX = size > 1 ? x - Math.floor((size - 1) / 2) : x
-    const centerY = size > 1 ? y - Math.floor((size - 1) / 2) : y
-    drawCtx.drawImage(this.brushCavnas, centerX, centerY)
+    const startX = size > 1 ? Math.round(x - size / 2) : x
+    const startY = size > 1 ? Math.round(y - size / 2) : y
+    drawCtx.drawImage(this.brushCavnas, startX, startY)
     this.painter.renderCanvas()
   }
   protected renderToolbar() {
@@ -152,8 +169,8 @@ export default class Brush extends Tool {
     brushCtx.clearRect(0, 0, size, size)
     brushCtx.fillStyle = color === 'transparent' ? 'black' : color
 
-    const center = size / 2
-    let radius = size / 2
+    const center = Math.round(size / 2)
+    let radius = Math.round(size / 2)
     const opacityStep = 1 / radius / ((105 - hardness) / 25)
     let opacity = opacityStep
     for (; radius > 0; radius--) {

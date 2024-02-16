@@ -2,8 +2,10 @@ import Tool from './Tool'
 import Brush from './Brush'
 import Pencil from './Pencil'
 import Painter, { Layer } from '../'
+import { CursorCircle } from './Pencil'
 
 export default class Eraser extends Tool {
+  private cursorCircle: CursorCircle
   constructor(painter: Painter) {
     super(painter)
 
@@ -12,6 +14,18 @@ export default class Eraser extends Tool {
       size: 4,
       opacity: 100,
       hardness: 100,
+    }
+
+    this.cursorCircle = new CursorCircle(
+      this.cursor,
+      painter,
+      this.options.size
+    )
+  }
+  setOption(name: string, val: any, renderToolbar?: boolean) {
+    super.setOption(name, val, renderToolbar)
+    if (name === 'size') {
+      this.cursorCircle.setSize(val)
     }
   }
   onDragStart(e: any) {
@@ -25,6 +39,9 @@ export default class Eraser extends Tool {
   }
   onAfterRenderLayer(layer: Layer) {
     this.getTool().onAfterRenderLayer(layer)
+  }
+  onZoom() {
+    this.cursorCircle.render()
   }
   private getTool(): Brush | Pencil {
     return this.painter.getTool(this.options.mode) as any

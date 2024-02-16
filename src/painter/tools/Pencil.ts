@@ -1,5 +1,7 @@
 import Painter, { Layer } from '../'
 import Tool from './Tool'
+import $ from 'licia/$'
+import Zoom from './Zoom'
 import defaults from 'licia/defaults'
 import nextTick from 'licia/nextTick'
 
@@ -7,6 +9,7 @@ export default class Pencil extends Tool {
   private drawCtx: CanvasRenderingContext2D
   private drawCanvas: HTMLCanvasElement
   private isDrawing = false
+  private cursorCircle: CursorCircle
   private drawOptions: Required<IDrawOptions> = {
     color: 'rgb(0,0,0)',
     size: 1,
@@ -20,8 +23,20 @@ export default class Pencil extends Tool {
       opacity: 100,
     }
 
+    this.cursorCircle = new CursorCircle(
+      this.cursor,
+      painter,
+      this.options.size
+    )
+
     this.drawCanvas = document.createElement('canvas')
     this.drawCtx = this.drawCanvas.getContext('2d')!
+  }
+  setOption(name: string, val: any, renderToolbar?: boolean) {
+    super.setOption(name, val, renderToolbar)
+    if (name === 'size') {
+      this.cursorCircle.setSize(val)
+    }
   }
   onDragStart(e: any, drawOptions: IDrawOptions = {}) {
     super.onDragStart(e)
@@ -85,6 +100,9 @@ export default class Pencil extends Tool {
       this.commitDraw(this.ctx)
     }
   }
+  onZoom() {
+    this.cursorCircle.render()
+  }
   protected renderToolbar() {
     super.renderToolbar()
     const { toolbar, options } = this
@@ -111,9 +129,9 @@ export default class Pencil extends Tool {
 
     const { size, color } = this.drawOptions
     drawCtx.fillStyle = color === 'transparent' ? 'black' : color
-    const centerX = size > 1 ? x - Math.floor((size - 1) / 2) : x
-    const centerY = size > 1 ? y - Math.floor((size - 1) / 2) : y
-    drawCtx.fillRect(centerX, centerY, size, size)
+    const startX = size > 1 ? Math.round(x - size / 2) : x
+    const startY = size > 1 ? Math.round(y - size / 2) : y
+    drawCtx.fillRect(startX, startY, size, size)
     this.painter.renderCanvas()
   }
   private commitDraw(ctx: CanvasRenderingContext2D) {
@@ -126,6 +144,47 @@ export default class Pencil extends Tool {
     ctx.drawImage(drawCanvas, 0, 0)
     ctx.globalCompositeOperation = 'source-over'
     ctx.globalAlpha = 1
+  }
+}
+
+export class CursorCircle {
+  private $container: $.$
+  private painter: Painter
+  private size = 1
+  constructor(container: HTMLDivElement, painter: Painter, size: number) {
+    this.$container = $(container)
+    this.painter = painter
+
+    this.setSize(size)
+  }
+  setSize(size: number) {
+    this.size = size
+    this.render()
+  }
+  render = () => {
+    const { painter } = this
+    const zoom = painter.getTool('zoom') as Zoom
+    let { size } = this
+    if (zoom) {
+      size *= Math.round(zoom.getRatio())
+    }
+    let html = ''
+    if (size > 1) {
+      const viewportSize = size + 8
+      const circle = (r: number, color: string) => {
+        return `<circle cx="${viewportSize / 2}" cy="${
+          viewportSize / 2
+        }" r="${r}" style="fill:none;stroke:${color};stroke-width:1px;"/>`
+      }
+      html = `<svg width="${viewportSize}" height="${viewportSize}" viewBox="0 0 ${viewportSize} ${viewportSize}">
+        ${circle(size / 2, '#000')}
+        ${circle(size / 2 + 1, '#fff')}
+        ${circle(size / 2 - 1, '#fff')}
+      </svg>`
+    } else {
+      html = painter.c('<span class="icon icon-crosshair"></span>')
+    }
+    this.$container.html(html)
   }
 }
 

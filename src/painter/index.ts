@@ -43,7 +43,6 @@ export default class Painter extends Component<IOptions> {
   private eraser: Eraser
   private activeLayer: Layer
   private resizeSensor: ResizeSensor
-  private canvasResizeSenor: ResizeSensor
   private $foregroundColor: $.$
   private $backgroundColor: $.$
   constructor(container: HTMLElement, options: IOptions = {}) {
@@ -72,12 +71,9 @@ export default class Painter extends Component<IOptions> {
     this.ctx = this.canvas.getContext('2d')!
 
     this.resizeSensor = new ResizeSensor(container)
-    this.canvasResizeSenor = new ResizeSensor(this.canvas)
 
     this.addLayer()
     this.activeLayer = this.layers[0]
-
-    this.bindEvent()
 
     this.brush = new Brush(this)
     this.pencil = new Pencil(this)
@@ -85,6 +81,8 @@ export default class Painter extends Component<IOptions> {
     this.zoom = new Zoom(this)
     this.paintBucket = new PaintBucket(this)
     this.eraser = new Eraser(this)
+
+    this.bindEvent()
 
     this.resetViewport()
     this.hand.centerCanvas()
@@ -94,7 +92,6 @@ export default class Painter extends Component<IOptions> {
   destroy() {
     super.destroy()
     this.resizeSensor.destroy()
-    this.canvasResizeSenor.destroy()
   }
   /** Add layer. */
   addLayer() {
@@ -239,7 +236,11 @@ export default class Painter extends Component<IOptions> {
       })
 
     this.resizeSensor.addListener(this.onResize)
-    this.canvasResizeSenor.addListener(this.resetViewport)
+
+    this.zoom.on('change', () => {
+      this.currentTool.onZoom()
+      this.resetViewport()
+    })
   }
   private onViewportMouseEnter = (e: any) => {
     this.currentTool.onMouseEnter(e.origEvent)

@@ -1,11 +1,12 @@
 import Painter, { Layer } from '../'
 import $ from 'licia/$'
 import h from 'licia/h'
+import Emitter from 'licia/Emitter'
 import types from 'licia/types'
 import { eventPage } from '../../share/util'
 import LunaToolbar from 'luna-toolbar'
 
-export default class Tool {
+export default class Tool extends Emitter {
   protected painter: Painter
   protected x = -1
   protected lastX = -1
@@ -24,6 +25,7 @@ export default class Tool {
   protected options: types.PlainObj<any> = {}
   protected isUsing = false
   constructor(painter: Painter) {
+    super()
     this.painter = painter
 
     this.viewport = painter.$container
@@ -43,17 +45,19 @@ export default class Tool {
     const toolbar = new LunaToolbar(h('div'))
     this.toolbar = toolbar
     toolbar.on('change', (key, val) => {
-      this.options[key] = val
+      this.setOption(key, val, false)
     })
     painter.addSubComponent(toolbar)
 
     this.cursor = h(`div.${painter.c('cursor')}`) as HTMLDivElement
     this.$cursor = $(this.cursor)
   }
-  setOption(name: string, val: any) {
+  setOption(name: string, val: any, renderToolbar = true) {
     this.options[name] = val
 
-    this.renderToolbar()
+    if (renderToolbar) {
+      this.renderToolbar()
+    }
   }
   onDragStart(e: any) {
     this.getXY(e)
@@ -82,7 +86,6 @@ export default class Tool {
   onMouseMove(e: any) {
     const { $cursor, $viewportOverlay } = this
     const overlayOffset = $viewportOverlay.offset()
-    const offset = $cursor.offset()
 
     const x = eventPage('x', e) - overlayOffset.left
     const y = eventPage('y', e) - overlayOffset.top
@@ -93,8 +96,8 @@ export default class Tool {
       })
     } else {
       $cursor.css({
-        left: x - offset.width / 2,
-        top: y - offset.height / 2,
+        left: x,
+        top: y,
         opacity: 1,
       })
     }
@@ -111,6 +114,7 @@ export default class Tool {
     })
   }
   onAfterRenderLayer(layer: Layer) {}
+  onZoom() {}
   protected renderToolbar() {
     this.toolbar.clear()
   }
@@ -120,8 +124,8 @@ export default class Tool {
     const pageX = eventPage('x', e)
     const pageY = eventPage('y', e)
 
-    const x = Math.floor(((pageX - offset.left) / offset.width) * canvas.width)
-    const y = Math.floor(((pageY - offset.top) / offset.height) * canvas.height)
+    const x = Math.round(((pageX - offset.left) / offset.width) * canvas.width)
+    const y = Math.round(((pageY - offset.top) / offset.height) * canvas.height)
 
     this.lastX = this.x
     this.x = x

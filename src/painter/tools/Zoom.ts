@@ -11,6 +11,7 @@ interface IPivot {
 export default class Zoom extends Tool {
   private isZooming = false
   private isAltDown = false
+  private ratio = 1
   constructor(painter: Painter) {
     super(painter)
 
@@ -49,11 +50,15 @@ export default class Zoom extends Tool {
     const offset = this.$canvas.offset()
     this.zoomTo((offset.width * ratio) / this.canvas.width, pivot)
   }
+  getRatio() {
+    return this.ratio
+  }
   zoomTo(ratio: number, pivot?: IPivot) {
     if (this.isZooming) {
       return
     }
     this.isZooming = true
+    this.ratio = ratio
 
     const { canvas, viewport, $canvas } = this
 
@@ -104,6 +109,7 @@ export default class Zoom extends Tool {
         })
         viewport.scrollLeft = target.scrollLeft
         viewport.scrollTop = target.scrollTop
+        this.emit('change')
       })
       .on('end', () => {
         this.isZooming = false
@@ -122,8 +128,8 @@ export default class Zoom extends Tool {
       )
       .play()
   }
-  setOption(name: string, val: any) {
-    super.setOption(name, val)
+  setOption(name: string, val: any, renderToolbar?: boolean) {
+    super.setOption(name, val, renderToolbar)
     if (name === 'mode') {
       const { c } = this.painter
       const $icon = this.$cursor.find(c('.icon'))

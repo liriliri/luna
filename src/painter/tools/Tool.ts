@@ -24,6 +24,7 @@ export default class Tool extends Emitter {
   protected toolbar: LunaToolbar
   protected options: types.PlainObj<any> = {}
   protected isUsing = false
+  private zoomRatio = 1
   constructor(painter: Painter) {
     super()
     this.painter = painter
@@ -102,6 +103,9 @@ export default class Tool extends Emitter {
       })
     }
   }
+  onZoom(ratio: number) {
+    this.zoomRatio = ratio
+  }
   /* eslint-disable @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars */
   onMouseEnter(e: any) {
     this.$cursor.css({
@@ -114,18 +118,18 @@ export default class Tool extends Emitter {
     })
   }
   onAfterRenderLayer(layer: Layer) {}
-  onZoom() {}
   protected renderToolbar() {
     this.toolbar.clear()
   }
   private getXY(e: any) {
-    const { canvas, $canvas } = this
+    const { $canvas } = this
     const offset = $canvas.offset()
     const pageX = eventPage('x', e)
     const pageY = eventPage('y', e)
 
-    const x = Math.round(((pageX - offset.left) / offset.width) * canvas.width)
-    const y = Math.round(((pageY - offset.top) / offset.height) * canvas.height)
+    const ratio = this.zoomRatio
+    const x = Math.floor((pageX - offset.left) / ratio)
+    const y = Math.floor((pageY - offset.top) / ratio)
 
     this.lastX = this.x
     this.x = x

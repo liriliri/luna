@@ -109,7 +109,8 @@ export default class Brush extends Tool {
       this.commitDraw(this.ctx)
     }
   }
-  onZoom() {
+  onZoom(ratio: number) {
+    super.onZoom(ratio)
     this.cursorCircle.render()
   }
   private draw(x: number, y: number) {
@@ -120,8 +121,8 @@ export default class Brush extends Tool {
       return
     }
 
-    const startX = size > 1 ? Math.round(x - size / 2) : x
-    const startY = size > 1 ? Math.round(y - size / 2) : y
+    const startX = size > 1 ? x - Math.floor((size - 1) / 2) : x
+    const startY = size > 1 ? y - Math.round((size - 1) / 2) : y
     drawCtx.drawImage(this.brushCavnas, startX, startY)
     this.painter.renderCanvas()
   }

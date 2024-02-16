@@ -40,7 +40,8 @@ export default class Eraser extends Tool {
   onAfterRenderLayer(layer: Layer) {
     this.getTool().onAfterRenderLayer(layer)
   }
-  onZoom() {
+  onZoom(ratio: number) {
+    super.onZoom(ratio)
     this.cursorCircle.render()
   }
   private getTool(): Brush | Pencil {

@@ -100,7 +100,8 @@ export default class Pencil extends Tool {
       this.commitDraw(this.ctx)
     }
   }
-  onZoom() {
+  onZoom(ratio: number) {
+    super.onZoom(ratio)
     this.cursorCircle.render()
   }
   protected renderToolbar() {
@@ -129,8 +130,8 @@ export default class Pencil extends Tool {
 
     const { size, color } = this.drawOptions
     drawCtx.fillStyle = color === 'transparent' ? 'black' : color
-    const startX = size > 1 ? Math.round(x - size / 2) : x
-    const startY = size > 1 ? Math.round(y - size / 2) : y
+    const startX = size > 1 ? x - Math.floor((size - 1) / 2) : x
+    const startY = size > 1 ? y - Math.round((size - 1) / 2) : y
     drawCtx.fillRect(startX, startY, size, size)
     this.painter.renderCanvas()
   }

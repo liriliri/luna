@@ -109,7 +109,7 @@ export default class Zoom extends Tool {
         })
         viewport.scrollLeft = target.scrollLeft
         viewport.scrollTop = target.scrollTop
-        this.emit('change')
+        this.emit('change', this.ratio)
       })
       .on('end', () => {
         this.isZooming = false

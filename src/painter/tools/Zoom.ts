@@ -1,6 +1,8 @@
 import Tool from './Tool'
 import Painter from '../index'
 import Tween from 'licia/Tween'
+import $ from 'licia/$'
+import h from 'licia/h'
 import { eventPage } from '../../share/util'
 
 interface IPivot {
@@ -12,6 +14,7 @@ export default class Zoom extends Tool {
   private isZooming = false
   private isAltDown = false
   private ratio = 1
+  private $cursorIcon: $.$
   constructor(painter: Painter) {
     super(painter)
 
@@ -19,7 +22,8 @@ export default class Zoom extends Tool {
       mode: 'in',
     }
 
-    this.$cursor.html(painter.c(`<span class="icon icon-zoom-in"></span>`))
+    const { c } = painter
+    this.$cursorIcon = $(h(`span${c('.icon')}${c('.icon-zoom-in')}`))
 
     this.bindEvent()
   }
@@ -35,6 +39,12 @@ export default class Zoom extends Tool {
         height,
       })
     }
+
+    this.$cursor.html('').append(this.$cursorIcon.get(0) as HTMLDivElement)
+  }
+  onUnuse() {
+    super.onUnuse()
+    this.$cursorIcon.remove()
   }
   onClick(e: any) {
     const offset = this.$viewport.offset()
@@ -132,7 +142,7 @@ export default class Zoom extends Tool {
     super.setOption(name, val, renderToolbar)
     if (name === 'mode') {
       const { c } = this.painter
-      const $icon = this.$cursor.find(c('.icon'))
+      const $icon = this.$cursorIcon
       $icon.rmClass(c('icon-zoom-in')).rmClass(c('icon-zoom-out'))
       $icon.addClass(c(`icon-zoom-${val}`))
     }
@@ -170,7 +180,7 @@ export default class Zoom extends Tool {
   }
   private bindEvent() {
     this.$viewport.on('wheel', this.onWheel)
-    document.addEventListener('keydown', (e: any) => {
+    document.addEventListener('keydown', (e) => {
       if (e.altKey && this.isUsing) {
         this.isAltDown = true
         this.toggleMode()

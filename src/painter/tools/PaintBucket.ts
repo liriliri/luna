@@ -10,6 +10,10 @@ export default class PaintBucket extends Tool {
     this.options = {
       tolerance: 32,
     }
+  }
+  onUse() {
+    super.onUse()
+    const { painter } = this
 
     this.$cursor.html(painter.c(`<span class="icon icon-paint-bucket"></span>`))
     this.$cursor.find(painter.c('.icon-paint-bucket')).css({

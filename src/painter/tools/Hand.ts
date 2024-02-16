@@ -1,6 +1,7 @@
 import Tool from './Tool'
 import Zoom from './Zoom'
 import Painter from '../'
+import keyCode from 'licia/keyCode'
 import { eventClient } from '../../share/util'
 
 export default class Hand extends Tool {
@@ -8,9 +9,15 @@ export default class Hand extends Tool {
   private startY = 0
   private startScrollLeft = 0
   private startScrollTop = 0
+  private isSpaceDown = false
   constructor(painter: Painter) {
     super(painter)
-    this.$cursor.html(painter.c(`<span class="icon icon-hand"></span>`))
+
+    this.bindEvent()
+  }
+  onUse() {
+    super.onUse()
+    this.$cursor.html(this.painter.c(`<span class="icon icon-hand"></span>`))
   }
   onDragStart(e: any) {
     const { viewport } = this
@@ -45,5 +52,30 @@ export default class Hand extends Tool {
       },
       'hover'
     )
+  }
+  private bindEvent() {
+    const { painter } = this
+
+    let currentToolName = ''
+    document.addEventListener('keydown', (e) => {
+      if (e.keyCode === keyCode('space') && !this.isUsing) {
+        e.preventDefault()
+        currentToolName = painter.getCurrentToolName()
+        this.isSpaceDown = true
+        painter.useTool('hand')
+      }
+    })
+    // Prevent scrolling
+    document.addEventListener('keypress', (e) => {
+      if (this.isSpaceDown) {
+        e.preventDefault()
+      }
+    })
+    document.addEventListener('keyup', () => {
+      if (this.isSpaceDown) {
+        this.isSpaceDown = false
+        painter.useTool(currentToolName)
+      }
+    })
   }
 }

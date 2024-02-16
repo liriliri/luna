@@ -35,6 +35,7 @@ export default class Painter extends Component<IOptions> {
   private ctx: CanvasRenderingContext2D
   private layers: Layer[] = []
   private currentTool: Tool
+  private currentToolName = ''
   private brush: Brush
   private pencil: Pencil
   private hand: Hand
@@ -114,10 +115,15 @@ export default class Painter extends Component<IOptions> {
         this.currentTool.onUnuse()
       }
       this.currentTool = tool
+      this.currentToolName = name
       tool.onUse()
       $tools.find(c('.tool')).rmClass(c('selected'))
       $tools.find(`${c('.tool')}[data-tool="${name}"]`).addClass(c('selected'))
     }
+  }
+  /** Get current tool name. */
+  getCurrentToolName() {
+    return this.currentToolName
   }
   /** Get tool. */
   getTool(name: string) {
@@ -204,7 +210,9 @@ export default class Painter extends Component<IOptions> {
               </div>
             </div>
           </div>
-          <div class="viewport-overlay"></div>
+          <div class="viewport-overlay">
+            <div class="cursor"></div>
+          </div>
         </div>
       `)
     )

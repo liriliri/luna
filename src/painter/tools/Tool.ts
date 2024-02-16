@@ -50,8 +50,8 @@ export default class Tool extends Emitter {
     })
     painter.addSubComponent(toolbar)
 
-    this.cursor = h(`div.${painter.c('cursor')}`) as HTMLDivElement
-    this.$cursor = $(this.cursor)
+    this.$cursor = painter.$container.find(painter.c('.cursor'))
+    this.cursor = this.$cursor.get(0) as HTMLDivElement
   }
   setOption(name: string, val: any, renderToolbar = true) {
     this.options[name] = val
@@ -74,12 +74,10 @@ export default class Tool extends Emitter {
     this.renderToolbar()
 
     this.$toolbar.append(this.toolbar.container)
-    this.$viewportOverlay.append(this.cursor)
   }
   onUnuse() {
     this.isUsing = false
     this.toolbar.$container.remove()
-    this.$cursor.remove()
   }
   onClick(e: any) {
     this.getXY(e)

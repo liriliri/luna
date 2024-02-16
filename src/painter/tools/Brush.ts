@@ -38,6 +38,10 @@ export default class Brush extends Tool {
     this.brushCavnas = document.createElement('canvas')
     this.brushCtx = this.brushCavnas.getContext('2d')!
   }
+  onUse() {
+    super.onUse()
+    this.cursorCircle.render()
+  }
   setOption(name: string, val: any, renderToolbar?: boolean) {
     super.setOption(name, val, renderToolbar)
     if (name === 'size') {

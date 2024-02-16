@@ -113,8 +113,8 @@ export default class Brush extends Tool {
       this.commitDraw(this.ctx)
     }
   }
-  onZoom(ratio: number) {
-    super.onZoom(ratio)
+  onZoom() {
+    super.onZoom()
     this.cursorCircle.render()
   }
   private draw(x: number, y: number) {

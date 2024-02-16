@@ -245,8 +245,8 @@ export default class Painter extends Component<IOptions> {
 
     this.resizeSensor.addListener(this.onResize)
 
-    this.zoom.on('change', (ratio) => {
-      this.currentTool.onZoom(ratio)
+    this.zoom.on('change', () => {
+      this.currentTool.onZoom()
       this.resetViewport()
     })
   }

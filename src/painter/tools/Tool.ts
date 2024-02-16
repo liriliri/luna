@@ -3,6 +3,7 @@ import $ from 'licia/$'
 import h from 'licia/h'
 import Emitter from 'licia/Emitter'
 import types from 'licia/types'
+import Zoom from './Zoom'
 import { eventPage } from '../../share/util'
 import LunaToolbar from 'luna-toolbar'
 
@@ -24,7 +25,6 @@ export default class Tool extends Emitter {
   protected toolbar: LunaToolbar
   protected options: types.PlainObj<any> = {}
   protected isUsing = false
-  private zoomRatio = 1
   constructor(painter: Painter) {
     super()
     this.painter = painter
@@ -101,9 +101,6 @@ export default class Tool extends Emitter {
       })
     }
   }
-  onZoom(ratio: number) {
-    this.zoomRatio = ratio
-  }
   /* eslint-disable @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars */
   onMouseEnter(e: any) {
     this.$cursor.css({
@@ -115,6 +112,7 @@ export default class Tool extends Emitter {
       opacity: 0,
     })
   }
+  onZoom() {}
   onAfterRenderLayer(layer: Layer) {}
   protected renderToolbar() {
     this.toolbar.clear()
@@ -125,7 +123,8 @@ export default class Tool extends Emitter {
     const pageX = eventPage('x', e)
     const pageY = eventPage('y', e)
 
-    const ratio = this.zoomRatio
+    const zoom = this.painter.getTool('zoom') as Zoom
+    const ratio = zoom.getRatio()
     const x = Math.floor((pageX - offset.left) / ratio)
     const y = Math.floor((pageY - offset.top) / ratio)
 

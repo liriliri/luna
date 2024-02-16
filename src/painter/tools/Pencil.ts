@@ -104,8 +104,8 @@ export default class Pencil extends Tool {
       this.commitDraw(this.ctx)
     }
   }
-  onZoom(ratio: number) {
-    super.onZoom(ratio)
+  onZoom() {
+    super.onZoom()
     this.cursorCircle.render()
   }
   protected renderToolbar() {

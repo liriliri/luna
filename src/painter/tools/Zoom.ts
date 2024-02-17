@@ -1,5 +1,6 @@
 import Tool from './Tool'
 import Painter from '../index'
+import Hand from './Hand'
 import Tween from 'licia/Tween'
 import $ from 'licia/$'
 import h from 'licia/h'
@@ -58,12 +59,12 @@ export default class Zoom extends Tool {
   zoom(ratio: number, pivot?: IPivot) {
     ratio = ratio < 0 ? 1 / (1 - ratio) : 1 + ratio
     const offset = this.$canvas.offset()
-    this.zoomTo((offset.width * ratio) / this.canvas.width, pivot)
+    this.zoomTo((offset.width * ratio) / this.canvas.width, true, pivot)
   }
   getRatio() {
     return this.ratio
   }
-  zoomTo(ratio: number, pivot?: IPivot) {
+  zoomTo(ratio: number, animation = true, pivot?: IPivot) {
     if (this.isZooming) {
       return
     }
@@ -104,39 +105,50 @@ export default class Zoom extends Tool {
     const newScrollTop =
       scrollTop + deltaMarginTop + deltaHeight * ((pivot.y - top) / height)
 
-    const tween = new Tween({
-      scrollLeft,
-      scrollTop,
-      width,
-      height,
-    })
+    if (animation) {
+      const tween = new Tween({
+        scrollLeft,
+        scrollTop,
+        width,
+        height,
+      })
 
-    tween
-      .on('update', (target) => {
-        $canvas.css({
-          width: target.width,
-          height: target.height,
+      tween
+        .on('update', (target) => {
+          $canvas.css({
+            width: target.width,
+            height: target.height,
+          })
+          viewport.scrollLeft = target.scrollLeft
+          viewport.scrollTop = target.scrollTop
+          this.emit('change')
         })
-        viewport.scrollLeft = target.scrollLeft
-        viewport.scrollTop = target.scrollTop
-        this.emit('change')
-      })
-      .on('end', () => {
-        this.isZooming = false
-      })
+        .on('end', () => {
+          this.isZooming = false
+        })
 
-    tween
-      .to(
-        {
-          scrollLeft: newScrollLeft,
-          scrollTop: newScrollTop,
-          width: newWidth,
-          height: newHeight,
-        },
-        300,
-        'linear'
-      )
-      .play()
+      tween
+        .to(
+          {
+            scrollLeft: newScrollLeft,
+            scrollTop: newScrollTop,
+            width: newWidth,
+            height: newHeight,
+          },
+          300,
+          'linear'
+        )
+        .play()
+    } else {
+      $canvas.css({
+        width: newWidth,
+        height: newHeight,
+      })
+      viewport.scrollLeft = newScrollLeft
+      viewport.scrollTop = newScrollTop
+      this.emit('change')
+      this.isZooming = false
+    }
   }
   setOption(name: string, val: any, renderToolbar?: boolean) {
     super.setOption(name, val, renderToolbar)
@@ -146,6 +158,18 @@ export default class Zoom extends Tool {
       $icon.rmClass(c('icon-zoom-in')).rmClass(c('icon-zoom-out'))
       $icon.addClass(c(`icon-zoom-${val}`))
     }
+  }
+  fitScreen() {
+    const { canvas, viewport } = this
+    const sx = viewport.clientWidth / canvas.width
+    const sy = viewport.clientHeight / canvas.height
+    this.zoomTo(Math.min(sx, sy), false)
+  }
+  fillScreen() {
+    const { canvas, viewport } = this
+    const sx = viewport.clientWidth / canvas.width
+    const sy = viewport.clientHeight / canvas.height
+    this.zoomTo(Math.max(sx, sy), false)
   }
   protected renderToolbar() {
     super.renderToolbar()
@@ -174,6 +198,24 @@ export default class Zoom extends Tool {
       '100%',
       () => {
         this.zoomTo(1)
+      },
+      'hover'
+    )
+    toolbar.appendButton(
+      'Fit Screen',
+      () => {
+        this.fitScreen()
+        const hand = painter.getTool('hand') as Hand
+        hand.centerCanvas()
+      },
+      'hover'
+    )
+    toolbar.appendButton(
+      'Fill Screen',
+      () => {
+        this.fillScreen()
+        const hand = painter.getTool('hand') as Hand
+        hand.centerCanvas()
       },
       'hover'
     )

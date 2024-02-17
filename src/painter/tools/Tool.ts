@@ -113,7 +113,7 @@ export default class Tool extends Emitter {
     })
   }
   onZoom() {}
-  onAfterRenderLayer(layer: Layer) {}
+  onRenderLayer(layer: Layer): HTMLCanvasElement | void {}
   protected renderToolbar() {
     this.toolbar.clear()
   }

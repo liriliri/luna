@@ -35,6 +35,13 @@ const def = story(
       tool: 'pencil',
     })
 
+    const ctx = painter.getActiveLayer().getContext()
+    ctx.fillStyle = '#ffffff'
+    ctx.fillRect(0, 0, width, height)
+    const idx = painter.addLayer()
+    painter.activateLayer(idx)
+    painter.renderCanvas()
+
     return painter
   },
   {

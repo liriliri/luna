@@ -44,8 +44,8 @@ export default class Eraser extends Tool {
   onDragEnd(e: any) {
     this.getTool().onDragEnd(e)
   }
-  onAfterRenderLayer(layer: Layer) {
-    this.getTool().onAfterRenderLayer(layer)
+  onRenderLayer(layer: Layer) {
+    return this.getTool().onRenderLayer(layer)
   }
   onZoom() {
     super.onZoom()

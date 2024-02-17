@@ -107,13 +107,16 @@ export default class Painter extends Component<IOptions> {
   }
   /** Add layer. */
   addLayer() {
-    const { width, height } = this.options
-    const layer = new Layer(width, height)
+    const layer = new Layer(this)
     this.layers.push(layer)
+    return this.layers.length - 1
   }
   /** Get active layer. */
   getActiveLayer() {
     return this.activeLayer
+  }
+  activateLayer(index: number) {
+    this.activeLayer = this.layers[index]
   }
   /** Use tool. */
   useTool(name: string) {
@@ -172,8 +175,12 @@ export default class Painter extends Component<IOptions> {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     each(layers, (layer) => {
-      ctx.drawImage(layer.getCanvas(), 0, 0)
-      this.currentTool.onAfterRenderLayer(layer)
+      const canvas = this.currentTool.onRenderLayer(layer)
+      if (canvas) {
+        ctx.drawImage(canvas, 0, 0)
+      } else {
+        ctx.drawImage(layer.getCanvas(), 0, 0)
+      }
     })
   }
   private initTpl() {
@@ -323,8 +330,9 @@ export default class Painter extends Component<IOptions> {
 export class Layer {
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
-  constructor(width: number, height: number) {
+  constructor(painter: Painter) {
     const canvas = document.createElement('canvas')
+    const { width, height } = painter.getCanvas()
     canvas.width = width
     canvas.height = height
     this.canvas = canvas

@@ -3,10 +3,12 @@ import defaults from 'licia/defaults'
 import Tool from './Tool'
 import nextTick from 'licia/nextTick'
 import { CursorCircle } from './Pencil'
+import { duplicateCanvas } from '../util'
 
 export default class Brush extends Tool {
   private drawCtx: CanvasRenderingContext2D
   private drawCanvas: HTMLCanvasElement
+  private combinedCanvas: HTMLCanvasElement
   private brushCavnas: HTMLCanvasElement
   private brushCtx: CanvasRenderingContext2D
   private isDrawing = false
@@ -108,9 +110,17 @@ export default class Brush extends Tool {
     this.commitDraw(painter.getActiveLayer().getContext())
     painter.renderCanvas()
   }
-  onAfterRenderLayer(layer: Layer) {
+  onRenderLayer(layer: Layer) {
     if (layer === this.painter.getActiveLayer() && this.isDrawing) {
-      this.commitDraw(this.ctx)
+      if (!this.combinedCanvas) {
+        this.combinedCanvas = duplicateCanvas(layer.getCanvas())
+      }
+      const combinedCtx = this.combinedCanvas.getContext('2d')!
+      const { width, height } = this.combinedCanvas
+      combinedCtx.clearRect(0, 0, width, height)
+      combinedCtx.drawImage(layer.getCanvas(), 0, 0)
+      this.commitDraw(combinedCtx)
+      return this.combinedCanvas
     }
   }
   onZoom() {

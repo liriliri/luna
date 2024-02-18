@@ -38,6 +38,7 @@
 * [music-visualizer](./src/music-visualizer/README.md): Music visualization.
 * [notification](./src/notification/README.md): Show notifications.
 * [object-viewer](./src/object-viewer/README.md): JavaScript object viewer.
+* [painter](./src/painter/README.md): Simple drawing tool.
 * [performance-monitor](./src/performance-monitor/README.md): Realtime counter used for displaying cpu, fps metrics.
 * [retro-emulator](./src/retro-emulator/README.md): Retro emulator using libretro.
 * [retro-handheld](./src/retro-handheld/README.md): Retro emulator with controls ui.

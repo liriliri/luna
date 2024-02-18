@@ -6,6 +6,7 @@
     "dependencies": [
       "toolbar"
     ],
-    "icon": true
+    "icon": true,
+    "react": true
   }
 }

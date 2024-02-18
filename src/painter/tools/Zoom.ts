@@ -161,8 +161,8 @@ export default class Zoom extends Tool {
   }
   fitScreen() {
     const { canvas, viewport } = this
-    const sx = viewport.clientWidth / canvas.width
-    const sy = viewport.clientHeight / canvas.height
+    const sx = viewport.clientWidth / (canvas.width + 20)
+    const sy = viewport.clientHeight / (canvas.height + 20)
     this.zoomTo(Math.min(sx, sy), false)
   }
   fillScreen() {

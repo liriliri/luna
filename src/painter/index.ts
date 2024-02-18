@@ -140,7 +140,7 @@ export default class Painter extends Component<IOptions> {
     return this.currentToolName
   }
   /** Get tool. */
-  getTool(name: string) {
+  getTool(name: string): Tool | void {
     switch (name) {
       case 'brush':
         return this.brush

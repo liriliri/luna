@@ -236,11 +236,11 @@
   "painter": {
     "dependencies": ["toolbar"],
     "icon": true,
+    "react": true,
     "version": "0.1.0",
     "style": true,
     "test": true,
-    "install": false,
-    "react": false
+    "install": false
   },
   "performance-monitor": {
     "react": true,

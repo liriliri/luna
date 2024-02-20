@@ -14,6 +14,7 @@ import {
   Eyedropper,
   Tool,
 } from './tools'
+import { duplicateCanvas } from './util'
 
 const $document = $(document as any)
 
@@ -182,6 +183,29 @@ export default class Painter extends Component<IOptions> {
         ctx.drawImage(layer.getCanvas(), 0, 0)
       }
     })
+
+    this.emit('canvasRender')
+  }
+  private resizeCanvas(width: number, height: number) {
+    const { canvas } = this
+    const oldWidth = canvas.width
+    const oldHeight = canvas.height
+
+    canvas.width = width
+    canvas.height = height
+
+    const x = Math.round((width - oldWidth) / 2)
+    const y = Math.round((height - oldHeight) / 2)
+
+    each(this.layers, (layer) => {
+      const canvas = layer.getCanvas()
+      const tempCanvas = duplicateCanvas(canvas, true)
+      canvas.width = width
+      canvas.height = height
+      layer.getContext().drawImage(tempCanvas, x, y, oldWidth, oldHeight)
+    })
+
+    this.renderCanvas()
   }
   private initTpl() {
     const { width, height } = this.options
@@ -274,6 +298,18 @@ export default class Painter extends Component<IOptions> {
     this.zoom.on('change', () => {
       this.currentTool.onZoom()
       this.resetViewport()
+    })
+
+    this.on('optionChange', (name, val) => {
+      const { canvas } = this
+      switch (name) {
+        case 'width':
+          this.resizeCanvas(val, canvas.height)
+          break
+        case 'height':
+          this.resizeCanvas(canvas.width, val)
+          break
+      }
     })
   }
   private onViewportMouseEnter = (e: any) => {

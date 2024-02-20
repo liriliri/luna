@@ -115,9 +115,11 @@ export default class Brush extends Tool {
       if (!this.combinedCanvas) {
         this.combinedCanvas = duplicateCanvas(layer.getCanvas())
       }
-      const combinedCtx = this.combinedCanvas.getContext('2d')!
-      const { width, height } = this.combinedCanvas
-      combinedCtx.clearRect(0, 0, width, height)
+      const { canvas, combinedCanvas } = this
+      const combinedCtx = combinedCanvas.getContext('2d')!
+      combinedCanvas.width = canvas.width
+      combinedCanvas.height = canvas.height
+      combinedCtx.clearRect(0, 0, canvas.width, canvas.height)
       combinedCtx.drawImage(layer.getCanvas(), 0, 0)
       this.commitDraw(combinedCtx)
       return this.combinedCanvas

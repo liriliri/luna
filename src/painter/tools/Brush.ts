@@ -20,7 +20,7 @@ export default class Brush extends Tool {
     hardness: 100,
   }
   constructor(painter: Painter) {
-    super(painter)
+    super(painter, 'brush')
 
     this.options = {
       size: 4,
@@ -39,16 +39,12 @@ export default class Brush extends Tool {
 
     this.brushCavnas = document.createElement('canvas')
     this.brushCtx = this.brushCavnas.getContext('2d')!
+
+    this.bindEvent()
   }
   onUse() {
     super.onUse()
     this.cursorCircle.render()
-  }
-  setOption(name: string, val: any, renderToolbar?: boolean) {
-    super.setOption(name, val, renderToolbar)
-    if (name === 'size') {
-      this.cursorCircle.setSize(val)
-    }
   }
   onDragStart(e: any, drawOptions: IDrawOptions = {}) {
     super.onDragStart(e)
@@ -199,6 +195,13 @@ export default class Brush extends Tool {
     }
 
     brushCtx.globalAlpha = 1
+  }
+  private bindEvent() {
+    this.on('optionChange', (name, val) => {
+      if (name === 'size') {
+        this.cursorCircle.setSize(val)
+      }
+    })
   }
 }
 

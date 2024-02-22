@@ -18,7 +18,7 @@ export default class Pencil extends Tool {
     opacity: 100,
   }
   constructor(painter: Painter) {
-    super(painter)
+    super(painter, 'pencil')
 
     this.options = {
       size: 1,
@@ -33,16 +33,12 @@ export default class Pencil extends Tool {
 
     this.drawCanvas = document.createElement('canvas')
     this.drawCtx = this.drawCanvas.getContext('2d')!
+
+    this.bindEvent()
   }
   onUse() {
     super.onUse()
     this.cursorCircle.render()
-  }
-  setOption(name: string, val: any, renderToolbar?: boolean) {
-    super.setOption(name, val, renderToolbar)
-    if (name === 'size') {
-      this.cursorCircle.setSize(val)
-    }
   }
   onDragStart(e: any, drawOptions: IDrawOptions = {}) {
     super.onDragStart(e)
@@ -162,6 +158,13 @@ export default class Pencil extends Tool {
     ctx.globalCompositeOperation = 'source-over'
     ctx.globalAlpha = 1
   }
+  private bindEvent() {
+    this.on('optionChange', (name, val) => {
+      if (name === 'size') {
+        this.cursorCircle.setSize(val)
+      }
+    })
+  }
 }
 
 export class CursorCircle {
@@ -183,7 +186,7 @@ export class CursorCircle {
     const zoom = painter.getTool('zoom') as Zoom
     let { size } = this
     if (zoom) {
-      size *= Math.round(zoom.getRatio())
+      size = Math.round(size * zoom.getRatio())
     }
     let html = ''
     if (size > 1) {

@@ -11,7 +11,7 @@ export default class Hand extends Tool {
   private startScrollTop = 0
   private isSpaceDown = false
   constructor(painter: Painter) {
-    super(painter)
+    super(painter, 'hand')
 
     this.bindEvent()
   }

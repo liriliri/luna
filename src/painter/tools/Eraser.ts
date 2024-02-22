@@ -8,7 +8,7 @@ import { CursorCircle } from './Pencil'
 export default class Eraser extends Tool {
   private cursorCircle: CursorCircle
   constructor(painter: Painter) {
-    super(painter)
+    super(painter, 'eraser')
 
     this.options = {
       mode: 'brush',
@@ -22,16 +22,12 @@ export default class Eraser extends Tool {
       painter,
       this.options.size
     )
+
+    this.bindEvent()
   }
   onUse() {
     super.onUse()
     this.cursorCircle.render()
-  }
-  setOption(name: string, val: any, renderToolbar?: boolean) {
-    super.setOption(name, val, renderToolbar)
-    if (name === 'size') {
-      this.cursorCircle.setSize(val)
-    }
   }
   onDragStart(e: any) {
     nextTick(() => {
@@ -91,6 +87,13 @@ export default class Eraser extends Tool {
       min: 1,
       max: 100,
       step: 1,
+    })
+  }
+  private bindEvent() {
+    this.on('optionChange', (name, val) => {
+      if (name === 'size') {
+        this.cursorCircle.setSize(val)
+      }
     })
   }
 }

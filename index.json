@@ -170,6 +170,15 @@
     "test": true,
     "react": false
   },
+  "mask-editor": {
+    "dependencies": ["toolbar", "painter"],
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "react": false
+  },
   "menu": {
     "icon": true,
     "version": "0.1.2",

@@ -55,7 +55,8 @@
       "luna-qrcode-generator": ["src/qrcode-generator/index"],
       "luna-toolbar": ["src/toolbar/index"],
       "luna-image-viewer": ["src/image-viewer/index"],
-      "luna-painter": ["src/painter/index"]
+      "luna-painter": ["src/painter/index"],
+      "luna-mask-editor": ["src/mask-editor/index"]
     }
   }
 }

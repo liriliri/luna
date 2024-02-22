@@ -1,0 +1,12 @@
+{
+  "name": "mask-editor",
+  "version": "0.1.0",
+  "description": "Image mask editing",
+  "luna": {
+    "dependencies": [
+      "toolbar",
+      "painter"
+    ],
+    "style": false
+  }
+}

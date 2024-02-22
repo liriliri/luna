@@ -3,6 +3,7 @@ import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import each from 'licia/each'
 import ResizeSensor from 'licia/ResizeSensor'
+import types from 'licia/types'
 import { exportCjs, drag, measuredScrollbarWidth } from '../share/util'
 import {
   Brush,
@@ -18,12 +19,14 @@ import { duplicateCanvas } from './util'
 
 const $document = $(document as any)
 
-/** IOptions. */
+/** IOptions */
 export interface IOptions extends IComponentOptions {
   /** Canvas width. */
   width?: number
   /** Canvas height. */
   height?: number
+  /** Initial tools. */
+  tools?: string[]
   /** Initial used tool. */
   tool?: string
 }
@@ -36,7 +39,9 @@ export interface IOptions extends IComponentOptions {
  * const painer = new LunaPainter(container)
  */
 export default class Painter extends Component<IOptions> {
-  private $tools: $.$
+  static Brush = Brush
+  static Eraser = Eraser
+  private $toolBox: $.$
   private $canvas: $.$
   private $viewport: $.$
   private $body: $.$
@@ -46,13 +51,7 @@ export default class Painter extends Component<IOptions> {
   private layers: Layer[] = []
   private currentTool: Tool
   private currentToolName = ''
-  private brush: Brush
-  private pencil: Pencil
-  private hand: Hand
-  private zoom: Zoom
-  private paintBucket: PaintBucket
-  private eraser: Eraser
-  private eyedropper: Eyedropper
+  private tools: types.PlainObj<Tool> = {}
   private activeLayer: Layer
   private resizeSensor: ResizeSensor
   private $foregroundColor: $.$
@@ -63,12 +62,13 @@ export default class Painter extends Component<IOptions> {
     this.initOptions(options, {
       width: 800,
       height: 600,
+      tools: ['eyedropper', 'brush', 'pencil', 'eraser', 'paintBucket'],
       tool: 'brush',
     })
 
     this.initTpl()
 
-    this.$tools = this.find('.tools')
+    this.$toolBox = this.find('.tool-box')
     this.$canvas = this.find('.main-canvas')
     this.$viewport = this.find('.viewport')
     this.viewport = this.$viewport.get(0) as HTMLDivElement
@@ -87,20 +87,35 @@ export default class Painter extends Component<IOptions> {
     this.addLayer()
     this.activeLayer = this.layers[0]
 
-    this.brush = new Brush(this)
-    this.pencil = new Pencil(this)
-    this.hand = new Hand(this)
-    this.zoom = new Zoom(this)
-    this.paintBucket = new PaintBucket(this)
-    this.eraser = new Eraser(this)
-    this.eyedropper = new Eyedropper(this)
+    each(this.options.tools, (tool) => {
+      switch (tool) {
+        case 'eyedropper':
+          this.addTool('eyedropper', new Eyedropper(this))
+          break
+        case 'brush':
+          this.addTool('brush', new Brush(this))
+          break
+        case 'pencil':
+          this.addTool('pencil', new Pencil(this))
+          break
+        case 'eraser':
+          this.addTool('eraser', new Eraser(this))
+          break
+        case 'paintBucket':
+          this.addTool('paintBucket', new PaintBucket(this))
+          break
+      }
+    })
+    const hand = new Hand(this)
+    this.addTool('hand', hand)
+    const zoom = new Zoom(this)
+    this.addTool('zoom', zoom)
 
     this.bindEvent()
-
     this.resetViewport()
-    this.hand.centerCanvas()
-
     this.useTool(this.options.tool)
+    zoom.fitScreen()
+    hand.centerCanvas()
   }
   destroy() {
     super.destroy()
@@ -121,8 +136,6 @@ export default class Painter extends Component<IOptions> {
   }
   /** Use tool. */
   useTool(name: string) {
-    const { c, $tools } = this
-
     const tool = this.getTool(name)
 
     if (tool) {
@@ -132,38 +145,26 @@ export default class Painter extends Component<IOptions> {
       this.currentTool = tool
       this.currentToolName = name
       tool.onUse()
-      $tools.find(c('.tool')).rmClass(c('selected'))
-      $tools.find(`${c('.tool')}[data-tool="${name}"]`).addClass(c('selected'))
     }
+  }
+  /** Add tool. */
+  addTool(name: string, tool: Tool) {
+    this.tools[name] = tool
   }
   /** Get current tool name. */
   getCurrentToolName() {
     return this.currentToolName
   }
   /** Get tool. */
-  getTool(name: string): Tool | void {
-    switch (name) {
-      case 'brush':
-        return this.brush
-      case 'pencil':
-        return this.pencil
-      case 'hand':
-        return this.hand
-      case 'zoom':
-        return this.zoom
-      case 'paintBucket':
-        return this.paintBucket
-      case 'eraser':
-        return this.eraser
-      case 'eyedropper':
-        return this.eyedropper
-    }
+  getTool(name: string): Tool {
+    return this.tools[name]
   }
   getForegroundColor() {
     return this.$foregroundColor.val()
   }
   setForegroundColor(color: string) {
     this.$foregroundColor.val(color)
+    this.emit('foregroundColorChange', color)
   }
   getBackgroundColor() {
     return this.$backgroundColor.val()
@@ -176,12 +177,20 @@ export default class Painter extends Component<IOptions> {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     each(layers, (layer) => {
+      ctx.globalAlpha = layer.opacity / 100
+      let blendMode = layer.blendMode
+      if (blendMode === 'normal') {
+        blendMode = 'source-over'
+      }
+      ctx.globalCompositeOperation = blendMode as any
       const canvas = this.currentTool.onRenderLayer(layer)
       if (canvas) {
         ctx.drawImage(canvas, 0, 0)
       } else {
         ctx.drawImage(layer.getCanvas(), 0, 0)
       }
+      ctx.globalAlpha = 1
+      ctx.globalCompositeOperation = 'source-over'
     })
 
     this.emit('canvasRender')
@@ -213,28 +222,8 @@ export default class Painter extends Component<IOptions> {
     this.$container.html(
       this.c(stripIndent`
         <div class="toolbar"></div>
-        <div class="tools">
-          <div class="tool" data-tool="eyedropper">
-            <span class="icon icon-eyedropper"></span>
-          </div>
-          <div class="tool" data-tool="brush">
-            <span class="icon icon-brush"></span>
-          </div>
-          <div class="tool" data-tool="pencil">
-            <span class="icon icon-pencil"></span>
-          </div>
-          <div class="tool" data-tool="eraser">
-            <span class="icon icon-eraser"></span>
-          </div>
-          <div class="tool" data-tool="paintBucket">
-            <span class="icon icon-paint-bucket"></span>
-          </div>
-          <div class="tool" data-tool="hand">
-            <span class="icon icon-hand"></span>
-          </div>
-          <div class="tool" data-tool="zoom">
-            <span class="icon icon-zoom"></span>
-          </div>
+        <div class="tool-box">
+          <div class="tools"></div>
           <div class="palette">
             <div class="palette-head">
               <span class="icon icon-reset-color"></span>
@@ -268,7 +257,7 @@ export default class Painter extends Component<IOptions> {
     )
   }
   private bindEvent() {
-    const { $viewport, $tools, $foregroundColor, $backgroundColor, c } = this
+    const { $viewport, $toolBox, $foregroundColor, $backgroundColor, c } = this
 
     $viewport
       .on(drag('start'), this.onViewportDragStart)
@@ -277,26 +266,28 @@ export default class Painter extends Component<IOptions> {
       .on('mousemove', this.onViewportMouseMove)
       .on('mouseleave', this.onViewportMouseLeave)
 
-    const self = this
-    $tools
-      .on('click', c('.tool'), function (this: HTMLDivElement) {
-        const $this = $(this)
-        self.useTool($this.data('tool'))
-      })
+    $toolBox
       .on('click', c('.icon-reset-color'), () => {
-        $foregroundColor.val('#000000')
+        this.setForegroundColor('#000000')
         $backgroundColor.val('#ffffff')
       })
       .on('click', c('.icon-swap'), () => {
         const foreground = $foregroundColor.val()
-        $foregroundColor.val($backgroundColor.val())
+        this.setForegroundColor($backgroundColor.val())
         $backgroundColor.val(foreground)
       })
 
+    $foregroundColor.on('change', () => {
+      this.emit('foregroundColorChange', $foregroundColor.val())
+    })
+
     this.resizeSensor.addListener(this.onResize)
 
-    this.zoom.on('change', () => {
-      this.currentTool.onZoom()
+    const zoom = this.getTool('zoom') as Zoom
+    zoom.on('change', () => {
+      if (this.currentTool) {
+        this.currentTool.onZoom()
+      }
       this.resetViewport()
     })
 
@@ -346,7 +337,7 @@ export default class Painter extends Component<IOptions> {
       canvasWidth < viewport.clientWidth &&
       canvasHeight < viewport.clientHeight
     ) {
-      this.hand.centerCanvas()
+      ;(this.getTool('hand') as Hand).centerCanvas
     }
   }
   private resetViewport = () => {
@@ -364,6 +355,8 @@ export default class Painter extends Component<IOptions> {
 }
 
 export class Layer {
+  blendMode = 'normal'
+  opacity = 100
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
   constructor(painter: Painter) {

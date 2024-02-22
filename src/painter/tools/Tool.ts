@@ -20,29 +20,29 @@ export default class Tool extends Emitter {
   protected ctx: CanvasRenderingContext2D
   protected canvas: HTMLCanvasElement
   protected $toolbar: $.$
+  protected $tool: $.$
   protected $cursor: $.$
   protected cursor: HTMLDivElement
   protected toolbar: LunaToolbar
   protected options: types.PlainObj<any> = {}
   protected isUsing = false
-  constructor(painter: Painter) {
+  constructor(painter: Painter, name: string, icon?: string) {
     super()
     this.painter = painter
+    const { c } = painter
 
     this.viewport = painter.$container
-      .find(painter.c('.viewport'))
+      .find(c('.viewport'))
       .get(0) as HTMLDivElement
     this.$viewport = $(this.viewport)
 
-    this.$viewportOverlay = painter.$container.find(
-      painter.c('.viewport-overlay')
-    )
+    this.$viewportOverlay = painter.$container.find(c('.viewport-overlay'))
 
     this.canvas = painter.getCanvas()
     this.ctx = this.canvas.getContext('2d')!
     this.$canvas = $(this.canvas)
 
-    this.$toolbar = painter.$container.find(painter.c('.toolbar'))
+    this.$toolbar = painter.$container.find(c('.toolbar'))
     const toolbar = new LunaToolbar(h('div'))
     this.toolbar = toolbar
     toolbar.on('change', (key, val) => {
@@ -50,11 +50,23 @@ export default class Tool extends Emitter {
     })
     painter.addSubComponent(toolbar)
 
-    this.$cursor = painter.$container.find(painter.c('.cursor'))
+    this.$cursor = painter.$container.find(c('.cursor'))
     this.cursor = this.$cursor.get(0) as HTMLDivElement
+
+    const tool = h(c('.tool'))
+    const $tool = $(tool)
+    if (!icon) {
+      icon = name
+    }
+    $tool.html(c(`<span class="icon icon-${icon}"></span>`))
+    this.$tool = $tool
+    this.$tool.on('click', () => painter.useTool(name))
+    painter.$container.find(c('.tools')).append(tool)
   }
   setOption(name: string, val: any, renderToolbar = true) {
+    const oldVal = this.options[name]
     this.options[name] = val
+    this.emit('optionChange', name, val, oldVal)
 
     if (renderToolbar) {
       this.renderToolbar()
@@ -74,10 +86,12 @@ export default class Tool extends Emitter {
     this.renderToolbar()
 
     this.$toolbar.append(this.toolbar.container)
+    this.$tool.addClass(this.painter.c('selected'))
   }
   onUnuse() {
     this.isUsing = false
     this.toolbar.$container.remove()
+    this.$tool.rmClass(this.painter.c('selected'))
   }
   onClick(e: any) {
     this.getXY(e)

@@ -17,7 +17,7 @@ export default class Zoom extends Tool {
   private ratio = 1
   private $cursorIcon: $.$
   constructor(painter: Painter) {
-    super(painter)
+    super(painter, 'zoom')
 
     this.options = {
       mode: 'in',
@@ -150,15 +150,6 @@ export default class Zoom extends Tool {
       this.isZooming = false
     }
   }
-  setOption(name: string, val: any, renderToolbar?: boolean) {
-    super.setOption(name, val, renderToolbar)
-    if (name === 'mode') {
-      const { c } = this.painter
-      const $icon = this.$cursorIcon
-      $icon.rmClass(c('icon-zoom-in')).rmClass(c('icon-zoom-out'))
-      $icon.addClass(c(`icon-zoom-${val}`))
-    }
-  }
   fitScreen() {
     const { canvas, viewport } = this
     const sx = viewport.clientWidth / (canvas.width + 20)
@@ -232,6 +223,15 @@ export default class Zoom extends Tool {
       if (this.isAltDown) {
         this.isAltDown = false
         this.toggleMode()
+      }
+    })
+
+    this.on('optionChange', (name, val) => {
+      if (name === 'mode') {
+        const { c } = this.painter
+        const $icon = this.$cursorIcon
+        $icon.rmClass(c('icon-zoom-in')).rmClass(c('icon-zoom-out'))
+        $icon.addClass(c(`icon-zoom-${val}`))
       }
     })
   }

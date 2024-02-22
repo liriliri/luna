@@ -6,7 +6,7 @@ import contain from 'licia/contain'
 export default class Eyedropper extends Tool {
   private isAltDown = false
   constructor(painter: Painter) {
-    super(painter)
+    super(painter, 'eyedropper')
 
     this.options = {
       sample: 'all',

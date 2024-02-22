@@ -5,7 +5,7 @@ import Painter from '../'
 
 export default class PaintBucket extends Tool {
   constructor(painter: Painter) {
-    super(painter)
+    super(painter, 'paintBucket', 'paint-bucket')
 
     this.options = {
       tolerance: 32,

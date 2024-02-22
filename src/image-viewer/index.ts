@@ -5,6 +5,7 @@ import $ from 'licia/$'
 import raf from 'licia/raf'
 import loadImg from 'licia/loadImg'
 import isHidden from 'licia/isHidden'
+import debounce from 'licia/debounce'
 
 const $document = $(document as any)
 
@@ -209,7 +210,7 @@ export default class ImageViewer extends Component<IOptions> {
   private bindEvent() {
     this.image.onload = () => this.reset()
 
-    this.resizeSensor.addListener(this.reset)
+    this.resizeSensor.addListener(debounce(this.reset, 20))
 
     this.$container
       .on(drag('start'), this.onMoveStart)

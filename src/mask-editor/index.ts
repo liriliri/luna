@@ -94,7 +94,7 @@ export default class MaskEditor extends Component<IOptions> {
     blackCanvas.height = height
     blackCtx.fillStyle = '#000000'
     blackCtx.fillRect(0, 0, width, height)
-    blackCtx.globalCompositeOperation = 'destination-in'
+    blackCtx.globalCompositeOperation = 'destination-out'
     blackCtx.drawImage(painter.getActiveLayer().getCanvas(), 0, 0)
 
     canvas.width = width
@@ -204,6 +204,6 @@ class MaskEraser extends LunaPainter.Eraser {
 class MaskPaintBucket extends LunaPainter.PaintBucket {
   constructor(painter: LunaPainter) {
     super(painter)
-    this.options.tolerance = 180
+    this.options.tolerance = 100
   }
 }

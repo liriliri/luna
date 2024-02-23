@@ -172,12 +172,12 @@
   },
   "mask-editor": {
     "dependencies": ["toolbar", "painter"],
+    "style": false,
+    "react": true,
     "version": "0.1.0",
-    "style": true,
     "icon": false,
     "test": true,
-    "install": false,
-    "react": false
+    "install": false
   },
   "menu": {
     "icon": true,
@@ -246,7 +246,7 @@
     "dependencies": ["toolbar"],
     "icon": true,
     "react": true,
-    "version": "0.2.0",
+    "version": "0.3.0",
     "style": true,
     "test": true,
     "install": false

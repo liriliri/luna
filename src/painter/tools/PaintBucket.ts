@@ -2,6 +2,7 @@ import Tool from './Tool'
 import Color from 'licia/Color'
 import isEqual from 'licia/isEqual'
 import Painter from '../'
+import { colorDistance } from '../util'
 
 export default class PaintBucket extends Tool {
   constructor(painter: Painter) {
@@ -107,15 +108,4 @@ export default class PaintBucket extends Tool {
       step: 1,
     })
   }
-}
-
-function colorDistance(color1: number[], color2: number[]) {
-  const r = Math.abs(color1[0] - color2[0])
-  const g = Math.abs(color1[1] - color2[1])
-  const b = Math.abs(color1[2] - color2[2])
-  if (color1.length === 4 && color2.length === 4) {
-    const a = Math.abs(color1[3] - color2[3])
-    return Math.round((r + b + g + a) / 4)
-  }
-  return Math.round((r + b + g) / 3)
 }

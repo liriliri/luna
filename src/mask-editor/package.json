@@ -7,6 +7,7 @@
       "toolbar",
       "painter"
     ],
-    "style": false
+    "style": false,
+    "react": true
   }
 }

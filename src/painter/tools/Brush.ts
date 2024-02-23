@@ -65,6 +65,7 @@ export default class Brush extends Tool {
       this.drawOptions = drawOptions as Required<IDrawOptions>
       this.generateBrush()
       this.draw(this.x, this.y)
+      this.painter.renderCanvas()
     })
   }
   onDragMove(e: any) {
@@ -92,6 +93,7 @@ export default class Brush extends Tool {
     }
 
     this.draw(x, y)
+    this.painter.renderCanvas()
   }
   onDragEnd(e: any) {
     if (!this.isDrawing) {
@@ -136,7 +138,6 @@ export default class Brush extends Tool {
     const startX = size > 1 ? x - Math.floor((size - 1) / 2) : x
     const startY = size > 1 ? y - Math.round((size - 1) / 2) : y
     drawCtx.drawImage(this.brushCavnas, startX, startY)
-    this.painter.renderCanvas()
   }
   protected renderToolbar() {
     super.renderToolbar()

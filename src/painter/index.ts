@@ -16,6 +16,7 @@ import {
   Tool,
 } from './tools'
 import { duplicateCanvas } from './util'
+import isHidden from 'licia/isHidden'
 
 const $document = $(document as any)
 
@@ -41,6 +42,9 @@ export interface IOptions extends IComponentOptions {
 export default class Painter extends Component<IOptions> {
   static Brush = Brush
   static Eraser = Eraser
+  static PaintBucket = PaintBucket
+  static Zoom = Zoom
+  static Hand = Hand
   private $toolBox: $.$
   private $canvas: $.$
   private $viewport: $.$
@@ -114,6 +118,7 @@ export default class Painter extends Component<IOptions> {
     this.bindEvent()
     this.resetViewport()
     this.useTool(this.options.tool)
+
     zoom.fitScreen()
     hand.centerCanvas()
   }
@@ -214,6 +219,10 @@ export default class Painter extends Component<IOptions> {
       layer.getContext().drawImage(tempCanvas, x, y, oldWidth, oldHeight)
     })
 
+    const zoom = this.getTool('zoom') as Zoom
+    const ratio = zoom.getRatio()
+    zoom.zoomTo(ratio, false)
+
     this.renderCanvas()
   }
   private initTpl() {
@@ -261,9 +270,9 @@ export default class Painter extends Component<IOptions> {
 
     $viewport
       .on(drag('start'), this.onViewportDragStart)
+      .on(drag('move'), this.onViewportMouseMove)
       .on('click', this.onViewportClick)
       .on('mouseenter', this.onViewportMouseEnter)
-      .on('mousemove', this.onViewportMouseMove)
       .on('mouseleave', this.onViewportMouseLeave)
 
     $toolBox
@@ -329,6 +338,10 @@ export default class Painter extends Component<IOptions> {
     this.currentTool.onClick(e.origEvent)
   }
   private onResize = () => {
+    if (isHidden(this.container)) {
+      return
+    }
+
     this.resetViewport()
 
     const { $canvas, viewport } = this
@@ -374,6 +387,8 @@ export class Layer {
     return this.canvas
   }
 }
+
+export * from './tools'
 
 if (typeof module !== 'undefined') {
   exportCjs(module, Painter)

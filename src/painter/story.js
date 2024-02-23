@@ -64,17 +64,17 @@ function onCreate(painter) {
 }
 
 function createKnobs() {
-  const width = number('Width', 512, {
+  const width = number('Width', 3000, {
     range: true,
     min: 128,
-    max: 2048,
+    max: 4000,
     step: 2,
   })
 
-  const height = number('Height', 512, {
+  const height = number('Height', 2000, {
     range: true,
     min: 128,
-    max: 2048,
+    max: 4000,
     step: 2,
   })
 

@@ -1,5 +1,5 @@
 import Component, { IComponentOptions } from '../share/Component'
-import LunaPainter from 'luna-painter'
+import LunaPainter, { Layer, Zoom } from 'luna-painter'
 import debounce from 'licia/debounce'
 import Color from 'licia/Color'
 
@@ -19,8 +19,15 @@ export interface IOptions extends IComponentOptions {
 export default class MaskEditor extends Component<IOptions> {
   private painter: LunaPainter
   private canvas: HTMLCanvasElement
+  private blackCanvas: HTMLCanvasElement
+  private blackCtx: CanvasRenderingContext2D
+  private ctx: CanvasRenderingContext2D
+  private maskBrush: MaskBrush
+  private baseLayer: Layer
+  private drawingLayer: Layer
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'mask-editor' }, options)
+    this.initOptions(options)
 
     this.initTpl()
 
@@ -30,47 +37,82 @@ export default class MaskEditor extends Component<IOptions> {
         tools: [],
       }
     )
+    painter.addTool('paintBucket', new MaskPaintBucket(painter))
     painter.addTool('eraser', new MaskEraser(painter))
-    const maskBrush = new MaskBrush(painter)
-    painter.addTool('brush', maskBrush)
+    this.maskBrush = new MaskBrush(painter)
+    painter.addTool('brush', this.maskBrush)
     painter.useTool('brush')
     this.painter = painter
-
-    const image = new Image()
-    image.onload = function () {
-      const ctx = painter.getActiveLayer().getContext()
-      ctx.drawImage(image, 0, 0, image.width, image.height)
-      const idx = painter.addLayer()
-      painter.activateLayer(idx)
-      const layer = painter.getActiveLayer()
-      layer.opacity = 80
-      maskBrush.on('optionChange', (name, val) => {
-        if (name === 'layerOpacity') {
-          layer.opacity = val
-          painter.renderCanvas()
-        }
-      })
-      painter.renderCanvas()
-    }
-    image.src = options.image
-
     this.addSubComponent(this.painter)
 
+    this.baseLayer = painter.getActiveLayer()
+    const idx = painter.addLayer()
+    painter.activateLayer(idx)
+    this.drawingLayer = painter.getActiveLayer()
+    this.drawingLayer.opacity = 80
+    painter.renderCanvas()
+
+    this.canvas = document.createElement('canvas')
+    this.ctx = this.canvas.getContext('2d')!
+    this.blackCanvas = document.createElement('canvas')
+    this.blackCtx = this.blackCanvas.getContext('2d')!
+
     this.bindEvent()
+
+    this.loadImage()
   }
   /** Get a canvas with mask drawn. */
   getCanvas() {
     return this.canvas
   }
+  private loadImage() {
+    const { painter } = this
+
+    const image = new Image()
+    image.onload = () => {
+      const { width, height } = image
+      painter.setOption({
+        width,
+        height,
+      })
+
+      const ctx = this.baseLayer.getContext()
+      ctx.drawImage(image, 0, 0, width, height)
+      painter.renderCanvas()
+      const zoom = painter.getTool('zoom') as Zoom
+      zoom.fitScreen()
+
+      this.renderMask()
+    }
+    image.src = this.options.image
+  }
+  private renderMask() {
+    const { canvas, ctx, blackCanvas, blackCtx, painter } = this
+    const { width, height } = painter.getCanvas()
+
+    blackCanvas.width = width
+    blackCanvas.height = height
+    blackCtx.fillStyle = '#000000'
+    blackCtx.fillRect(0, 0, width, height)
+    blackCtx.globalCompositeOperation = 'destination-in'
+    blackCtx.drawImage(painter.getActiveLayer().getCanvas(), 0, 0)
+
+    canvas.width = width
+    canvas.height = height
+    ctx.fillStyle = '#ffffff'
+    ctx.fillRect(0, 0, width, height)
+    ctx.drawImage(blackCanvas, 0, 0)
+  }
   private initTpl() {
     this.$container.html(this.c('<div class="painter"></painter>'))
   }
   private bindEvent() {
-    const { painter } = this
+    const { painter, maskBrush } = this
 
     painter.on(
       'canvasRender',
       debounce(() => {
+        this.renderMask()
         this.emit('change')
       }, 20)
     )
@@ -79,7 +121,7 @@ export default class MaskEditor extends Component<IOptions> {
       const c = new Color(color)
       const rgb = Color.parse(c.toRgb()).val
 
-      const ctx = painter.getActiveLayer().getContext()
+      const ctx = this.drawingLayer.getContext()
       const canvas = ctx.canvas
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
       const { data } = imageData
@@ -90,6 +132,19 @@ export default class MaskEditor extends Component<IOptions> {
       }
       ctx.putImageData(imageData, 0, 0)
       painter.renderCanvas()
+    })
+
+    maskBrush.on('optionChange', (name, val) => {
+      if (name === 'layerOpacity') {
+        this.drawingLayer.opacity = val
+        painter.renderCanvas()
+      }
+    })
+
+    this.on('optionChange', (name) => {
+      if (name === 'image') {
+        this.loadImage()
+      }
     })
   }
 }
@@ -143,5 +198,12 @@ class MaskEraser extends LunaPainter.Eraser {
       max: 1000,
       step: 1,
     })
+  }
+}
+
+class MaskPaintBucket extends LunaPainter.PaintBucket {
+  constructor(painter: LunaPainter) {
+    super(painter)
+    this.options.tolerance = 180
   }
 }

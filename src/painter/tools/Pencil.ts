@@ -57,6 +57,7 @@ export default class Pencil extends Tool {
       })
       this.drawOptions = drawOptions as Required<IDrawOptions>
       this.draw(this.x, this.y)
+      this.painter.renderCanvas()
     })
   }
   onDragMove(e: any) {
@@ -83,6 +84,7 @@ export default class Pencil extends Tool {
     }
 
     this.draw(x, y)
+    this.painter.renderCanvas()
   }
   onDragEnd(e: any) {
     if (!this.isDrawing) {
@@ -145,7 +147,6 @@ export default class Pencil extends Tool {
     const startX = size > 1 ? x - Math.floor((size - 1) / 2) : x
     const startY = size > 1 ? y - Math.round((size - 1) / 2) : y
     drawCtx.fillRect(startX, startY, size, size)
-    this.painter.renderCanvas()
   }
   private commitDraw(ctx: CanvasRenderingContext2D) {
     const { drawCanvas } = this

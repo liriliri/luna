@@ -4,7 +4,6 @@
   "description": "Image mask editing",
   "luna": {
     "dependencies": [
-      "toolbar",
       "painter"
     ],
     "style": false,

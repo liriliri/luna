@@ -171,10 +171,10 @@
     "react": false
   },
   "mask-editor": {
-    "dependencies": ["toolbar", "painter"],
+    "dependencies": ["painter"],
     "style": false,
     "react": true,
-    "version": "0.1.0",
+    "version": "0.2.0",
     "icon": false,
     "test": true,
     "install": false

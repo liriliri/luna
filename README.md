@@ -31,6 +31,7 @@
 * [log](./src/log/README.md): Terminal log viewer.
 * [markdown-editor](./src/markdown-editor/README.md): Markdown editor with preview.
 * [markdown-viewer](./src/markdown-viewer/README.md): Live markdown renderer.
+* [mask-editor](./src/mask-editor/README.md): Image mask editing.
 * [menu](./src/menu/README.md): Simple menu.
 * [menu-bar](./src/menu-bar/README.md) Application menu bar.
 * [modal](./src/modal/README.md): Create modal dialogs.

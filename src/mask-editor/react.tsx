@@ -4,6 +4,7 @@ import { useNonInitialEffect } from '../share/hooks'
 
 interface IMaskEditorProps extends IOptions {
   style?: CSSProperties
+  onChange?: (canvas: HTMLCanvasElement) => void
   onCreate?: (maskEditor: MaskEditor) => void
 }
 
@@ -17,6 +18,10 @@ const LunaMaskEditor: FC<IMaskEditorProps> = (props) => {
       image,
     })
     props.onCreate && props.onCreate(maskEditor.current)
+
+    if (props.onChange) {
+      maskEditor.current.on('change', props.onChange)
+    }
 
     return () => maskEditor.current?.destroy()
   }, [])

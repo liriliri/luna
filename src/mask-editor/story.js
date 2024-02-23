@@ -40,6 +40,10 @@ const def = story(
 
     onCreate(maskEditor, maskContainer)
 
+    maskEditor.on('change', () => {
+      console.log('mask change')
+    })
+
     return maskEditor
   },
   {
@@ -58,6 +62,9 @@ const def = story(
               if (maskContainer.current) {
                 onCreate(maskEditor, maskContainer.current)
               }
+            }}
+            onChange={() => {
+              console.log('mask change')
             }}
           />
           <div

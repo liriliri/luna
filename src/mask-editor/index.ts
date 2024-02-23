@@ -113,7 +113,7 @@ export default class MaskEditor extends Component<IOptions> {
       'canvasRender',
       debounce(() => {
         this.renderMask()
-        this.emit('change')
+        this.emit('change', this.canvas)
       }, 20)
     )
 

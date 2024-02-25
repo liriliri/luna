@@ -1,12 +1,15 @@
 import Component, { IComponentOptions } from '../share/Component'
-import LunaPainter, { Layer, Zoom } from 'luna-painter'
+import LunaPainter, { Layer, Zoom, Hand } from 'luna-painter'
 import debounce from 'licia/debounce'
 import Color from 'licia/Color'
+import { loadImage } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
   /** Image src. */
   image: string
+  /** Mask src. */
+  mask?: string
 }
 
 /**
@@ -59,32 +62,64 @@ export default class MaskEditor extends Component<IOptions> {
 
     this.bindEvent()
 
-    this.loadImage()
+    this.loadImage().then(() => this.loadMask())
   }
   /** Get a canvas with mask drawn. */
   getCanvas() {
     return this.canvas
   }
-  private loadImage() {
+  private async loadImage() {
     const { painter } = this
-
-    const image = new Image()
-    image.onload = () => {
-      const { width, height } = image
-      painter.setOption({
-        width,
-        height,
-      })
-
-      const ctx = this.baseLayer.getContext()
-      ctx.drawImage(image, 0, 0, width, height)
-      painter.renderCanvas()
-      const zoom = painter.getTool('zoom') as Zoom
-      zoom.fitScreen()
-
-      this.renderMask()
+    if (!this.options.image) {
+      return
     }
-    image.src = this.options.image
+
+    const image = await loadImage(this.options.image)
+
+    const { width, height } = image
+    painter.setOption({
+      width,
+      height,
+    })
+
+    const ctx = this.baseLayer.getContext()
+    ctx.drawImage(image, 0, 0, width, height)
+    painter.renderCanvas()
+
+    this.renderMask()
+
+    const zoom = painter.getTool('zoom') as Zoom
+    zoom.fitScreen()
+    const hand = painter.getTool('hand') as Hand
+    hand.centerCanvas()
+  }
+  private async loadMask() {
+    const { painter } = this
+    if (!this.options.mask) {
+      return
+    }
+
+    const image = await loadImage(this.options.mask)
+
+    const width = painter.getOption('width')
+    const height = painter.getOption('height')
+    const ctx = this.drawingLayer.getContext()
+    ctx.drawImage(image, 0, 0, width, height)
+    const c = new Color(painter.getForegroundColor())
+    const rgb = Color.parse(c.toRgb()).val
+    const canvas = ctx.canvas
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    const { data } = imageData
+    for (let i = 0, len = data.length; i < len; i += 4) {
+      data[i + 3] = (data[i] + data[i + 1] + data[i + 2]) / 3
+      data[i] = rgb[0]
+      data[i + 1] = rgb[1]
+      data[i + 2] = rgb[2]
+    }
+    ctx.putImageData(imageData, 0, 0)
+    painter.renderCanvas()
+
+    this.renderMask()
   }
   private renderMask() {
     const { canvas, ctx, blackCanvas, blackCtx, painter } = this
@@ -142,8 +177,13 @@ export default class MaskEditor extends Component<IOptions> {
     })
 
     this.on('optionChange', (name) => {
-      if (name === 'image') {
-        this.loadImage()
+      switch (name) {
+        case 'image':
+          this.loadImage()
+          break
+        case 'mask':
+          this.loadMask()
+          break
       }
     })
   }

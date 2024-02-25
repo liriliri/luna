@@ -13,9 +13,10 @@ const LunaMaskEditor: FC<IMaskEditorProps> = (props) => {
   const maskEditor = useRef<MaskEditor>()
 
   useEffect(() => {
-    const { image } = props
+    const { image, mask } = props
     maskEditor.current = new MaskEditor(maskEditorRef.current!, {
       image,
+      mask,
     })
     props.onCreate && props.onCreate(maskEditor.current)
 
@@ -31,6 +32,12 @@ const LunaMaskEditor: FC<IMaskEditorProps> = (props) => {
       maskEditor.current.setOption('image', props.image)
     }
   }, [props.image])
+
+  useNonInitialEffect(() => {
+    if (maskEditor.current) {
+      maskEditor.current.setOption('mask', props.mask)
+    }
+  }, [props.mask])
 
   return <div ref={maskEditorRef} style={props.style}></div>
 }

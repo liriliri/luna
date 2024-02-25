@@ -6,6 +6,7 @@ import isNum from 'licia/isNum'
 import contain from 'licia/contain'
 import toNum from 'licia/toNum'
 import detectOs from 'licia/detectOs'
+import loadImg from 'licia/loadImg'
 import isHidden from 'licia/isHidden'
 
 export function exportCjs(module: any, clazz: any) {
@@ -170,4 +171,16 @@ export function getPlatform() {
 export function resetCanvasSize(canvas: HTMLCanvasElement) {
   canvas.width = Math.round(canvas.offsetWidth * window.devicePixelRatio)
   canvas.height = Math.round(canvas.offsetHeight * window.devicePixelRatio)
+}
+
+export function loadImage(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    loadImg(url, function (err, img) {
+      if (err) {
+        return reject(err)
+      }
+
+      resolve(img)
+    })
+  })
 }

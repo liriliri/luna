@@ -4,8 +4,9 @@ import $ from 'licia/$'
 import h from 'licia/h'
 import readme from './README.md'
 import LunaMaskEditor from './react'
-import { text } from '@storybook/addon-knobs'
+import { text, files } from '@storybook/addon-knobs'
 import { useRef } from 'react'
+import isEmpty from 'licia/isEmpty'
 
 const def = story(
   'mask-editor',
@@ -33,9 +34,10 @@ const def = story(
     })
     wrapper.appendChild(maskContainer)
 
-    const { image } = createKnobs()
+    const { image, mask } = createKnobs()
     const maskEditor = new MaskEditor(container, {
       image,
+      mask,
     })
 
     onCreate(maskEditor, maskContainer)
@@ -51,13 +53,14 @@ const def = story(
     source: __STORY__,
     ReactComponent({ theme }) {
       const maskContainer = useRef(null)
-      const { image } = createKnobs()
+      const { image, mask } = createKnobs()
 
       return (
         <>
           <LunaMaskEditor
             theme={theme}
             image={image}
+            mask={mask}
             onCreate={(maskEditor) => {
               if (maskContainer.current) {
                 onCreate(maskEditor, maskContainer.current)
@@ -86,9 +89,11 @@ const def = story(
 
 function createKnobs() {
   const image = text('Image', 'https://res.liriliri.io/luna/pic1.jpg')
+  const masks = files('Mask')
 
   return {
     image,
+    mask: !isEmpty(masks) ? masks[0] : '',
   }
 }
 

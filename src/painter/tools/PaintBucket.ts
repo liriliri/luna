@@ -101,7 +101,7 @@ export default class PaintBucket extends Tool {
 
     const { toolbar, options } = this
 
-    toolbar.appendText('Tolerance:')
+    toolbar.appendText(Painter.i18n.t('tolerance') + ':')
     toolbar.appendNumber('tolerance', options.tolerance, {
       min: 0,
       max: 255,

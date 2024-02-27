@@ -62,6 +62,7 @@ const def = story(
     return modal
   },
   {
+    i18n: Modal.i18n,
     readme,
     changelog,
     source: __STORY__,

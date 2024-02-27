@@ -53,7 +53,7 @@ export default class Hand extends Tool {
       'hover'
     )
     toolbar.appendButton(
-      'Fit Screen',
+      Painter.i18n.t('fitScreen'),
       () => {
         const zoom = painter.getTool('zoom') as Zoom
         zoom.fitScreen()
@@ -62,7 +62,7 @@ export default class Hand extends Tool {
       'hover'
     )
     toolbar.appendButton(
-      'Fill Screen',
+      Painter.i18n.t('fillScreen'),
       () => {
         const zoom = painter.getTool('zoom') as Zoom
         zoom.fillScreen()

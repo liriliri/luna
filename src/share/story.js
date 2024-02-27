@@ -20,6 +20,7 @@ export default function story(
   name,
   storyFn,
   {
+    i18n = null,
     readme,
     changelog = '',
     source,
@@ -53,7 +54,10 @@ export default function story(
       fixKnobs(name)
 
       waitUntil(() => container.parentElement).then(() => {
-        const { theme } = createKnobs()
+        const { theme, language } = createKnobs()
+        if (language) {
+          i18n.locale(language)
+        }
         const story = storyFn(container)
         if (isArr(story)) {
           window.components = story
@@ -89,8 +93,8 @@ export default function story(
       ReactDOM.render(<ReactComponent theme={theme} />, container)
 
       document.documentElement.style.background = contain(theme, 'dark')
-          ? '#000'
-          : '#fff'
+        ? '#000'
+        : '#fff'
 
       return container
     }
@@ -111,6 +115,25 @@ export default function story(
         display: 'select',
       }
     )
+
+    if (i18n) {
+      const language = optionsKnob(
+        'Language',
+        {
+          English: 'en-US',
+          中文: 'zh-CN',
+        },
+        navigator.language,
+        {
+          display: 'select',
+        }
+      )
+
+      return {
+        theme,
+        language,
+      }
+    }
 
     return {
       theme,

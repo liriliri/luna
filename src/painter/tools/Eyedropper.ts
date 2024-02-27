@@ -47,10 +47,10 @@ export default class Eyedropper extends Tool {
     super.renderToolbar()
 
     const { toolbar, options } = this
-    toolbar.appendText('Sample:')
+    toolbar.appendText(Painter.i18n.t('sample') + ':')
     toolbar.appendSelect('sample', options.sample, {
-      'Current Layer': 'current',
-      'All Layers': 'all',
+      [Painter.i18n.t('currentLayer')]: 'current',
+      [Painter.i18n.t('allLayers')]: 'all',
     })
   }
   private bindEvent() {

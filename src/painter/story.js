@@ -29,6 +29,7 @@ const def = story(
     return painter
   },
   {
+    i18n: Painter.i18n,
     readme,
     source: __STORY__,
     ReactComponent({ theme }) {

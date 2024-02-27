@@ -65,24 +65,24 @@ export default class Eraser extends Tool {
 
     const { toolbar, options } = this
 
-    toolbar.appendText('Mode:')
+    toolbar.appendText(Painter.i18n.t('mode') + ':')
     toolbar.appendSelect('mode', options.mode, {
-      Brush: 'brush',
-      Pencil: 'pencil',
+      [Painter.i18n.t('brush')]: 'brush',
+      [Painter.i18n.t('pencil')]: 'pencil',
     })
-    toolbar.appendText('Size:')
+    toolbar.appendText(Painter.i18n.t('size') + ':')
     toolbar.appendNumber('size', options.size, {
       min: 1,
       max: 1000,
       step: 1,
     })
-    toolbar.appendText('Hardness:')
+    toolbar.appendText(Painter.i18n.t('hardness') + ':')
     toolbar.appendNumber('hardness', options.hardness, {
       min: 1,
       max: 100,
       step: 1,
     })
-    toolbar.appendText('Opacity:')
+    toolbar.appendText(Painter.i18n.t('opacity') + ':')
     toolbar.appendNumber('opacity', options.opacity, {
       min: 1,
       max: 100,

@@ -144,19 +144,19 @@ export default class Brush extends Tool {
 
     const { toolbar, options } = this
 
-    toolbar.appendText('Size:')
+    toolbar.appendText(Painter.i18n.t('size') + ':')
     toolbar.appendNumber('size', options.size, {
       min: 1,
       max: 1000,
       step: 1,
     })
-    toolbar.appendText('Hardness:')
+    toolbar.appendText(Painter.i18n.t('hardness') + ':')
     toolbar.appendNumber('hardness', options.hardness, {
       min: 1,
       max: 100,
       step: 1,
     })
-    toolbar.appendText('Opacity:')
+    toolbar.appendText(Painter.i18n.t('opacity') + ':')
     toolbar.appendNumber('opacity', options.opacity, {
       min: 1,
       max: 100,

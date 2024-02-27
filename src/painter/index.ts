@@ -17,6 +17,7 @@ import {
 } from './tools'
 import { duplicateCanvas } from './util'
 import isHidden from 'licia/isHidden'
+import I18n from 'licia/I18n'
 
 const $document = $(document as any)
 
@@ -40,6 +41,36 @@ export interface IOptions extends IComponentOptions {
  * const painer = new LunaPainter(container)
  */
 export default class Painter extends Component<IOptions> {
+  static i18n = new I18n(navigator.language !== 'zh-CN' ? 'en-US' : 'zh-CN', {
+    'en-US': {
+      size: 'Size',
+      opacity: 'Opacity',
+      hardness: 'Hardness',
+      sample: 'Sample',
+      allLayers: 'All Layers',
+      currentLayer: 'Current Layer',
+      mode: 'Mode',
+      brush: 'Brush',
+      pencil: 'Pencil',
+      tolerance: 'Tolerance',
+      fitScreen: 'Fit Screen',
+      fillScreen: 'Fill Screen',
+    },
+    'zh-CN': {
+      size: '大小',
+      opacity: '不透明度',
+      hardness: '硬度',
+      sample: '样本',
+      allLayers: '所有图层',
+      currentLayer: '当前图层',
+      mode: '模式',
+      brush: '画笔',
+      pencil: '铅笔',
+      tolerance: '容差',
+      fitScreen: '适合屏幕',
+      fillScreen: '填充屏幕',
+    },
+  })
   static Brush = Brush
   static Eraser = Eraser
   static PaintBucket = PaintBucket

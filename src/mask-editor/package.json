@@ -1,6 +1,6 @@
 {
   "name": "mask-editor",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Image mask editing",
   "luna": {
     "dependencies": [

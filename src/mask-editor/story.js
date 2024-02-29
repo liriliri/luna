@@ -1,4 +1,5 @@
 import MaskEditor from 'luna-mask-editor.js'
+import Painter from 'luna-painter.js'
 import story from '../share/story'
 import $ from 'licia/$'
 import h from 'licia/h'
@@ -49,6 +50,7 @@ const def = story(
     return maskEditor
   },
   {
+    i18n: Painter.i18n,
     readme,
     source: __STORY__,
     ReactComponent({ theme }) {

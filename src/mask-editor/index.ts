@@ -204,13 +204,13 @@ class MaskBrush extends LunaPainter.Brush {
     const { toolbar, options } = this
     toolbar.clear()
 
-    toolbar.appendText('Size:')
+    toolbar.appendText(LunaPainter.i18n.t('size') + ':')
     toolbar.appendNumber('size', options.size, {
       min: 1,
       max: 1000,
       step: 1,
     })
-    toolbar.appendText('Opacity:')
+    toolbar.appendText(LunaPainter.i18n.t('opacity') + ':')
     toolbar.appendNumber('layerOpacity', options.layerOpacity, {
       min: 1,
       max: 100,
@@ -232,7 +232,7 @@ class MaskEraser extends LunaPainter.Eraser {
     const { toolbar, options } = this
     toolbar.clear()
 
-    toolbar.appendText('Size:')
+    toolbar.appendText(LunaPainter.i18n.t('size') + ':')
     toolbar.appendNumber('size', options.size, {
       min: 1,
       max: 1000,

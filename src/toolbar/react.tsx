@@ -89,7 +89,9 @@ interface IToolbarButtonProps extends IToolbarItemProps {
   state?: IButtonState
 }
 
-export const LunaToolbarButton: FC<IToolbarButtonProps> = (props) => {
+export const LunaToolbarButton: FC<PropsWithChildren<IToolbarButtonProps>> = (
+  props
+) => {
   const toolbarButton = useRef<ToolbarButton>()
   const forceUpdate = useForceUpdate()
 

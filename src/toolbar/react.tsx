@@ -85,21 +85,23 @@ export const LunaToolbarText: FC<IToolbarTextProps> = (props) => {
 }
 
 interface IToolbarButtonProps extends IToolbarItemProps {
-  content: string | HTMLElement
   onClick: () => void
   state?: IButtonState
 }
 
 export const LunaToolbarButton: FC<IToolbarButtonProps> = (props) => {
   const toolbarButton = useRef<ToolbarButton>()
+  const forceUpdate = useForceUpdate()
 
   useEffect(() => {
     if (props.toolbar) {
       toolbarButton.current = props.toolbar.appendButton(
-        props.content,
+        '',
         props.onClick,
         props.state
       )
+      forceUpdate()
+      setDisabled(toolbarButton.current, props.disabled)
     }
 
     return () => toolbarButton.current?.detach()
@@ -111,7 +113,12 @@ export const LunaToolbarButton: FC<IToolbarButtonProps> = (props) => {
     }
   }, [props.state])
 
-  return null
+  return toolbarButton.current
+    ? createPortal(
+        <>{props.children}</>,
+        toolbarButton.current.container.querySelector('button')!
+      )
+    : null
 }
 
 interface IToolbarSelectProps extends IToolbarItemProps {

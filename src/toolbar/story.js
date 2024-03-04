@@ -91,10 +91,11 @@ const def = story(
             disabled={true}
           />
           <LunaToolbarButton
-            content="Trigger"
             onClick={() => console.log('trigger')}
             state="hover"
-          />
+          >
+            Trigger
+          </LunaToolbarButton>
           <LunaToolbarSpace />
           <LunaToolbarHtml>
             <span

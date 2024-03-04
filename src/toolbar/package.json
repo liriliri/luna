@@ -1,6 +1,6 @@
 {
   "name": "toolbar",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Application toolbar",
   "luna": {
     "react": true

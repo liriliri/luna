@@ -5,6 +5,7 @@ import Zoom from './Zoom'
 import defaults from 'licia/defaults'
 import nextTick from 'licia/nextTick'
 import { duplicateCanvas } from '../util'
+import hotkey from 'licia/hotkey'
 
 export default class Pencil extends Tool {
   private drawCtx: CanvasRenderingContext2D
@@ -160,9 +161,24 @@ export default class Pencil extends Tool {
     ctx.globalAlpha = 1
   }
   private bindEvent() {
+    const { cursorCircle } = this
+
     this.on('optionChange', (name, val) => {
       if (name === 'size') {
-        this.cursorCircle.setSize(val)
+        cursorCircle.setSize(val)
+      }
+    })
+    const options = {
+      element: this.painter.container,
+    }
+    hotkey.on('[', options, () => {
+      if (this.isUsing) {
+        this.setOption('size', cursorCircle.decrease())
+      }
+    })
+    hotkey.on(']', options, () => {
+      if (this.isUsing) {
+        this.setOption('size', cursorCircle.increase())
       }
     })
   }
@@ -179,16 +195,38 @@ export class CursorCircle {
     this.setSize(size)
   }
   setSize(size: number) {
+    if (size === this.size) {
+      return
+    }
+    if (size <= 0) {
+      size = 1
+    }
+    if (size > 1000) {
+      size = 1000
+    }
     this.size = size
     this.render()
   }
+  decrease() {
+    let { size } = this
+    const unit = this.getUnit()
+    const remainder = size % unit
+    size -= remainder === 0 ? unit : remainder
+    this.setSize(size)
+    return this.size
+  }
+  increase() {
+    let { size } = this
+    const unit = this.getUnit()
+    const remainder = size % unit
+    size += remainder === 0 ? unit : unit - remainder
+    this.setSize(size)
+    return this.size
+  }
   render = () => {
     const { painter } = this
-    const zoom = painter.getTool('zoom') as Zoom
     let { size } = this
-    if (zoom) {
-      size = Math.round(size * zoom.getRatio())
-    }
+    size = Math.round(size * this.getRatio())
     let html = ''
     if (size > 1) {
       const viewportSize = size + 8
@@ -206,6 +244,37 @@ export class CursorCircle {
       html = painter.c('<span class="icon icon-crosshair"></span>')
     }
     this.$container.html(html)
+  }
+  private getUnit() {
+    const { size } = this
+    if (size >= 300) {
+      return 100
+    }
+
+    if (size >= 200) {
+      return 50
+    }
+
+    if (size >= 100) {
+      return 25
+    }
+
+    if (size >= 50) {
+      return 10
+    }
+
+    if (size >= 10) {
+      return 5
+    }
+
+    return 1
+  }
+  private getRatio() {
+    const zoom = this.painter.getTool('zoom') as Zoom
+    if (zoom) {
+      return zoom.getRatio()
+    }
+    return 1
   }
 }
 

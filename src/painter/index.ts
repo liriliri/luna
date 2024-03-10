@@ -93,6 +93,7 @@ export default class Painter extends Component<IOptions> {
   private $backgroundColor: $.$
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'painter' }, options)
+    this.$container.attr('tabindex', '-1')
 
     this.initOptions(options, {
       width: 800,

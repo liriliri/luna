@@ -4,6 +4,7 @@ import Pencil from './Pencil'
 import Painter, { Layer } from '../'
 import nextTick from 'licia/nextTick'
 import { CursorCircle } from './Pencil'
+import hotkey from 'licia/hotkey'
 
 export default class Eraser extends Tool {
   private cursorCircle: CursorCircle
@@ -90,9 +91,29 @@ export default class Eraser extends Tool {
     })
   }
   private bindEvent() {
+    const { cursorCircle, painter } = this
+
     this.on('optionChange', (name, val) => {
       if (name === 'size') {
-        this.cursorCircle.setSize(val)
+        cursorCircle.setSize(val)
+      }
+    })
+    const options = {
+      element: painter.container,
+    }
+    hotkey.on('[', options, () => {
+      if (this.isUsing) {
+        this.setOption('size', cursorCircle.decrease())
+      }
+    })
+    hotkey.on(']', options, () => {
+      if (this.isUsing) {
+        this.setOption('size', cursorCircle.increase())
+      }
+    })
+    hotkey.on('e', options, () => {
+      if (!this.isUsing) {
+        painter.useTool('eraser')
       }
     })
   }

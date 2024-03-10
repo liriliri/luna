@@ -3,6 +3,7 @@ import Color from 'licia/Color'
 import isEqual from 'licia/isEqual'
 import Painter from '../'
 import { colorDistance } from '../util'
+import hotkey from 'licia/hotkey'
 
 export default class PaintBucket extends Tool {
   constructor(painter: Painter) {
@@ -11,6 +12,8 @@ export default class PaintBucket extends Tool {
     this.options = {
       tolerance: 32,
     }
+
+    this.bindEvent()
   }
   onUse() {
     super.onUse()
@@ -107,5 +110,20 @@ export default class PaintBucket extends Tool {
       max: 255,
       step: 1,
     })
+  }
+  private bindEvent() {
+    const { painter } = this
+
+    hotkey.on(
+      'g',
+      {
+        element: painter.container,
+      },
+      () => {
+        if (!this.isUsing) {
+          painter.useTool('paintBucket')
+        }
+      }
+    )
   }
 }

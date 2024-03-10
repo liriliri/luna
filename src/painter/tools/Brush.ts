@@ -4,6 +4,7 @@ import Tool from './Tool'
 import nextTick from 'licia/nextTick'
 import { CursorCircle } from './Pencil'
 import { duplicateCanvas } from '../util'
+import hotkey from 'licia/hotkey'
 
 export default class Brush extends Tool {
   private drawCtx: CanvasRenderingContext2D
@@ -198,9 +199,29 @@ export default class Brush extends Tool {
     brushCtx.globalAlpha = 1
   }
   private bindEvent() {
+    const { cursorCircle, painter } = this
+
     this.on('optionChange', (name, val) => {
       if (name === 'size') {
-        this.cursorCircle.setSize(val)
+        cursorCircle.setSize(val)
+      }
+    })
+    const options = {
+      element: painter.container,
+    }
+    hotkey.on('[', options, () => {
+      if (this.isUsing) {
+        this.setOption('size', cursorCircle.decrease())
+      }
+    })
+    hotkey.on(']', options, () => {
+      if (this.isUsing) {
+        this.setOption('size', cursorCircle.increase())
+      }
+    })
+    hotkey.on('b', options, () => {
+      if (!this.isUsing) {
+        painter.useTool('brush')
       }
     })
   }

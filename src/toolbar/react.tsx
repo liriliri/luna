@@ -18,6 +18,7 @@ import Toolbar, {
   LunaToolbarItem,
   IButtonState,
 } from './index'
+import $ from 'licia/$'
 import { useForceUpdate } from '../share/hooks'
 import { IComponentOptions } from '../share/Component'
 import { createPortal } from 'react-dom'
@@ -180,6 +181,7 @@ export const LunaToolbarSelect: FC<IToolbarSelectProps> = (props) => {
 interface IToolbarInputProps extends IToolbarItemProps {
   keyName: string
   value: string
+  onChange?: (val: string) => void
   placeholder?: string
 }
 
@@ -194,6 +196,13 @@ export const LunaToolbarInput: FC<IToolbarInputProps> = (props) => {
         props.placeholder
       )
       setDisabled(toolbarInput.current, props.disabled)
+      toolbarInput.current.$container
+        .find('input')
+        .on('input', function (this: HTMLInputElement) {
+          if (props.onChange) {
+            props.onChange($(this).val())
+          }
+        })
     }
   }, [props.toolbar])
 

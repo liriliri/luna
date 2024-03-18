@@ -87,8 +87,8 @@ const def = story(
           <LunaToolbarInput
             keyName="filter"
             value=""
+            onChange={(val) => console.log(val)}
             placeholder="Filter"
-            disabled={true}
           />
           <LunaToolbarButton
             onClick={() => console.log('trigger')}

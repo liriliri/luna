@@ -1,10 +1,12 @@
 import 'luna-cropper.css'
 import Cropper from 'luna-cropper.js'
+import LunaCropper from './react'
 import readme from './README.md'
 import story from '../share/story'
 import h from 'licia/h'
 import $ from 'licia/$'
 import { text } from '@storybook/addon-knobs'
+import { useState } from 'react'
 
 const def = story(
   'cropper',
@@ -27,10 +29,10 @@ const def = story(
     wrapper.appendChild(container)
     wrapper.appendChild(preview)
 
-    const url = text('Url', 'https://res.liriliri.io/luna/wallpaper.jpg')
+    const { image } = createKnobs()
 
     const cropper = new Cropper(container, {
-      url,
+      image,
       preview,
     })
 
@@ -39,9 +41,44 @@ const def = story(
   {
     readme,
     source: __STORY__,
+    ReactComponent() {
+      const { image } = createKnobs()
+      const [ref, setRef] = useState()
+
+      return (
+        <>
+          <LunaCropper
+            style={{
+              width: '100%',
+              height: 400,
+              aspectRatio: '2',
+            }}
+            onCreate={(cropper) => {
+              console.log(cropper)
+            }}
+            preview={ref}
+            image={image}
+          />
+          <div
+            style={{ width: '50%', margin: '1rem 0' }}
+            ref={(ref) => {
+              setRef(ref)
+            }}
+          />
+        </>
+      )
+    },
   }
 )
 
+function createKnobs() {
+  const image = text('Image', 'https://res.liriliri.io/luna/wallpaper.jpg')
+
+  return {
+    image,
+  }
+}
+
 export default def
 
-export const { cropper } = def
+export const { cropper: html, react } = def

@@ -7,16 +7,16 @@ import throttle from 'licia/throttle'
 import clone from 'licia/clone'
 import max from 'licia/max'
 import contain from 'licia/contain'
-import { drag, eventPage } from '../share/util'
+import { drag, eventPage, exportCjs } from '../share/util'
 
 const $document = $(document as any)
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
   /** Image url. */
-  url: string
+  image: string
   /** Preview dom container. */
-  preview: HTMLElement | null
+  preview?: HTMLElement
 }
 
 interface IImageData {
@@ -51,7 +51,7 @@ interface ICropBoxData {
  * @example
  * const container = document.getElementById('container')
  * const cropper = new LunaCropper(container, {
- *   url: 'https://res.liriliri.io/luna/wallpaper.jpg',
+ *   image: 'https://res.liriliri.io/luna/wallpaper.jpg',
  * })
  * console.log(cropper.getData())
  */
@@ -108,7 +108,7 @@ export default class Cropper extends Component<IOptions> {
       this.initPreview(options.preview)
     }
 
-    this.load(options.url)
+    this.load(options.image)
   }
   destroy() {
     super.destroy()
@@ -179,6 +179,22 @@ export default class Cropper extends Component<IOptions> {
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
     this.$container.on(drag('start'), this.onCropStart)
+
+    this.on('optionChange', (name, val) => {
+      switch (name) {
+        case 'preview':
+          if (val) {
+            this.initPreview(val)
+            this.load(this.options.image)
+          } else {
+            this.$preview = null
+          }
+          break
+        case 'image':
+          this.load(val)
+          break
+      }
+    })
   }
   private onCropStart = (e: any) => {
     e = e.origEvent
@@ -627,8 +643,9 @@ export default class Cropper extends Component<IOptions> {
   }
 }
 
-module.exports = Cropper
-module.exports.default = Cropper
-
 const round = Math.round
 const abs = Math.abs
+
+if (typeof module !== 'undefined') {
+  exportCjs(module, Cropper)
+}

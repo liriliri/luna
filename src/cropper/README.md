@@ -31,15 +31,15 @@ import LunaCropper from 'luna-cropper'
 ```javascript
 const container = document.getElementById('container')
 const cropper = new LunaCropper(container, {
-  url: 'https://res.liriliri.io/luna/wallpaper.jpg',
+  image: 'https://res.liriliri.io/luna/wallpaper.jpg',
 })
 console.log(cropper.getData())
 ```
 
 ## Configuration
 
-* preview(null | HTMLElement): Preview dom container.
-* url(string): Image url.
+* image(string): Image url.
+* preview(HTMLElement): Preview dom container.
 
 ## Api
 

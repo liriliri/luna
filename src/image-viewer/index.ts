@@ -25,6 +25,7 @@ interface IImageData {
   rotate: number
   naturalWidth: number
   naturalHeight: number
+  ratio: number
 }
 
 /** Pivot point coordinate for zooming. */
@@ -53,13 +54,16 @@ export default class ImageViewer extends Component<IOptions> {
     rotate: 0,
     naturalWidth: 0,
     naturalHeight: 0,
+    ratio: 1,
   }
   private resizeSensor: ResizeSensor
   private $image: $.$
   private image: HTMLImageElement
+  private $ratio: $.$
   private startX = 0
   private startY = 0
   private isWheeling = false
+  private ratioHideTimer: any = 0
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'image-viewer' })
     this.initOptions(options, {
@@ -71,6 +75,7 @@ export default class ImageViewer extends Component<IOptions> {
     this.initTpl()
     this.$image = this.find('.image')
     this.image = this.$image.get(0) as HTMLImageElement
+    this.$ratio = this.find('.ratio')
 
     this.bindEvent()
 
@@ -106,6 +111,7 @@ export default class ImageViewer extends Component<IOptions> {
 
     imageData.width = newWidth
     imageData.height = newHeight
+    imageData.ratio = ratio
 
     if (!pivot) {
       pivot = {
@@ -118,6 +124,8 @@ export default class ImageViewer extends Component<IOptions> {
     imageData.top -= offsetHeight * ((pivot.y - imageData.top) / height)
 
     this.render()
+
+    this.showRatio()
   }
   /** Reset image to initial state. */
   reset = () => {
@@ -153,6 +161,7 @@ export default class ImageViewer extends Component<IOptions> {
       rotate: 0,
       naturalWidth,
       naturalHeight,
+      ratio: width / naturalWidth,
     }
 
     $image.rmClass(c('image-transition'))
@@ -162,6 +171,23 @@ export default class ImageViewer extends Component<IOptions> {
   destroy() {
     super.destroy()
     this.resizeSensor.destroy()
+  }
+  private showRatio() {
+    const { $ratio } = this
+
+    $ratio.text(`${Math.round(this.imageData.ratio * 100)}%`)
+
+    const showClass = this.c('show')
+    if (!this.ratioHideTimer) {
+      $ratio.addClass(showClass)
+    } else {
+      clearTimeout(this.ratioHideTimer)
+    }
+
+    this.ratioHideTimer = setTimeout(() => {
+      $ratio.rmClass(showClass)
+      this.ratioHideTimer = null
+    }, 1000)
   }
   private onMoveStart = (e: any) => {
     e.preventDefault()
@@ -200,6 +226,9 @@ export default class ImageViewer extends Component<IOptions> {
   }
   private setImage(image: string) {
     loadImg(image, (err) => {
+      if (image !== this.options.image) {
+        return
+      }
       if (err) {
         this.emit('error', err)
       } else {
@@ -255,7 +284,12 @@ export default class ImageViewer extends Component<IOptions> {
     })
   }
   private initTpl() {
-    this.$container.html(this.c(`<img class="image"></img>`))
+    this.$container.html(
+      this.c(`
+        <img class="image"></img>
+        <div class="ratio"></div>
+      `)
+    )
   }
 }
 

@@ -1,8 +1,14 @@
-import { FC, useEffect, useRef } from 'react'
+import { CSSProperties, FC, useEffect, useRef } from 'react'
 import ObjectViewer, { IOptions } from './index'
 import each from 'licia/each'
+import { useNonInitialEffect } from '../share/hooks'
 
-const LunaObjectViewer: FC<IOptions> = (props) => {
+interface IObjectViewerProps extends IOptions {
+  style?: CSSProperties
+  className?: string
+}
+
+const LunaObjectViewer: FC<IObjectViewerProps> = (props) => {
   const objectViewerRef = useRef<HTMLDivElement>(null)
   const objectViewer = useRef<ObjectViewer>()
 
@@ -20,8 +26,8 @@ const LunaObjectViewer: FC<IOptions> = (props) => {
 
   each(
     ['object', 'prototype', 'unenumerable', 'accessGetter'],
-    (key: keyof IOptions) => {
-      useEffect(() => {
+    (key: keyof IObjectViewerProps) => {
+      useNonInitialEffect(() => {
         if (objectViewer.current) {
           objectViewer.current.setOption(key, props[key])
         }
@@ -29,7 +35,13 @@ const LunaObjectViewer: FC<IOptions> = (props) => {
     }
   )
 
-  return <div ref={objectViewerRef} />
+  return (
+    <div
+      className={props.className || ''}
+      style={props.style}
+      ref={objectViewerRef}
+    />
+  )
 }
 
 export default LunaObjectViewer

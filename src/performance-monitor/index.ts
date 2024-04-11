@@ -11,6 +11,7 @@ import now from 'licia/now'
 import dateFormat from 'licia/dateFormat'
 import Color from 'licia/Color'
 import isHidden from 'licia/isHidden'
+import stripNum from 'licia/stripNum'
 import { exportCjs } from '../share/util'
 
 /** IOptions */
@@ -307,7 +308,7 @@ export default class PerformanceMonitor extends Component<IOptions> {
     ctx.beginPath()
     for (let i = 0; i < 2; ++i) {
       const y = calcY(scaleValue)
-      const labelText = scaleValue + unit
+      const labelText = stripNum(scaleValue) + unit
       ctx.moveTo(0, y)
       ctx.lineTo(4, y)
       ctx.moveTo(ctx.measureText(labelText).width + 12, y)

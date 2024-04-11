@@ -1,6 +1,6 @@
 {
   "name": "performance-monitor",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Realtime counter used for displaying cpu, fps metrics",
   "luna": {
     "react": true

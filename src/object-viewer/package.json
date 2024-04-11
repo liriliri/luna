@@ -1,8 +1,9 @@
 {
   "name": "object-viewer",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "JavaScript object viewer",
   "luna": {
-    "icon": true
+    "icon": true,
+    "react": true
   }
 }

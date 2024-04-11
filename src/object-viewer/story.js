@@ -4,14 +4,13 @@ import stringifyAll from 'licia/stringifyAll'
 import readme from './README.md'
 import { text, boolean } from '@storybook/addon-knobs'
 import story from '../share/story'
+import LunaObjectViewer from './react'
 
 const def = story(
   'object-viewer',
   (container) => {
-    const target = text('Target', 'navigator')
     const useStatic = boolean('Use Static Object Viewer', false)
-    const unenumerable = boolean('Show Unenumerable', true)
-    const accessGetter = boolean('Access Getter', true)
+    const { target, prototype, unenumerable, accessGetter } = createKnobs()
 
     if (window[target]) {
       if (useStatic) {
@@ -25,6 +24,7 @@ const def = story(
         return staticObjectViewer
       } else {
         const objectViewer = new ObjectViewer(container, {
+          prototype,
           unenumerable,
           accessGetter,
         })
@@ -38,9 +38,35 @@ const def = story(
   {
     readme,
     source: __STORY__,
+    ReactComponent() {
+      const { target, prototype, unenumerable, accessGetter } = createKnobs()
+
+      return (
+        <LunaObjectViewer
+          object={window[target]}
+          prototype={prototype}
+          unenumerable={unenumerable}
+          accessGetter={accessGetter}
+        />
+      )
+    },
   }
 )
 
+function createKnobs() {
+  const target = text('Target', 'navigator')
+  const prototype = boolean('Show Prototype', true)
+  const unenumerable = boolean('Show Unenumerable', true)
+  const accessGetter = boolean('Access Getter', true)
+
+  return {
+    target,
+    prototype,
+    unenumerable,
+    accessGetter,
+  }
+}
+
 export default def
 
-export const { objectViewer } = def
+export const { objectViewer: html, react } = def

@@ -28,6 +28,10 @@ import { exportCjs } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
+  /** JavaScript object to display. */
+  object?: any
+  /** Show prototype. */
+  prototype?: boolean
   /** Show unenumerable properties. */
   unenumerable?: boolean
   /** Access getter value. */
@@ -53,11 +57,16 @@ export default class ObjectViewer extends Component<IOptions> {
     super(container, { compName: 'object-viewer' })
 
     this.initOptions(options, {
+      prototype: true,
       unenumerable: false,
       accessGetter: false,
     })
 
     this.bindEvent()
+
+    if (this.options.object) {
+      this.set(this.options.object)
+    }
   }
   /** Set the JavaScript object to display. */
   set(data: any) {
@@ -194,16 +203,18 @@ export default class ObjectViewer extends Component<IOptions> {
       }
     })
 
-    const proto = getProto(data)
-    if (!firstLevel && proto) {
-      if (ret === '') {
-        const id = visitor.set(proto, {
-          self: data,
-        })
-        this.map[id] = proto
-        ret = this.objToHtml(proto)
-      } else {
-        ret += this.createEl('[[Prototype]]', self || data, proto, 'proto')
+    if (this.options.prototype) {
+      const proto = getProto(data)
+      if (!firstLevel && proto) {
+        if (ret === '') {
+          const id = visitor.set(proto, {
+            self: data,
+          })
+          this.map[id] = proto
+          ret = this.objToHtml(proto)
+        } else {
+          ret += this.createEl('[[Prototype]]', self || data, proto, 'proto')
+        }
       }
     }
 
@@ -306,6 +317,19 @@ export default class ObjectViewer extends Component<IOptions> {
   }
   private bindEvent() {
     this.$container.on('click', 'li', this.onItemClick)
+
+    this.on('optionChange', (name, val) => {
+      switch (name) {
+        case 'object':
+          this.set(val)
+          break
+        case 'unenumerable':
+        case 'prototype':
+        case 'accessGetter':
+          this.render()
+          break
+      }
+    })
   }
   private onItemClick = (e: any) => {
     const { map, c } = this

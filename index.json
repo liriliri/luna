@@ -235,11 +235,11 @@
   },
   "object-viewer": {
     "icon": true,
-    "version": "0.2.4",
+    "react": true,
+    "version": "0.3.0",
     "style": true,
     "test": true,
     "install": false,
-    "react": false,
     "dependencies": []
   },
   "painter": {

@@ -40,6 +40,8 @@ objectViewer.set(window.navigator)
 ## Configuration
 
 * accessGetter(boolean): Access getter value.
+* object(any): JavaScript object to display.
+* prototype(boolean): Show prototype.
 * unenumerable(boolean): Show unenumerable properties.
 
 ## Api

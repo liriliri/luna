@@ -1,5 +1,8 @@
 import { CSSProperties, FC, useEffect, useRef } from 'react'
 import Cropper, { IOptions } from './index'
+import each from 'licia/each'
+import { useNonInitialEffect } from '../share/hooks'
+import clone from 'licia/clone'
 
 interface ICropperProps extends IOptions {
   style?: CSSProperties
@@ -12,27 +15,19 @@ const LunaCropper: FC<ICropperProps> = (props) => {
   const cropper = useRef<Cropper>()
 
   useEffect(() => {
-    const { image, preview } = props
-    cropper.current = new Cropper(cropperRef.current!, {
-      image,
-      preview,
-    })
+    cropper.current = new Cropper(cropperRef.current!, clone(props))
     props.onCreate && props.onCreate(cropper.current)
 
     return () => cropper.current?.destroy()
   }, [])
 
-  useEffect(() => {
-    if (cropper.current) {
-      cropper.current.setOption('image', props.image)
-    }
-  }, [props.image])
-
-  useEffect(() => {
-    if (cropper.current) {
-      cropper.current.setOption('preview', props.preview)
-    }
-  }, [props.preview])
+  each(['image', 'preview'], (key: keyof ICropperProps) => {
+    useNonInitialEffect(() => {
+      if (cropper.current) {
+        cropper.current.setOption(key, props[key])
+      }
+    }, [props[key]])
+  })
 
   return (
     <div

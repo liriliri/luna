@@ -1,6 +1,8 @@
 import { CSSProperties, FC, useEffect, useRef } from 'react'
 import Painter, { IOptions } from './index'
 import { useNonInitialEffect } from '../share/hooks'
+import clone from 'licia/clone'
+import each from 'licia/each'
 
 interface IPainterProps extends IOptions {
   style?: CSSProperties
@@ -12,28 +14,19 @@ const LunaPainter: FC<IPainterProps> = (props) => {
   const painter = useRef<Painter>()
 
   useEffect(() => {
-    const { width, height, tool } = props
-    painter.current = new Painter(painterRef.current!, {
-      width,
-      height,
-      tool,
-    })
+    painter.current = new Painter(painterRef.current!, clone(props))
     props.onCreate && props.onCreate(painter.current)
 
     return () => painter.current?.destroy()
   }, [])
 
-  useNonInitialEffect(() => {
-    if (painter.current) {
-      painter.current.setOption('width', props.width)
-    }
-  }, [props.width])
-
-  useNonInitialEffect(() => {
-    if (painter.current) {
-      painter.current.setOption('height', props.height)
-    }
-  }, [props.height])
+  each(['theme', 'width', 'height'], (key: keyof IPainterProps) => {
+    useNonInitialEffect(() => {
+      if (painter.current) {
+        painter.current.setOption(key, props[key])
+      }
+    }, [props[key]])
+  })
 
   return <div ref={painterRef} style={props.style}></div>
 }

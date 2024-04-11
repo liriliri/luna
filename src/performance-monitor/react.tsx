@@ -1,6 +1,8 @@
 import { FC, useEffect, useRef } from 'react'
 import PerformanceMonitor, { IOptions } from './index'
 import { useNonInitialEffect } from '../share/hooks'
+import each from 'licia/each'
+import clone from 'licia/clone'
 
 const LunaPerformanceMonitor: FC<IOptions> = (props) => {
   const performanceMonitorRef = useRef<HTMLDivElement>(null)
@@ -9,26 +11,20 @@ const LunaPerformanceMonitor: FC<IOptions> = (props) => {
   useEffect(() => {
     performanceMonitor.current = new PerformanceMonitor(
       performanceMonitorRef.current!,
-      {
-        ...props,
-      }
+      clone(props)
     )
     performanceMonitor.current.start()
 
     return () => performanceMonitor.current?.destroy()
   }, [])
 
-  useNonInitialEffect(() => {
-    if (performanceMonitor.current) {
-      performanceMonitor.current.setOption('theme', props.theme)
-    }
-  }, [props.theme])
-
-  useNonInitialEffect(() => {
-    if (performanceMonitor.current) {
-      performanceMonitor.current.setOption('color', props.color)
-    }
-  }, [props.color])
+  each(['theme', 'color'], (key: keyof IOptions) => {
+    useNonInitialEffect(() => {
+      if (performanceMonitor.current) {
+        performanceMonitor.current.setOption(key, props[key])
+      }
+    }, [props[key]])
+  })
 
   return <div ref={performanceMonitorRef} />
 }

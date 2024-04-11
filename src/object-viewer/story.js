@@ -38,11 +38,12 @@ const def = story(
   {
     readme,
     source: __STORY__,
-    ReactComponent() {
+    ReactComponent({ theme }) {
       const { target, prototype, unenumerable, accessGetter } = createKnobs()
 
       return (
         <LunaObjectViewer
+          theme={theme}
           object={window[target]}
           prototype={prototype}
           unenumerable={unenumerable}

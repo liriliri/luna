@@ -298,6 +298,12 @@ export const LunaSettingInput: FC<ISettingTextProps> = (props) => {
     setDisabled(settingInput.current, props.disabled)
   }, [props.disabled])
 
+  useEffect(() => {
+    if (settingInput.current) {
+      settingInput.current.setValue(props.value)
+    }
+  }, [props.value])
+
   return null
 }
 

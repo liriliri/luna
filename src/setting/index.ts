@@ -391,6 +391,10 @@ export class LunaSettingInput extends LunaSettingItem {
     $input.on('change', () => this.onChange($input.val()))
     this.$input = $input
   }
+  setValue(value: string) {
+    this.$input.val(value)
+    this.value = value
+  }
   disable() {
     super.disable()
     this.$input.attr('disabled', '')

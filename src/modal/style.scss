@@ -58,6 +58,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .content {
@@ -66,6 +67,7 @@
 }
 
 .footer {
+  flex-shrink: 0;
   padding: 12px;
 }
 

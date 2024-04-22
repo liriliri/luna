@@ -84,6 +84,9 @@ export default class Modal extends Component<IOptions> {
     super.destroy()
     this.$container.rmClass(this.c('hidden'))
   }
+  renderContent() {
+    this.$content.html('').append(this.options.content)
+  }
   /**
    * Like `window.alert`.
    * @static
@@ -226,7 +229,7 @@ export default class Modal extends Component<IOptions> {
       this.$close.show()
     }
     this.$body.css('width', options.width + 'px')
-    this.$content.html('').append(options.content)
+    this.renderContent()
   }
   private initTpl() {
     this.$container.html(

@@ -1,8 +1,10 @@
 import { FC, PropsWithChildren, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import h from 'licia/h'
 import types from 'licia/types'
 import Modal from './index'
+import noop from 'licia/noop'
+import each from 'licia/each'
+import { useForceUpdate, useNonInitialEffect } from '../share/hooks'
 
 interface IModalProps {
   title: string
@@ -14,33 +16,43 @@ interface IModalProps {
 const LunaModal: FC<PropsWithChildren<IModalProps>> = (props) => {
   const modalRef = useRef<HTMLDivElement>(null)
   const modal = useRef<Modal>()
-  const content = useRef<HTMLDivElement>(h('div') as HTMLDivElement)
+  const content = useRef<HTMLDivElement>()
   const doHide = useRef<types.AnyFn>()
+  const forceUpdate = useForceUpdate()
 
   useEffect(() => {
-    modal.current = new Modal(modalRef.current!, {
+    const m = new Modal(modalRef.current!, {
       title: props.title,
-      content: content.current,
+      content: '',
     })
-    doHide.current = modal.current.hide
-    modal.current.hide = function () {
+    m.renderContent = noop
+    doHide.current = m.hide
+    m.hide = function () {
       props.onClose && props.onClose()
     }
     if (props.visible) {
-      modal.current.show()
+      m.show()
     }
     if (props.width) {
-      modal.current.setOption('width', props.width)
+      m.setOption('width', props.width)
     }
+    modal.current = m
 
-    return () => modal.current?.destroy()
+    content.current = m.$container
+      .find(m.c('.content'))
+      .get(0) as HTMLDivElement
+    forceUpdate()
+
+    return () => m.destroy()
   }, [])
 
-  useEffect(() => {
-    if (modal.current) {
-      modal.current.setOption('title', props.title)
-    }
-  }, [props.title])
+  each(['title', 'width'], (key: keyof IModalProps) => {
+    useNonInitialEffect(() => {
+      if (modal.current) {
+        modal.current.setOption(key, props[key])
+      }
+    }, [props[key]])
+  })
 
   useEffect(() => {
     if (modal.current) {
@@ -52,15 +64,9 @@ const LunaModal: FC<PropsWithChildren<IModalProps>> = (props) => {
     }
   }, [props.visible])
 
-  useEffect(() => {
-    if (modal.current) {
-      modal.current.setOption('width', props.width)
-    }
-  }, [props.width])
-
   return (
     <div ref={modalRef}>
-      {createPortal(<>{props.children}</>, content.current)}
+      {content.current && createPortal(<>{props.children}</>, content.current)}
     </div>
   )
 }

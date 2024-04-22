@@ -1,3 +1,7 @@
+## 1.2.2 (22 Apr 2023)
+
+* fix: title shrinked
+
 ## 1.2.1 (7 Oct 2023)
 
 * fix: alert promise

@@ -1,4 +1,8 @@
-## 1.2.2 (22 Apr 2023)
+## 1.2.3 (10 May 2024)
+
+* fix: react onClose unable to update
+
+## 1.2.2 (22 Apr 2024)
 
 * fix: title shrinked
 

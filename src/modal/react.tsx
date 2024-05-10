@@ -56,6 +56,14 @@ const LunaModal: FC<PropsWithChildren<IModalProps>> = (props) => {
 
   useEffect(() => {
     if (modal.current) {
+      modal.current.hide = function () {
+        props.onClose && props.onClose()
+      }
+    }
+  }, [props.onClose])
+
+  useEffect(() => {
+    if (modal.current) {
       if (props.visible) {
         modal.current.show()
       } else {

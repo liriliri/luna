@@ -253,6 +253,7 @@ export type IButtonState = '' | 'hover' | 'active'
 
 export class LunaToolbarButton extends LunaToolbarItem {
   private $button: $.$
+  private handler: types.AnyFn
   constructor(
     toolbar: Toolbar,
     content: string | HTMLElement,
@@ -266,6 +267,7 @@ export class LunaToolbarButton extends LunaToolbarItem {
     const $button = this.$container.find('button')
     $button.append(content)
     $button.on('click', handler)
+    this.handler = handler
     this.$button = $button
 
     this.setState(state)
@@ -276,6 +278,13 @@ export class LunaToolbarButton extends LunaToolbarItem {
     if (state) {
       $button.addClass(this.toolbar.c(state))
     }
+  }
+  setHandler(handler: types.AnyFn) {
+    const { $button } = this
+
+    $button.off('click', this.handler)
+    $button.on('click', handler)
+    this.handler = handler
   }
 }
 

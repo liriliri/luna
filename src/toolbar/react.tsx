@@ -116,6 +116,12 @@ export const LunaToolbarButton: FC<PropsWithChildren<IToolbarButtonProps>> = (
     }
   }, [props.state])
 
+  useEffect(() => {
+    if (toolbarButton.current && props.onClick) {
+      toolbarButton.current.setHandler(props.onClick)
+    }
+  }, [props.onClick])
+
   useEffect(
     () => setDisabled(toolbarButton.current, props.disabled),
     [props.disabled]

@@ -1,6 +1,7 @@
 import { CSSProperties, FC, useEffect, useRef } from 'react'
 import ImageViewer, { IOptions } from './index'
 import each from 'licia/each'
+import { useNonInitialEffect } from 'src/share/hooks'
 
 interface IImageViewerProps extends IOptions {
   style?: CSSProperties
@@ -25,7 +26,7 @@ const LunaImageViewer: FC<IImageViewerProps> = (props) => {
   }, [])
 
   each(['image', 'zoomOnWheel'], (key: keyof IOptions) => {
-    useEffect(() => {
+    useNonInitialEffect(() => {
       if (imageViewer.current) {
         imageViewer.current.setOption(key, props[key])
       }

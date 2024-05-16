@@ -74,6 +74,9 @@ export const LunaTabItem: FC<ITabItemProps> = (props) => {
         id: props.id,
         title: props.title,
       })
+      if (props.selected) {
+        props.tab.select(props.id)
+      }
     }
 
     return () => props.tab?.remove(props.id)

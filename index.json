@@ -325,7 +325,7 @@
   },
   "tab": {
     "react": true,
-    "version": "0.3.0",
+    "version": "0.3.1",
     "style": true,
     "icon": false,
     "test": true,

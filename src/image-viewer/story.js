@@ -3,7 +3,7 @@ import ImageViewer from 'luna-image-viewer.js'
 import readme from './README.md'
 import story from '../share/story'
 import $ from 'licia/$'
-import { text, number, button } from '@storybook/addon-knobs'
+import { text, number, button, boolean } from '@storybook/addon-knobs'
 import LunaImageViewer from './react'
 
 const def = story(
@@ -16,11 +16,12 @@ const def = story(
       margin: '0 auto',
     })
 
-    const { image, initialCoverage } = createKnobs()
+    const { image, initialCoverage, zoomOnWheel } = createKnobs()
 
     const imageViewer = new ImageViewer(container, {
       image,
       initialCoverage,
+      zoomOnWheel,
     })
 
     button('Reset', () => {
@@ -54,7 +55,7 @@ const def = story(
     readme,
     source: __STORY__,
     ReactComponent() {
-      const { image, initialCoverage } = createKnobs()
+      const { image, initialCoverage, zoomOnWheel } = createKnobs()
 
       return (
         <LunaImageViewer
@@ -69,6 +70,7 @@ const def = story(
           }}
           image={image}
           initialCoverage={initialCoverage}
+          zoomOnWheel={zoomOnWheel}
         />
       )
     },
@@ -83,10 +85,12 @@ function createKnobs() {
     max: 1,
     step: 0.1,
   })
+  const zoomOnWheel = boolean('Zoom On Wheel', true)
 
   return {
     image,
     initialCoverage,
+    zoomOnWheel,
   }
 }
 

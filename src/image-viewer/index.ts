@@ -15,6 +15,8 @@ export interface IOptions extends IComponentOptions {
   image: string
   /** Initial coverage. */
   initialCoverage?: number
+  /** Enable to zoom the image by mouse wheel. */
+  zoomOnWheel?: boolean
 }
 
 interface IImageData {
@@ -68,6 +70,7 @@ export default class ImageViewer extends Component<IOptions> {
     super(container, { compName: 'image-viewer' })
     this.initOptions(options, {
       initialCoverage: 0.9,
+      zoomOnWheel: true,
     })
 
     this.resizeSensor = new ResizeSensor(container)
@@ -254,6 +257,10 @@ export default class ImageViewer extends Component<IOptions> {
     })
   }
   private onWheel = (e: any) => {
+    if (!this.options.zoomOnWheel) {
+      return
+    }
+
     e.preventDefault()
 
     if (this.isWheeling) {

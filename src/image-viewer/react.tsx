@@ -1,9 +1,8 @@
 import { CSSProperties, FC, useEffect, useRef } from 'react'
-import ImageViewer from './index'
+import ImageViewer, { IOptions } from './index'
+import each from 'licia/each'
 
-interface IImageViewerProps {
-  image: string
-  initialCoverage?: number
+interface IImageViewerProps extends IOptions {
   style?: CSSProperties
   className?: string
   onCreate?: (imageViewer: ImageViewer) => void
@@ -14,21 +13,24 @@ const LunaImageViewer: FC<IImageViewerProps> = (props) => {
   const imageViewer = useRef<ImageViewer>()
 
   useEffect(() => {
-    const { image, initialCoverage } = props
+    const { image, initialCoverage, zoomOnWheel } = props
     imageViewer.current = new ImageViewer(imageViewerRef.current!, {
       image,
       initialCoverage,
+      zoomOnWheel,
     })
     props.onCreate && props.onCreate(imageViewer.current)
 
     return () => imageViewer.current?.destroy()
   }, [])
 
-  useEffect(() => {
-    if (imageViewer.current) {
-      imageViewer.current.setOption('image', props.image)
-    }
-  }, [props.image])
+  each(['image', 'zoomOnWheel'], (key: keyof IOptions) => {
+    useEffect(() => {
+      if (imageViewer.current) {
+        imageViewer.current.setOption(key, props[key])
+      }
+    }, [props[key]])
+  })
 
   return (
     <div

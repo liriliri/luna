@@ -39,6 +39,7 @@ imageViewer.zoom(0.1)
 
 * image(string): Image src.
 * initialCoverage(number): Initial coverage.
+* zoomOnWheel(boolean): Enable to zoom the image by mouse wheel.
 
 ## Api
 

@@ -1,7 +1,7 @@
 import { CSSProperties, FC, useEffect, useRef } from 'react'
 import ImageViewer, { IOptions } from './index'
 import each from 'licia/each'
-import { useNonInitialEffect } from 'src/share/hooks'
+import { useNonInitialEffect } from '../share/hooks'
 
 interface IImageViewerProps extends IOptions {
   style?: CSSProperties

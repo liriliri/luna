@@ -24,6 +24,7 @@
   border: 1px solid $color-border;
   padding: 10px 16px;
   color: $color-text;
+  align-items: center;
   background: $color-bg-container;
 }
 
@@ -60,12 +61,16 @@
     }
   }
   &.warning {
+    position: relative;
+    top: -2px;
     color: $color-warning;
     .icon {
       font-size: 14px;
     }
   }
   &.error {
+    position: relative;
+    top: -1px;
     color: $color-error;
     .icon {
       font-size: 14px;

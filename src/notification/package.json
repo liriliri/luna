@@ -1,6 +1,6 @@
 {
   "name": "notification",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Show notifications",
   "luna": {
     "icon": true

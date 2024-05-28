@@ -35,11 +35,63 @@
   margin-bottom: 16px;
 }
 
+.icon-container {
+  margin-right: 8px;
+  color: #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  line-height: 16px;
+  &.info {
+    background: $color-info;
+    .icon {
+      position: relative;
+      top: -2px;
+      font-size: 12px;
+    }
+  }
+  &.success {
+    background: $color-success;
+    .icon {
+      position: relative;
+      top: -1px;
+      font-size: 12px;
+    }
+  }
+  &.warning {
+    color: $color-warning;
+    .icon {
+      font-size: 14px;
+    }
+  }
+  &.error {
+    color: $color-error;
+    .icon {
+      font-size: 14px;
+    }
+  }
+}
+
 .theme-dark {
   .item {
     border-color: $color-border-dark;
     box-shadow: $box-shadow-dark;
     color: $color-text-dark;
     background: $color-bg-container-dark;
+  }
+  .icon-container {
+    &.info {
+      background: $color-info-dark;
+    }
+    &.success {
+      background: $color-success-dark;
+    }
+    &.warning {
+      color: $color-warning-dark;
+    }
+    &.error {
+      color: $color-error-dark;
+    }
   }
 }

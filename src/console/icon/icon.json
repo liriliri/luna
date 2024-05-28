@@ -1,1 +1,6 @@
-["../../share/icon/caret-down.svg", "../../share/icon/caret-right.svg"]
+[
+  "../../share/icon/caret-down.svg",
+  "../../share/icon/caret-right.svg",
+  "../../share/icon/warn.svg",
+  "../../share/icon/error.svg"
+]

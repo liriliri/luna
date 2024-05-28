@@ -10,6 +10,7 @@ const def = story(
   (container) => {
     const x = select('X', ['left', 'center', 'right'], 'center')
     const y = select('Y', ['top', 'bottom'], 'top')
+    const icon = select('Icon', ['none', 'info', 'success', 'warning', 'error'])
 
     const inline = boolean('Inline Mode', false)
 
@@ -40,6 +41,7 @@ const def = story(
 
     function notify() {
       notification.notify(content, {
+        icon,
         duration,
       })
     }

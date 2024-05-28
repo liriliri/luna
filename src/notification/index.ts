@@ -17,6 +17,8 @@ export interface IPosition {
 export interface INotifyOptions {
   /** Notification duration. */
   duration: number
+  /** Notification icon. */
+  icon?: string
 }
 
 /** IOptions */
@@ -72,7 +74,9 @@ export default class Notification extends Component<IOptions> {
       duration: this.options.duration,
     }
   ) {
-    const notification = new NotificationItem(this, content)
+    const notification = new NotificationItem(this, content, {
+      icon: options.icon || 'none',
+    })
     this.notifications.push(notification)
     this.add(notification)
     setTimeout(() => this.remove(notification.id), options.duration)
@@ -129,7 +133,11 @@ class NotificationItem {
   private $container: $.$
   private notification: Notification
   private content: string
-  constructor(notification: Notification, content: string) {
+  constructor(
+    notification: Notification,
+    content: string,
+    options: { icon: string }
+  ) {
     this.$container = $(this.container)
     this.notification = notification
     this.content = content
@@ -144,14 +152,26 @@ class NotificationItem {
       ),
     })
 
-    this.initTpl()
+    this.initTpl(options.icon)
   }
   destroy() {
     this.$container.remove()
   }
-  private initTpl() {
+  private initTpl(icon: string) {
+    let iconName = icon
+    if (icon === 'success') {
+      iconName = 'check'
+    } else if (icon === 'warning') {
+      iconName = 'warn'
+    }
+    const iconHtml =
+      icon === 'none'
+        ? ''
+        : `<div class="icon-container ${icon}"><span class="icon icon-${iconName}"></span></div>`
     this.$container.html(
-      this.notification.c(`<div class="content">${this.content}</div>`)
+      this.notification.c(
+        `${iconHtml}<div class="content">${this.content}</div>`
+      )
     )
   }
 }

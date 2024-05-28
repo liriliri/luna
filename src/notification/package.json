@@ -1,5 +1,8 @@
 {
   "name": "notification",
-  "version": "0.2.0",
-  "description": "Show notifications"
+  "version": "0.3.0",
+  "description": "Show notifications",
+  "luna": {
+    "icon": true
+  }
 }

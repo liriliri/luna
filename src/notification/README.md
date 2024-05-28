@@ -63,6 +63,7 @@ Show notification.
 ### INotifyOptions
 
 * duration(number): Notification duration.
+* icon(string): Notification icon.
 
 ### IPosition
 

@@ -4,6 +4,7 @@ import find from 'licia/find'
 import h from 'licia/h'
 import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs } from '../share/util'
+import isUndef from 'licia/isUndef'
 
 /** IPosition */
 export interface IPosition {
@@ -16,7 +17,7 @@ export interface IPosition {
 /** INotifyOptions */
 export interface INotifyOptions {
   /** Notification duration. */
-  duration: number
+  duration?: number
   /** Notification icon. */
   icon?: string
 }
@@ -68,12 +69,11 @@ export default class Notification extends Component<IOptions> {
     this.initTpl()
   }
   /** Show notification. */
-  notify(
-    content: string,
-    options: INotifyOptions = {
-      duration: this.options.duration,
+  notify(content: string, options: INotifyOptions = {}) {
+    if (isUndef(options.duration)) {
+      options.duration = this.options.duration
     }
-  ) {
+
     const notification = new NotificationItem(this, content, {
       icon: options.icon || 'none',
     })

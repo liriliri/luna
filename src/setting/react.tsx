@@ -77,7 +77,11 @@ const LunaSetting: FC<PropsWithChildren<ISettingProps>> = (props) => {
   })
 
   return (
-    <Component compName="setting" theme={props.theme}>
+    <Component
+      compName="setting"
+      theme={props.theme}
+      className={props.className}
+    >
       {children}
     </Component>
   )

@@ -1,3 +1,7 @@
+## 2.0.1 (11 Jun 2024)
+
+* fix: react custom className not working
+
 ## 2.0.0 (11 Jun 2024)
 
 * refactor: react implementation

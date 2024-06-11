@@ -5,6 +5,7 @@ import className from 'licia/className'
 interface IComponentProps {
   compName: string
   theme?: string
+  className?: string
 }
 
 export const Component: FC<PropsWithChildren<IComponentProps>> = (props) => {
@@ -15,7 +16,8 @@ export const Component: FC<PropsWithChildren<IComponentProps>> = (props) => {
       className={className(
         `luna-${props.compName}`,
         c(`platform-${getPlatform()}`),
-        c(`theme-${props.theme || 'light'}`)
+        c(`theme-${props.theme || 'light'}`),
+        props.className
       )}
     >
       {props.children}

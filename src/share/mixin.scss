@@ -164,7 +164,7 @@
     border: 1px solid $color-border;
     outline: none;
     padding: 2px 8px;
-    border-radius: 0;
+    border-radius: #{$border-radius-x-s}px;
     font-size: #{$font-size}px;
     background: $color-bg-container;
   }
@@ -225,7 +225,7 @@
       padding-right: 18px;
       outline: none;
       color: $color-text;
-      border-radius: 0;
+      border-radius: #{$border-radius-x-s}px;
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
     &:after {
@@ -263,7 +263,7 @@
     padding: 2px 8px;
     color: $color-primary;
     font-size: #{$font-size}px;
-    border-radius: 2px;
+    border-radius: #{$border-radius-x-s}px;
     &:hover,
     &:active {
       background: $color-fill-secondary;

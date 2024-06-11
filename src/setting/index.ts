@@ -20,6 +20,7 @@ import each from 'licia/each'
 import { micromark } from 'micromark'
 import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs } from '../share/util'
+import { progress } from './util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -508,10 +509,6 @@ export class LunaSettingNumber extends LunaSettingItem {
     )
     this.$value.text(toStr(value))
   }
-}
-
-const progress = (val: number, min: number, max: number) => {
-  return (((val - min) / (max - min)) * 100).toFixed(2)
 }
 
 export class LunaSettingCheckbox extends LunaSettingItem {

@@ -299,7 +299,7 @@
   "setting": {
     "install": true,
     "react": true,
-    "version": "1.0.1",
+    "version": "2.0.0",
     "style": true,
     "icon": false,
     "test": true,

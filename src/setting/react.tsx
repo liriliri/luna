@@ -5,67 +5,89 @@ import {
   ReactElement,
   cloneElement,
   isValidElement,
-  useEffect,
-  useRef,
+  useState,
 } from 'react'
+import { IOptions } from './index'
 import types from 'licia/types'
-import Setting, {
-  LunaSettingTitle as SettingTitle,
-  LunaSettingMarkdown as SettingMarkdown,
-  LunaSettingSelect as SettingSelect,
-  LunaSettingNumber as SettingNumber,
-  LunaSettingSeparator as SettingSeparator,
-  LunaSettingCheckbox as SettingCheckbox,
-  LunaSettingInput as SettingInput,
-  LunaSettingHtml as SettingHtml,
-  LunaSettingButton as SettingButton,
-  LunaSettingItem,
-  INumberOptions,
-} from './index'
-import { useForceUpdate } from '../share/hooks'
-import { createPortal } from 'react-dom'
+import { progress } from './util'
+import { classPrefix } from '../share/util'
+import isUndef from 'licia/isUndef'
+import { micromark } from 'micromark'
+import map from 'licia/map'
+import className from 'licia/className'
+import isRegExp from 'licia/isRegExp'
+import uniqId from 'licia/uniqId'
+import isStr from 'licia/isStr'
+import trim from 'licia/trim'
+import contain from 'licia/contain'
+import lowerCase from 'licia/lowerCase'
+import toStr from 'licia/toStr'
+import toNum from 'licia/toNum'
+import { Component } from '../share/react'
 
-interface ISettingProps {
-  separatorCollapse?: boolean
-  filter?: string | RegExp | types.AnyFn
+const c = classPrefix('setting')
+
+interface ISettingProps extends IOptions {
   className?: string
   onChange?: (key: string, val: any, oldVal: any) => void
 }
 
 const LunaSetting: FC<PropsWithChildren<ISettingProps>> = (props) => {
-  const settingRef = useRef<HTMLDivElement>(null)
-  const setting = useRef<Setting>()
-  const forceUpdate = useForceUpdate()
+  const [selectedIndex, setSelectedIdx] = useState(-1)
 
-  useEffect(() => {
-    setting.current = new Setting(settingRef.current!, {
-      separatorCollapse: props.separatorCollapse,
-      filter: props.filter,
-    })
-    setting.current.on('change', (key, val, oldVal) => {
-      props.onChange && props.onChange(key, val, oldVal)
-    })
-    forceUpdate()
+  let lastChild: ReactElement | null = null
+  const children = Children.map(props.children, (child, index) => {
+    if (isValidElement(child)) {
+      const childProps: Partial<any> & React.Attributes = {
+        selected: selectedIndex === index,
+        onSelect: () => setSelectedIdx(index),
+      }
+      const keyName = child.props.keyName
+      if (keyName) {
+        childProps.onChange = (val: any, oldVal: any) => {
+          props.onChange && props.onChange(keyName, val, oldVal)
+        }
+      }
+      let filter = props.filter
+      if (filter) {
+        const title = child.props.title || ''
+        const description = child.props.description || ''
+        const text = title + '\n' + description
+        if (isRegExp(filter)) {
+          if (!filter.test(text)) {
+            return null
+          }
+        } else if (isStr(filter)) {
+          filter = trim(filter)
+          if (filter && !contain(lowerCase(text), lowerCase(filter))) {
+            return null
+          }
+        }
+      }
 
-    return () => setting.current?.destroy()
-  }, [])
+      if (child.type === LunaSettingSeparator && props.separatorCollapse) {
+        if (lastChild && lastChild.type === LunaSettingSeparator) {
+          return null
+        }
+      }
+
+      lastChild = cloneElement(child as ReactElement, childProps)
+      return lastChild
+    }
+  })
 
   return (
-    <div className={props.className || ''} ref={settingRef}>
-      {Children.map(props.children, (child) => {
-        if (isValidElement(child)) {
-          return cloneElement(child as ReactElement, {
-            setting: setting.current,
-          })
-        }
-      })}
-    </div>
+    <Component compName="setting" theme={props.theme}>
+      {children}
+    </Component>
   )
 }
 
 interface ISettingItemProps {
-  setting?: Setting
   disabled?: boolean
+  selected?: boolean
+  onChange?: (val: any, oldVal: any) => void
+  onSelect?: () => void
 }
 
 interface ISettingTitleProps extends ISettingItemProps {
@@ -73,18 +95,39 @@ interface ISettingTitleProps extends ISettingItemProps {
   level?: number
 }
 
+const LunaSettingItem: FC<
+  ISettingItemProps & {
+    type: string
+    className?: string
+    dangerouslySetInnerHTML?: { __html: string }
+  }
+> = (props) => {
+  return (
+    <div
+      tabIndex={0}
+      onClick={props.onSelect}
+      className={className(
+        c(`item item-${props.type} ${props.disabled ? 'disabled' : ''}`),
+        {
+          [c('selected')]: props.selected,
+        },
+        props.className
+      )}
+      dangerouslySetInnerHTML={props.dangerouslySetInnerHTML}
+    >
+      {props.children}
+    </div>
+  )
+}
+
 export const LunaSettingTitle: FC<ISettingTitleProps> = (props) => {
-  const settingTitle = useRef<SettingTitle>()
+  const level = isUndef(props.level) ? 1 : props.level
 
-  useEffect(() => {
-    if (props.setting) {
-      settingTitle.current = props.setting.appendTitle(props.title, props.level)
-    }
-
-    return () => settingTitle.current?.detach()
-  }, [props.setting])
-
-  return null
+  return (
+    <LunaSettingItem {...props} type="title" className={c(`level-${level}`)}>
+      {props.title}
+    </LunaSettingItem>
+  )
 }
 
 interface ISettingMarkdownProps extends ISettingItemProps {
@@ -92,17 +135,13 @@ interface ISettingMarkdownProps extends ISettingItemProps {
 }
 
 export const LunaSettingMarkdown: FC<ISettingMarkdownProps> = (props) => {
-  const settingMarkdown = useRef<SettingMarkdown>()
-
-  useEffect(() => {
-    if (props.setting) {
-      settingMarkdown.current = props.setting.appendMarkdown(props.markdown)
-    }
-
-    return () => settingMarkdown.current?.detach()
-  }, [props.setting])
-
-  return null
+  return (
+    <LunaSettingItem
+      {...props}
+      type="markdown"
+      dangerouslySetInnerHTML={{ __html: micromark(props.markdown) }}
+    />
+  )
 }
 
 interface ISettingSelectProps extends ISettingItemProps {
@@ -114,52 +153,34 @@ interface ISettingSelectProps extends ISettingItemProps {
 }
 
 export const LunaSettingSelect: FC<ISettingSelectProps> = (props) => {
-  const settingSelect = useRef<SettingSelect>()
+  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    props.onChange && props.onChange(e.target.value, props.value)
+  }
 
-  useEffect(() => {
-    const { setting, title, keyName, value, description, options } = props
-
-    if (setting) {
-      if (description) {
-        settingSelect.current = setting.appendSelect(
-          keyName,
-          value,
-          title,
-          description,
-          options
-        )
-      } else {
-        settingSelect.current = setting.appendSelect(
-          keyName,
-          value,
-          title,
-          options
-        )
-      }
-      setDisabled(settingSelect.current, props.disabled)
-    }
-
-    return () => settingSelect.current?.detach()
-  }, [props.setting])
-
-  useEffect(
-    () => setDisabled(settingSelect.current, props.disabled),
-    [props.disabled]
+  return (
+    <LunaSettingItem {...props} type="select">
+      <div className={c('title')}>{props.title}</div>
+      <div
+        className={c('description')}
+        dangerouslySetInnerHTML={{ __html: micromark(props.description || '') }}
+      />
+      <div className={c('control')}>
+        <div className={c('select')}>
+          <select
+            value={props.value}
+            onChange={onChange}
+            disabled={props.disabled}
+          >
+            {map(props.options, (val, key) => (
+              <option key={val} value={val}>
+                {key}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+    </LunaSettingItem>
   )
-
-  useEffect(() => {
-    if (settingSelect.current) {
-      settingSelect.current.setValue(props.value)
-    }
-  }, [props.value])
-
-  useEffect(() => {
-    if (settingSelect.current) {
-      settingSelect.current.setOptions(props.options)
-    }
-  }, [props.options])
-
-  return null
 }
 
 interface ISettingNumberProps extends ISettingItemProps {
@@ -167,64 +188,70 @@ interface ISettingNumberProps extends ISettingItemProps {
   value: number
   title: string
   description?: string
-  options: INumberOptions
+  min?: number
+  max?: number
+  step?: number
+  range?: boolean
 }
 
 export const LunaSettingNumber: FC<ISettingNumberProps> = (props) => {
-  const settingNumber = useRef<SettingNumber>()
-
-  useEffect(() => {
-    const { setting, keyName, value, title, description, options } = props
-
-    if (setting) {
-      if (description) {
-        settingNumber.current = setting.appendNumber(
-          keyName,
-          value,
-          title,
-          description,
-          options
-        )
-      } else {
-        settingNumber.current = setting.appendNumber(
-          keyName,
-          value,
-          title,
-          options
-        )
-      }
-      setDisabled(settingNumber.current, props.disabled)
+  const [value, setValue] = useState(toStr(props.value))
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (props.onChange) {
+      setValue(e.target.value)
+      props.onChange && props.onChange(toNum(e.target.value), props.value)
     }
+  }
 
-    return () => settingNumber.current?.detach()
-  }, [props.setting])
-
-  useEffect(
-    () => setDisabled(settingNumber.current, props.disabled),
-    [props.disabled]
+  const max = props.max || Infinity
+  const min = props.min || 0
+  const step = props.step || 1
+  let input = (
+    <input
+      type={props.range ? 'range' : 'number'}
+      value={value !== '' ? props.value : value}
+      onChange={onChange}
+      disabled={props.disabled}
+      min={min}
+      max={max}
+      step={step}
+    />
   )
 
-  useEffect(() => {
-    if (settingNumber.current) {
-      settingNumber.current.setValue(props.value)
-    }
-  }, [props.value])
+  if (props.range) {
+    input = (
+      <>
+        {min}
+        <div className={c('range-container')}>
+          <div className={c('range-track')}>
+            <div className={c('range-track-bar')}>
+              <div
+                className={c('range-track-progress')}
+                style={{ width: `${progress(props.value, min, max)}%` }}
+              ></div>
+            </div>
+          </div>
+          {input}
+        </div>
+        <span className={c('value')}>{value}</span>/{max}
+      </>
+    )
+  }
 
-  return null
+  return (
+    <LunaSettingItem {...props} type="number">
+      <div className={c('title')}>{props.title}</div>
+      <div
+        className={c('description')}
+        dangerouslySetInnerHTML={{ __html: micromark(props.description || '') }}
+      />
+      <div className={c('control')}>{input}</div>
+    </LunaSettingItem>
+  )
 }
 
 export const LunaSettingSeparator: FC<ISettingItemProps> = (props) => {
-  const settingSeparator = useRef<SettingSeparator>()
-
-  useEffect(() => {
-    if (props.setting) {
-      settingSeparator.current = props.setting.appendSeparator()
-    }
-
-    return () => settingSeparator.current?.detach()
-  }, [props.setting])
-
-  return null
+  return <div className={c('item item-separator')} />
 }
 
 interface ISettingCheckboxProps extends ISettingItemProps {
@@ -235,39 +262,37 @@ interface ISettingCheckboxProps extends ISettingItemProps {
 }
 
 export const LunaSettingCheckbox: FC<ISettingCheckboxProps> = (props) => {
-  const settingCheckbox = useRef<SettingCheckbox>()
+  const id = uniqId(c('checkbox-'))
 
-  useEffect(() => {
-    if (props.setting) {
-      let { title, description } = props
-      if (!title) {
-        title = description
-        description = ''
-      }
-      settingCheckbox.current = props.setting.appendCheckbox(
-        props.keyName,
-        props.value,
-        title,
-        description
-      )
-      setDisabled(settingCheckbox.current, props.disabled)
-    }
+  let title = props.title
+  let description = props.description
+  if (!description) {
+    description = title || ''
+    title = ''
+  }
 
-    return () => settingCheckbox.current?.detach()
-  }, [props.setting])
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.onChange && props.onChange(e.target.checked, props.value)
+  }
 
-  useEffect(
-    () => setDisabled(settingCheckbox.current, props.disabled),
-    [props.disabled]
+  return (
+    <LunaSettingItem {...props} type="checkbox">
+      <div className={c('title')}>{title}</div>
+      <div className={c('control')}>
+        <input
+          type="checkbox"
+          disabled={props.disabled}
+          id={id}
+          checked={props.value}
+          onChange={onChange}
+        />
+        <label
+          htmlFor={id}
+          dangerouslySetInnerHTML={{ __html: micromark(description) }}
+        />
+      </div>
+    </LunaSettingItem>
   )
-
-  useEffect(() => {
-    if (settingCheckbox.current) {
-      settingCheckbox.current.setValue(props.value)
-    }
-  }, [props.value])
-
-  return null
 }
 
 interface ISettingTextProps extends ISettingItemProps {
@@ -278,53 +303,37 @@ interface ISettingTextProps extends ISettingItemProps {
 }
 
 export const LunaSettingInput: FC<ISettingTextProps> = (props) => {
-  const settingInput = useRef<SettingInput>()
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.onChange && props.onChange(e.target.value, props.value)
+  }
 
-  useEffect(() => {
-    if (props.setting) {
-      settingInput.current = props.setting.appendInput(
-        props.keyName,
-        props.value,
-        props.title,
-        props.description
-      )
-      setDisabled(settingInput.current, props.disabled)
-    }
-
-    return () => settingInput.current?.detach()
-  }, [props.setting])
-
-  useEffect(() => {
-    setDisabled(settingInput.current, props.disabled)
-  }, [props.disabled])
-
-  useEffect(() => {
-    if (settingInput.current) {
-      settingInput.current.setValue(props.value)
-    }
-  }, [props.value])
-
-  return null
+  return (
+    <LunaSettingItem {...props} type="input">
+      <div className={c('title')}>{props.title}</div>
+      <div
+        className={c('description')}
+        dangerouslySetInnerHTML={{ __html: micromark(props.description || '') }}
+      />
+      <div className={c('control')}>
+        <input
+          type="text"
+          value={props.value}
+          onChange={onChange}
+          disabled={props.disabled}
+        />
+      </div>
+    </LunaSettingItem>
+  )
 }
 
 export const LunaSettingHtml: FC<PropsWithChildren<ISettingItemProps>> = (
   props
 ) => {
-  const settingHtml = useRef<SettingHtml>()
-  const forceUpdate = useForceUpdate()
-
-  useEffect(() => {
-    if (props.setting) {
-      settingHtml.current = props.setting.appendHtml('')
-      forceUpdate()
-    }
-
-    return () => settingHtml.current?.detach()
-  }, [props.setting])
-
-  return settingHtml.current
-    ? createPortal(<>{props.children}</>, settingHtml.current.container)
-    : null
+  return (
+    <LunaSettingItem {...props} type="html">
+      {props.children}
+    </LunaSettingItem>
+  )
 }
 
 interface ISettingButtonProps extends ISettingItemProps {
@@ -334,38 +343,14 @@ interface ISettingButtonProps extends ISettingItemProps {
 }
 
 export const LunaSettingButton: FC<ISettingButtonProps> = (props) => {
-  const settingButton = useRef<SettingButton>()
-
-  useEffect(() => {
-    if (props.setting) {
-      const { description, title, onClick } = props
-      if (title) {
-        settingButton.current = props.setting.appendButton(
-          title,
-          description,
-          onClick
-        )
-      } else {
-        settingButton.current = props.setting.appendButton(description, onClick)
-      }
-    }
-
-    return () => settingButton.current?.detach()
-  }, [props.setting])
-
-  return null
-}
-
-function setDisabled(item?: LunaSettingItem, disabled = false) {
-  if (!item) {
-    return
-  }
-
-  if (disabled) {
-    item.disable()
-  } else {
-    item.enable()
-  }
+  return (
+    <LunaSettingItem {...props} type="button">
+      <div className={c('title')}>{props.title}</div>
+      <div className={c('control')}>
+        <button onClick={props.onClick}>{props.description}</button>
+      </div>
+    </LunaSettingItem>
+  )
 }
 
 export default LunaSetting

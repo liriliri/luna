@@ -109,16 +109,55 @@ const def = story(
   {
     readme,
     source: __STORY__,
-    ReactComponent() {
+    ReactComponent({ theme }) {
       const { separatorCollapse, filter } = createKnobs()
       const [mouseOver, setMouseOver] = useState(false)
 
+      const [themeSetting, setThemeSetting] = useState('light')
+      const [selectedContextFilterEnabled, setSelectedContextFilterEnabled] =
+        useState(false)
+      const [consoleTimestampsEnabled, setConsoleTimestampsEnabled] =
+        useState(false)
+      const [consoleHistoryAutocomplete, setConsoleHistoryAutocomplete] =
+        useState(true)
+      const [consoleGroupSimilar, setConsoleGroupSimilar] = useState(true)
+      const [searchKeyword, setSearchKeyword] = useState('div')
+      const [height, setHeight] = useState(50)
+      const [transparency, setTransparency] = useState(0.5)
+
       return (
         <LunaSetting
+          theme={theme}
           separatorCollapse={separatorCollapse}
           filter={filter}
           onChange={(key, val, oldVal) => {
             console.log(key, val, oldVal)
+            switch (key) {
+              case 'theme':
+                setTheme(val)
+                break
+              case 'selectedContextFilterEnabled':
+                setSelectedContextFilterEnabled(val)
+                break
+              case 'consoleTimestampsEnabled':
+                setConsoleTimestampsEnabled(val)
+                break
+              case 'consoleHistoryAutocomplete':
+                setConsoleHistoryAutocomplete(val)
+                break
+              case 'consoleGroupSimilar':
+                setConsoleGroupSimilar(val)
+                break
+              case 'searchKeyword':
+                setSearchKeyword(val)
+                break
+              case 'height':
+                setHeight(val)
+                break
+              case 'transparency':
+                setTransparency(val)
+                break
+            }
           }}
         >
           <LunaSettingTitle title="Configuration" />
@@ -126,7 +165,7 @@ const def = story(
           <LunaSettingTitle title="Appearance" level={2} />
           <LunaSettingSelect
             keyName="theme"
-            value="light"
+            value={themeSetting}
             title="Theme"
             description="Specifies the color theme."
             options={{
@@ -137,55 +176,51 @@ const def = story(
           />
           <LunaSettingNumber
             keyName="transparency"
-            value={0.5}
+            value={transparency}
             title="Transparency"
-            options={{
-              min: 0.1,
-              max: 1,
-              step: 0.1,
-            }}
+            min={0.1}
+            max={1}
+            step={0.1}
           />
           <LunaSettingNumber
             keyName="height"
-            value={50}
+            value={height}
             title="Height"
             description="Set devtools height."
-            options={{
-              range: true,
-              min: 40,
-              max: 100,
-              step: 1,
-            }}
+            range={true}
+            min={40}
+            max={100}
+            step={1}
           />
           <LunaSettingSeparator />
           <LunaSettingSeparator />
           <LunaSettingTitle title="Console" />
           <LunaSettingCheckbox
             keyName="selectedContextFilterEnabled"
-            value={false}
+            value={selectedContextFilterEnabled}
             description="Selected context only"
           />
           <LunaSettingCheckbox
             keyName="consoleTimestampsEnabled"
-            value={false}
+            value={consoleTimestampsEnabled}
             title="Timestamp"
             description="Show timestamps"
           />
           <LunaSettingCheckbox
             keyName="consoleHistoryAutocomplete"
-            value={true}
+            value={consoleHistoryAutocomplete}
             title="Autocomplete from history"
           />
           <LunaSettingCheckbox
             keyName="consoleGroupSimilar"
-            value={true}
+            value={consoleGroupSimilar}
             description="Group similar"
           />
           <LunaSettingSeparator />
           <LunaSettingTitle title="Element" />
           <LunaSettingInput
             keyName="searchKeyword"
-            value="div"
+            value={searchKeyword}
             title="Search Keyword"
             description="Find by **string**, **selector**, or **XPath**"
           />

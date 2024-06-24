@@ -1,8 +1,20 @@
-# Luna
+<div align="center">
+  <a href="https://luna.liriliri.io/" target="_blank">
+    <img src="https://luna.liriliri.io/icon.png" width="400">
+  </a>
+</div>
+
+<h1 align="center">Luna</h1>
+
+<div align="center">
+
+UI library.
 
 [![Build status][ci-image]][ci-url]
 [![Test coverage][codecov-image]][codecov-url]
 ![License][license-image]
+
+</div>
 
 [ci-image]: https://img.shields.io/github/actions/workflow/status/liriliri/luna/main.yml?branch=master&style=flat-square
 [ci-url]: https://github.com/liriliri/luna/actions/workflows/main.yml

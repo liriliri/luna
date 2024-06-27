@@ -3,8 +3,11 @@ import { create } from '@storybook/theming/create'
 export default create({
   base: 'light',
   brandUrl: 'https://github.com/liriliri/luna',
+  brandImage: 'icon.png',
   brandTitle: 'LUNA UI',
-  colorSecondary: '#1a73e8',
-  appBg: '#F7F7F7',
+  colorSecondary: '#f8866e',
+  appBg: '#f6f9fc',
   appContentBg: '#FFF',
+  appBorderColor: '#d9d9d9',
+  appBorderRadius: 0,
 })

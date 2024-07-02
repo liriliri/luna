@@ -698,7 +698,7 @@ export default class Console extends Component<IOptions> {
     let isAtBottom = false
     if (scrollHeight === offsetHeight) {
       isAtBottom = true
-    } else if (scrollTop === scrollHeight - offsetHeight) {
+    } else if (Math.abs(scrollHeight - offsetHeight - scrollTop) < 1) {
       isAtBottom = true
     }
     this.isAtBottom = isAtBottom

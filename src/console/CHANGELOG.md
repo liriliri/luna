@@ -1,3 +1,7 @@
+## 1.3.4 (8 July 2024)
+
+* fix: scroll bottom check [#17](https://github.com/liriliri/luna/pull/17)
+
 ## 1.3.3 (12 June 2023)
 
 * fix: print string with %o

@@ -20,7 +20,7 @@ module.exports = function (name, { useIcon = false, hasStyle = true } = {}) {
   webpackCfg.module.rules.push({
     test: /\.ts$/,
     exclude: /node_modules|share/,
-    loader: 'istanbul-instrumenter-loader',
+    loader: '@jsdevtools/coverage-istanbul-loader',
     enforce: 'post',
     options: {
       esModules: true,

@@ -53,6 +53,7 @@
 .resizer {
   @include fill-window;
   touch-action: none;
+  z-index: 5000;
 }
 
 .title-bar {

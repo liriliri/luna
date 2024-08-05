@@ -30,7 +30,7 @@ import LunaImageViewer from 'luna-image-viewer'
 
 ```javascript
 const imageViewer = new LunaImageViewer(container, {
-  image: 'https://res.liriliri.io/luna/pic1.jpg',
+  image: 'https://luna.liriliri.io/pic1.png',
 })
 imageViewer.zoom(0.1)
 ```

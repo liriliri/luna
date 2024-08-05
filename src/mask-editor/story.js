@@ -90,7 +90,7 @@ const def = story(
 )
 
 function createKnobs() {
-  const image = text('Image', 'https://res.liriliri.io/luna/pic1.jpg')
+  const image = text('Image', '/wallpaper.png')
   const masks = files('Mask')
 
   return {

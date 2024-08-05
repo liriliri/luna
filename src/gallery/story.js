@@ -22,10 +22,10 @@ const def = story(
     })
     gallery.show()
 
-    gallery.append('https://res.liriliri.io/luna/pic1.jpg', 'pic1.jpg')
-    gallery.append('https://res.liriliri.io/luna/pic2.jpg', 'pic2.jpg')
-    gallery.append('https://res.liriliri.io/luna/pic3.jpg', 'pic3.jpg')
-    gallery.append('https://res.liriliri.io/luna/pic4.jpg', 'pic4.jpg')
+    gallery.append('/pic1.png', 'pic1.png')
+    gallery.append('/pic2.png', 'pic2.png')
+    gallery.append('/pic3.png', 'pic3.png')
+    gallery.append('/pic4.png', 'pic4.png')
 
     button('Show', () => {
       gallery.show()

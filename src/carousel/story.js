@@ -28,16 +28,16 @@ const def = story(
       'position:relative;height:100%;width:100%;background-size:contain;background-repeat:no-repeat;background-position:center;'
 
     carousel.append(
-      `<div style="${commonStyle};background-image:url(https://res.liriliri.io/luna/pic1.jpg);"></div>`
+      `<div style="${commonStyle};background-image:url(/pic1.png);"></div>`
     )
     carousel.append(
-      `<div style="${commonStyle};background-image:url(https://res.liriliri.io/luna/pic2.jpg);"></div>`
+      `<div style="${commonStyle};background-image:url(/pic2.png);"></div>`
     )
     carousel.append(
-      `<div style="${commonStyle};background-image:url(https://res.liriliri.io/luna/pic3.jpg);"></div>`
+      `<div style="${commonStyle};background-image:url(/pic3.png);"></div>`
     )
     carousel.append(
-      `<div style="${commonStyle};background-image:url(https://res.liriliri.io/luna/pic4.jpg);"></div>`
+      `<div style="${commonStyle};background-image:url(/pic4.png);"></div>`
     )
 
     button('Clear', () => {

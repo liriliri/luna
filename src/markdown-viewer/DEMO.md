@@ -128,5 +128,5 @@ Autoconverted link https://luna.liriliri.io/
 
 ## Image
 
-![Pic1](https://res.liriliri.io/luna/pic1.jpg)
-![Pic2](https://res.liriliri.io/luna/pic2.jpg)
+![Pic1](https://luna.liriliri.io/pic1.png)
+![Pic2](https://luna.liriliri.io/pic2.png)

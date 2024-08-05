@@ -78,7 +78,7 @@ const def = story(
 )
 
 function createKnobs() {
-  const image = text('Image', 'https://res.liriliri.io/luna/pic1.jpg')
+  const image = text('Image', '/wallpaper.png')
   const initialCoverage = number('Initial Coverage', 0.9, {
     range: true,
     min: 0.1,

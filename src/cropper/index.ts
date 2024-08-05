@@ -51,7 +51,7 @@ interface ICropBoxData {
  * @example
  * const container = document.getElementById('container')
  * const cropper = new LunaCropper(container, {
- *   image: 'https://res.liriliri.io/luna/wallpaper.jpg',
+ *   image: 'https://luna.liriliri.io/wallpaper.png',
  * })
  * console.log(cropper.getData())
  */

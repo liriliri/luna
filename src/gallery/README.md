@@ -33,7 +33,7 @@ import LunaGallery from 'luna-gallery'
 
 ```javascript
 const gallery = new LunaGallery(container)
-gallery.append('https://res.liriliri.io/luna/pic1.jpg', 'pic1.jpg')
+gallery.append('https://luna.liriliri.io/pic1.png', 'pic1.png')
 gallery.show()
 ```
 

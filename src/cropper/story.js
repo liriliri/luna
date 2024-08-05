@@ -72,7 +72,7 @@ const def = story(
 )
 
 function createKnobs() {
-  const image = text('Image', 'https://res.liriliri.io/luna/wallpaper.jpg')
+  const image = text('Image', '/wallpaper.png')
 
   return {
     image,

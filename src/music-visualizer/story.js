@@ -41,14 +41,14 @@ const def = story(
 
     const container = h('div')
     $(container).css({
-      aspectRatio: '1280/720',
+      aspectRatio: '768/512',
     })
 
     const image = boolean('Background Image', true)
 
     const musicVisualizer = new MusicVisualizer(container, {
       audio: musicPlayer.getAudio(),
-      image: image ? 'https://res.liriliri.io/luna/wallpaper.jpg' : '',
+      image: image ? '/wallpaper.png' : '',
       fftSize: 512,
     })
 

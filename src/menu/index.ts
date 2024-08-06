@@ -3,7 +3,6 @@ import $ from 'licia/$'
 import h from 'licia/h'
 import defaults from 'licia/defaults'
 import each from 'licia/each'
-import nextTick from 'licia/nextTick'
 import {
   measuredScrollbarWidth,
   hasVerticalScrollbar,
@@ -69,17 +68,14 @@ export default class Menu extends Component {
     $container.html('')
 
     for (let i = 0, len = menuItems.length; i < len; i++) {
-      this.$container.append(this.createMenuItem(menuItems[i]))
+      $container.append(this.createMenuItem(menuItems[i]))
     }
 
     const $glassPane = this.createGlassPane()
     $glassPane.append(this.container)
     $glassPane.show()
 
-    // Delay a little to make sure height calculation is correct.
-    nextTick(() => {
-      this.positionContent(x, y, parent)
-    })
+    this.positionContent(x, y, parent)
   }
   destroy() {
     this.hide()
@@ -133,8 +129,6 @@ export default class Menu extends Component {
     }
 
     $container.css({
-      width,
-      height,
       left,
       top,
     })

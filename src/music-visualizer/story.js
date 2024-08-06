@@ -32,7 +32,7 @@ const def = story(
       width: 640,
       margin: '0 auto',
       maxWidth: '100%',
-      boxShadow: 'none',
+      border: 'none',
     })
     const musicPlayer = new MusicPlayer(musicPlayerContainer, {
       audio,

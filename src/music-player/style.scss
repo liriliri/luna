@@ -3,7 +3,7 @@
 .luna-music-player {
   @include component();
   min-width: 375px;
-  box-shadow: $box-shadow;
+  border: 1px solid $color-border;
   font-size: 14px;
   cursor: default;
 }
@@ -213,7 +213,7 @@
 }
 
 .theme-dark {
-  box-shadow: $box-shadow-dark;
+  border-color: $color-border-dark;
   .body-right {
     border-bottom-color: $color-border-dark;
   }

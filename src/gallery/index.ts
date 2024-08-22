@@ -1,11 +1,13 @@
 import stripIndent from 'licia/stripIndent'
 import Component, { IComponentOptions } from '../share/Component'
 import LunaCarousel from 'luna-carousel'
+import LunaImageViewer from 'luna-image-viewer'
 import h from 'licia/h'
 import $ from 'licia/$'
 import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
 import each from 'licia/each'
+import loadImg from 'licia/loadImg'
 import fullscreen from 'licia/fullscreen'
 
 /** IOptions */
@@ -186,11 +188,10 @@ const loadingImg =
 class Image {
   container: HTMLElement = h('div')
   private title?: string
-  private image: HTMLImageElement
-  private $image: $.$
   private $container: $.$
   private gallery: Gallery
   private src: string
+  private imageViewer: LunaImageViewer
   constructor(gallery: Gallery, src: string, title?: string) {
     this.container = h(gallery.c('.image'))
     this.$container = $(this.container)
@@ -201,12 +202,19 @@ class Image {
 
     this.initTpl()
 
-    this.$image = this.$container.find('img')
-    this.image = this.$image.get(0) as HTMLImageElement
-    this.reset()
+    const viewer = this.$container
+      .find(gallery.c('.viewer'))
+      .get(0) as HTMLElement
+    this.imageViewer = new LunaImageViewer(viewer, {
+      image: loadingImg,
+      initialCoverage: 0.8,
+    })
 
-    this.bindEvent()
-    this.image.src = src
+    loadImg(src, (err) => {
+      if (!err) {
+        this.imageViewer.setOption('image', src)
+      }
+    })
   }
   download() {
     const el = document.createElement('a')
@@ -221,34 +229,7 @@ class Image {
     document.body.removeChild(el)
   }
   reset() {
-    const { image, $image } = this
-    this.$image.rmAttr('style')
-    let { width, height } = image
-    if (width === 0 || height === 0) {
-      return
-    }
-
-    const padding = 38
-    const offset = this.gallery.$container.offset()
-    const containerHeight = offset.height
-    const containerWidth = offset.width
-    const ratio = width / height
-
-    if (width > containerWidth) {
-      width = containerWidth
-      height = width / ratio
-    }
-    if (height > containerHeight - padding * 2) {
-      height = containerHeight - padding * 2
-      width = height * ratio
-    }
-
-    $image.css({
-      width,
-      height,
-      top: (containerHeight - height) / 2,
-      left: (containerWidth - width) / 2,
-    })
+    this.imageViewer.reset()
   }
   private initTpl() {
     const { gallery } = this
@@ -260,13 +241,10 @@ class Image {
 
     this.$container.html(
       this.gallery.c(stripIndent`
-      <img src="${loadingImg}"></img>
+      <div class="viewer"></div>
       ${title}
     `)
     )
-  }
-  private bindEvent() {
-    this.image.onload = () => this.reset()
   }
 }
 

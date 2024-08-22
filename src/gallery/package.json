@@ -5,7 +5,8 @@
   "luna": {
     "icon": true,
     "dependencies": [
-      "carousel"
+      "carousel",
+      "image-viewer"
     ]
   }
 }

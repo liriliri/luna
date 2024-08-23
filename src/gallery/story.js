@@ -2,6 +2,7 @@ import 'luna-gallery.css'
 import Gallery from 'luna-gallery.js'
 import $ from 'licia/$'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 import story from '../share/story'
 import { button, boolean } from '@storybook/addon-knobs'
 
@@ -41,6 +42,7 @@ const def = story(
   },
   {
     readme,
+    changelog,
     source: __STORY__,
   }
 )

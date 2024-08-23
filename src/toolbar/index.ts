@@ -8,7 +8,7 @@ import defaults from 'licia/defaults'
 import toStr from 'licia/toStr'
 import toNum from 'licia/toNum'
 import types, { PlainObj } from 'licia/types'
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs } from '../share/util'
 
 /**
@@ -20,8 +20,8 @@ import { exportCjs } from '../share/util'
  */
 export default class Toolbar extends Component {
   private items: LunaToolbarItem[] = []
-  constructor(container: HTMLElement) {
-    super(container, { compName: 'toolbar' })
+  constructor(container: HTMLElement, options?: IComponentOptions) {
+    super(container, { compName: 'toolbar' }, options)
   }
   /** Remove item. */
   remove(item: LunaToolbarItem) {

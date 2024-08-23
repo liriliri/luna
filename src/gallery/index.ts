@@ -2,10 +2,12 @@ import stripIndent from 'licia/stripIndent'
 import Component, { IComponentOptions } from '../share/Component'
 import LunaCarousel from 'luna-carousel'
 import LunaImageViewer from 'luna-image-viewer'
+import LunaToolbar, { LunaToolbarButton, LunaToolbarText } from 'luna-toolbar'
 import h from 'licia/h'
 import $ from 'licia/$'
 import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
+import types from 'licia/types'
 import each from 'licia/each'
 import loadImg from 'licia/loadImg'
 import fullscreen from 'licia/fullscreen'
@@ -29,10 +31,9 @@ export default class Gallery extends Component<IOptions> {
   private carousel: LunaCarousel
   private images: Image[] = []
   private resizeSensor: ResizeSensor
-  private $toolbar: $.$
-  private $counter: $.$
-  private $playIcon: $.$
   private isCycling = false
+  private counter: LunaToolbarText
+  private playBtn: LunaToolbarButton
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'gallery' })
     this.initOptions(options, {
@@ -47,13 +48,11 @@ export default class Gallery extends Component<IOptions> {
 
     const $body = this.find('.body')
     const body = $body.get(0) as HTMLElement
-    this.$toolbar = this.find('.toolbar')
-    this.$counter = this.find('.counter')
-    this.$playIcon = this.find('.icon-play')
 
     this.carousel = new LunaCarousel(body)
     this.resizeSensor = new ResizeSensor(container)
     this.onResize = throttle(() => this.reset(), 16)
+    this.initToolbar()
 
     this.bindEvent()
     this.hide()
@@ -104,16 +103,18 @@ export default class Gallery extends Component<IOptions> {
     each(this.images, (image) => image.reset())
   }
   cycle() {
-    const { carousel, c } = this
+    const { carousel, c, playBtn } = this
     carousel.setOption('interval', 5000)
     carousel.cycle()
-    this.$playIcon.rmClass(c('icon-play')).addClass(c('icon-pause'))
+    const $playIcon = playBtn.$container.find(c('.icon'))
+    $playIcon.rmClass(c('icon-play')).addClass(c('icon-pause'))
     this.isCycling = true
   }
   pause() {
-    const { c } = this
+    const { c, playBtn } = this
     this.carousel.pause()
-    this.$playIcon.addClass(c('icon-play')).rmClass(c('icon-pause'))
+    const $playIcon = playBtn.$container.find(c('.icon'))
+    $playIcon.addClass(c('icon-play')).rmClass(c('icon-pause'))
     this.isCycling = false
   }
   destroy() {
@@ -128,28 +129,31 @@ export default class Gallery extends Component<IOptions> {
       this.cycle()
     }
   }
+  private initToolbar() {
+    const { c } = this
+    const $toolbar = this.find('.toolbar')
+    const toolbar = new LunaToolbar($toolbar.get(0) as HTMLElement, {
+      theme: 'dark',
+    })
+    function appendIcon(icon: string, handler: types.AnyFn) {
+      const el = h(`span${c('.icon') + c(`.icon-${icon}`)}`)
+      return toolbar.appendButton(el, handler)
+    }
+    this.counter = toolbar.appendText('1/4')
+    toolbar.appendSpace()
+    this.playBtn = appendIcon('play', this.toggleCycle)
+    appendIcon('zoom-in', this.zoomIn)
+    appendIcon('zoom-out', this.zoomOut)
+    appendIcon('original', this.zoomToOriginal)
+    appendIcon('download', this.download)
+    appendIcon('fullscreen', this.toggleFullscreen)
+    appendIcon('close', this.hide)
+  }
   private initTpl() {
     this.$container.html(
       this.c(stripIndent`
       <div class="body"></div>
-      <div class="toolbar">
-        <div class="counter"></div>
-        <div class="button button-close">
-          <span class="icon icon-close"></span>
-        </div>
-        <div class="button button-fullscreen">
-          <span class="icon icon-fullscreen"></span>
-        </div>
-        <div class="button button-download">
-          <span class="icon icon-download"></span>
-        </div>
-        <div class="button button-play">
-          <div class="icon-play-circle">
-            <span class="icon icon-play"></span>
-          </div>
-        </div>
-      </div>
-      `)
+      <div class="toolbar"></div>`)
     )
   }
   private toggleFullscreen = () => {
@@ -157,27 +161,42 @@ export default class Gallery extends Component<IOptions> {
   }
   private updateCounter = () => {
     const { carousel } = this
-    this.$counter.html(
+    this.counter.setText(
       `${carousel.getActiveIdx() + 1} / ${carousel.getSlides().length}`
     )
   }
   private download = () => {
+    const image = this.getActiveImage()
+    if (image) {
+      image.download()
+    }
+  }
+  private zoomIn = () => {
+    const image = this.getActiveImage()
+    if (image) {
+      image.zoom(0.1)
+    }
+  }
+  private zoomOut = () => {
+    const image = this.getActiveImage()
+    if (image) {
+      image.zoom(-0.1)
+    }
+  }
+  private zoomToOriginal = () => {
+    const image = this.getActiveImage()
+    if (image) {
+      image.zoomTo(1)
+    }
+  }
+  private getActiveImage() {
     const { carousel, images } = this
     const activeIdx = carousel.getActiveIdx()
     const image = images[activeIdx]
-    if (!image) {
-      return
-    }
-    image.download()
+    return image
   }
   private bindEvent() {
-    const { c } = this
     this.resizeSensor.addListener(this.onResize)
-    this.$toolbar
-      .on('click', c('.button-close'), this.hide)
-      .on('click', c('.button-fullscreen'), this.toggleFullscreen)
-      .on('click', c('.button-play'), this.toggleCycle)
-      .on('click', c('.button-download'), this.download)
     this.carousel.on('slide', this.updateCounter)
   }
 }
@@ -230,6 +249,12 @@ class Image {
   }
   reset() {
     this.imageViewer.reset()
+  }
+  zoom(ratio: number) {
+    this.imageViewer.zoom(ratio)
+  }
+  zoomTo(ratio: number) {
+    this.imageViewer.zoomTo(ratio)
   }
   private initTpl() {
     const { gallery } = this

@@ -109,8 +109,8 @@
   },
   "gallery": {
     "icon": true,
-    "dependencies": ["carousel"],
-    "version": "0.1.0",
+    "dependencies": ["carousel", "image-viewer", "toolbar"],
+    "version": "1.0.0",
     "style": true,
     "test": true,
     "install": false,
@@ -352,7 +352,7 @@
   },
   "toolbar": {
     "react": true,
-    "version": "0.5.7",
+    "version": "0.5.8",
     "style": true,
     "icon": false,
     "test": true,

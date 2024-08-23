@@ -3,14 +3,23 @@
 .luna-gallery {
   @include component();
   position: relative;
+  background: black;
   &.full {
     position: fixed;
+    background: rgba(0, 0, 0, 50%);
     left: 0;
     top: 0;
     z-index: 10;
     width: 100% !important;
     height: 100% !important;
     max-width: 100% !important;
+  }
+  .luna-carousel {
+    background: transparent;
+  }
+  .luna-toolbar {
+    background: rgba(0, 0, 0, 0.45) !important;
+    border-bottom: none;
   }
   .luna-carousel-indicators {
     display: none;
@@ -62,46 +71,5 @@
   top: 0;
   left: 0;
   width: 100%;
-  color: #999;
-  background: rgba(0, 0, 0, 0.45);
   transition: opacity 0.3s;
-  .button {
-    float: right;
-    cursor: pointer;
-    padding: 5px 10px 5px 5px;
-    &:hover {
-      color: #fff;
-      .icon-play-circle {
-        border-color: #fff;
-      }
-    }
-    span {
-      font-size: 24px;
-      &.icon-play,
-      &.icon-pause {
-        font-size: 12px;
-      }
-    }
-  }
-  .icon-play-circle {
-    border: 2px solid #999;
-    border-radius: 50%;
-    width: 22px;
-    height: 22px;
-  }
-  .icon-play {
-    position: relative;
-    left: 4px;
-    top: -1px;
-  }
-  .icon-pause {
-    position: relative;
-    left: 3px;
-    top: -1px;
-  }
-  .counter {
-    float: left;
-    padding: 5px 10px;
-    font-size: 20px;
-  }
 }

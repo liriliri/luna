@@ -56,7 +56,8 @@
       "luna-toolbar": ["src/toolbar/index"],
       "luna-image-viewer": ["src/image-viewer/index"],
       "luna-painter": ["src/painter/index"],
-      "luna-mask-editor": ["src/mask-editor/index"]
+      "luna-mask-editor": ["src/mask-editor/index"],
+      "luna-image-list": ["src/image-list/index"]
     }
   }
 }

@@ -116,6 +116,15 @@
     "install": false,
     "react": false
   },
+  "image-list": {
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "react": false,
+    "dependencies": []
+  },
   "image-viewer": {
     "react": true,
     "version": "0.5.2",

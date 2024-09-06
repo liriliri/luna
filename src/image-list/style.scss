@@ -1,0 +1,5 @@
+@import '../share/mixin';
+
+.luna-image-list {
+  @include component();
+}

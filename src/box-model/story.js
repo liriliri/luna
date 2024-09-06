@@ -3,6 +3,7 @@ import $ from 'licia/$'
 import h from 'licia/h'
 import story from '../share/story'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 import BoxModel from 'luna-box-model.js'
 import { text, object } from '@storybook/addon-knobs'
 
@@ -53,10 +54,15 @@ const def = story(
 
     boxModel.setOption('element', target)
 
+    boxModel
+      .on('highlight', (type) => console.log('highlight', type))
+      .on('leave', () => console.log('leave'))
+
     return boxModel
   },
   {
     readme,
+    changelog,
     source: __STORY__,
   }
 )

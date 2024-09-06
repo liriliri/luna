@@ -1,6 +1,8 @@
 import map from 'licia/map'
 import isNum from 'licia/isNum'
 import isStr from 'licia/isStr'
+import bind from 'licia/bind'
+import $ from 'licia/$'
 import { exportCjs, pxToNum } from '../share/util'
 import Component, { IComponentOptions } from '../share/Component'
 
@@ -39,11 +41,11 @@ export default class BoxModel extends Component<IOptions> {
     })
   }
   private render() {
-    const { c } = this
+    const { c, $container } = this
     const boxModel = this.getBoxModelData()
 
     // prettier-ignore
-    this.$container.html([boxModel.position ? `<div class="${c('position')}">` : '',
+    $container.html([boxModel.position ? `<div class="${c('position')}">` : '',
       boxModel.position ? `<div class="${c('label')}">position</div><div class="${c('top')}">${boxModel.position.top}</div><br><div class="${c('left')}">${boxModel.position.left}</div>` : '',
       `<div class="${c('margin')}">`,
         `<div class="${c('label')}">margin</div><div class="${c('top')}">${boxModel.margin.top}</div><br><div class="${c('left')}">${boxModel.margin.left}</div>`,
@@ -62,6 +64,57 @@ export default class BoxModel extends Component<IOptions> {
       '</div>',
       boxModel.position ? `<div class="${c('right')}">${boxModel.position.right}</div><br><div class="${c('bottom')}">${boxModel.position.bottom}</div>` : '',
     boxModel.position ? '</div>' : ''].join(''))
+
+    const $margin = this.find('.margin')
+    const $border = this.find('.border')
+    const $padding = this.find('.padding')
+    const $content = this.find('.content')
+
+    const highlightAll = () => {
+      $margin.addClass(c('highlighted'))
+      $border.addClass(c('highlighted'))
+      $padding.addClass(c('highlighted'))
+      $content.addClass(c('highlighted'))
+    }
+    highlightAll()
+
+    const highlight = (type: string) => {
+      this.find(`.highlighted`).rmClass(c('highlighted'))
+      let $el: $.$
+      switch (type) {
+        case 'margin':
+          $el = $margin
+          break
+        case 'border':
+          $el = $border
+          break
+        case 'padding':
+          $el = $padding
+          break
+        default:
+          $el = $content
+          break
+      }
+      $el.addClass(c('highlighted'))
+      this.emit('highlight', type)
+    }
+
+    const highlightMargin = bind(highlight, this, 'margin')
+    const highlightBorder = bind(highlight, this, 'border')
+    const highlightPadding = bind(highlight, this, 'padding')
+    const highlightContent = bind(highlight, this, 'content')
+
+    $margin.on('mouseenter', highlightMargin).on('mouseleave', () => {
+      highlightAll()
+      this.emit('highlight', 'all')
+    })
+    $border.on('mouseenter', highlightBorder).on('mouseleave', highlightMargin)
+    $padding
+      .on('mouseenter', highlightPadding)
+      .on('mouseleave', highlightBorder)
+    $content
+      .on('mouseenter', highlightContent)
+      .on('mouseleave', highlightPadding)
   }
   private getBoxModelData() {
     const { element } = this.options

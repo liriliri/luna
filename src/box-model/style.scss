@@ -34,28 +34,52 @@
   vertical-align: middle;
   padding: 3px;
   margin: 3px;
+  color: $color-text;
+  background: $color-bg-container;
 }
 .position {
   border: 1px grey dotted;
 }
 .margin {
-  color: $color-text;
   border: 1px dashed;
-  background: rgba(246, 178, 107, 0.66);
+  &.highlighted {
+    color: $color-text !important;
+    background: rgba(246, 178, 107, 0.66) !important;
+  }
 }
 .border {
-  color: $color-text;
   border: 1px #000 solid;
-  background: rgba(255, 229, 153, 0.66);
+  &.highlighted {
+    color: $color-text !important;
+    background: rgba(255, 229, 153, 0.66) !important;
+  }
 }
 .padding {
-  color: $color-text;
   border: 1px grey dashed;
-  background: rgba(147, 196, 125, 0.55);
+  &.highlighted {
+    color: $color-text !important;
+    background: rgba(147, 196, 125, 0.55) !important;
+  }
 }
 .content {
-  color: $color-text;
   border: 1px grey solid;
   min-width: 100px;
-  background: rgba(111, 168, 220, 0.66);
+  &.highlighted {
+    color: $color-text !important;
+    background: rgba(111, 168, 220, 0.66) !important;
+  }
+}
+
+.theme-dark {
+  .position,
+  .margin,
+  .border,
+  .padding,
+  .content {
+    color: $color-text-dark;
+    background: $color-bg-container-dark;
+  }
+  .border {
+    border-color: grey;
+  }
 }

@@ -1,6 +1,6 @@
 import 'luna-image-list.css'
 import ImageList from 'luna-image-list.js'
-import { number, boolean } from '@storybook/addon-knobs'
+import { number, boolean, button } from '@storybook/addon-knobs'
 import story from '../share/story'
 import readme from './README.md'
 
@@ -39,6 +39,11 @@ const def = story(
     imageList.append('/pic3.png', 'pic3.png')
     imageList.append('/pic4.png', 'pic4.png')
     imageList.append('/icon.png', 'icon.png')
+
+    button('Clear', () => {
+      imageList.clear()
+      return false
+    })
 
     return imageList
   },

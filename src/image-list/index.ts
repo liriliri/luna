@@ -66,6 +66,12 @@ export default class ImageList extends Component<IOptions> {
     document.body.removeChild(this.galleryContainer)
     super.destroy()
   }
+  /** Clear all images. */
+  clear() {
+    this.images = []
+    this.$container.html('')
+    this.gallery.clear()
+  }
   /** Append image. */
   append(src: string, title?: string) {
     const { verticalMargin, horizontalMargin, rowHeight } = this.options

@@ -110,7 +110,7 @@
   "gallery": {
     "icon": true,
     "dependencies": ["carousel", "image-viewer", "toolbar"],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "style": true,
     "test": true,
     "install": false,

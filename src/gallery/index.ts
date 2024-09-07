@@ -11,6 +11,7 @@ import types from 'licia/types'
 import each from 'licia/each'
 import loadImg from 'licia/loadImg'
 import fullscreen from 'licia/fullscreen'
+import { exportCjs } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -273,5 +274,6 @@ class Image {
   }
 }
 
-module.exports = Gallery
-module.exports.default = Gallery
+if (typeof module !== 'undefined') {
+  exportCjs(module, Gallery)
+}

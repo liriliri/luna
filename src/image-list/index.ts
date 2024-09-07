@@ -2,6 +2,10 @@ import toEl from 'licia/toEl'
 import stripIndent from 'licia/stripIndent'
 import last from 'licia/last'
 import $ from 'licia/$'
+import h from 'licia/h'
+import toStr from 'licia/toStr'
+import toNum from 'licia/toNum'
+import LunaGallery from 'luna-gallery'
 import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs } from '../share/util'
 
@@ -32,6 +36,8 @@ interface IImage {
  */
 export default class ImageList extends Component<IOptions> {
   private images: IImage[] = []
+  private gallery: LunaGallery
+  private galleryContainer: HTMLElement = h('div')
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'image-list' })
 
@@ -42,6 +48,9 @@ export default class ImageList extends Component<IOptions> {
       showTitle: true,
     })
 
+    document.body.appendChild(this.galleryContainer)
+    this.gallery = new LunaGallery(this.galleryContainer)
+
     const { $container } = this
     $container.css({
       marginLeft: this.options.horizontalMargin + 'px',
@@ -50,6 +59,12 @@ export default class ImageList extends Component<IOptions> {
     if (!this.options.showTitle) {
       $container.addClass(this.c('no-title'))
     }
+
+    this.bindEvent()
+  }
+  destroy() {
+    document.body.removeChild(this.galleryContainer)
+    super.destroy()
   }
   /** Append image. */
   append(src: string, title?: string) {
@@ -82,12 +97,25 @@ export default class ImageList extends Component<IOptions> {
       $container.css('flex-basis', width + 'px')
       this.$container.append(container)
 
+      $container.data('idx', toStr(this.images.length))
+
       this.images.push({
         src,
         title: title || '',
         container,
       })
+
+      this.gallery.append(src, title)
     }
+  }
+  private bindEvent() {
+    const { gallery } = this
+
+    this.$container.on('click', this.c('.item'), function (this: HTMLElement) {
+      const idx = toNum($(this).data('idx'))
+      gallery.slideTo(idx)
+      gallery.show()
+    })
   }
 }
 

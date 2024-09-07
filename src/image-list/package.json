@@ -1,5 +1,10 @@
 {
   "name": "image-list",
   "version": "0.1.0",
-  "description": "Show list of images"
+  "description": "Show list of images",
+  "luna": {
+    "dependencies": [
+      "gallery"
+    ]
+  }
 }

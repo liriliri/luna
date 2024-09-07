@@ -3,19 +3,22 @@
 .luna-image-list {
   @include component();
   background-color: transparent;
-  display: flex;
-  flex-wrap: wrap;
   &.theme-dark {
     background-color: transparent;
+  }
+}
+
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  &::after {
+    content: '';
+    flex-grow: 1000;
   }
   &.no-title {
     .title {
       display: none;
     }
-  }
-  &::after {
-    content: '';
-    flex-grow: 1000;
   }
 }
 

@@ -2,7 +2,6 @@ import toEl from 'licia/toEl'
 import stripIndent from 'licia/stripIndent'
 import last from 'licia/last'
 import $ from 'licia/$'
-import h from 'licia/h'
 import toStr from 'licia/toStr'
 import toNum from 'licia/toNum'
 import LunaGallery from 'luna-gallery'
@@ -37,7 +36,7 @@ interface IImage {
 export default class ImageList extends Component<IOptions> {
   private images: IImage[] = []
   private gallery: LunaGallery
-  private galleryContainer: HTMLElement = h('div')
+  private $images: $.$
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'image-list' })
 
@@ -48,28 +47,27 @@ export default class ImageList extends Component<IOptions> {
       showTitle: true,
     })
 
-    document.body.appendChild(this.galleryContainer)
-    this.gallery = new LunaGallery(this.galleryContainer)
+    this.initTpl()
 
-    const { $container } = this
-    $container.css({
+    const $images = this.find('.images')
+    $images.css({
       marginLeft: this.options.horizontalMargin + 'px',
       marginBottom: -this.options.verticalMargin + 'px',
     })
     if (!this.options.showTitle) {
-      $container.addClass(this.c('no-title'))
+      $images.addClass(this.c('no-title'))
     }
+    this.$images = $images
+
+    const galleryContainer = this.find('.gallery').get(0) as HTMLElement
+    this.gallery = new LunaGallery(galleryContainer)
 
     this.bindEvent()
-  }
-  destroy() {
-    document.body.removeChild(this.galleryContainer)
-    super.destroy()
   }
   /** Clear all images. */
   clear() {
     this.images = []
-    this.$container.html('')
+    this.$images.html('')
     this.gallery.clear()
   }
   /** Append image. */
@@ -80,7 +78,7 @@ export default class ImageList extends Component<IOptions> {
     if (!title) {
       title = last(src.split('/'))
     }
-    const container = toEl(
+    const item = toEl(
       this.c(stripIndent`
       <div class="item">
         <div class="image" style="height:${imageHeight}px;">
@@ -90,29 +88,37 @@ export default class ImageList extends Component<IOptions> {
       </div>`)
     ) as HTMLElement
 
-    const $container = $(container)
-    $container.css({
+    const $item = $(item)
+    $item.css({
       marginRight: horizontalMargin + 'px',
       marginBottom: verticalMargin + 'px',
     })
-    const $img = $container.find('img')
+    const $img = $item.find('img')
     const img = $img.get(0) as HTMLImageElement
     img.onload = () => {
       const ratio = img.width / img.height
       const width = imageHeight * ratio
-      $container.css('flex-basis', width + 'px')
-      this.$container.append(container)
+      $item.css('flex-basis', width + 'px')
+      this.$images.append(item)
 
-      $container.data('idx', toStr(this.images.length))
+      $item.data('idx', toStr(this.images.length))
 
       this.images.push({
         src,
         title: title || '',
-        container,
+        container: item,
       })
 
       this.gallery.append(src, title)
     }
+  }
+  private initTpl() {
+    this.$container.html(
+      this.c(stripIndent`
+        <div class="images"></div>
+        <div class="gallery"></div>
+      `)
+    )
   }
   private bindEvent() {
     const { gallery } = this

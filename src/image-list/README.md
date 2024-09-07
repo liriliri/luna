@@ -35,4 +35,13 @@ imageList.append('https://luna.liriliri.io/pic1.png', 'pic1.png')
 
 ## Configuration
 
+* horizontalMargin(number): Horizontal margin.
 * rowHeight(number): Row height.
+* showTitle(boolean): Show title.
+* verticalMargin(number): Vertical margin.
+
+## Api
+
+### append(src: string, title?: string): void
+
+Append image.

@@ -57,3 +57,7 @@ imageList.append('https://luna.liriliri.io/pic1.png', 'pic1.png')
 ### append(src: string, title?: string): void
 
 Append image.
+
+### clear(): void
+
+Clear all images.

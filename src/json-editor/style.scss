@@ -16,13 +16,13 @@
     display: inline-block;
   }
   & > .expand {
-    .icon-arrow-down {
+    .icon-caret-down {
       display: none;
     }
   }
   & > .collapse {
     font-size: 12px;
-    .icon-arrow-right {
+    .icon-caret-right {
       display: none;
     }
   }
@@ -35,17 +35,17 @@
   }
 }
 
-.icon-arrow-right,
-.icon-arrow-down {
+.icon-caret-right,
+.icon-caret-down {
   position: absolute !important;
   font-size: 12px !important;
 }
 
-.icon-arrow-down {
+.icon-caret-down {
   top: 1px;
 }
 
-.icon-arrow-right {
+.icon-caret-right {
   top: 0px;
 }
 

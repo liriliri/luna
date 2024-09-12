@@ -292,7 +292,7 @@ export default class JsonEditor extends Component<IOptions> {
     this.$container.html(
       this.c(
         [
-          '<div class="toggle"><span class="icon icon-arrow-right"></span><span class="icon icon-arrow-down"></span></div>',
+          '<div class="toggle"><span class="icon icon-caret-right"></span><span class="icon icon-caret-down"></span></div>',
           '<div class="name"></div>',
           '<div class="separator"></div>',
           '<div class="value"></div>',

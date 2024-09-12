@@ -25,8 +25,8 @@
   margin-left: -12px;
 }
 
-.icon-arrow-right,
-.icon-arrow-down {
+.icon-caret-right,
+.icon-caret-down {
   position: absolute !important;
   font-size: 12px !important;
 }
@@ -58,14 +58,14 @@
       background: #cfe8fc;
     }
   }
-  .icon-arrow-down {
+  .icon-caret-down {
     display: none;
   }
   &.expanded {
-    .icon-arrow-down {
+    .icon-caret-down {
       display: inline-block;
     }
-    .icon-arrow-right {
+    .icon-caret-right {
       display: none;
     }
   }
@@ -116,8 +116,8 @@
 }
 
 .theme-dark {
-  .icon-arrow-down,
-  .icon-arrow-right {
+  .icon-caret-down,
+  .icon-caret-right {
     color: #9aa0a6;
   }
   .html-tag,

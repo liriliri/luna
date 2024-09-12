@@ -2,6 +2,7 @@ import 'luna-data-grid.css'
 import DataGrid from 'luna-data-grid'
 import story from '../share/story'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 import each from 'licia/each'
 import toEl from 'licia/toEl'
 import LunaDataGrid from './react'
@@ -40,6 +41,7 @@ const def = story(
   },
   {
     readme,
+    changelog,
     source: __STORY__,
     ReactComponent() {
       const { columns, minHeight, maxHeight, filter } = createKnobs()

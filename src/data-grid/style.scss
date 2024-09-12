@@ -33,11 +33,21 @@
     border-bottom: 1px solid $color-border;
     text-align: left;
     background: $color-fill-secondary;
+    position: relative;
     &.sortable {
+      padding-right: $padding-s-m;
       &:hover,
       &:active {
         background: #e6e6e6;
       }
+    }
+    .icon-caret-down,
+    .icon-caret-up {
+      font-size: 12px;
+      position: absolute;
+      display: none;
+      top: 6px;
+      right: 2px;
     }
   }
 

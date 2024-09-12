@@ -136,7 +136,6 @@ export default class DataGrid extends Component<IOptions> {
     if (maxHeight < minHeight) {
       this.setOption('maxHeight', minHeight)
     }
-    ;('width')
     this.initTpl()
     this.$headerRow = this.find('.header').find('tr')
     this.$fillerRow = this.find('.filler-row')
@@ -331,6 +330,17 @@ export default class DataGrid extends Component<IOptions> {
         const isAscending = order !== 'descending'
         $this.data('order', isAscending ? 'descending' : 'ascending')
 
+        $headerRow.find(c('.icon-caret-up')).hide()
+        $headerRow.find(c('.icon-caret-down')).hide()
+
+        const $iconUp = $this.find(c('.icon-caret-up'))
+        const $iconDown = $this.find(c('.icon-caret-down'))
+        if (isAscending) {
+          $iconUp.show()
+        } else {
+          $iconDown.show()
+        }
+
         self.sortNodes(id, isAscending)
 
         $headerRow.find('th').each(function (this: HTMLTableCellElement) {
@@ -488,7 +498,12 @@ export default class DataGrid extends Component<IOptions> {
     each(this.options.columns, (column) => {
       const title = escape(column.title)
       if (column.sortable) {
-        html += c(`<th class="sortable" data-id="${column.id}">${title}</th>`)
+        html += c(`
+          <th class="sortable" data-id="${column.id}">
+            ${title}
+            <span class="icon-caret-up"></span>
+            <span class="icon-caret-down"></span>
+          </th>`)
       } else {
         html += `<th>${title}</th>`
       }

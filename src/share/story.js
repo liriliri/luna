@@ -15,6 +15,7 @@ import now from 'licia/now'
 import ReactDOM from 'react-dom'
 import * as registerKnobs from '@storybook/addon-knobs/dist/registerKnobs'
 import { optionsKnob } from '@storybook/addon-knobs'
+import { createApp } from 'vue'
 
 export default function story(
   name,
@@ -27,6 +28,7 @@ export default function story(
     layout = 'padded',
     themes = {},
     ReactComponent = false,
+    VueComponent = false,
   } = {}
 ) {
   const container = h('div')
@@ -67,9 +69,8 @@ export default function story(
         window.component = window.components[0]
         window.componentName = upperFirst(camelCase(name))
 
-        document.documentElement.style.background = contain(theme, 'dark')
-          ? '#000'
-          : '#fff'
+        updateBackground(theme)
+
         each(window.components, (component) =>
           component.setOption('theme', theme)
         )
@@ -92,11 +93,28 @@ export default function story(
 
       ReactDOM.render(<ReactComponent theme={theme} />, container)
 
-      document.documentElement.style.background = contain(theme, 'dark')
-        ? '#000'
-        : '#fff'
+      updateBackground(theme)
 
       return container
+    }
+  }
+
+  if (VueComponent) {
+    const container = h('div')
+
+    ret.vue = function () {
+      fixKnobs(`vue-${name}`)
+
+      const { theme } = createKnobs()
+      window.components = []
+      delete window.component
+      window.componentName = upperFirst(camelCase(`vue-${name}`))
+
+      createApp(VueComponent({ theme })).mount(container)
+        
+      updateBackground(theme)
+
+      return container 
     }
   }
 
@@ -157,4 +175,10 @@ function fixKnobs(name) {
     }
     each(window.components, (component) => component.destroy())
   }
+}
+
+function updateBackground(theme) {
+  document.documentElement.style.background = contain(theme, 'dark')
+    ? '#000'
+    : '#fff'
 }

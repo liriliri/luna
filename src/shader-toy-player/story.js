@@ -2,9 +2,10 @@ import 'luna-shader-toy-player.css'
 import ShaderToyPlayer from 'luna-shader-toy-player.js'
 import readme from './README.md'
 import story from '../share/story'
-import h from 'licia/h'
 import $ from 'licia/$'
 import shaders, { cube } from './shaders'
+import LunaShaderToyPlayer from './vue'
+import { defineComponent, h } from 'vue'
 import { text, optionsKnob, button } from '@storybook/addon-knobs'
 
 const def = story(
@@ -74,9 +75,19 @@ const def = story(
   {
     readme,
     source: __STORY__,
+    VueComponent() {
+      return defineComponent({
+        components: {
+          LunaShaderToyPlayer,
+        },
+        render() {
+          return h('div', 'hello')
+        },
+      })
+    },
   }
 )
 
 export default def
 
-export const { shaderToyPlayer } = def
+export const { shaderToyPlayer: html, vue } = def

@@ -4,6 +4,7 @@
   "description": "Shader toy player",
   "luna": {
     "icon": true,
+    "vue": true,
     "test": false
   }
 }

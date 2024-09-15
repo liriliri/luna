@@ -75,13 +75,22 @@ const def = story(
   {
     readme,
     source: __STORY__,
-    VueComponent() {
+    VueComponent({ theme }) {
       return defineComponent({
         components: {
           LunaShaderToyPlayer,
         },
         render() {
-          return h('div', 'hello')
+          return h(LunaShaderToyPlayer, {
+            theme,
+            style: {
+              maxWidth: '640px',
+              width: '100%',
+              margin: '0 auto',
+              minHeight: '150px',
+              aspectRatio: '1280/720',
+            },
+          })
         },
       })
     },

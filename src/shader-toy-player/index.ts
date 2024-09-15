@@ -5,7 +5,7 @@ import noop from 'licia/noop'
 import perfNow from 'licia/perfNow'
 import fullscreen from 'licia/fullscreen'
 import raf from 'licia/raf'
-import { drag, eventPage } from '../share/util'
+import { drag, eventPage, exportCjs } from '../share/util'
 import { piCreateAudioContext, piCreateFPSCounter } from './piLibs'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Effect = require('./Effect').default
@@ -315,5 +315,6 @@ export default class ShaderToyPlayer extends Component {
   }
 }
 
-module.exports = ShaderToyPlayer
-module.exports.default = ShaderToyPlayer
+if (typeof module !== 'undefined') {
+  exportCjs(module, ShaderToyPlayer)
+}

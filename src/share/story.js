@@ -31,8 +31,6 @@ export default function story(
     VueComponent = false,
   } = {}
 ) {
-  const container = h('div')
-
   if (changelog) {
     readme += `\n## Changelog\n${changelog.replace(/## /g, '### ')}`
   }
@@ -53,6 +51,8 @@ export default function story(
       layout,
     },
     [camelCase(name)]: () => {
+      const container = h('div')
+
       fixKnobs(name)
 
       waitUntil(() => container.parentElement).then(() => {
@@ -81,9 +81,9 @@ export default function story(
   }
 
   if (ReactComponent) {
-    const container = h('div')
-
     ret.react = function () {
+      const container = h('div')
+
       fixKnobs(`react-${name}`)
 
       const { theme } = createKnobs()
@@ -100,9 +100,9 @@ export default function story(
   }
 
   if (VueComponent) {
-    const container = h('div')
-
     ret.vue = function () {
+      const container = h('div')
+
       fixKnobs(`vue-${name}`)
 
       const { theme } = createKnobs()
@@ -111,10 +111,10 @@ export default function story(
       window.componentName = upperFirst(camelCase(`vue-${name}`))
 
       createApp(VueComponent({ theme })).mount(container)
-        
+
       updateBackground(theme)
 
-      return container 
+      return container
     }
   }
 

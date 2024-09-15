@@ -2,6 +2,7 @@ const path = require('path')
 const map = require('licia/map')
 const each = require('licia/each')
 const keys = require('licia/keys')
+const webpack = require('webpack')
 
 const components = keys(require('../index.json'))
 
@@ -58,6 +59,15 @@ module.exports = {
         )
       })
     })
+
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        __VUE_OPTIONS_API__: true,
+        __VUE_PROD_DEVTOOLS__: false,
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
+      })
+    )
+
     return config
   },
   staticDirs: ['../public'],

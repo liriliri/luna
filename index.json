@@ -316,6 +316,7 @@
   },
   "shader-toy-player": {
     "icon": true,
+    "vue": true,
     "test": false,
     "version": "0.1.0",
     "style": true,

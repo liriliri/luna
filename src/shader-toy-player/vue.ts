@@ -1,4 +1,4 @@
-import { defineComponent, h, onMounted, shallowRef } from 'vue'
+import { defineComponent, h, onBeforeMount, onMounted, shallowRef } from 'vue'
 import ShaderToyPlayer from './index'
 
 const LunaShaderToyPlayer = defineComponent({
@@ -8,13 +8,30 @@ const LunaShaderToyPlayer = defineComponent({
       type: Object,
       default: () => ({}),
     },
+    controls: {
+      type: Boolean,
+      default: true,
+    },
+    renderPass: {
+      type: Array,
+    },
   },
-  setup(props) {
+  emits: ['create'],
+  setup(props, context) {
     const container = shallowRef<HTMLDivElement>()
     const shaderToyPlayer = shallowRef<ShaderToyPlayer>()
 
     onMounted(() => {
-      shaderToyPlayer.value = new ShaderToyPlayer(container.value!)
+      shaderToyPlayer.value = new ShaderToyPlayer(container.value!, {
+        renderPass: props.renderPass,
+        controls: props.controls,
+      })
+
+      context.emit('create', shaderToyPlayer.value)
+    })
+
+    onBeforeMount(() => {
+      shaderToyPlayer.value?.destroy()
     })
 
     return () => {

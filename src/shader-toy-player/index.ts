@@ -1,4 +1,4 @@
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import noop from 'licia/noop'
@@ -7,10 +7,19 @@ import fullscreen from 'licia/fullscreen'
 import raf from 'licia/raf'
 import { drag, eventPage, exportCjs } from '../share/util'
 import { piCreateAudioContext, piCreateFPSCounter } from './piLibs'
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Effect = require('./Effect').default
 
 const $document = $(document as any)
+
+/** IOptions */
+export interface IOptions extends IComponentOptions {
+  /** Render pass. */
+  renderPass?: any[]
+  /** Player controls. */
+  controls?: boolean
+}
 
 /**
  * Shader toy player.
@@ -19,7 +28,7 @@ const $document = $(document as any)
  * const container = document.getElementById('container')
  * const shaderToyPlayer = new LunaShaderToyPlayer(container)
  *
- * shaderToyPlayer.load([
+ * shaderToyPlayer.setOption('renderPass', [
  *   {
  *     inputs: [],
  *     outputs: [],
@@ -35,7 +44,7 @@ const $document = $(document as any)
  *   },
  * ])
  */
-export default class ShaderToyPlayer extends Component {
+export default class ShaderToyPlayer extends Component<IOptions> {
   private $canvas: $.$
   private canvas: HTMLCanvasElement = document.createElement('canvas')
   private $controller: $.$
@@ -58,8 +67,12 @@ export default class ShaderToyPlayer extends Component {
   private startY = 0
   private x = 0
   private y = 0
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'shader-toy-player' })
+
+    this.initOptions(options, {
+      controls: true,
+    })
 
     this.fpsCounter.Reset(this.timeBase)
 
@@ -77,7 +90,7 @@ export default class ShaderToyPlayer extends Component {
       null,
       piCreateAudioContext(),
       this.canvas,
-      noop,
+      null,
       null,
       false,
       false,
@@ -86,20 +99,14 @@ export default class ShaderToyPlayer extends Component {
     )
 
     this.bindEvent()
-  }
-  load(pass: any[]) {
-    const { effect } = this
-    this.pause()
 
-    if (!effect.Load({ ver: '0.1', renderpass: pass })) {
-      return
+    if (this.options.renderPass) {
+      this.load(this.options.renderPass)
     }
 
-    effect.Compile(true, () => {
-      this.isPaused = false
-      this.startRendering()
-      this.reset()
-    })
+    if (!this.options.controls) {
+      this.$controller.hide()
+    }
   }
   destroy() {
     raf.cancel.call(window, this.animationId)
@@ -127,6 +134,20 @@ export default class ShaderToyPlayer extends Component {
     this.time = 0
     this.isRestarted = true
     this.effect.ResetTime()
+  }
+  private load(pass: any[]) {
+    const { effect } = this
+    this.pause()
+
+    if (!effect.Load({ ver: '0.1', renderpass: pass })) {
+      return
+    }
+
+    effect.Compile(true, () => {
+      this.isPaused = false
+      this.startRendering()
+      this.reset()
+    })
   }
   private get isPaused() {
     return this._isPaused
@@ -165,6 +186,12 @@ export default class ShaderToyPlayer extends Component {
     this.$container.on('mousemove', this.onMouseMove)
 
     this.$canvas.on(drag('start'), this.onDragStart)
+
+    this.on('optionChange', (name, val) => {
+      if (name === 'renderPass') {
+        this.load(val)
+      }
+    })
   }
   private onDragStart = (e: any) => {
     const { x, y } = this.getXY(e)

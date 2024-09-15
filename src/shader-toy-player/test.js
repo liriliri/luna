@@ -9,9 +9,10 @@ const code = `void mainImage( out vec4 fragColor, in vec2 fragCoord )
 }`
 
 test('shader-toy-player', (container) => {
+  const shaderToyPlayer = new ShaderToyPlayer(container)
+
   it('basic', function () {
-    const shaderToyPlayer = new ShaderToyPlayer(container)
-    shaderToyPlayer.load([
+    shaderToyPlayer.setOption('renderPass', [
       {
         inputs: [],
         outputs: [],
@@ -22,4 +23,6 @@ test('shader-toy-player', (container) => {
       },
     ])
   })
+
+  return shaderToyPlayer
 })

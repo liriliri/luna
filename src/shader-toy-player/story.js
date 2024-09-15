@@ -6,7 +6,7 @@ import $ from 'licia/$'
 import shaders, { cube } from './shaders'
 import LunaShaderToyPlayer from './vue'
 import { defineComponent, h } from 'vue'
-import { text, optionsKnob, button } from '@storybook/addon-knobs'
+import { text, optionsKnob, button, boolean } from '@storybook/addon-knobs'
 
 const def = story(
   'shader-toy-player',
@@ -19,70 +19,37 @@ const def = story(
       aspectRatio: '1280/720',
     })
 
-    const example = optionsKnob(
-      'Example',
-      {
-        'Star Nest': 'star',
-        Seascape: 'sea',
-        'Protean clouds': 'cloud',
-      },
-      'star',
-      {
-        display: 'select',
-      }
-    )
-
-    const userImage = text('Image', cube.image)
-    const userSound = text('Sound', cube.sound)
+    const { example, renderPass, controls } = createKnobs()
 
     button('Compile', function () {
-      loadShader(userImage, userSound)
+      shaderToyPlayer.setOption('renderPass', renderPass)
       return false
     })
 
-    const shaderToyPlayer = new ShaderToyPlayer(container)
-
-    function loadShader(code, sound) {
-      const pass = [
-        {
-          inputs: [],
-          outputs: [],
-          code,
-          name: 'Image',
-          description: '',
-          type: 'image',
-        },
-      ]
-
-      if (sound) {
-        pass.push({
-          inputs: [],
-          outputs: [],
-          code: sound,
-          name: 'Sound',
-          description: '',
-          type: 'sound',
-        })
-      }
-
-      shaderToyPlayer.load(pass)
-    }
-
-    loadShader(shaders[example])
+    const shaderToyPlayer = new ShaderToyPlayer(container, {
+      controls,
+      renderPass: example,
+    })
 
     return shaderToyPlayer
   },
   {
     readme,
     source: __STORY__,
-    VueComponent({ theme }) {
+    VueComponent() {
+      const { example, renderPass, controls } = createKnobs()
+      let shaderToyPlayer
+
+      button('Compile', function () {
+        shaderToyPlayer.setOption('renderPass', renderPass)
+        return false
+      })
+
       return defineComponent({
-        components: {
-          LunaShaderToyPlayer,
-        },
         render() {
           return h(LunaShaderToyPlayer, {
-            theme,
+            renderPass: example,
+            controls,
             style: {
               maxWidth: '640px',
               width: '100%',
@@ -90,12 +57,72 @@ const def = story(
               minHeight: '150px',
               aspectRatio: '1280/720',
             },
+            onCreate(instance) {
+              shaderToyPlayer = instance
+            },
           })
         },
       })
     },
   }
 )
+
+function createKnobs() {
+  const controls = boolean('Controls', true)
+
+  const example = optionsKnob(
+    'Example',
+    {
+      'Star Nest': 'star',
+      Seascape: 'sea',
+      'Protean clouds': 'cloud',
+    },
+    'star',
+    {
+      display: 'select',
+    }
+  )
+
+  const userImage = text('Image', cube.image)
+  const userSound = text('Sound', cube.sound)
+
+  const renderPass = [
+    {
+      inputs: [],
+      outputs: [],
+      code: userImage,
+      name: 'Image',
+      description: '',
+      type: 'image',
+    },
+  ]
+
+  if (userSound) {
+    renderPass.push({
+      inputs: [],
+      outputs: [],
+      code: userSound,
+      name: 'Sound',
+      description: '',
+      type: 'sound',
+    })
+  }
+
+  return {
+    controls,
+    example: [
+      {
+        inputs: [],
+        outputs: [],
+        code: shaders[example],
+        name: 'Image',
+        description: '',
+        type: 'image',
+      },
+    ],
+    renderPass,
+  }
+}
 
 export default def
 

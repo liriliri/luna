@@ -32,7 +32,7 @@ import LunaShaderToyPlayer from 'luna-shader-toy-player'
 const container = document.getElementById('container')
 const shaderToyPlayer = new LunaShaderToyPlayer(container)
 
-shaderToyPlayer.load([
+shaderToyPlayer.setOption('renderPass', [
   {
     inputs: [],
     outputs: [],
@@ -48,3 +48,8 @@ shaderToyPlayer.load([
   },
 ])
 ```
+
+## Configuration
+
+* controls(boolean): Player controls.
+* renderPass(any[]): Render pass.

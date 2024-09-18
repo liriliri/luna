@@ -7,9 +7,7 @@ import fullscreen from 'licia/fullscreen'
 import raf from 'licia/raf'
 import { drag, eventPage, exportCjs } from '../share/util'
 import { piCreateAudioContext, piCreateFPSCounter } from './piLibs'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Effect = require('./Effect').default
+import Effect from './Effect'
 
 const $document = $(document as any)
 
@@ -86,7 +84,7 @@ export default class ShaderToyPlayer extends Component<IOptions> {
     this.$time = this.find('.time')
     this.$fps = this.find('.fps')
 
-    this.effect = new Effect(
+    this.effect = new (Effect as any)(
       null,
       piCreateAudioContext(),
       this.canvas,

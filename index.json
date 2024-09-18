@@ -161,6 +161,15 @@
     "install": false,
     "react": false
   },
+  "lrc-player": {
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "test": true,
+    "install": false,
+    "react": false,
+    "dependencies": []
+  },
   "markdown-editor": {
     "dependencies": ["markdown-viewer"],
     "icon": true,

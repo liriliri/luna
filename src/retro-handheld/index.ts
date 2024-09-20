@@ -7,9 +7,10 @@ import defaults from 'licia/defaults'
 import each from 'licia/each'
 import invert from 'licia/invert'
 import contain from 'licia/contain'
+import pointerEvent from 'licia/pointerEvent'
 import LunaMenu from 'luna-menu'
 import Component, { IComponentOptions } from '../share/Component'
-import { drag, eventClient } from '../share/util'
+import { eventClient, exportCjs } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -147,10 +148,14 @@ export default class RetroHandheld extends Component<IOptions> {
     const bindControl = (button: string, code: string) => {
       const selector = `.button-${button}`
       if (contain(['select', 'start'], button)) {
-        $gameControls.on(drag('start'), c(selector), onPressKey(code, true))
+        $gameControls.on(
+          pointerEvent('down'),
+          c(selector),
+          onPressKey(code, true)
+        )
       } else {
-        $controls.on(drag('start'), c(selector), onPressKey(code))
-        $controls.on(drag('end'), c(selector), onReleaseKey(code))
+        $controls.on(pointerEvent('down'), c(selector), onPressKey(code))
+        $controls.on(pointerEvent('up'), c(selector), onReleaseKey(code))
       }
     }
 
@@ -226,5 +231,6 @@ export default class RetroHandheld extends Component<IOptions> {
   }
 }
 
-module.exports = RetroHandheld
-module.exports.default = RetroHandheld
+if (typeof module !== 'undefined') {
+  exportCjs(module, RetroHandheld)
+}

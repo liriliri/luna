@@ -5,7 +5,8 @@ import noop from 'licia/noop'
 import perfNow from 'licia/perfNow'
 import fullscreen from 'licia/fullscreen'
 import raf from 'licia/raf'
-import { drag, eventPage, exportCjs } from '../share/util'
+import pointerEvent from 'licia/pointerEvent'
+import { eventPage, exportCjs } from '../share/util'
 import { piCreateAudioContext, piCreateFPSCounter } from './piLibs'
 import Effect from './Effect'
 
@@ -183,7 +184,7 @@ export default class ShaderToyPlayer extends Component<IOptions> {
 
     this.$container.on('mousemove', this.onMouseMove)
 
-    this.$canvas.on(drag('start'), this.onDragStart)
+    this.$canvas.on(pointerEvent('down'), this.onDragStart)
 
     this.on('optionChange', (name, val) => {
       if (name === 'renderPass') {
@@ -198,8 +199,8 @@ export default class ShaderToyPlayer extends Component<IOptions> {
     this.x = x
     this.y = y
 
-    $document.on(drag('move'), this.onDragMove)
-    $document.on(drag('end'), this.onDragEnd)
+    $document.on(pointerEvent('move'), this.onDragMove)
+    $document.on(pointerEvent('up'), this.onDragEnd)
   }
   private onDragMove = (e: any) => {
     const { x, y } = this.getXY(e)
@@ -227,8 +228,8 @@ export default class ShaderToyPlayer extends Component<IOptions> {
     return { x, y }
   }
   private onDragEnd = () => {
-    $document.off(drag('move'), this.onDragMove)
-    $document.off(drag('end'), this.onDragEnd)
+    $document.off(pointerEvent('move'), this.onDragMove)
+    $document.off(pointerEvent('up'), this.onDragEnd)
   }
   private toggleFullscreen = () => {
     fullscreen.toggle(this.container)

@@ -1,7 +1,8 @@
 import Component, { IComponentOptions } from '../share/Component'
-import { exportCjs, drag, eventPage } from '../share/util'
+import { exportCjs, eventPage } from '../share/util'
 import ResizeSensor from 'licia/ResizeSensor'
 import $ from 'licia/$'
+import pointerEvent from 'licia/pointerEvent'
 import raf from 'licia/raf'
 import loadImg from 'licia/loadImg'
 import isHidden from 'licia/isHidden'
@@ -198,8 +199,8 @@ export default class ImageViewer extends Component<IOptions> {
     this.startX = eventPage('x', e)
     this.startY = eventPage('y', e)
     this.$image.rmClass(this.c('image-transition'))
-    this.$container.on(drag('move'), this.onMove)
-    $document.on(drag('end'), this.onMoveEnd)
+    this.$container.on(pointerEvent('move'), this.onMove)
+    $document.on(pointerEvent('up'), this.onMoveEnd)
   }
   private onMove = (e: any) => {
     const { imageData } = this
@@ -224,8 +225,8 @@ export default class ImageViewer extends Component<IOptions> {
     this.render()
 
     this.$image.addClass(this.c('image-transition'))
-    this.$container.off(drag('move'), this.onMove)
-    $document.off(drag('end'), this.onMoveEnd)
+    this.$container.off(pointerEvent('move'), this.onMove)
+    $document.off(pointerEvent('up'), this.onMoveEnd)
   }
   private setImage(image: string) {
     loadImg(image, (err) => {
@@ -245,7 +246,7 @@ export default class ImageViewer extends Component<IOptions> {
     this.resizeSensor.addListener(debounce(this.reset, 20))
 
     this.$container
-      .on(drag('start'), this.onMoveStart)
+      .on(pointerEvent('down'), this.onMoveStart)
       .on('wheel', this.onWheel)
 
     this.on('optionChange', (name, val) => {

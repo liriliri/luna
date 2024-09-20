@@ -23,7 +23,8 @@ import lowerCase from 'licia/lowerCase'
 import clamp from 'licia/clamp'
 import max from 'licia/max'
 import min from 'licia/min'
-import { exportCjs, drag, eventClient, pxToNum } from '../share/util'
+import pointerEvent from 'licia/pointerEvent'
+import { exportCjs, eventClient, pxToNum } from '../share/util'
 
 const $document = $(document as any)
 const MIN_COL_WIDTH = 24
@@ -262,8 +263,8 @@ export default class DataGrid extends Component<IOptions> {
     this.resizeStartLeft = pxToNum($resizers.eq(resizeIdx).css('left'))
 
     $(document.body).addClass(c('resizing'))
-    $document.on(drag('move'), this.onResizeColMove)
-    $document.on(drag('end'), this.onResizeColEnd)
+    $document.on(pointerEvent('move'), this.onResizeColMove)
+    $document.on(pointerEvent('up'), this.onResizeColEnd)
   }
   private onResizeColMove = (e: any) => {
     const { resizeIdx, $resizers, colWidths, $colgroup } = this
@@ -304,8 +305,8 @@ export default class DataGrid extends Component<IOptions> {
     this.applyColWeights()
 
     $(document.body).rmClass(c('resizing'))
-    $document.off(drag('move'), this.onResizeColMove)
-    $document.off(drag('end'), this.onResizeColEnd)
+    $document.off(pointerEvent('move'), this.onResizeColMove)
+    $document.off(pointerEvent('up'), this.onResizeColEnd)
   }
   private bindEvent() {
     const { c, $headerRow, $tableBody, $resizers } = this
@@ -352,7 +353,7 @@ export default class DataGrid extends Component<IOptions> {
       }
     )
 
-    $resizers.on(drag('start'), function (this: HTMLDivElement, e) {
+    $resizers.on(pointerEvent('down'), function (this: HTMLDivElement, e) {
       const $this = $(this)
       self.resizeIdx = toNum($this.data('idx'))
       self.onResizeColStart(e)

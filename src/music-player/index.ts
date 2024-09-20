@@ -2,8 +2,9 @@ import $ from 'licia/$'
 import stripIndent from 'licia/stripIndent'
 import openFile from 'licia/openFile'
 import createUrl from 'licia/createUrl'
-import { drag, eventPage } from '../share/util'
+import { exportCjs, eventPage } from '../share/util'
 import each from 'licia/each'
+import pointerEvent from 'licia/pointerEvent'
 import { splitName } from './util'
 import durationFormat from 'licia/durationFormat'
 import convertBin from 'licia/convertBin'
@@ -344,30 +345,30 @@ export default class MusicPlayer extends Component<IOptions> {
   }
   private onBarDragStart = () => {
     this.audioTimeUpdate = false
-    $document.on(drag('move'), this.onBarDragMove)
-    $document.on(drag('end'), this.onBarDragEnd)
+    $document.on(pointerEvent('move'), this.onBarDragMove)
+    $document.on(pointerEvent('up'), this.onBarDragEnd)
   }
   private onBarDragMove = (e: any) => {
     this.updateTimeUi(this.getBarClickTime(e))
   }
   private onBarDragEnd = (e: any) => {
-    $document.off(drag('move'), this.onBarDragMove)
-    $document.off(drag('end'), this.onBarDragEnd)
+    $document.off(pointerEvent('move'), this.onBarDragMove)
+    $document.off(pointerEvent('up'), this.onBarDragEnd)
     this.audioTimeUpdate = true
     this.onBarClick(e)
   }
   private onVolumeDragStart = () => {
     this.$volume.addClass(this.c('active'))
-    $document.on(drag('move'), this.onVolumeDragMove)
-    $document.on(drag('end'), this.onVolumeDragEnd)
+    $document.on(pointerEvent('move'), this.onVolumeDragMove)
+    $document.on(pointerEvent('up'), this.onVolumeDragEnd)
   }
   private onVolumeDragMove = (e: any) => {
     this.onVolumeClick(e)
   }
   private onVolumeDragEnd = (e: any) => {
     this.$volume.rmClass(this.c('active'))
-    $document.off(drag('move'), this.onVolumeDragMove)
-    $document.off(drag('end'), this.onVolumeDragEnd)
+    $document.off(pointerEvent('move'), this.onVolumeDragMove)
+    $document.off(pointerEvent('up'), this.onVolumeDragEnd)
     this.onVolumeClick(e)
   }
   private bindEvent() {
@@ -379,9 +380,9 @@ export default class MusicPlayer extends Component<IOptions> {
       .on('click', c('.loop'), this.onLoopClick)
       .on('click', c('.shuffle'), this.toggleShuffle)
       .on('click', c('.controller-left'), this.onBarClick)
-      .on(drag('start'), c('.controller-left'), this.onBarDragStart)
+      .on(pointerEvent('down'), c('.controller-left'), this.onBarDragStart)
       .on('click', c('.volume-controller'), this.onVolumeClick)
-      .on(drag('start'), c('.volume-controller'), this.onVolumeDragStart)
+      .on(pointerEvent('down'), c('.volume-controller'), this.onVolumeDragStart)
 
     this.$list.on('click', c('.list-item'), this.onListItemClick)
 
@@ -535,5 +536,6 @@ export default class MusicPlayer extends Component<IOptions> {
   }
 }
 
-module.exports = MusicPlayer
-module.exports.default = MusicPlayer
+if (typeof module !== 'undefined') {
+  exportCjs(module, MusicPlayer)
+}

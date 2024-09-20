@@ -1,6 +1,7 @@
 import Component from '../share/Component'
 import stripIndent from 'licia/stripIndent'
-import { drag } from '../share/util'
+import { exportCjs } from '../share/util'
+import pointerEvent from 'licia/pointerEvent'
 import $ from 'licia/$'
 import toNum from 'licia/toNum'
 import types from 'licia/types'
@@ -120,50 +121,54 @@ export default class Keyboard extends Component {
   private bindEvent() {
     const { c, $container } = this
     const self = this
-    this.find('.row').on(drag('start'), 'li', function (this: HTMLLIElement) {
-      const $li = $(this)
-      if (!$li.data('key')) {
-        return
-      }
-      const key = toNum($li.data('key'))
-      let input = self.input
-      switch (key) {
-        case 8: {
-          if (input.length > 0) {
-            input = input.slice(0, input.length - 1)
-          }
-          break
+    this.find('.row').on(
+      pointerEvent('down'),
+      'li',
+      function (this: HTMLLIElement) {
+        const $li = $(this)
+        if (!$li.data('key')) {
+          return
         }
-        case 16: {
-          const isPressed = $li.hasClass(c('pressed'))
-          $container.find('li[data-key="16"]').rmClass(c('pressed'))
-          self.shift = !isPressed
-          if (isPressed) {
-            $li.rmClass(c('pressed'))
-          } else {
-            $li.addClass(c('pressed'))
+        const key = toNum($li.data('key'))
+        let input = self.input
+        switch (key) {
+          case 8: {
+            if (input.length > 0) {
+              input = input.slice(0, input.length - 1)
+            }
+            break
           }
-          break
+          case 16: {
+            const isPressed = $li.hasClass(c('pressed'))
+            $container.find('li[data-key="16"]').rmClass(c('pressed'))
+            self.shift = !isPressed
+            if (isPressed) {
+              $li.rmClass(c('pressed'))
+            } else {
+              $li.addClass(c('pressed'))
+            }
+            break
+          }
+          case 17:
+          case 18:
+          case 37:
+          case 38:
+          case 39:
+          case 40:
+          case 91:
+          case 93:
+            break
+          case 20:
+            self.capsLock = !self.capsLock
+            $li.toggleClass(c('active'))
+            break
+          default:
+            input += keyCodeToChar(key, self.capsLock, self.shift)
         }
-        case 17:
-        case 18:
-        case 37:
-        case 38:
-        case 39:
-        case 40:
-        case 91:
-        case 93:
-          break
-        case 20:
-          self.capsLock = !self.capsLock
-          $li.toggleClass(c('active'))
-          break
-        default:
-          input += keyCodeToChar(key, self.capsLock, self.shift)
+        self.input = input
+        self.emit('change', self.input)
       }
-      self.input = input
-      self.emit('change', self.input)
-    })
+    )
   }
 }
 
@@ -220,5 +225,6 @@ function keyCodeToChar(key: number, capsLock = false, shift = false) {
   return String.fromCharCode(key)
 }
 
-module.exports = Keyboard
-module.exports.default = Keyboard
+if (typeof module !== 'undefined') {
+  exportCjs(module, Keyboard)
+}

@@ -61,30 +61,6 @@ function traverseTree(tree: any[], handler: any) {
 }
 
 export const hasTouchSupport = 'ontouchstart' in root
-export const hasPointerSupport = 'PointerEvent' in root
-const touchEvents: any = {
-  start: 'touchstart',
-  move: 'touchmove',
-  end: 'touchend',
-}
-const mouseEvents: any = {
-  start: 'mousedown',
-  move: 'mousemove',
-  end: 'mouseup',
-}
-const pointerEvents: any = {
-  start: 'pointerdown',
-  move: 'pointermove',
-  end: 'pointerup',
-}
-
-export function drag(name: string) {
-  if (hasPointerSupport) {
-    return pointerEvents[name]
-  }
-
-  return hasTouchSupport ? touchEvents[name] : mouseEvents[name]
-}
 
 export function eventClient(type: string, e: any) {
   const name = type === 'x' ? 'clientX' : 'clientY'

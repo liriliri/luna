@@ -4,8 +4,9 @@ import stripIndent from 'licia/stripIndent'
 import Color from 'licia/Color'
 import clamp from 'licia/clamp'
 import throttle from 'licia/throttle'
+import pointerEvent from 'licia/pointerEvent'
 import { rgbToHsv } from './util'
-import { drag, eventPage } from '../share/util'
+import { exportCjs, eventPage } from '../share/util'
 
 const $document = $(document as any)
 
@@ -64,7 +65,7 @@ export default class ColorPicker extends Component<IOptions> {
     return rgbToHsv(val[0], val[1], val[2])
   }
   private bindEvent() {
-    this.$saturation.on(drag('start'), this.onSaturationStart)
+    this.$saturation.on(pointerEvent('down'), this.onSaturationStart)
 
     const updateColor = throttle(this.updateColor, 50)
     this.on('optionChange', (name, val) => {
@@ -79,8 +80,8 @@ export default class ColorPicker extends Component<IOptions> {
   private onSaturationStart = (e: any) => {
     this.onSaturationMove(e)
 
-    $document.on(drag('move'), this.onSaturationMove)
-    $document.on(drag('end'), this.onSaturationEnd)
+    $document.on(pointerEvent('move'), this.onSaturationMove)
+    $document.on(pointerEvent('up'), this.onSaturationEnd)
   }
   private onSaturationMove = (e: any) => {
     e = e.origEvent
@@ -100,8 +101,8 @@ export default class ColorPicker extends Component<IOptions> {
     })
   }
   private onSaturationEnd = () => {
-    $document.off(drag('move'), this.onSaturationMove)
-    $document.off(drag('end'), this.onSaturationEnd)
+    $document.off(pointerEvent('move'), this.onSaturationMove)
+    $document.off(pointerEvent('up'), this.onSaturationEnd)
   }
   private initTpl() {
     this.$container.html(
@@ -130,5 +131,6 @@ export default class ColorPicker extends Component<IOptions> {
   }
 }
 
-module.exports = ColorPicker
-module.exports.default = ColorPicker
+if (typeof module !== 'undefined') {
+  exportCjs(module, ColorPicker)
+}

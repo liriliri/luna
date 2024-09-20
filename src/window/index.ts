@@ -8,7 +8,8 @@ import types from 'licia/types'
 import each from 'licia/each'
 import max from 'licia/max'
 import isEmpty from 'licia/isEmpty'
-import { drag, eventClient } from '../share/util'
+import pointerEvent from 'licia/pointerEvent'
+import { eventClient, exportCjs } from '../share/util'
 
 const $document = $(document as any)
 
@@ -191,8 +192,8 @@ export default class Window extends Component<IOptions> {
     e = e.origEvent
     this.startX = eventClient('x', e)
     this.startY = eventClient('y', e)
-    $document.on(drag('move'), this.onMove)
-    $document.on(drag('end'), this.onMoveEnd)
+    $document.on(pointerEvent('move'), this.onMove)
+    $document.on(pointerEvent('up'), this.onMoveEnd)
   }
   private onMove = (e: any, updateOptions = false) => {
     const { options } = this
@@ -226,8 +227,8 @@ export default class Window extends Component<IOptions> {
   }
   private onMoveEnd = (e: any) => {
     this.onMove(e, true)
-    $document.off(drag('move'), this.onMove)
-    $document.off(drag('end'), this.onMoveEnd)
+    $document.off(pointerEvent('move'), this.onMove)
+    $document.off(pointerEvent('up'), this.onMoveEnd)
   }
   private onResizeStart = (e: any) => {
     e.stopPropagation()
@@ -242,8 +243,8 @@ export default class Window extends Component<IOptions> {
     $desktop.addClass(this.c('resizing'))
     this.startX = eventClient('x', e)
     this.startY = eventClient('y', e)
-    $document.on(drag('move'), this.onResizeMove)
-    $document.on(drag('end'), this.onResizeEnd)
+    $document.on(pointerEvent('move'), this.onResizeMove)
+    $document.on(pointerEvent('up'), this.onResizeEnd)
   }
   private onResizeMove = (e: any, updateOptions = false) => {
     e = e.origEvent
@@ -313,8 +314,8 @@ export default class Window extends Component<IOptions> {
     const $desktop = this.createDesktop()
     $desktop.rmClass(this.c(`cursor-${this.action}`))
     $desktop.rmClass(this.c('resizing'))
-    $document.off(drag('move'), this.onResizeMove)
-    $document.off(drag('end'), this.onResizeEnd)
+    $document.off(pointerEvent('move'), this.onResizeMove)
+    $document.off(pointerEvent('up'), this.onResizeEnd)
     this.action = ''
   }
   private bindEvent() {
@@ -331,18 +332,18 @@ export default class Window extends Component<IOptions> {
       }
     })
 
-    this.$titleBarRight.on(drag('start'), (e) => {
+    this.$titleBarRight.on(pointerEvent('down'), (e) => {
       e.stopPropagation()
       this.focus()
     })
 
     this.$taskBarItem.on('click', this.show)
 
-    this.$resizer.on(drag('start'), this.onResizeStart)
+    this.$resizer.on(pointerEvent('down'), this.onResizeStart)
 
     this.$titleBar
       .on('click', c('.icon-close'), this.destroy)
-      .on(drag('start'), this.onMoveStart)
+      .on(pointerEvent('down'), this.onMoveStart)
 
     this.$minimizeBtn.on('click', (e) => {
       e.stopPropagation()
@@ -445,5 +446,6 @@ export default class Window extends Component<IOptions> {
   }
 }
 
-module.exports = Window
-module.exports.default = Window
+if (typeof module !== 'undefined') {
+  exportCjs(module, Window)
+}

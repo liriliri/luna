@@ -4,7 +4,8 @@ import $ from 'licia/$'
 import each from 'licia/each'
 import clone from 'licia/clone'
 import ResizeSensor from 'licia/ResizeSensor'
-import { measuredScrollbarWidth, drag, exportCjs } from '../share/util'
+import pointerEvent from 'licia/pointerEvent'
+import { measuredScrollbarWidth, exportCjs } from '../share/util'
 
 const $document = $(document as any)
 
@@ -77,8 +78,8 @@ export default class Scrollbar extends Component {
     this.resizeSensor.addListener(this.reset)
     this.contentResizeSensor.addListener(this.reset)
 
-    this.$xThumb.on(drag('start'), (e) => this.onDragStart(e, 'x'))
-    this.$yThumb.on(drag('start'), (e) => this.onDragStart(e, 'y'))
+    this.$xThumb.on(pointerEvent('down'), (e) => this.onDragStart(e, 'x'))
+    this.$yThumb.on(pointerEvent('down'), (e) => this.onDragStart(e, 'y'))
 
     this.$contentWrapper.on('scroll', this.onScroll)
   }
@@ -96,8 +97,8 @@ export default class Scrollbar extends Component {
       this.$yTrack.addClass(c('active'))
     }
 
-    $document.on(drag('move'), this.onDragMove)
-    $document.on(drag('end'), this.onDragEnd)
+    $document.on(pointerEvent('move'), this.onDragMove)
+    $document.on(pointerEvent('up'), this.onDragEnd)
   }
   private onDragMove = (e: any) => {
     e = e.origEvent
@@ -131,8 +132,8 @@ export default class Scrollbar extends Component {
       this.$yTrack.rmClass(c('active'))
     }
 
-    $document.off(drag('move'), this.onDragMove)
-    $document.off(drag('end'), this.onDragEnd)
+    $document.off(pointerEvent('move'), this.onDragMove)
+    $document.off(pointerEvent('up'), this.onDragEnd)
   }
   private onScroll = () => {
     this.renderScrollbarX()

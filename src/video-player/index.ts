@@ -10,7 +10,8 @@ import toStr from 'licia/toStr'
 import durationFormat from 'licia/durationFormat'
 import fullscreen from 'licia/fullscreen'
 import hotkey from 'licia/hotkey'
-import { eventPage, drag } from '../share/util'
+import pointerEvent from 'licia/pointerEvent'
+import { eventPage, exportCjs } from '../share/util'
 import Component, { IComponentOptions } from '../share/Component'
 
 const $document = $(document as any)
@@ -189,16 +190,16 @@ export default class VideoPlayer extends Component<IOptions> {
   }
   private onVolumeDragStart = () => {
     this.$volume.addClass(this.c('active'))
-    $document.on(drag('move'), this.onVolumeDragMove)
-    $document.on(drag('end'), this.onVolumeDragEnd)
+    $document.on(pointerEvent('move'), this.onVolumeDragMove)
+    $document.on(pointerEvent('up'), this.onVolumeDragEnd)
   }
   private onVolumeDragMove = (e: any) => {
     this.onVolumeClick(e)
   }
   private onVolumeDragEnd = (e: any) => {
     this.$volume.rmClass(this.c('active'))
-    $document.off(drag('move'), this.onVolumeDragMove)
-    $document.off(drag('end'), this.onVolumeDragEnd)
+    $document.off(pointerEvent('move'), this.onVolumeDragMove)
+    $document.off(pointerEvent('up'), this.onVolumeDragEnd)
     this.onVolumeClick(e)
   }
   private onMouseMove = () => {
@@ -216,12 +217,12 @@ export default class VideoPlayer extends Component<IOptions> {
     this.$controller
       .on('click', c('.play'), this.togglePlay)
       .on('click', c('.controller-top'), this.onBarClick)
-      .on(drag('start'), c('.controller-top'), this.onBarDragStart)
+      .on(pointerEvent('down'), c('.controller-top'), this.onBarDragStart)
       .on('click', c('.icon-fullscreen'), this.toggleFullscreen)
       .on('click', c('.icon-pip'), this.togglePip)
       .on('click', c('.icon-camera'), this.captureScreenshot)
       .on('click', c('.volume-controller'), this.onVolumeClick)
-      .on(drag('start'), c('.volume-controller'), this.onVolumeDragStart)
+      .on(pointerEvent('down'), c('.volume-controller'), this.onVolumeDragStart)
 
     this.$container.on('mousemove', this.onMouseMove)
     this.$video.on('click', this.togglePlay)
@@ -302,15 +303,15 @@ export default class VideoPlayer extends Component<IOptions> {
   }
   private onBarDragStart = () => {
     this.videoTimeUpdate = false
-    $document.on(drag('move'), this.onBarDragMove)
-    $document.on(drag('end'), this.onBarDragEnd)
+    $document.on(pointerEvent('move'), this.onBarDragMove)
+    $document.on(pointerEvent('up'), this.onBarDragEnd)
   }
   private onBarDragMove = (e: any) => {
     this.updateTimeUi(this.getBarClickTime(e))
   }
   private onBarDragEnd = (e: any) => {
-    $document.off(drag('move'), this.onBarDragMove)
-    $document.off(drag('end'), this.onBarDragEnd)
+    $document.off(pointerEvent('move'), this.onBarDragMove)
+    $document.off(pointerEvent('up'), this.onBarDragEnd)
     this.videoTimeUpdate = true
     this.onBarClick(e)
   }
@@ -396,5 +397,6 @@ export default class VideoPlayer extends Component<IOptions> {
   }
 }
 
-module.exports = VideoPlayer
-module.exports.default = VideoPlayer
+if (typeof module !== 'undefined') {
+  exportCjs(module, VideoPlayer)
+}

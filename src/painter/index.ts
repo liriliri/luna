@@ -4,7 +4,8 @@ import $ from 'licia/$'
 import each from 'licia/each'
 import ResizeSensor from 'licia/ResizeSensor'
 import types from 'licia/types'
-import { exportCjs, drag, measuredScrollbarWidth } from '../share/util'
+import pointerEvent from 'licia/pointerEvent'
+import { exportCjs, measuredScrollbarWidth } from '../share/util'
 import {
   Brush,
   Pencil,
@@ -301,8 +302,8 @@ export default class Painter extends Component<IOptions> {
     const { $viewport, $toolBox, $foregroundColor, $backgroundColor, c } = this
 
     $viewport
-      .on(drag('start'), this.onViewportDragStart)
-      .on(drag('move'), this.onViewportMouseMove)
+      .on(pointerEvent('down'), this.onViewportDragStart)
+      .on(pointerEvent('move'), this.onViewportMouseMove)
       .on('click', this.onViewportClick)
       .on('mouseenter', this.onViewportMouseEnter)
       .on('mouseleave', this.onViewportMouseLeave)
@@ -355,16 +356,16 @@ export default class Painter extends Component<IOptions> {
   }
   private onViewportDragStart = (e: any) => {
     this.currentTool.onDragStart(e.origEvent)
-    $document.on(drag('move'), this.onViewportDragMove)
-    $document.on(drag('end'), this.onViewportDragEnd)
+    $document.on(pointerEvent('move'), this.onViewportDragMove)
+    $document.on(pointerEvent('up'), this.onViewportDragEnd)
   }
   private onViewportDragMove = (e: any) => {
     this.currentTool.onDragMove(e.origEvent)
   }
   private onViewportDragEnd = (e: any) => {
     this.currentTool.onDragEnd(e.origEvent)
-    $document.off(drag('move'), this.onViewportDragMove)
-    $document.off(drag('end'), this.onViewportDragEnd)
+    $document.off(pointerEvent('move'), this.onViewportDragMove)
+    $document.off(pointerEvent('up'), this.onViewportDragEnd)
   }
   private onViewportClick = (e: any) => {
     this.currentTool.onClick(e.origEvent)

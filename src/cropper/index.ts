@@ -7,7 +7,8 @@ import throttle from 'licia/throttle'
 import clone from 'licia/clone'
 import max from 'licia/max'
 import contain from 'licia/contain'
-import { drag, eventPage, exportCjs } from '../share/util'
+import pointerEvent from 'licia/pointerEvent'
+import { eventPage, exportCjs } from '../share/util'
 
 const $document = $(document as any)
 
@@ -178,7 +179,7 @@ export default class Cropper extends Component<IOptions> {
 
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
-    this.$container.on(drag('start'), this.onCropStart)
+    this.$container.on(pointerEvent('down'), this.onCropStart)
 
     this.on('optionChange', (name, val) => {
       switch (name) {
@@ -203,8 +204,8 @@ export default class Cropper extends Component<IOptions> {
     this.startX = eventPage('x', e)
     this.startY = eventPage('y', e)
     this.oldCropBoxData = clone(this.cropBoxData)
-    $document.on(drag('move'), this.onCropMove)
-    $document.on(drag('end'), this.onCropEnd)
+    $document.on(pointerEvent('move'), this.onCropMove)
+    $document.on(pointerEvent('up'), this.onCropEnd)
   }
   private onCropMove = (e: any) => {
     e = e.origEvent
@@ -516,8 +517,8 @@ export default class Cropper extends Component<IOptions> {
   private onCropEnd = (e: any) => {
     this.onCropMove(e)
     this.$container.rmClass(this.c(`cursor-${this.action}`))
-    $document.off(drag('move'), this.onCropMove)
-    $document.off(drag('end'), this.onCropEnd)
+    $document.off(pointerEvent('move'), this.onCropMove)
+    $document.off(pointerEvent('up'), this.onCropEnd)
     this.action = ''
   }
   private resetCropBoxData() {

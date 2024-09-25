@@ -21,8 +21,8 @@ const def = story(
 
     const audio = object('Audio', [
       {
-        url: 'https://res.liriliri.io/luna/Give_a_reason.mp3',
-        cover: 'https://res.liriliri.io/luna/Give_a_reason.jpg',
+        url: '/Give_a_reason.mp3',
+        cover: '/Give_a_reason.jpg',
         title: 'Give a Reason',
         artist: '林原めぐみ',
       },

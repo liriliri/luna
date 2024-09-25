@@ -14,14 +14,14 @@ const def = story(
       margin: '0 auto',
     })
 
-    const fcCore = 'https://res.liriliri.io/luna/fceumm_libretro.js'
+    const fcCore = '/fceumm_libretro.js'
 
     const core = optionsKnob(
       'Core',
       {
         FC: fcCore,
-        SFC: 'https://res.liriliri.io/luna/snes9x_libretro.js',
-        GBA: 'https://res.liriliri.io/luna/vba_next_libretro.js',
+        SFC: '/snes9x_libretro.js',
+        GBA: '/vba_next_libretro.js',
       },
       fcCore,
       {
@@ -39,11 +39,11 @@ const def = story(
       core,
       config,
       coreConfig,
-      browserFS: 'https://res.liriliri.io/luna/browserfs.min.js',
+      browserFS: '/browserfs.min.js',
     })
 
     if (core === fcCore) {
-      const rom = text('ROM', 'https://res.liriliri.io/luna/Contra.nes')
+      const rom = text('ROM', '/Contra.nes')
       button('Load', () => {
         retroHandheld.load(rom)
         return false

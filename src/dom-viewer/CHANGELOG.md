@@ -1,3 +1,7 @@
+## 1.4.0 (27 Sep 2024)
+
+* feat: shadow root support
+
 ## 1.3.0 (25 Dec 2023)
 
 * feat: hotkey for navigation

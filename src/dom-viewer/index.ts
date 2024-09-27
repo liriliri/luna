@@ -56,6 +56,7 @@ export default class DomViewer extends Component<IOptions> {
   private $tag: $.$
   private $children: $.$
   private observer: MutationObserver
+  private isShadowRoot: boolean
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'dom-viewer' }, options)
 
@@ -68,6 +69,8 @@ export default class DomViewer extends Component<IOptions> {
       ignore: () => false,
       hotkey: true,
     })
+
+    this.isShadowRoot = isShadowRoot(this.options.node)
 
     this.initTpl()
     this.bindEvent()
@@ -177,13 +180,15 @@ export default class DomViewer extends Component<IOptions> {
     const { $tag, c } = this
     const { node } = this.options
 
-    $tag.html(
-      this.renderHtmlTag({
-        ...getHtmlTagData(node as HTMLElement),
-        hasTail: false,
-        hasToggleButton: true,
-      })
-    )
+    if (!this.isShadowRoot) {
+      $tag.html(
+        this.renderHtmlTag({
+          ...getHtmlTagData(node as HTMLElement),
+          hasTail: false,
+          hasToggleButton: true,
+        })
+      )
+    }
     $tag.addClass(c('expanded'))
     this.$children.rmClass(c('hidden'))
   }
@@ -192,13 +197,15 @@ export default class DomViewer extends Component<IOptions> {
     const { node } = this.options
 
     this.$children.addClass(c('hidden'))
-    this.$tag.html(
-      this.renderHtmlTag({
-        ...getHtmlTagData(node as HTMLElement),
-        hasTail: true,
-        hasToggleButton: true,
-      })
-    )
+    if (!this.isShadowRoot) {
+      this.$tag.html(
+        this.renderHtmlTag({
+          ...getHtmlTagData(node as HTMLElement),
+          hasTail: true,
+          hasToggleButton: true,
+        })
+      )
+    }
     $tag.rmClass(c('expanded'))
   }
   private initObserver() {
@@ -232,12 +239,17 @@ export default class DomViewer extends Component<IOptions> {
         this.isExpanded ? this.renderExpandTag() : this.renderCollapseTag()
       } else {
         this.$children.addClass(c('hidden'))
-        $tag.html(
-          this.renderHtmlTag({
-            ...getHtmlTagData(node as HTMLElement),
-            hasTail: false,
-          })
-        )
+        this.isExpanded = false
+        if (this.isShadowRoot) {
+          $tag.html(this.renderShadowRoot(false))
+        } else {
+          $tag.html(
+            this.renderHtmlTag({
+              ...getHtmlTagData(node as HTMLElement),
+              hasTail: false,
+            })
+          )
+        }
       }
     } else if (mutation.type === 'characterData') {
       if (node.nodeType === Node.TEXT_NODE) {
@@ -251,7 +263,7 @@ export default class DomViewer extends Component<IOptions> {
     const { c, $tag } = this
     const { node } = this.options
 
-    if (node.nodeType === Node.ELEMENT_NODE) {
+    if (node.nodeType === Node.ELEMENT_NODE || this.isShadowRoot) {
       $tag.on('click', c('.toggle'), (e: any) => {
         e.stopPropagation()
         this.toggle()
@@ -353,9 +365,11 @@ export default class DomViewer extends Component<IOptions> {
   private isExpandable() {
     const { node } = this.options
 
-    return (
-      node.nodeType === Node.ELEMENT_NODE && this.getChildNodes().length > 0
-    )
+    if (node.nodeType !== Node.ELEMENT_NODE && !this.isShadowRoot) {
+      return false
+    }
+
+    return this.getChildNodes().length > 0
   }
   private getChildNodes() {
     const { rootContainer, ignore } = this.options
@@ -373,6 +387,11 @@ export default class DomViewer extends Component<IOptions> {
       }
       return child !== rootContainer && !ignore(child)
     })
+    if (node.shadowRoot) {
+      childNodes.unshift(node.shadowRoot)
+    } else if ((node as any).chobitsuShadowRoot) {
+      childNodes.unshift((node as any).chobitsuShadowRoot)
+    }
     return childNodes
   }
   private initTpl() {
@@ -399,6 +418,9 @@ export default class DomViewer extends Component<IOptions> {
         hasToggleButton: isExpandable,
       }
       $tag.html(this.renderHtmlTag(data))
+    } else if (isShadowRoot(node)) {
+      const isExpandable = this.isExpandable()
+      $tag.html(this.renderShadowRoot(isExpandable))
     } else if (node.nodeType === Node.TEXT_NODE) {
       $tag.html(this.renderTextNode(node))
     } else if (node.nodeType === Node.COMMENT_NODE) {
@@ -412,7 +434,7 @@ export default class DomViewer extends Component<IOptions> {
 
     container.appendChild($tag.get(0))
 
-    if (node.nodeType === node.ELEMENT_NODE) {
+    if (node.nodeType === node.ELEMENT_NODE || this.isShadowRoot) {
       const $children = $(h('ul'))
       $children.addClass([c('children'), c('hidden')])
       container.appendChild($children.get(0))
@@ -465,7 +487,7 @@ export default class DomViewer extends Component<IOptions> {
       }
     })
 
-    if (node) {
+    if (node && !this.isShadowRoot) {
       if (this.endTagDomViewer) {
         this.endTagDomViewer.attach()
       } else {
@@ -506,15 +528,11 @@ export default class DomViewer extends Component<IOptions> {
       tail = `<span class="html-tag">&lt;<span class="tag-name">/${data.tagName}</span>&gt;</span>`
     }
 
-    let toggle = ''
-    if (data.hasToggleButton) {
-      toggle =
-        '<div class="toggle "><span class="icon icon-caret-right"></span><span class="icon icon-caret-down"></span></div>'
-    }
-
     return this.c(stripIndent`
-      ${toggle}
-      <span class="html-tag">&lt;<span class="tag-name">${data.tagName}</span>${attributes}&gt;</span>${tail}
+      ${data.hasToggleButton ? this.renderToggle() : ''}
+      <span class="html-tag">&lt;<span class="tag-name">${
+        data.tagName
+      }</span>${attributes}&gt;</span>${tail}
       <span class="selection"></span>`)
   }
   private renderTextNode(node: ChildNode) {
@@ -552,6 +570,17 @@ export default class DomViewer extends Component<IOptions> {
         value
       )} --&gt;</span><span class="selection"></span>`
     )
+  }
+  private renderShadowRoot(hasToggle: boolean) {
+    const { node } = this.options
+
+    return this.c(stripIndent`
+      ${hasToggle ? this.renderToggle() : ''}
+      <span class="shadow-root">#shadow-root (${(node as any).mode})</span>
+      <span class="selection"></span>`)
+  }
+  private renderToggle() {
+    return '<div class="toggle "><span class="icon icon-caret-right"></span><span class="icon icon-caret-down"></span></div>'
   }
 }
 
@@ -606,6 +635,14 @@ function isUrlAttribute(el: HTMLElement, name: string) {
 
   if (tagName === 'LINK') {
     if (name === 'href') return true
+  }
+
+  return false
+}
+
+function isShadowRoot(node: any) {
+  if (window.ShadowRoot) {
+    return node instanceof ShadowRoot
   }
 
   return false

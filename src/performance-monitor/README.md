@@ -29,7 +29,6 @@ import LunaPerformanceMonitor from 'luna-performance-monitor'
 ## Usage
 
 ```javascript
-const container = document.getElementById('container')
 const memoryMonitor = new PerformanceMonitor(container, {
   title: 'Used JS heap size',
   unit: 'MB',

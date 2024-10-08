@@ -2,6 +2,7 @@ import 'luna-performance-monitor.css'
 import PerformanceMonitor from 'luna-performance-monitor.js'
 import story from '../share/story'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 import $ from 'licia/$'
 import h from 'licia/h'
 import raf from 'licia/raf'
@@ -100,6 +101,7 @@ const def = story(
   },
   {
     readme,
+    changelog,
     source: __STORY__,
     ReactComponent({ theme }) {
       return (

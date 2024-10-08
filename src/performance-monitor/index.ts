@@ -1,5 +1,4 @@
 import Component, { IComponentOptions } from '../share/Component'
-import stripIndent from 'licia/stripIndent'
 import types from 'licia/types'
 import $ from 'licia/$'
 import raf from 'licia/raf'
@@ -44,7 +43,6 @@ const PIXELS_PER_MS = 10 / 1000
  * Realtime counter used for displaying cpu, fps metrics.
  *
  * @example
- * const container = document.getElementById('container')
  * const memoryMonitor = new PerformanceMonitor(container, {
  *   title: 'Used JS heap size',
  *   unit: 'MB',
@@ -331,9 +329,7 @@ export default class PerformanceMonitor extends Component<IOptions> {
     const { title } = this.options
 
     this.$container.html(
-      this.c(stripIndent`
-      <div class="title">${title}<span class="value"></span></div>
-      `)
+      this.c(`<div class="title">${title}<span class="value"></span></div>`)
     )
   }
 }

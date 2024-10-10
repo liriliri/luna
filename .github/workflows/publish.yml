@@ -21,7 +21,7 @@ jobs:
       - run: |
           npm i
           npm link
-          luna install ${{ github.event.inputs.component }}
+          luna install
           luna build ${{ github.event.inputs.component }}
       - working-directory: dist
         run: |

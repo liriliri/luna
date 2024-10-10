@@ -605,7 +605,8 @@ export default class Log extends Emitter {
   }
   private formatErr(err: Error) {
     let lines = err.stack ? err.stack.split('\n') : []
-    const msg = `${err.message || lines[0]}<br/>`
+    let msg = err.name ? `${err.name}: ` : ''
+    msg += `${err.message || lines[0]}<br/>`
 
     lines = lines.map((val: string) => escape(val))
 

@@ -1,3 +1,7 @@
+## 1.3.5 (10 Oct 2024)
+
+* fix: DOMException not treated as error [#18](https://github.com/liriliri/luna/issues/18)
+
 ## 1.3.4 (8 July 2024)
 
 * fix: scroll bottom check [#17](https://github.com/liriliri/luna/pull/17)

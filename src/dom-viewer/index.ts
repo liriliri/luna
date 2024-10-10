@@ -4,6 +4,7 @@ import $ from 'licia/$'
 import h from 'licia/h'
 import map from 'licia/map'
 import filter from 'licia/filter'
+import isShadowRoot from 'licia/isShadowRoot'
 import stripIndent from 'licia/stripIndent'
 import toArr from 'licia/toArr'
 import MutationObserver from 'licia/MutationObserver'
@@ -635,14 +636,6 @@ function isUrlAttribute(el: HTMLElement, name: string) {
 
   if (tagName === 'LINK') {
     if (name === 'href') return true
-  }
-
-  return false
-}
-
-function isShadowRoot(node: any) {
-  if (window.ShadowRoot) {
-    return node instanceof ShadowRoot
   }
 
   return false

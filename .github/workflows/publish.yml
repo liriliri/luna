@@ -1,0 +1,31 @@
+name: Publish to NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      component:
+        description: 'Component'
+        required: true
+
+jobs:
+  publish:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: |
+          npm i
+          npm link
+          luna install ${{ github.event.inputs.component }}
+          luna build ${{ github.event.inputs.component }}
+      - working-directory: dist
+        run: |
+          cd ${{ github.event.inputs.component }}
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -14,19 +14,15 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install -g codecov
-    - run: npm i && npm link
-    - run: npm run ci
-    - run: codecov --disable=gcov
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        node-version: '18.x'
+    - run: |
+        npm i
+        npm link
+        npm run ci
+    - uses: codecov/codecov-action@v4
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }} 

@@ -24,5 +24,5 @@ jobs:
         npm link
         npm run ci
     - uses: codecov/codecov-action@v4
-          with:
-            token: ${{ secrets.CODECOV_TOKEN }} 
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} 

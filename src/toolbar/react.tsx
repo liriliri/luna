@@ -82,6 +82,12 @@ export const LunaToolbarText: FC<IToolbarTextProps> = (props) => {
     return () => toolbarText.current?.detach()
   }, [props.toolbar])
 
+  useEffect(() => {
+    if (toolbarText.current) {
+      toolbarText.current.setText(props.text)
+    }
+  }, [props.text])
+
   return null
 }
 

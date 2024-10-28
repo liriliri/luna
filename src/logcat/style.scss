@@ -1,16 +1,19 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-logcat {
-  @include component();
-  padding-left: #{$padding-x-x-s}px;
-  font-family: $font-family-code;
-  unicode-bidi: embed;
-  position: relative;
-  overflow: auto;
-  line-height: #{$line-height-l-g}em;
-  border: 1px solid $color-border;
-  white-space: pre;
-  user-select: text;
+  @include mixin.component();
+  & {
+    padding-left: #{theme.$padding-x-x-s}px;
+    font-family: theme.$font-family-code;
+    unicode-bidi: embed;
+    position: relative;
+    overflow: auto;
+    line-height: #{theme.$line-height-l-g}em;
+    border: 1px solid theme.$color-border;
+    white-space: pre;
+    user-select: text;
+  }
   &.wrap-long-lines {
     white-space: pre-wrap;
     word-break: break-all;
@@ -21,7 +24,7 @@
 }
 
 .entry {
-  font-size: #{$font-size-s-m}px;
+  font-size: #{theme.$font-size-s-m}px;
 }
 
 .date,
@@ -43,7 +46,7 @@
 }
 
 .date {
-  margin-right: #{$margin-x-x-s}px;
+  margin-right: #{theme.$margin-x-x-s}px;
 }
 
 .pid {
@@ -59,68 +62,68 @@
 }
 
 .priority {
-  padding: 0 #{$padding-x-s}px;
+  padding: 0 #{theme.$padding-x-s}px;
 }
 
 .W {
   .priority {
-    background: $color-warning-text;
+    background: theme.$color-warning-text;
   }
   .message {
-    color: $color-warning-text;
+    color: theme.$color-warning-text;
   }
 }
 
 .E {
   .priority {
-    background: $color-error-text;
+    background: theme.$color-error-text;
   }
   .message {
-    color: $color-error-text;
+    color: theme.$color-error-text;
   }
 }
 
 .D {
   .priority {
-    background: $color-success-text;
+    background: theme.$color-success-text;
   }
 }
 
 .I {
   .priority {
-    background: $color-info-text;
+    background: theme.$color-info-text;
   }
 }
 
 .theme-dark {
-  border-color: $color-border-dark;
+  border-color: theme.$color-border-dark;
   .W {
     .priority {
-      background: $color-warning-text-dark;
+      background: theme.$color-warning-text-dark;
     }
     .message {
-      color: $color-warning-text-dark;
+      color: theme.$color-warning-text-dark;
     }
   }
 
   .E {
     .priority {
-      background: $color-error-text-dark;
+      background: theme.$color-error-text-dark;
     }
     .message {
-      color: $color-error-text-dark;
+      color: theme.$color-error-text-dark;
     }
   }
 
   .D {
     .priority {
-      background: $color-success-text-dark;
+      background: theme.$color-success-text-dark;
     }
   }
 
   .I {
     .priority {
-      background: $color-info-text-dark;
+      background: theme.$color-info-text-dark;
     }
   }
 }

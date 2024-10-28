@@ -1,11 +1,14 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-box-model {
-  @include component();
-  display: inline-block;
-  font-size: #{$font-size-s-m}px;
-  text-align: center;
-  white-space: nowrap;
+  @include mixin.component();
+  & {
+    display: inline-block;
+    font-size: #{theme.$font-size-s-m}px;
+    text-align: center;
+    white-space: nowrap;
+  }
 }
 
 .label {
@@ -34,8 +37,8 @@
   vertical-align: middle;
   padding: 3px;
   margin: 3px;
-  color: $color-text;
-  background: $color-bg-container;
+  color: theme.$color-text;
+  background: theme.$color-bg-container;
 }
 .position {
   border: 1px grey dotted;
@@ -43,21 +46,21 @@
 .margin {
   border: 1px dashed;
   &.highlighted {
-    color: $color-text !important;
+    color: theme.$color-text !important;
     background: rgba(246, 178, 107, 0.66) !important;
   }
 }
 .border {
   border: 1px #000 solid;
   &.highlighted {
-    color: $color-text !important;
+    color: theme.$color-text !important;
     background: rgba(255, 229, 153, 0.66) !important;
   }
 }
 .padding {
   border: 1px grey dashed;
   &.highlighted {
-    color: $color-text !important;
+    color: theme.$color-text !important;
     background: rgba(147, 196, 125, 0.55) !important;
   }
 }
@@ -65,7 +68,7 @@
   border: 1px grey solid;
   min-width: 100px;
   &.highlighted {
-    color: $color-text !important;
+    color: theme.$color-text !important;
     background: rgba(111, 168, 220, 0.66) !important;
   }
 }
@@ -76,8 +79,8 @@
   .border,
   .padding,
   .content {
-    color: $color-text-dark;
-    background: $color-bg-container-dark;
+    color: theme.$color-text-dark;
+    background: theme.$color-bg-container-dark;
   }
   .border {
     border-color: grey;

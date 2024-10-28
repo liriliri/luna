@@ -1,4 +1,4 @@
-@import './theme';
+@use './theme' as theme;
 
 @mixin overflow-auto($direction: 'both') {
   @if $direction == 'both' {
@@ -10,12 +10,12 @@
 }
 
 @mixin component {
-  color: $color-text;
-  background-color: $color-bg-container;
-  font-family: $font-family;
+  color: theme.$color-text;
+  background-color: theme.$color-bg-container;
+  font-family: theme.$font-family;
   box-sizing: border-box;
   user-select: none;
-  font-size: #{$font-size}px;
+  font-size: #{theme.$font-size}px;
   &.hidden,
   .hidden {
     display: none;
@@ -29,8 +29,8 @@
   }
   &.theme-dark {
     color-scheme: dark;
-    color: $color-text-dark;
-    background-color: $color-bg-container-dark;
+    color: theme.$color-text-dark;
+    background-color: theme.$color-bg-container-dark;
   }
 }
 

@@ -1,0 +1,911 @@
+[
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 5,
+    "tag": "System.err",
+    "message": "java.lang.NoSuchMethodException: android.view.IWindowManager$Stub$Proxy.getRotation []",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 5,
+    "tag": "System.err",
+    "message": "\tat java.lang.Class.getMethod(Class.java:2072)",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 5,
+    "tag": "System.err",
+    "message": "\tat java.lang.Class.getMethod(Class.java:1693)",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 5,
+    "tag": "System.err",
+    "message": "\tat jp.co.cyberagent.stf.compat.WindowManagerWrapper.getRotation(WindowManagerWrapper.java:66)",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 5,
+    "tag": "System.err",
+    "message": "\tat jp.co.cyberagent.stf.monitor.RotationMonitor.peek(RotationMonitor.java:54)",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 5,
+    "tag": "System.err",
+    "message": "\tat jp.co.cyberagent.stf.Service$Server$Connection.run(Service.java:375)",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 5,
+    "tag": "System.err",
+    "message": "\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:462)",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 5,
+    "tag": "System.err",
+    "message": "\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 5,
+    "tag": "System.err",
+    "message": "\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 5,
+    "tag": "System.err",
+    "message": "\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 5,
+    "tag": "System.err",
+    "message": "\tat java.lang.Thread.run(Thread.java:923)",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.452Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 4,
+    "tag": "STFRotationMonitor",
+    "message": "Rotation is 0",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.453Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 4,
+    "tag": "STFAirplaneModeMonitor",
+    "message": "Airplane mode is off",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.463Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 4,
+    "tag": "STFBrowserPkgMonitor",
+    "message": "Browser list changed",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.470Z",
+    "pid": 17486,
+    "tid": 17486,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=10279(com.heytap.htms) expire 60 lines",
+    "package": "pid-17486"
+  },
+  {
+    "date": "2024-10-28T07:21:37.491Z",
+    "pid": 3207,
+    "tid": 22269,
+    "priority": 6,
+    "tag": "PhoneInterfaceManager",
+    "message": "[PhoneIntfMgr] getCarrierPrivilegeStatusForUid: No UICC",
+    "package": "pid-3207"
+  },
+  {
+    "date": "2024-10-28T07:21:37.494Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 3,
+    "tag": "GetPropertiesResponder",
+    "message": "Security exception trying to retrieve phoneNumber",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.497Z",
+    "pid": 3207,
+    "tid": 4188,
+    "priority": 6,
+    "tag": "PhoneInterfaceManager",
+    "message": "[PhoneIntfMgr] getCarrierPrivilegeStatusForUid: No UICC",
+    "package": "pid-3207"
+  },
+  {
+    "date": "2024-10-28T07:21:37.498Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 3,
+    "tag": "GetPropertiesResponder",
+    "message": "Security exception trying to retrieve network",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:37.503Z",
+    "pid": 27690,
+    "tid": 17459,
+    "priority": 4,
+    "tag": "MSP-LOG-SDK-OperaCfg_SDK_OperaCfgImpl",
+    "message": "forceUpdate, productId: magazine, rMaxVer: 54345\n",
+    "package": "pid-27690"
+  },
+  {
+    "date": "2024-10-28T07:21:37.504Z",
+    "pid": 27690,
+    "tid": 17459,
+    "priority": 4,
+    "tag": "MSP-LOG-SDK-OperaCfg_SDK_OperaCfgImpl",
+    "message": "forceUpdate checkForceUpdateTime = false\n",
+    "package": "pid-27690"
+  },
+  {
+    "date": "2024-10-28T07:21:37.523Z",
+    "pid": 1754,
+    "tid": 1926,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=1000(system) android.ui expire 8 lines",
+    "package": "pid-1754"
+  },
+  {
+    "date": "2024-10-28T07:21:37.550Z",
+    "pid": 2580,
+    "tid": 2956,
+    "priority": 3,
+    "tag": "OplusCoreAppService",
+    "message": "isPackageContainsOplusCertificates be called",
+    "package": "pid-2580"
+  },
+  {
+    "date": "2024-10-28T07:21:37.598Z",
+    "pid": 1754,
+    "tid": 2502,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=1000(system) OplusNetworkSta expire 1 line",
+    "package": "pid-1754"
+  },
+  {
+    "date": "2024-10-28T07:21:37.728Z",
+    "pid": 27690,
+    "tid": 27703,
+    "priority": 4,
+    "tag": "eytap.pictoria",
+    "message": "Background concurrent copying GC freed 180931(8837KB) AllocSpace objects, 64(4692KB) LOS objects, 51% free, 11MB/23MB, paused 115us total 162.808ms",
+    "package": "pid-27690"
+  },
+  {
+    "date": "2024-10-28T07:21:37.783Z",
+    "pid": 27690,
+    "tid": 16971,
+    "priority": 5,
+    "tag": "AlarmManager",
+    "message": "Unrecognized alarm listener com.heytap.pictorial.core.download.n@7758935",
+    "package": "pid-27690"
+  },
+  {
+    "date": "2024-10-28T07:21:37.802Z",
+    "pid": 27690,
+    "tid": 28918,
+    "priority": 6,
+    "tag": "Parcel",
+    "message": "Reading a NULL string not supported here.",
+    "package": "pid-27690"
+  },
+  {
+    "date": "2024-10-28T07:21:37.834Z",
+    "pid": 27643,
+    "tid": 27643,
+    "priority": 6,
+    "tag": "adbd",
+    "message": "failed to connect to socket 'localabstract:minitouch': could not connect to localabstract address 'localabstract:minitouch'",
+    "package": "pid-27643"
+  },
+  {
+    "date": "2024-10-28T07:21:37.856Z",
+    "pid": 17455,
+    "tid": 17472,
+    "priority": 3,
+    "tag": "MinitouchAgent",
+    "message": "client connected",
+    "package": "pid-17455"
+  },
+  {
+    "date": "2024-10-28T07:21:37.863Z",
+    "pid": 14159,
+    "tid": 23645,
+    "priority": 3,
+    "tag": "OppoUsbEnvironmentSys",
+    "message": "getVolumes: sInternalSdDir=/storage/emulated/0",
+    "package": "pid-14159"
+  },
+  {
+    "date": "2024-10-28T07:21:37.865Z",
+    "pid": 14159,
+    "tid": 23645,
+    "priority": 3,
+    "tag": "OppoUsbEnvironmentSys",
+    "message": "update: registerReceiver sVolumeStateReceiver",
+    "package": "pid-14159"
+  },
+  {
+    "date": "2024-10-28T07:21:37.878Z",
+    "pid": 14159,
+    "tid": 23645,
+    "priority": 6,
+    "tag": "RefClass",
+    "message": "java.lang.reflect.InvocationTargetException",
+    "package": "pid-14159"
+  },
+  {
+    "date": "2024-10-28T07:21:37.878Z",
+    "pid": 14159,
+    "tid": 23645,
+    "priority": 6,
+    "tag": "RefClass",
+    "message": "java.lang.reflect.InvocationTargetException",
+    "package": "pid-14159"
+  },
+  {
+    "date": "2024-10-28T07:21:37.881Z",
+    "pid": 14159,
+    "tid": 17521,
+    "priority": 3,
+    "tag": "DCS-",
+    "message": "test refreshAppSessionIdIfNeed",
+    "package": "pid-14159"
+  },
+  {
+    "date": "2024-10-28T07:21:37.881Z",
+    "pid": 14159,
+    "tid": 17521,
+    "priority": 3,
+    "tag": "DCS-",
+    "message": "test isAppSessionIdFresh timeGap=1730100097881",
+    "package": "pid-14159"
+  },
+  {
+    "date": "2024-10-28T07:21:37.890Z",
+    "pid": 15219,
+    "tid": 15284,
+    "priority": 4,
+    "tag": "[0]DCS-StrategyManager",
+    "message": "isNeedUpload: false, appID: 26, logTag: 10009, eventID: add",
+    "package": "pid-15219"
+  },
+  {
+    "date": "2024-10-28T07:21:37.933Z",
+    "pid": 14159,
+    "tid": 14246,
+    "priority": 3,
+    "tag": "CompatibilityChangeReporter",
+    "message": "Compat change id reported: 150939131; UID 10031; state: ENABLED",
+    "package": "pid-14159"
+  },
+  {
+    "date": "2024-10-28T07:21:37.948Z",
+    "pid": 14159,
+    "tid": 17523,
+    "priority": 3,
+    "tag": "NetworkSecurityConfig",
+    "message": "Using Network Security Config from resource network_security_config debugBuild: false",
+    "package": "pid-14159"
+  },
+  {
+    "date": "2024-10-28T07:21:37.951Z",
+    "pid": 2672,
+    "tid": 17291,
+    "priority": 3,
+    "tag": "ViewRootImpl[]",
+    "message": "processMotionEvent MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=974.0, y[0]=1877.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=21041349, downTime=21041349, deviceId=3, source=0x1002, displayId=0 }",
+    "package": "pid-2672"
+  },
+  {
+    "date": "2024-10-28T07:21:37.951Z",
+    "pid": 14159,
+    "tid": 17523,
+    "priority": 3,
+    "tag": "NetworkSecurityConfig",
+    "message": "Using Network Security Config from resource network_security_config debugBuild: false",
+    "package": "pid-14159"
+  },
+  {
+    "date": "2024-10-28T07:21:37.953Z",
+    "pid": 1033,
+    "tid": 1093,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=0(root) perf@2.2-servic expire 24 lines",
+    "package": "pid-1033"
+  },
+  {
+    "date": "2024-10-28T07:21:37.954Z",
+    "pid": 2672,
+    "tid": 17291,
+    "priority": 3,
+    "tag": "ViewRootImpl[]",
+    "message": "dispatchPointerEvent handled=true, event=MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=974.0, y[0]=1877.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=21041349, downTime=21041349, deviceId=3, source=0x1002, displayId=0 }",
+    "package": "pid-2672"
+  },
+  {
+    "date": "2024-10-28T07:21:37.959Z",
+    "pid": 14159,
+    "tid": 17523,
+    "priority": 4,
+    "tag": "DpmTcmClient",
+    "message": "RegisterTcmMonitor from: $Proxy1",
+    "package": "pid-14159"
+  },
+  {
+    "date": "2024-10-28T07:21:37.980Z",
+    "pid": 17486,
+    "tid": 17536,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=10279(com.heytap.htms) expire 32 lines",
+    "package": "pid-17486"
+  },
+  {
+    "date": "2024-10-28T07:21:37.982Z",
+    "pid": 17486,
+    "tid": 17537,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=10279(com.heytap.htms) expire 1 line",
+    "package": "pid-17486"
+  },
+  {
+    "date": "2024-10-28T07:21:38.001Z",
+    "pid": 17486,
+    "tid": 17532,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=10279(com.heytap.htms) expire 1 line",
+    "package": "pid-17486"
+  },
+  {
+    "date": "2024-10-28T07:21:38.007Z",
+    "pid": 17486,
+    "tid": 17530,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=10279(com.heytap.htms) expire 7 lines",
+    "package": "pid-17486"
+  },
+  {
+    "date": "2024-10-28T07:21:38.011Z",
+    "pid": 17542,
+    "tid": 17542,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=0(root) com.heytap.htms expire 1 line",
+    "package": "pid-17542"
+  },
+  {
+    "date": "2024-10-28T07:21:38.025Z",
+    "pid": 17542,
+    "tid": 17542,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=10279(com.heytap.htms) expire 142 lines",
+    "package": "pid-17542"
+  },
+  {
+    "date": "2024-10-28T07:21:38.027Z",
+    "pid": 17486,
+    "tid": 17504,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=10279(com.heytap.htms) expire 123 lines",
+    "package": "pid-17486"
+  },
+  {
+    "date": "2024-10-28T07:21:38.051Z",
+    "pid": 2672,
+    "tid": 17291,
+    "priority": 3,
+    "tag": "ViewRootImpl[]",
+    "message": "processMotionEvent MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=974.0, y[0]=1877.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=21041449, downTime=21041349, deviceId=3, source=0x1002, displayId=0 }",
+    "package": "pid-2672"
+  },
+  {
+    "date": "2024-10-28T07:21:38.052Z",
+    "pid": 2672,
+    "tid": 17291,
+    "priority": 3,
+    "tag": "ViewRootImpl[]",
+    "message": "dispatchPointerEvent handled=true, event=MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=974.0, y[0]=1877.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=21041449, downTime=21041349, deviceId=3, source=0x1002, displayId=0 }",
+    "package": "pid-2672"
+  },
+  {
+    "date": "2024-10-28T07:21:38.065Z",
+    "pid": 1754,
+    "tid": 1925,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=1000(system) android.fg expire 1 line",
+    "package": "pid-1754"
+  },
+  {
+    "date": "2024-10-28T07:21:38.070Z",
+    "pid": 15219,
+    "tid": 15284,
+    "priority": 4,
+    "tag": "[0]DCS-StrategyManager",
+    "message": "isNeedUpload: false, appID: 20082, logTag: 20082005, eventID: usb_insert_event",
+    "package": "pid-15219"
+  },
+  {
+    "date": "2024-10-28T07:21:38.082Z",
+    "pid": 17486,
+    "tid": 17565,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=10279(com.heytap.htms) expire 1 line",
+    "package": "pid-17486"
+  },
+  {
+    "date": "2024-10-28T07:21:38.083Z",
+    "pid": 27643,
+    "tid": 17100,
+    "priority": 4,
+    "tag": "adbd",
+    "message": "USB event: FUNCTIONFS_UNBIND",
+    "package": "pid-27643"
+  },
+  {
+    "date": "2024-10-28T07:21:38.083Z",
+    "pid": 27643,
+    "tid": 17100,
+    "priority": 5,
+    "tag": "adbd",
+    "message": "received FUNCTIONFS_UNBIND while still enabled?",
+    "package": "pid-27643"
+  },
+  {
+    "date": "2024-10-28T07:21:38.084Z",
+    "pid": 27643,
+    "tid": 17289,
+    "priority": 4,
+    "tag": "adbd",
+    "message": "UsbFfs: connection terminated: read 1781 failed with error No such device",
+    "package": "pid-27643"
+  },
+  {
+    "date": "2024-10-28T07:21:38.089Z",
+    "pid": 1754,
+    "tid": 2528,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=1000(system) EthernetService expire 7 lines",
+    "package": "pid-1754"
+  },
+  {
+    "date": "2024-10-28T07:21:38.090Z",
+    "pid": 3207,
+    "tid": 3207,
+    "priority": 3,
+    "tag": "PhoneSwitcherNetworkRequstListener",
+    "message": "got request NetworkRequest [ TRACK_DEFAULT id=514, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10279 AdministratorUids: [] RequestorUid: 10279 RequestorPackageName: com.heytap.htms] ] with score 79 and providerId 6",
+    "package": "pid-3207"
+  },
+  {
+    "date": "2024-10-28T07:21:38.090Z",
+    "pid": 1754,
+    "tid": 2430,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=1000(system) ClientModeImpl2 expire 7 lines",
+    "package": "pid-1754"
+  },
+  {
+    "date": "2024-10-28T07:21:38.093Z",
+    "pid": 17569,
+    "tid": 17569,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=0(root) com.heytap.mcs.appservice expire 1 line",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.114Z",
+    "pid": 17486,
+    "tid": 17585,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=10279(com.heytap.htms) expire 71 lines",
+    "package": "pid-17486"
+  },
+  {
+    "date": "2024-10-28T07:21:38.116Z",
+    "pid": 17569,
+    "tid": 17569,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=1000(system) com.heytap.mcs.appservice expire 35 lines",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.118Z",
+    "pid": 2580,
+    "tid": 2956,
+    "priority": 3,
+    "tag": "OplusCoreAppService",
+    "message": "isPackageContainsOplusCertificates be called",
+    "package": "pid-2580"
+  },
+  {
+    "date": "2024-10-28T07:21:38.132Z",
+    "pid": 27690,
+    "tid": 17458,
+    "priority": 6,
+    "tag": "MSP-LOG-SDK-",
+    "message": "MspSdkException{code=-1,message=com.heytap.mspsdk.exception.MspProxyException: com.opos.process.bridge.provider.BridgeExecuteException}\n\tat com.heytap.mspsdk.proxy.e.c(RealIPCInterceptor.java:10)\n\tat com.heytap.mspsdk.proxy.e.b(Unknown Source:8)\n\tat com.heytap.mspsdk.proxy.e.a(Unknown Source:6)\n\tat com.heytap.mspsdk.interceptor.c.a(StandardListChain.java:4)\n\tat com.heytap.mspsdk.proxy.PreConnectCoreInterceptor.a(PreConnectCoreInterceptor.java:5)\n\tat com.heytap.mspsdk.interceptor.c.a(StandardListChain.java:4)\n\tat com.heytap.mspsdk.proxy.f.a(RelativeConnectInterceptor.java:7)\n\tat com.heytap.mspsdk.interceptor.c.a(StandardListChain.java:4)\n\tat com.heytap.mspsdk.proxy.b.a(CompatCheckInterceptor.java:12)\n\tat com.heytap.mspsdk.interceptor.c.a(StandardListChain.java:4)\n\tat com.heytap.mspsdk.proxy.a$c.invoke(ApiProxy.java:14)\n\tat java.lang.reflect.Proxy.invoke(Proxy.java:1006)\n\tat $Proxy28.forceUpdate(Unknown Source)\n\tat com.heytap.msp.kit.operacfg.sdk.impl.b.m(OperaCfgImpl.java:12)\n\tat com.heytap.msp.kit.operacfg.sdk.b.e(Unknown Source:8)\n\tat com.heytap.pictorial.core.o.d(OperaCfgController.kt:5)\n\tat com.heytap.pictorial.core.OperaCfgCallback.forceUpdate(Unknown Source:2)\n\tat com.heytap.pictorial.network.interceptor.d.intercept(OperaCfgInterceptor.kt:14)\n\tat t60.g.h(RealInterceptorChain.java:9)\n\tat t60.g.b(Unknown Source:6)\n\tat com.heytap.pictorial.network.interceptor.DeviceIdentifyInterceptor.intercept(DeviceIdentifyInterceptor.kt:18)\n\tat t60.g.h(RealInterceptorChain.java:9)\n\tat t60.g.b(Unknown Source:6)\n\tat com.heytap.pictorial.network.interceptor.c.intercept(HttpCostInterceptor.kt:7)\n\tat t60.g.h(RealInterceptorChain.java:9)\n\tat t60.g.b(Unknown Source:6)\n\tat com.heytap.pictorial.network.interceptor.f.intercept(UaInterceptor.kt:8)\n\tat t60.g.h(RealInterceptorChain.java:9)\n\tat t60.g.b(Unknown Source:6)\n\tat com.heytap.pictorial.network.interceptor.e.intercept(ServerEnvInterceptor.kt:21)\n\tat t60.g.h(RealInterceptorChain.java:9)\n\tat t60.g.b(Unknown Source:6)\n\tat okhttp3.w.d(RealCall.java:17)\n\tat okhttp3.w$b.k(RealCall.java:2)\n\tat q60.b.run(NamedRunnable.java:3)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)\n\tat java.lang.Thread.run(Thread.java:923)\nCaused by: com.opos.process.bridge.provider.BridgeExecuteException\n\tat com.opos.process.bridge.client.BaseClient.callForResult(BaseClient.java:18)\n\tat com.opos.process.bridge.client.BaseProviderClient.callForResult(BaseProviderClient.java:2)\n\tat com.opos.process.bridge.client.BaseClient.call(BaseClient.java:2)\n\tat com.opos.process.bridge.client.BaseProviderClient.call(BaseProviderClient.java:2)\n\tat com.heytap.msp.kit.operacfg.sdk.ipc.a.forceUpdate(OperaCfgIPCServer$Client.java:2)\n\tat java.lang.reflect.Method.invoke(Native Method)\n\tat com.heytap.mspsdk.proxy.e.c(RealIPCInterceptor.java:3)\n\t... 37 more\n",
+    "package": "pid-27690"
+  },
+  {
+    "date": "2024-10-28T07:21:38.133Z",
+    "pid": 27690,
+    "tid": 17458,
+    "priority": 5,
+    "tag": "MSP-LOG-SDK-OperaCfg_SDK_OperaCfgImpl",
+    "message": "MspSdkException{code=101008,message=com.heytap.mspsdk.exception.MspSdkException}\n\tat com.heytap.mspsdk.proxy.a$c.invoke(ApiProxy.java:19)\n\tat java.lang.reflect.Proxy.invoke(Proxy.java:1006)\n\tat $Proxy28.forceUpdate(Unknown Source)\n\tat com.heytap.msp.kit.operacfg.sdk.impl.b.m(OperaCfgImpl.java:12)\n\tat com.heytap.msp.kit.operacfg.sdk.b.e(Unknown Source:8)\n\tat com.heytap.pictorial.core.o.d(OperaCfgController.kt:5)\n\tat com.heytap.pictorial.core.OperaCfgCallback.forceUpdate(Unknown Source:2)\n\tat com.heytap.pictorial.network.interceptor.d.intercept(OperaCfgInterceptor.kt:14)\n\tat t60.g.h(RealInterceptorChain.java:9)\n\tat t60.g.b(Unknown Source:6)\n\tat com.heytap.pictorial.network.interceptor.DeviceIdentifyInterceptor.intercept(DeviceIdentifyInterceptor.kt:18)\n\tat t60.g.h(RealInterceptorChain.java:9)\n\tat t60.g.b(Unknown Source:6)\n\tat com.heytap.pictorial.network.interceptor.c.intercept(HttpCostInterceptor.kt:7)\n\tat t60.g.h(RealInterceptorChain.java:9)\n\tat t60.g.b(Unknown Source:6)\n\tat com.heytap.pictorial.network.interceptor.f.intercept(UaInterceptor.kt:8)\n\tat t60.g.h(RealInterceptorChain.java:9)\n\tat t60.g.b(Unknown Source:6)\n\tat com.heytap.pictorial.network.interceptor.e.intercept(ServerEnvInterceptor.kt:21)\n\tat t60.g.h(RealInterceptorChain.java:9)\n\tat t60.g.b(Unknown Source:6)\n\tat okhttp3.w.d(RealCall.java:17)\n\tat okhttp3.w$b.k(RealCall.java:2)\n\tat q60.b.run(NamedRunnable.java:3)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)\n\tat java.lang.Thread.run(Thread.java:923)\n\n",
+    "package": "pid-27690"
+  },
+  {
+    "date": "2024-10-28T07:21:38.144Z",
+    "pid": 15219,
+    "tid": 15284,
+    "priority": 4,
+    "tag": "[0]DCS-StrategyManager",
+    "message": "isNeedUpload: false, appID: 26, logTag: 10009, eventID: start",
+    "package": "pid-15219"
+  },
+  {
+    "date": "2024-10-28T07:21:38.172Z",
+    "pid": 14159,
+    "tid": 17523,
+    "priority": 5,
+    "tag": "StorageManager",
+    "message": "fallocate() not supported; falling back to ftruncate()",
+    "package": "pid-14159"
+  },
+  {
+    "date": "2024-10-28T07:21:38.184Z",
+    "pid": 2580,
+    "tid": 2956,
+    "priority": 3,
+    "tag": "OplusCoreAppService",
+    "message": "isPackageContainsOplusCertificates be called",
+    "package": "pid-2580"
+  },
+  {
+    "date": "2024-10-28T07:21:38.193Z",
+    "pid": 15219,
+    "tid": 15284,
+    "priority": 4,
+    "tag": "[0]DCS-StrategyManager",
+    "message": "isNeedUpload: false, appID: 26, logTag: 10009, eventID: success",
+    "package": "pid-15219"
+  },
+  {
+    "date": "2024-10-28T07:21:38.203Z",
+    "pid": 17486,
+    "tid": 17608,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=10279(com.heytap.htms) expire 4 lines",
+    "package": "pid-17486"
+  },
+  {
+    "date": "2024-10-28T07:21:38.224Z",
+    "pid": 17569,
+    "tid": 17569,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MMKV_IO.cpp:86::loadFromFile> loading [mmkv_com.heytap.mcs.cloudconfig] with crc 1003800135 sequence 15 version 3",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.224Z",
+    "pid": 17569,
+    "tid": 17569,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MMKV_IO.cpp:130::loadFromFile> loaded [mmkv_com.heytap.mcs.cloudconfig] with 12 key-values",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.232Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "Disable checkProcessMode()",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.233Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MMKV.cpp:207::initializeMMKV> root dir: /data/user_de/0/com.heytap.mcs/files/mmkv",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.233Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MemoryFile.cpp:97::open> open fd[0x4f], /data/user_de/0/com.heytap.mcs/files/mmkv/mmkv_com.heytap.mcs.identifier",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.233Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MemoryFile.cpp:97::open> open fd[0x50], /data/user_de/0/com.heytap.mcs/files/mmkv/mmkv_com.heytap.mcs.identifier.crc",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.233Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MMKV_IO.cpp:81::loadFromFile> loading [mmkv_com.heytap.mcs.identifier] with 51 actual size, file size 4096, InterProcess 1, meta info version:3",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.233Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MMKV_IO.cpp:86::loadFromFile> loading [mmkv_com.heytap.mcs.identifier] with crc 3852372065 sequence 1 version 3",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.233Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MMKV_IO.cpp:130::loadFromFile> loaded [mmkv_com.heytap.mcs.identifier] with 1 key-values",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.233Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "Disable checkProcessMode()",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.233Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MMKV.cpp:207::initializeMMKV> root dir: /data/user_de/0/com.heytap.mcs/files/mmkv",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.233Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MemoryFile.cpp:97::open> open fd[0x51], /data/user_de/0/com.heytap.mcs/files/mmkv/oplus_config_com.heytap.mcs",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.233Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MemoryFile.cpp:97::open> open fd[0x52], /data/user_de/0/com.heytap.mcs/files/mmkv/oplus_config_com.heytap.mcs.crc",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.234Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MMKV_IO.cpp:81::loadFromFile> loading [oplus_config_com.heytap.mcs] with 3127 actual size, file size 4096, InterProcess 1, meta info version:3",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.234Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MMKV_IO.cpp:86::loadFromFile> loading [oplus_config_com.heytap.mcs] with crc 2039976664 sequence 865 version 3",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.234Z",
+    "pid": 17569,
+    "tid": 17623,
+    "priority": 4,
+    "tag": "MMKV",
+    "message": "<MMKV_IO.cpp:130::loadFromFile> loaded [oplus_config_com.heytap.mcs] with 11 key-values",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.242Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 4,
+    "tag": "STFService",
+    "message": "Connection stopping",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:38.242Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 3,
+    "tag": "AudioManager",
+    "message": "adjustStreamVolume streamType=4 direction=100 flags=0 from jp.co.cyberagent.stf",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:38.244Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 3,
+    "tag": "AudioManager",
+    "message": "adjustStreamVolume streamType=8 direction=100 flags=0 from jp.co.cyberagent.stf",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:38.244Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 3,
+    "tag": "AudioManager",
+    "message": "adjustStreamVolume streamType=3 direction=100 flags=0 from jp.co.cyberagent.stf",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:38.246Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 3,
+    "tag": "AudioManager",
+    "message": "adjustStreamVolume streamType=5 direction=100 flags=0 from jp.co.cyberagent.stf",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:38.251Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 3,
+    "tag": "AudioManager",
+    "message": "adjustStreamVolume streamType=2 direction=100 flags=0 from jp.co.cyberagent.stf",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:38.257Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 3,
+    "tag": "AudioManager",
+    "message": "adjustStreamVolume streamType=1 direction=100 flags=0 from jp.co.cyberagent.stf",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:38.261Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 3,
+    "tag": "AudioManager",
+    "message": "adjustStreamVolume streamType=0 direction=100 flags=0 from jp.co.cyberagent.stf",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:38.262Z",
+    "pid": 31332,
+    "tid": 17073,
+    "priority": 4,
+    "tag": "STFKeyguardStateResp",
+    "message": "Locking device",
+    "package": "com.example"
+  },
+  {
+    "date": "2024-10-28T07:21:38.293Z",
+    "pid": 17569,
+    "tid": 17624,
+    "priority": 4,
+    "tag": "MCS2.0_CIPHER_ALGO",
+    "message": "JNI_OnLoad",
+    "package": "pid-17569"
+  },
+  {
+    "date": "2024-10-28T07:21:38.297Z",
+    "pid": 2672,
+    "tid": 2672,
+    "priority": 3,
+    "tag": "InterruptionStateProvider",
+    "message": "No bubble up: not allowed to bubble: 0|com.android.systemui|10005|null|10064",
+    "package": "pid-2672"
+  },
+  {
+    "date": "2024-10-28T07:21:38.298Z",
+    "pid": 2672,
+    "tid": 2672,
+    "priority": 3,
+    "tag": "InterruptionStateProvider",
+    "message": "No heads up: unimportant notification: 0|com.android.systemui|10005|null|10064",
+    "package": "pid-2672"
+  },
+  {
+    "date": "2024-10-28T07:21:38.301Z",
+    "pid": 17542,
+    "tid": 17633,
+    "priority": 4,
+    "tag": "chatty",
+    "message": "uid=10279(com.heytap.htms) expire 1 line",
+    "package": "pid-17542"
+  }
+]

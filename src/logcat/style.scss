@@ -1,0 +1,126 @@
+@import '../share/mixin';
+
+.luna-logcat {
+  @include component();
+  padding-left: #{$padding-x-x-s}px;
+  font-family: $font-family-code;
+  unicode-bidi: embed;
+  position: relative;
+  overflow: auto;
+  line-height: #{$line-height-l-g}em;
+  border: 1px solid $color-border;
+  white-space: pre;
+  user-select: text;
+  &.wrap-long-lines {
+    white-space: pre-wrap;
+    word-break: break-all;
+    .message {
+      display: inline;
+    }
+  }
+}
+
+.entry {
+  font-size: #{$font-size-s-m}px;
+}
+
+.date,
+.pid,
+.tag,
+.package,
+.priority {
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.message {
+  display: inline-block;
+}
+
+.wrap-long-lines .message {
+  display: inline;
+}
+
+.date {
+  margin-right: #{$margin-x-x-s}px;
+}
+
+.pid {
+  width: 100px;
+  text-align: center;
+}
+
+.tag,
+.package {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 150px;
+}
+
+.priority {
+  padding: 0 #{$padding-x-s}px;
+}
+
+.W {
+  .priority {
+    background: $color-warning-text;
+  }
+  .message {
+    color: $color-warning-text;
+  }
+}
+
+.E {
+  .priority {
+    background: $color-error-text;
+  }
+  .message {
+    color: $color-error-text;
+  }
+}
+
+.D {
+  .priority {
+    background: $color-success-text;
+  }
+}
+
+.I {
+  .priority {
+    background: $color-info-text;
+  }
+}
+
+.theme-dark {
+  border-color: $color-border-dark;
+  .W {
+    .priority {
+      background: $color-warning-text-dark;
+    }
+    .message {
+      color: $color-warning-text-dark;
+    }
+  }
+
+  .E {
+    .priority {
+      background: $color-error-text-dark;
+    }
+    .message {
+      color: $color-error-text-dark;
+    }
+  }
+
+  .D {
+    .priority {
+      background: $color-success-text-dark;
+    }
+  }
+
+  .I {
+    .priority {
+      background: $color-info-text-dark;
+    }
+  }
+}

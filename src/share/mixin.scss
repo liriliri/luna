@@ -16,12 +16,6 @@
   box-sizing: border-box;
   user-select: none;
   font-size: #{$font-size}px;
-  &.platform-windows {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-  }
-  &.platform-linux {
-    font-family: Roboto, Ubuntu, Arial, sans-serif;
-  }
   &.hidden,
   .hidden {
     display: none;

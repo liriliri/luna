@@ -11,10 +11,16 @@ import { exportCjs } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
+  /** Log filter. */
+  filter?: IFilter
   /** Log entries. */
   entries?: IEntry[]
   /** Wrap long lines. */
   wrapLongLines?: boolean
+}
+
+interface IFilter {
+  priority?: number
 }
 
 interface IBaseEntry {
@@ -122,6 +128,9 @@ export default class Logcat extends Component<IOptions> {
           } else {
             this.$container.rmClass(c('wrap-long-lines'))
           }
+          break
+        case 'filter':
+          this.render()
           break
       }
     })

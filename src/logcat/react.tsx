@@ -26,7 +26,7 @@ const LunaLogcat: FC<IILogcatProps> = (props) => {
     return () => logcat.current?.destroy()
   }, [])
 
-  each(['filter', 'maxNum', 'wrapLongLines'], (key: keyof IOptions) => {
+  each(['filter', 'maxNum', 'wrapLongLines', 'view'], (key: keyof IOptions) => {
     useNonInitialEffect(() => {
       if (logcat.current) {
         logcat.current.setOption(key, props[key])

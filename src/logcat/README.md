@@ -46,6 +46,7 @@ logcatp.append({
 * entries(IEntry[]): Log entries.
 * filter(IFilter): Log filter.
 * maxNum(number): Max entry number, zero means infinite.
+* view('standard' | 'compact'): Log formatting.
 * wrapLongLines(boolean): Wrap long lines.
 
 ## Api

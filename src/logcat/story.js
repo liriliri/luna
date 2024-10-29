@@ -13,11 +13,12 @@ const def = story(
   (container) => {
     $(container).css('height', '500px')
 
-    const { wrapLongLines, maxNum, filter } = createKnobs()
+    const { wrapLongLines, maxNum, filter, view } = createKnobs()
 
     const logcat = new Logcat(container, {
       filter,
       maxNum,
+      view,
       wrapLongLines,
     })
     each(logs, (log) => logcat.append(log))
@@ -63,6 +64,10 @@ function createKnobs() {
     max: 1000,
     step: 10,
   })
+  const view = select('View', {
+    'Standard View': 'standard',
+    'Compact View': 'compact',
+  })
   const wrapLongLines = boolean('Wrap Long Lines', false)
 
   return {
@@ -71,6 +76,7 @@ function createKnobs() {
       package: filterPackage,
       tag: filterTag,
     },
+    view,
     maxNum,
     wrapLongLines,
   }

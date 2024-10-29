@@ -20,6 +20,8 @@ export interface IOptions extends IComponentOptions {
   filter?: IFilter
   /** Log entries. */
   entries?: IEntry[]
+  /** Log formatting. */
+  view?: 'standard' | 'compact'
   /** Wrap long lines. */
   wrapLongLines?: boolean
 }
@@ -47,6 +49,10 @@ interface IEntry extends IBaseEntry {
   date: string | Date
 }
 
+interface IInnerEntry extends IBaseEntry {
+  date: Date
+}
+
 /**
  * Android logcat viewer.
  *
@@ -67,13 +73,14 @@ export default class Logcat extends Component<IOptions> {
   private render: types.AnyFn
   private entries: Array<{
     container: HTMLElement
-    entry: IBaseEntry & { date: Date }
+    entry: IInnerEntry
   }> = []
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'logcat' })
 
     this.initOptions(options, {
       maxNum: 0,
+      view: 'standard',
       entries: [],
       wrapLongLines: false,
     })
@@ -98,15 +105,13 @@ export default class Logcat extends Component<IOptions> {
   /** Append entry. */
   append(entry: IEntry) {
     const { c, entries } = this
-    const { maxNum } = this.options
+    const { maxNum, view } = this.options
 
     const date: Date = isDate(entry.date)
       ? (entry.date as Date)
       : new Date(entry.date)
 
-    const level = ['?', '?', 'V', 'D', 'I', 'W', 'E'][entry.priority]
-
-    const container = h(`.${c('entry')}.${c(level)}`)
+    const container = h(`.${c('entry')}.${c(toLetter(entry.priority))}`)
     const e = {
       ...entry,
       date,
@@ -123,20 +128,8 @@ export default class Logcat extends Component<IOptions> {
       }
     }
 
-    const html = [
-      `<span class="${c('date')}">${dateFormat(
-        date,
-        'yyyy-mm-dd HH:MM:ss.l'
-      )}</span>`,
-      `<span class="${c('pid')}">${entry.pid}-${entry.tid}</span>`,
-      `<span class="${c('tag')}" style="color:${getColor(entry.tag)}">${escape(
-        entry.tag
-      )}</span>`,
-      `<span class="${c('package')}">${escape(entry.package)}</span>`,
-      `<span class="${c('priority')}">${level}</span>`,
-      `<span class="${c('message')}">${escape(entry.message)}</span>`,
-    ].join(' ')
-    container.innerHTML = html
+    container.innerHTML =
+      view === 'standard' ? this.formatStandard(e) : this.formatCompact(e)
 
     if (this.filterEntry(e)) {
       const isAtBottom = this.isAtBottom
@@ -204,6 +197,16 @@ export default class Logcat extends Component<IOptions> {
             this.render()
           }
           break
+        case 'view':
+          each(entries, (entry) => {
+            const html =
+              val === 'standard'
+                ? this.formatStandard(entry.entry)
+                : this.formatCompact(entry.entry)
+
+            entry.container.innerHTML = html
+          })
+          break
         case 'filter':
           this.render()
           break
@@ -224,6 +227,35 @@ export default class Logcat extends Component<IOptions> {
     }
     this.isAtBottom = isAtBottom
   }
+  private formatStandard(entry: IInnerEntry) {
+    const { c } = this
+
+    return [
+      `<span class="${c('date')}">${dateFormat(
+        entry.date,
+        'yyyy-mm-dd HH:MM:ss.l'
+      )}</span>`,
+      `<span class="${c('pid')}">${entry.pid}-${entry.tid}</span>`,
+      `<span class="${c('tag')}" style="color:${getColor(entry.tag)}">${escape(
+        entry.tag
+      )}</span>`,
+      `<span class="${c('package')}">${escape(entry.package)}</span>`,
+      `<span class="${c('priority')}">${toLetter(entry.priority)}</span>`,
+      `<span class="${c('message')}">${escape(entry.message)}</span>`,
+    ].join(' ')
+  }
+  private formatCompact(entry: IInnerEntry) {
+    const { c } = this
+
+    return [
+      `<span class="${c('date')}">${dateFormat(
+        entry.date,
+        'HH:MM:ss.l'
+      )}</span>`,
+      `<span class="${c('priority')}">${toLetter(entry.priority)}</span>`,
+      `<span class="${c('message')}">${escape(entry.message)}</span>`,
+    ].join(' ')
+  }
   private _render() {
     const { container } = this
     this.$container.html('')
@@ -237,6 +269,10 @@ export default class Logcat extends Component<IOptions> {
 
     this.scrollToBottom()
   }
+}
+
+function toLetter(priority: number) {
+  return ['?', '?', 'V', 'D', 'I', 'W', 'E'][priority]
 }
 
 function getColor(str: string) {

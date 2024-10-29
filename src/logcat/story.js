@@ -29,17 +29,14 @@ const def = story(
 )
 
 function createKnobs() {
-  const priority = select(
+  const filterPriority = select(
     'Filter Level',
     {
-      DEFAULT: 1,
       VERBOSE: 2,
       DEBUG: 3,
       INFO: 4,
-      WARN: 5,
+      WARNING: 5,
       ERROR: 6,
-      FATAL: 7,
-      SILENT: 8,
     },
     1
   )
@@ -47,7 +44,7 @@ function createKnobs() {
 
   return {
     filter: {
-      priority,
+      priority: filterPriority,
     },
     wrapLongLines,
   }

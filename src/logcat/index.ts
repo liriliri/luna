@@ -85,7 +85,7 @@ export default class Logcat extends Component<IOptions> {
       ? (entry.date as Date)
       : new Date(entry.date)
 
-    const level = [' ', 'V', 'D', 'I', 'W', 'E'][entry.priority - 1]
+    const level = ['?', '?', 'V', 'D', 'I', 'W', 'E'][entry.priority]
 
     const container = h(`.${c('entry')}.${c(level)}`)
     const e = {

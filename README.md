@@ -42,6 +42,7 @@ UI library.
 * [json-editor](./src/json-editor/README.md): JSON editor.
 * [keyboard](./src/keyboard/README.md): Virtual keyboard.
 * [log](./src/log/README.md): Terminal log viewer.
+* [logcat](./src/logcat/README.md): Android logcat viewer.
 * [markdown-editor](./src/markdown-editor/README.md): Markdown editor with preview.
 * [markdown-viewer](./src/markdown-viewer/README.md): Live markdown renderer.
 * [mask-editor](./src/mask-editor/README.md): Image mask editing.

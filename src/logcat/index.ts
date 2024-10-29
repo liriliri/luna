@@ -6,11 +6,16 @@ import throttle from 'licia/throttle'
 import isDate from 'licia/isDate'
 import each from 'licia/each'
 import strHash from 'licia/strHash'
+import $ from 'licia/$'
+import lowerCase from 'licia/lowerCase'
+import contain from 'licia/contain'
 import dateFormat from 'licia/dateFormat'
 import { exportCjs } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
+  /** Max entry number, zero means infinite. */
+  maxNum?: number
   /** Log filter. */
   filter?: IFilter
   /** Log entries. */
@@ -19,8 +24,14 @@ export interface IOptions extends IComponentOptions {
   wrapLongLines?: boolean
 }
 
-interface IFilter {
+/** IFilter */
+export interface IFilter {
+  /** Entry priority. */
   priority?: number
+  /** Package name. */
+  package?: string
+  /** Tag name. */
+  tag?: string
 }
 
 interface IBaseEntry {
@@ -52,6 +63,7 @@ interface IEntry extends IBaseEntry {
  * })
  */
 export default class Logcat extends Component<IOptions> {
+  private isAtBottom = true
   private render: types.AnyFn
   private entries: Array<{
     container: HTMLElement
@@ -61,6 +73,7 @@ export default class Logcat extends Component<IOptions> {
     super(container, { compName: 'logcat' })
 
     this.initOptions(options, {
+      maxNum: 0,
       entries: [],
       wrapLongLines: false,
     })
@@ -78,8 +91,14 @@ export default class Logcat extends Component<IOptions> {
 
     this.bindEvent()
   }
+  destroy() {
+    this.$container.off('scroll', this.onScroll)
+    super.destroy()
+  }
+  /** Append entry. */
   append(entry: IEntry) {
-    const { c } = this
+    const { c, entries } = this
+    const { maxNum } = this.options
 
     const date: Date = isDate(entry.date)
       ? (entry.date as Date)
@@ -92,10 +111,17 @@ export default class Logcat extends Component<IOptions> {
       ...entry,
       date,
     }
-    this.entries.push({
+    entries.push({
       container,
       entry: e,
     })
+
+    if (maxNum !== 0 && entries.length > maxNum) {
+      const entry = entries.shift()
+      if (entry) {
+        $(entry.container).remove()
+      }
+    }
 
     const html = [
       `<span class="${c('date')}">${dateFormat(
@@ -114,11 +140,22 @@ export default class Logcat extends Component<IOptions> {
 
     if (this.filterEntry(e)) {
       this.container.appendChild(container)
+      if (this.isAtBottom) {
+        this.scrollToBottom()
+      }
     }
   }
+  /** Clear all entries. */
   clear() {
     this.entries = []
     this.$container.html('')
+  }
+  private scrollToBottom() {
+    const { container } = this
+    const { scrollHeight, scrollTop, offsetHeight } = container
+    if (scrollTop <= scrollHeight - offsetHeight) {
+      container.scrollTop = 10000000
+    }
   }
   private filterEntry(entry: IBaseEntry) {
     const { filter } = this.options
@@ -131,12 +168,26 @@ export default class Logcat extends Component<IOptions> {
       return false
     }
 
+    if (filter.package) {
+      if (!contain(lowerCase(entry.package), lowerCase(filter.package))) {
+        return false
+      }
+    }
+
+    if (filter.tag) {
+      if (!contain(lowerCase(entry.tag), lowerCase(filter.tag))) {
+        return false
+      }
+    }
+
     return true
   }
   private bindEvent() {
     const { c } = this
 
     this.on('optionChange', (name, val) => {
+      const { entries } = this
+
       switch (name) {
         case 'wrapLongLines':
           if (val) {
@@ -145,21 +196,44 @@ export default class Logcat extends Component<IOptions> {
             this.$container.rmClass(c('wrap-long-lines'))
           }
           break
+        case 'maxNum':
+          if (val > 0 && entries.length > val) {
+            this.entries = entries.slice(entries.length - val)
+            this.render()
+          }
+          break
         case 'filter':
           this.render()
           break
       }
     })
+
+    this.$container.on('scroll', this.onScroll)
+  }
+  private onScroll = () => {
+    const { scrollHeight, offsetHeight, scrollTop } = this
+      .container as HTMLElement
+
+    let isAtBottom = false
+    if (scrollHeight === offsetHeight) {
+      isAtBottom = true
+    } else if (Math.abs(scrollHeight - offsetHeight - scrollTop) < 1) {
+      isAtBottom = true
+    }
+    this.isAtBottom = isAtBottom
   }
   private _render() {
     const { container } = this
     this.$container.html('')
+    this.isAtBottom = true
 
     each(this.entries, (entry) => {
       if (this.filterEntry(entry.entry)) {
         container.appendChild(entry.container)
       }
     })
+
+    this.scrollToBottom()
   }
 }
 

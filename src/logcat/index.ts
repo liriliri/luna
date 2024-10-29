@@ -139,8 +139,9 @@ export default class Logcat extends Component<IOptions> {
     container.innerHTML = html
 
     if (this.filterEntry(e)) {
+      const isAtBottom = this.isAtBottom
       this.container.appendChild(container)
-      if (this.isAtBottom) {
+      if (isAtBottom) {
         this.scrollToBottom()
       }
     }
@@ -155,6 +156,7 @@ export default class Logcat extends Component<IOptions> {
     const { scrollHeight, scrollTop, offsetHeight } = container
     if (scrollTop <= scrollHeight - offsetHeight) {
       container.scrollTop = 10000000
+      this.isAtBottom = true
     }
   }
   private filterEntry(entry: IBaseEntry) {
@@ -211,13 +213,13 @@ export default class Logcat extends Component<IOptions> {
     this.$container.on('scroll', this.onScroll)
   }
   private onScroll = () => {
-    const { scrollHeight, offsetHeight, scrollTop } = this
+    const { scrollHeight, clientHeight, scrollTop } = this
       .container as HTMLElement
 
     let isAtBottom = false
-    if (scrollHeight === offsetHeight) {
+    if (scrollHeight === clientHeight) {
       isAtBottom = true
-    } else if (Math.abs(scrollHeight - offsetHeight - scrollTop) < 1) {
+    } else if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1) {
       isAtBottom = true
     }
     this.isAtBottom = isAtBottom

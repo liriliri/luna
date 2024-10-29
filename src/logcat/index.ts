@@ -62,7 +62,7 @@ export default class Logcat extends Component<IOptions> {
 
     this.initOptions(options, {
       entries: [],
-      wrapLongLines: true,
+      wrapLongLines: false,
     })
 
     this.render = throttle(() => this._render(), 16)
@@ -88,12 +88,13 @@ export default class Logcat extends Component<IOptions> {
     const level = [' ', 'V', 'D', 'I', 'W', 'E'][entry.priority - 1]
 
     const container = h(`.${c('entry')}.${c(level)}`)
+    const e = {
+      ...entry,
+      date,
+    }
     this.entries.push({
       container,
-      entry: {
-        ...entry,
-        date,
-      },
+      entry: e,
     })
 
     const html = [
@@ -111,11 +112,26 @@ export default class Logcat extends Component<IOptions> {
     ].join(' ')
     container.innerHTML = html
 
-    this.container.appendChild(container)
+    if (this.filterEntry(e)) {
+      this.container.appendChild(container)
+    }
   }
   clear() {
     this.entries = []
     this.$container.html('')
+  }
+  private filterEntry(entry: IBaseEntry) {
+    const { filter } = this.options
+
+    if (!filter) {
+      return true
+    }
+
+    if (filter.priority && entry.priority < filter.priority) {
+      return false
+    }
+
+    return true
   }
   private bindEvent() {
     const { c } = this
@@ -140,7 +156,9 @@ export default class Logcat extends Component<IOptions> {
     this.$container.html('')
 
     each(this.entries, (entry) => {
-      container.appendChild(entry.container)
+      if (this.filterEntry(entry.entry)) {
+        container.appendChild(entry.container)
+      }
     })
   }
 }

@@ -1,10 +1,11 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-qrcode-generator {
-  @include mixin.component();
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
   display: flex;
   height: 250px;
+  @include mixin.component();
 }
 
 .controller {
@@ -35,5 +36,5 @@
 }
 
 .theme-dark {
-  border-color: $color-border-dark;
+  border-color: theme.$color-border-dark;
 }

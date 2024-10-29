@@ -1,16 +1,19 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-modal {
-  @include mixin.component();
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
+  @include mixin.component();
+  & {
+    background: rgba(0, 0, 0, 0.5);
+  }
 }
 
 .icon-close {
@@ -23,7 +26,7 @@
 
 .body {
   position: relative;
-  background: $color-bg-container;
+  background: theme.$color-bg-container;
   max-height: 100%;
   display: flex;
   flex-direction: column;
@@ -83,14 +86,14 @@
   position: relative;
   user-select: none;
   margin: 0 4px;
-  font-size: #{$font-size-s-m}px;
+  font-size: #{theme.$font-size-s-m}px;
   border-radius: 4px;
   overflow: hidden;
   height: 28px;
   line-height: 28px;
   &:active {
     &::before {
-      background: $color-primary;
+      background: theme.$color-primary;
       content: '';
       opacity: 0.4;
       position: absolute;
@@ -102,13 +105,13 @@
     }
   }
   &.secondary {
-    color: $color-primary;
-    border: 1px solid $color-border;
+    color: theme.$color-primary;
+    border: 1px solid theme.$color-border;
     background: #fff;
   }
   &.primary {
     color: #fff;
-    background: $color-primary;
+    background: theme.$color-primary;
   }
 }
 
@@ -118,14 +121,14 @@
   width: 100%;
   font-size: 16px;
   padding: 6px 12px;
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
 .theme-dark {
   .body {
-    background: $color-bg-container-dark;
-    border: 1px solid $color-border-dark;
+    background: theme.$color-bg-container-dark;
+    border: 1px solid theme.$color-border-dark;
   }
 }

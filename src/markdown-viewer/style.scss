@@ -2,11 +2,6 @@
 
 // https://github.com/sindresorhus/github-markdown-css
 .luna-markdown-viewer {
-  @include mixin.component();
-  background: transparent;
-  &.theme-dark {
-    background: transparent;
-  }
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   margin: 0;
@@ -17,6 +12,13 @@
   line-height: 1.5;
   word-wrap: break-word;
   overflow-y: auto;
+  @include mixin.component();
+  & {
+    background: transparent;
+  }
+  &.theme-dark {
+    background: transparent;
+  }
   details,
   figcaption,
   figure {

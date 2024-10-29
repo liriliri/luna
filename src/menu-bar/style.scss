@@ -1,28 +1,29 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-menu-bar {
+  border-bottom: 1px solid theme.$color-border;
   @include mixin.component();
-  border-bottom: 1px solid $color-border;
 }
 
 .menu-list {
   font-size: 0;
-  @include clear-float();
+  @include mixin.clear-float();
 }
 
 .menu-item {
-  font-size: #{$font-size-s-m}px;
+  font-size: #{theme.$font-size-s-m}px;
   padding: 2px 6px;
   cursor: default;
   display: block;
   float: left;
   user-select: none;
   &:hover {
-    color: $color-text;
-    background: $color-fill-secondary;
+    color: theme.$color-text;
+    background: theme.$color-fill-secondary;
   }
 }
 
 .theme-dark {
-  border-color: $color-border-dark;
+  border-color: theme.$color-border-dark;
 }

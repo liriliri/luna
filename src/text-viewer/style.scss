@@ -1,12 +1,13 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-text-viewer {
-  @include mixin.component();
   padding: 0;
   unicode-bidi: embed;
   position: relative;
   overflow: auto;
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
+  @include mixin.component();
   &:hover {
     .copy {
       opacity: 1;
@@ -32,7 +33,7 @@
   text-align: right;
   vertical-align: top;
   user-select: none;
-  border-right: 1px solid $color-border;
+  border-right: 1px solid theme.$color-border;
 }
 
 .line-text {
@@ -42,12 +43,12 @@
 }
 
 .copy {
-  background: $color-bg-container;
+  background: theme.$color-bg-container;
   opacity: 0;
   position: absolute;
   right: 5px;
   top: 5px;
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
   border-radius: 4px;
   width: 25px;
   height: 25px;
@@ -56,7 +57,7 @@
   cursor: pointer;
   transition: opacity 0.3s, top 0.3s;
   .icon-check {
-    color: $color-success-text;
+    color: theme.$color-success-text;
   }
 }
 
@@ -72,8 +73,8 @@
       word-break: break-all;
     }
   }
-  font-size: #{$font-size-s-m}px;
-  font-family: $font-family-code;
+  font-size: #{theme.$font-size-s-m}px;
+  font-family: theme.$font-family-code;
   box-sizing: border-box;
   white-space: pre;
   display: block;
@@ -81,15 +82,15 @@
 
 .theme-dark {
   color: #d9d9d9;
-  border-color: $color-border-dark;
+  border-color: theme.$color-border-dark;
   .copy,
   .line-number {
-    border-color: $color-border-dark;
+    border-color: theme.$color-border-dark;
   }
   .copy .icon-check {
-    color: $color-success-text-dark;
+    color: theme.$color-success-text-dark;
   }
   .copy {
-    background-color: $color-bg-container-dark;
+    background-color: theme.$color-bg-container-dark;
   }
 }

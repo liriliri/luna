@@ -1,14 +1,17 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-keyboard {
-  @include mixin.component();
-  border: 1px solid $color-border;
-  background: #f2f2f2;
+  border: 1px solid theme.$color-border;
   position: relative;
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
   padding: 3px;
+  @include mixin.component();
+  & {
+    background: #f2f2f2;
+  }
 }
 
 .row {
@@ -34,7 +37,7 @@
     &:active,
     &.pressed {
       color: #fff;
-      background-color: $color-primary;
+      background-color: theme.$color-primary;
     }
   }
   li {
@@ -145,5 +148,5 @@
 }
 
 .theme-dark {
-  border-color: $color-border-dark;
+  border-color: theme.$color-border-dark;
 }

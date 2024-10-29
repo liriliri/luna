@@ -1,15 +1,18 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-shader-toy-player {
-  @include mixin.component();
-  background: #000;
   width: 100%;
   height: 100%;
   touch-action: none;
   position: relative;
+  @include mixin.component();
+  & {
+    background: #000;
+  }
 }
 
-@include controller('shader-toy-player');
+@include mixin.controller('shader-toy-player');
 
 .canvas {
   width: 100%;
@@ -33,7 +36,7 @@
 .fps-button,
 .resolution {
   color: #eee;
-  font-size: #{$font-size-s-m}px;
+  font-size: #{theme.$font-size-s-m}px;
   line-height: 38px;
 }
 
@@ -44,12 +47,12 @@
 .fps {
   opacity: 0;
   position: absolute;
-  font-size: #{$font-size-s-m}px;
+  font-size: #{theme.$font-size-s-m}px;
   top: 0;
   right: 0;
   padding: 4px 8px;
   background: rgba(0, 0, 0, 0.5);
-  color: $color-white;
+  color: theme.$color-white;
   transition: opacity 0.3s;
   &.active {
     opacity: 1;

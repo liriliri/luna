@@ -7,7 +7,7 @@
   min-height: 150px;
 }
 
-@include controller('music-visualizer');
+@include mixin.controller('music-visualizer');
 
 .canvas {
   width: 100%;

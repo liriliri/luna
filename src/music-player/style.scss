@@ -1,15 +1,18 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-music-player {
-  @include mixin.component();
   min-width: 375px;
-  border: 1px solid $color-border;
-  font-size: 14px;
+  border: 1px solid theme.$color-border;
   cursor: default;
+  @include mixin.component();
+  & {
+    font-size: 14px;
+  }
 }
 
 .body-left {
-  background: $color-primary;
+  background: theme.$color-primary;
   width: 90px;
   height: 90px;
   float: left;
@@ -25,7 +28,7 @@
   position: absolute;
   width: 30px;
   height: 30px;
-  border: 2px solid $color-white;
+  border: 2px solid theme.$color-white;
   border-radius: 50%;
   bottom: 50%;
   right: 50%;
@@ -35,7 +38,7 @@
   .icon {
     cursor: pointer;
     position: absolute;
-    color: $color-white;
+    color: theme.$color-white;
     top: 5px;
   }
   .icon-play {
@@ -50,13 +53,13 @@
   margin-left: 90px;
   height: 90px;
   padding: 10px 7px 0;
-  border-bottom: 1px solid $color-border;
+  border-bottom: 1px solid theme.$color-border;
 }
 
 .info {
   height: 22px;
   margin: 0 0 35px 5px;
-  color: $color-text;
+  color: theme.$color-text;
 }
 
 .controller {
@@ -111,7 +114,7 @@
   width: 8px;
   height: 8px;
   display: inline-block;
-  background: $color-primary;
+  background: theme.$color-primary;
   border-radius: 50%;
 }
 
@@ -130,7 +133,7 @@
 }
 
 .bar-played {
-  background: $color-primary;
+  background: theme.$color-primary;
 }
 
 .volume {
@@ -170,7 +173,7 @@
 }
 
 .volume-bar-fill {
-  background: $color-primary;
+  background: theme.$color-primary;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -178,7 +181,7 @@
 }
 
 .list {
-  @include overflow-auto(y);
+  @include mixin.overflow-auto(y);
   max-height: 150px;
 }
 
@@ -188,19 +191,19 @@
   line-height: 32px;
   padding: 0 15px;
   font-size: 12px;
-  border-top: 1px solid $color-border;
+  border-top: 1px solid theme.$color-border;
   margin: 0;
   transition: background-color 0.3s;
-  color: $color-text;
+  color: theme.$color-text;
   &:first-child {
     border-top: none;
   }
   &.active,
   &:hover {
-    background: $color-fill-secondary;
+    background: theme.$color-fill-secondary;
   }
   &.active {
-    color: $color-primary;
+    color: theme.$color-primary;
   }
 }
 
@@ -213,22 +216,22 @@
 }
 
 .theme-dark {
-  border-color: $color-border-dark;
+  border-color: theme.$color-border-dark;
   .body-right {
-    border-bottom-color: $color-border-dark;
+    border-bottom-color: theme.$color-border-dark;
   }
   .info {
-    color: $color-text-dark;
+    color: theme.$color-text-dark;
   }
   .list-item {
-    border-top-color: $color-border-dark;
-    color: $color-text-dark;
+    border-top-color: theme.$color-border-dark;
+    color: theme.$color-text-dark;
     &.active,
     &:hover {
-      background: $color-fill-secondary-dark;
+      background: theme.$color-fill-secondary-dark;
     }
     &.active {
-      color: $color-primary;
+      color: theme.$color-primary;
     }
   }
 }

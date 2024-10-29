@@ -1,14 +1,15 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-menu {
-  @include mixin.component();
   position: absolute;
   padding: 4px 0;
-  box-shadow: $box-shadow;
-  border: 1px solid $color-border;
+  box-shadow: theme.$box-shadow;
+  border: 1px solid theme.$color-border;
   padding: 4px 0;
   z-index: 4000;
   overflow-y: auto;
+  @include mixin.component();
 }
 
 .glass-pane {
@@ -29,8 +30,8 @@
   width: 100%;
   font-size: 12px;
   &.active {
-    color: $color-white;
-    background: $color-primary;
+    color: theme.$color-white;
+    background: theme.$color-primary;
   }
   .icon-arrow-right {
     margin-left: auto;
@@ -43,13 +44,13 @@
 
 .separator {
   height: 1px;
-  background-color: $color-border;
+  background-color: theme.$color-border;
   margin: 5px 1px;
 }
 
 .theme-dark {
-  border-color: $color-border-dark;
+  border-color: theme.$color-border-dark;
   .separator {
-    background-color: $color-border-dark;
+    background-color: theme.$color-border-dark;
   }
 }

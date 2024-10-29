@@ -1,17 +1,19 @@
 @use '../share/mixin' as mixin;
 
 .luna-retro-emulator {
-  @include mixin.component();
-  background: #000;
   width: 100%;
   height: 100%;
   user-select: none;
   position: relative;
   min-height: 150px;
   min-width: 300px;
+  @include mixin.component();
+  & {
+    background: #000;
+  }
 }
 
-@include controller('retro-emulator');
+@include mixin.controller('retro-emulator');
 
 .reset,
 .play,

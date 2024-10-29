@@ -2,15 +2,17 @@
 
 // https://codepen.io/manz/pen/XQYoKd
 .luna-retro-handheld {
-  @include mixin.component();
   min-width: 380px;
-  background: #d3ccd3 linear-gradient(#d3ccd3 95%, #999 98%, #777 99%);
   overflow: hidden;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
+  @include mixin.component();
+  & {
+    background: #d3ccd3 linear-gradient(#d3ccd3 95%, #999 98%, #777 99%);
+  }
 }
 
 .luna-retro-handheld > .top {

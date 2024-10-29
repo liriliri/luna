@@ -1,18 +1,19 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-tab {
-  @include mixin.component();
   position: relative;
   overflow: hidden;
   width: 100%;
+  @include mixin.component();
 }
 
 .tabs-container {
-  border-bottom: 1px solid $color-border;
+  border-bottom: 1px solid theme.$color-border;
 }
 
 .tabs {
-  @include overflow-auto(x);
+  @include mixin.overflow-auto(x);
   overflow-y: hidden;
   width: 100%;
   height: 100%;
@@ -29,11 +30,11 @@
   cursor: pointer;
   display: inline-block;
   padding: 0 10px;
-  font-size: #{$font-size-s-m}px;
+  font-size: #{theme.$font-size-s-m}px;
   text-align: center;
   text-transform: capitalize;
   &:hover {
-    background: $color-fill-secondary;
+    background: theme.$color-fill-secondary;
   }
 }
 
@@ -48,11 +49,11 @@
 
 .theme-dark {
   .tabs-container {
-    border-color: $color-border-dark;
+    border-color: theme.$color-border-dark;
   }
   .item {
     &:hover {
-      background: $color-fill-secondary-dark;
+      background: theme.$color-fill-secondary-dark;
     }
   }
 }

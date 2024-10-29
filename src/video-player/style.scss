@@ -1,15 +1,18 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-video-player {
-  @include mixin.component();
-  background: #000;
   min-height: 150px;
   position: relative;
-  font-size: 14px;
   outline: none;
+  @include mixin.component();
+  & {
+    background: #000;
+    font-size: 14px;
+  }
 }
 
-@include controller('video-player');
+@include mixin.controller('video-player');
 
 .video {
   display: flex;
@@ -45,7 +48,7 @@
   width: 8px;
   height: 8px;
   display: inline-block;
-  background: $color-primary;
+  background: theme.$color-primary;
   border-radius: 50%;
 }
 
@@ -71,7 +74,7 @@
 }
 
 .bar-played {
-  background: $color-primary;
+  background: theme.$color-primary;
 }
 
 .play,
@@ -115,7 +118,7 @@
 }
 
 .volume-bar-fill {
-  background: $color-primary;
+  background: theme.$color-primary;
   position: absolute;
   top: 0;
   left: 0;
@@ -124,6 +127,6 @@
 
 .time {
   color: #eee;
-  font-size: #{$font-size-s-m}px;
+  font-size: #{theme.$font-size-s-m}px;
   line-height: 38px;
 }

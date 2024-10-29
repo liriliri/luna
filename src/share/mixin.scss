@@ -148,30 +148,30 @@
 
 @mixin input($dark: false) {
   @if $dark {
-    background: $color-border-dark;
-    border-color: $color-border-dark;
-    color: $color-text-dark;
+    background: theme.$color-border-dark;
+    border-color: theme.$color-border-dark;
+    color: theme.$color-text-dark;
   } @else {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    color: $color-text;
+    color: theme.$color-text;
     appearance: none;
-    border: 1px solid $color-border;
+    border: 1px solid theme.$color-border;
     outline: none;
     padding: 2px 8px;
-    border-radius: #{$border-radius-x-s}px;
-    font-size: #{$font-size}px;
-    background: $color-bg-container;
+    border-radius: #{theme.$border-radius-x-s}px;
+    font-size: #{theme.$font-size}px;
+    background: theme.$color-bg-container;
   }
 }
 
 @mixin checkbox($dark: false) {
   @if $dark {
-    border-color: $color-border-dark;
+    border-color: theme.$color-border-dark;
   } @else {
     appearance: none;
     width: 14px;
     height: 14px;
-    border: 1px solid $color-border;
+    border: 1px solid theme.$color-border;
     border-radius: 0;
     position: relative;
     outline: none;
@@ -179,8 +179,8 @@
     margin-right: 8px;
     transition: background-color 0.1s;
     &:checked {
-      background-color: $color-primary;
-      border-color: $color-primary;
+      background-color: theme.$color-primary;
+      border-color: theme.$color-primary;
       &:after {
         content: '';
         width: 100%;
@@ -200,26 +200,26 @@
 @mixin select($dark: false) {
   @if $dark {
     select {
-      color: $color-text-dark;
-      border-color: $color-border-dark;
-      background: $color-border-dark;
+      color: theme.$color-text-dark;
+      border-color: theme.$color-border-dark;
+      background: theme.$color-border-dark;
     }
     &:after {
-      border-top-color: $color-text-dark;
+      border-top-color: theme.$color-text-dark;
     }
   } @else {
     position: relative;
     select {
       margin: 0;
-      font-size: #{$font-size}px;
-      background: $color-bg-container;
+      font-size: #{theme.$font-size}px;
+      background: theme.$color-bg-container;
       appearance: none;
-      border: 1px solid $color-border;
+      border: 1px solid theme.$color-border;
       padding: 2px 8px;
       padding-right: 18px;
       outline: none;
-      color: $color-text;
-      border-radius: #{$border-radius-x-s}px;
+      color: theme.$color-text;
+      border-radius: #{theme.$border-radius-x-s}px;
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
     &:after {
@@ -228,7 +228,7 @@
       height: 0;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
-      border-top: 5px solid $color-text;
+      border-top: 5px solid theme.$color-text;
       position: absolute;
       top: 0;
       bottom: 0;
@@ -241,29 +241,29 @@
 
 @mixin button($dark: false) {
   @if $dark {
-    background: $color-bg-container-dark;
-    border-color: $color-border-dark;
+    background: theme.$color-bg-container-dark;
+    border-color: theme.$color-border-dark;
     &:hover,
     &:active {
-      background: $color-fill-secondary-dark;
+      background: theme.$color-fill-secondary-dark;
     }
     &:active {
-      border: 1px solid $color-primary;
+      border: 1px solid theme.$color-primary;
     }
   } @else {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    background: $color-bg-container;
-    border: 1px solid $color-border;
+    background: theme.$color-bg-container;
+    border: 1px solid theme.$color-border;
     padding: 2px 8px;
-    color: $color-primary;
-    font-size: #{$font-size}px;
-    border-radius: #{$border-radius-x-s}px;
+    color: theme.$color-primary;
+    font-size: #{theme.$font-size}px;
+    border-radius: #{theme.$border-radius-x-s}px;
     &:hover,
     &:active {
-      background: $color-fill-secondary;
+      background: theme.$color-fill-secondary;
     }
     &:active {
-      border: 1px solid $color-primary;
+      border: 1px solid theme.$color-primary;
     }
   }
 }

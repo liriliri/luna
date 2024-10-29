@@ -1,17 +1,18 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-window {
-  @include mixin.component();
   position: absolute;
   pointer-events: all;
   display: flex;
   flex-flow: column;
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
   overflow: hidden;
-  box-shadow: $box-shadow;
+  box-shadow: theme.$box-shadow;
+  @include mixin.component();
   &.active {
     .title-bar {
-      background: $color-fill-secondary;
+      background: theme.$color-fill-secondary;
     }
     .resizer {
       position: static;
@@ -64,7 +65,7 @@
   background: rgb(250, 250, 250);
   display: flex;
   flex-flow: row;
-  font-family: $font-family;
+  font-family: theme.$font-family;
 }
 
 .title-bar-left {
@@ -229,6 +230,6 @@
   pointer-events: all;
   &:hover,
   &.active {
-    background: $color-primary;
+    background: theme.$color-primary;
   }
 }

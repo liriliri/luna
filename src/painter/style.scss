@@ -1,14 +1,15 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-painter {
-  @include mixin.component();
   position: relative;
   padding-left: 40px;
   padding-top: 30px;
   width: 100%;
   height: 600px;
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
   outline: none;
+  @include mixin.component();
 }
 
 .toolbar {
@@ -17,7 +18,7 @@
   top: 0;
   width: 100%;
   height: 30px;
-  border-bottom: 1px solid $color-border;
+  border-bottom: 1px solid theme.$color-border;
   overflow: hidden;
   .luna-toolbar {
     border-bottom: none;
@@ -30,7 +31,7 @@
   top: 30px;
   width: 40px;
   height: calc(100% - 30px);
-  border-right: 1px solid $color-border;
+  border-right: 1px solid theme.$color-border;
 }
 
 .tool {
@@ -41,12 +42,12 @@
   border: 1px solid transparent;
   padding: 2px 0;
   &:hover {
-    background: $color-fill-tertiary;
-    border-color: $color-border;
+    background: theme.$color-fill-tertiary;
+    border-color: theme.$color-border;
   }
   &.selected {
-    background: $color-fill-secondary;
-    border-color: $color-border;
+    background: theme.$color-fill-secondary;
+    border-color: theme.$color-border;
   }
   .icon {
     position: relative;
@@ -84,7 +85,7 @@
     width: 100%;
     height: 100%;
     padding: 0;
-    border: 1px solid $color-white;
+    border: 1px solid theme.$color-white;
     &::-webkit-color-swatch-wrapper {
       width: 100%;
       height: 100%;
@@ -140,8 +141,8 @@
   transform: translate(-50%, -50%);
   .icon {
     color: #000;
-    text-shadow: -1px -1px 0 $color-white, 1px -1px 0 $color-white,
-      -1px 1px 0 $color-white, 1px 1px 0 $color-white;
+    text-shadow: -1px -1px 0 theme.$color-white, 1px -1px 0 theme.$color-white,
+      -1px 1px 0 theme.$color-white, 1px 1px 0 theme.$color-white;
   }
 }
 
@@ -153,7 +154,7 @@
 
 .canvas-wrapper {
   margin: auto;
-  box-shadow: $box-shadow;
+  box-shadow: theme.$box-shadow;
 }
 
 .canvas-container {
@@ -167,19 +168,19 @@
 
 .theme-dark {
   color-scheme: dark;
-  border-color: $color-border-dark;
+  border-color: theme.$color-border-dark;
   .toolbar,
   .tool-box {
-    border-color: $color-border-dark;
+    border-color: theme.$color-border-dark;
   }
   .tool {
     &:hover {
-      background: $color-fill-tertiary-dark;
-      border-color: $color-border-dark;
+      background: theme.$color-fill-tertiary-dark;
+      border-color: theme.$color-border-dark;
     }
     &.selected {
-      background: $color-fill-secondary-dark;
-      border-color: $color-border-dark;
+      background: theme.$color-fill-secondary-dark;
+      border-color: theme.$color-border-dark;
     }
   }
 }

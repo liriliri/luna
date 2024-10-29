@@ -1,9 +1,9 @@
-@import '../share/theme';
+@use '../share/theme' as theme;
 
 .luna-syntax-highlighter {
   &.theme-vs-dark {
     background: #1e1e1e;
-    border-color: $color-border-dark;
+    border-color: theme.$color-border-dark;
     color: #dcdcdc;
   }
   .string {
@@ -50,13 +50,13 @@
   color-scheme: dark;
   .luna-text-viewer-copy,
   .luna-text-viewer-line-number {
-    border-color: $color-border-dark;
+    border-color: theme.$color-border-dark;
   }
   .luna-text-viewer-copy .luna-text-viewr-icon-check {
-    color: $color-success-dark;
+    color: theme.$color-success-dark;
   }
   .luna-text-viewer-copy {
-    background-color: $color-bg-container-dark;
+    background-color: theme.$color-bg-container-dark;
   }
 }
 

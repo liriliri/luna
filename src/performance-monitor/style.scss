@@ -1,16 +1,17 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-performance-monitor {
-  @include mixin.component();
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
   width: 100%;
   padding: 5px;
+  @include mixin.component();
 }
 
 .title {
-  font-size: #{$font-size}px;
+  font-size: #{theme.$font-size}px;
   margin-bottom: 5px;
-  color: $color-text;
+  color: theme.$color-text;
 }
 
 .value {
@@ -19,17 +20,17 @@
 
 .chart {
   box-sizing: border-box;
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
   width: 100%;
   height: 100px;
 }
 
 .theme-dark {
-  border-color: $color-border-dark;
+  border-color: theme.$color-border-dark;
   .title {
-    color: $color-text-dark;
+    color: theme.$color-text-dark;
   }
   .chart {
-    border-color: $color-border-dark;
+    border-color: theme.$color-border-dark;
   }
 }

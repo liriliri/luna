@@ -1,11 +1,12 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-object-viewer {
-  @include overflow-auto(x);
+  @include mixin.overflow-auto(x);
   overflow-y: hidden;
   cursor: default;
-  font-family: $font-family-code;
-  font-size: #{$font-size-s-m}px;
+  font-family: theme.$font-family-code;
+  font-size: #{theme.$font-size-s-m}px;
   line-height: 1.2;
   min-height: 100%;
   color: #333;

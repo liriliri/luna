@@ -1,33 +1,36 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-toolbar {
-  @include mixin.component();
   height: 31px;
   display: flex;
   white-space: nowrap;
   overflow-x: hidden;
-  font-size: #{$font-size-s-m}px;
-  border-bottom: 1px solid $color-border;
+  border-bottom: 1px solid theme.$color-border;
+  @include mixin.component();
+  & {
+    font-size: #{theme.$font-size-s-m}px;
+  }
 }
 
 .item {
   display: flex;
-  margin: 0 #{$margin-x-x-s}px;
+  margin: 0 #{theme.$margin-x-x-s}px;
 }
 
 .item-separator {
-  background: $color-border;
+  background: theme.$color-border;
   width: 1px;
   height: 22px;
   margin-top: 4px;
 }
 
 .item-select {
-  @include select();
+  @include mixin.select();
   margin-top: 4px;
   margin-bottom: 4px;
   select {
-    font-size: #{$font-size-s-m}px;
+    font-size: #{theme.$font-size-s-m}px;
     max-width: 200px;
   }
 }
@@ -38,7 +41,7 @@
 
 .item-input {
   input {
-    @include input();
+    @include mixin.input();
     height: 22px;
     margin-top: 4px;
     margin-bottom: 4px;
@@ -48,7 +51,7 @@
 
 .item-number {
   input[type='number'] {
-    @include input();
+    @include mixin.input();
     width: 60px;
     padding: 2px;
     height: 22px;
@@ -61,25 +64,25 @@
   button {
     display: flex;
     align-items: center;
-    font-size: #{$font-size-s-m}px;
+    font-size: #{theme.$font-size-s-m}px;
     padding: 0 2px;
-    color: $color-text;
+    color: theme.$color-text;
     height: 22px;
     margin-top: 4px;
     margin-bottom: 4px;
     border: none;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: #{$border-radius-x-s}px;
+    border-radius: #{theme.$border-radius-x-s}px;
     &:hover,
     &.hover {
-      background: $color-fill-tertiary;
-      border-color: $color-border;
+      background: theme.$color-fill-tertiary;
+      border-color: theme.$color-border;
     }
     &:active,
     &.active {
-      border-color: $color-border;
-      background: $color-fill-secondary;
+      border-color: theme.$color-border;
+      background: theme.$color-fill-secondary;
     }
   }
 }
@@ -94,36 +97,36 @@
 }
 
 .theme-dark {
-  border-bottom-color: $color-border-dark;
+  border-bottom-color: theme.$color-border-dark;
   .item-separator {
-    background: $color-border-dark;
+    background: theme.$color-border-dark;
   }
   .item-button {
     button {
-      color: $color-text-dark;
+      color: theme.$color-text-dark;
       &:hover,
       &.hover {
-        background: $color-fill-secondary-dark;
-        border-color: $color-border-dark;
+        background: theme.$color-fill-secondary-dark;
+        border-color: theme.$color-border-dark;
       }
       &:active,
       &.active {
-        border-color: $color-border-dark;
-        background: $color-fill-tertiary-dark;
+        border-color: theme.$color-border-dark;
+        background: theme.$color-fill-tertiary-dark;
       }
     }
   }
   .item-select {
-    @include select(true);
+    @include mixin.select(true);
   }
   .item-input {
     input {
-      @include input(true);
+      @include mixin.input(true);
     }
   }
   .item-number {
     input[type='number'] {
-      @include input(true);
+      @include mixin.input(true);
     }
   }
 }

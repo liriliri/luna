@@ -1,15 +1,17 @@
 @use '../share/mixin' as mixin;
-@import '../share/theme';
+@use '../share/theme' as theme;
 
 .luna-notification {
-  @include mixin.component();
   position: relative;
   padding: 20px;
   pointer-events: none;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: transparent;
+  @include mixin.component();
+  & {
+    background: transparent;
+  }
   &.full {
     position: fixed;
     top: 0;
@@ -21,11 +23,11 @@
 
 .item {
   display: flex;
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
   padding: 10px 16px;
-  color: $color-text;
+  color: theme.$color-text;
   align-items: center;
-  background: $color-bg-container;
+  background: theme.$color-bg-container;
 }
 
 .lower {
@@ -45,7 +47,7 @@
   text-align: center;
   line-height: 16px;
   &.info {
-    background: $color-info;
+    background: theme.$color-info;
     .icon {
       position: relative;
       top: -2px;
@@ -53,7 +55,7 @@
     }
   }
   &.success {
-    background: $color-success;
+    background: theme.$color-success;
     .icon {
       position: relative;
       top: -1px;
@@ -63,7 +65,7 @@
   &.warning {
     position: relative;
     top: -2px;
-    color: $color-warning;
+    color: theme.$color-warning;
     .icon {
       font-size: 14px;
     }
@@ -71,7 +73,7 @@
   &.error {
     position: relative;
     top: -1px;
-    color: $color-error;
+    color: theme.$color-error;
     .icon {
       font-size: 14px;
     }
@@ -80,23 +82,23 @@
 
 .theme-dark {
   .item {
-    border-color: $color-border-dark;
-    box-shadow: $box-shadow-dark;
-    color: $color-text-dark;
-    background: $color-bg-container-dark;
+    border-color: theme.$color-border-dark;
+    box-shadow: theme.$box-shadow-dark;
+    color: theme.$color-text-dark;
+    background: theme.$color-bg-container-dark;
   }
   .icon-container {
     &.info {
-      background: $color-info-dark;
+      background: theme.$color-info-dark;
     }
     &.success {
-      background: $color-success-dark;
+      background: theme.$color-success-dark;
     }
     &.warning {
-      color: $color-warning-dark;
+      color: theme.$color-warning-dark;
     }
     &.error {
-      color: $color-error-dark;
+      color: theme.$color-error-dark;
     }
   }
 }

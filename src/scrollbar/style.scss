@@ -1,9 +1,8 @@
 @use '../share/mixin' as mixin;
 
 .luna-scrollbar {
-  @include mixin.component();
   position: relative;
-  box-sizing: border-box;
+  @include mixin.component();
   &:hover {
     .track {
       opacity: 1;

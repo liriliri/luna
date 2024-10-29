@@ -1,8 +1,8 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 // https://codepen.io/manz/pen/XQYoKd
 .luna-retro-handheld {
-  @include component();
+  @include mixin.component();
   min-width: 380px;
   background: #d3ccd3 linear-gradient(#d3ccd3 95%, #999 98%, #777 99%);
   overflow: hidden;

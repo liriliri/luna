@@ -1,8 +1,8 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 @import '../share/theme';
 
 .luna-notification {
-  @include component();
+  @include mixin.component();
   position: relative;
   padding: 20px;
   pointer-events: none;

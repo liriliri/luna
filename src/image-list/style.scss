@@ -1,8 +1,11 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-image-list {
-  @include component();
-  background-color: transparent;
+  @include mixin.component();
+  & {
+    background-color: transparent;
+  }
   &.theme-dark {
     background-color: transparent;
   }
@@ -30,17 +33,17 @@
   cursor: pointer;
   &:hover {
     .image {
-      box-shadow: $box-shadow;
+      box-shadow: theme.$box-shadow;
     }
   }
 }
 
 .image {
   width: 100%;
-  border-radius: #{$border-radius-l-g}px;
+  border-radius: #{theme.$border-radius-l-g}px;
   overflow: hidden;
-  background-color: $color-bg-container;
-  border: 1px solid $color-border;
+  background-color: theme.$color-bg-container;
+  border: 1px solid theme.$color-border;
   img {
     object-fit: cover;
     width: 100%;
@@ -59,7 +62,7 @@
 
 .theme-dark {
   .image {
-    background-color: $color-bg-container-dark;
-    border-color: $color-border-dark;
+    background-color: theme.$color-bg-container-dark;
+    border-color: theme.$color-border-dark;
   }
 }

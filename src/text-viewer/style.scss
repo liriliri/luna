@@ -1,7 +1,7 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 .luna-text-viewer {
-  @include component();
+  @include mixin.component();
   padding: 0;
   unicode-bidi: embed;
   position: relative;

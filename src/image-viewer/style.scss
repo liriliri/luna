@@ -1,12 +1,12 @@
-@import '../share/mixin';
-@import '../share/theme';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-image-viewer {
-  @include component();
   overflow: hidden;
   touch-action: none;
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
   position: relative;
+  @include mixin.component();
 }
 
 .image {
@@ -42,5 +42,5 @@
 }
 
 .theme-dark {
-  border: 1px solid $color-border-dark;
+  border: 1px solid theme.$color-border-dark;
 }

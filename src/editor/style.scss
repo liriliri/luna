@@ -1,8 +1,9 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-editor {
-  @include component();
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
+  @include mixin.component();
   &.fullscreen {
     position: fixed;
     width: 100% !important;
@@ -14,10 +15,10 @@
 }
 
 .toolbar {
-  background: $color-bg-container;
+  background: theme.$color-bg-container;
   padding: 0 6px;
   font-size: 0;
-  border-bottom: 1px solid $color-border;
+  border-bottom: 1px solid theme.$color-border;
 }
 
 .button {
@@ -25,15 +26,15 @@
   width: 30px;
   height: 30px;
   text-align: center;
-  background: $color-bg-container;
+  background: theme.$color-bg-container;
   cursor: pointer;
   border: none;
-  color: $color-text;
+  color: theme.$color-text;
   &:hover {
-    background: $color-fill-secondary;
+    background: theme.$color-fill-secondary;
   }
   &.active {
-    color: $color-primary;
+    color: theme.$color-primary;
   }
   &:active,
   &:focus {
@@ -47,7 +48,7 @@
 }
 
 .body {
-  background: $color-bg-container;
+  background: theme.$color-bg-container;
   height: 300px;
 }
 
@@ -55,29 +56,29 @@
   padding: 6px;
   width: 100%;
   height: 100%;
-  @include overflow-auto(y);
+  @include mixin.overflow-auto(y);
   &:focus {
     outline: none;
   }
   blockquote {
     margin: 10px 0;
     padding: 5px 10px;
-    border-left: 8px solid $color-primary;
-    background: $color-fill-secondary;
+    border-left: 8px solid theme.$color-primary;
+    background: theme.$color-fill-secondary;
   }
 }
 
 .theme-dark {
-  border-color: $color-border-dark;
+  border-color: theme.$color-border-dark;
   .toolbar {
-    background: $color-bg-container-dark;
-    border-color: $color-border-dark;
+    background: theme.$color-bg-container-dark;
+    border-color: theme.$color-border-dark;
   }
   .button {
-    background: $color-bg-container-dark;
-    color: $color-text-dark;
+    background: theme.$color-bg-container-dark;
+    color: theme.$color-text-dark;
   }
   .body {
-    background: $color-bg-container-dark;
+    background: theme.$color-bg-container-dark;
   }
 }

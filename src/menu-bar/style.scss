@@ -1,7 +1,7 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 .luna-menu-bar {
-  @include component();
+  @include mixin.component();
   border-bottom: 1px solid $color-border;
 }
 

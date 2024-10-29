@@ -1,7 +1,7 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 .luna-modal {
-  @include component();
+  @include mixin.component();
   position: fixed;
   top: 0;
   left: 0;

@@ -2,12 +2,12 @@
 @use '../share/theme' as theme;
 
 .luna-box-model {
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
   @include mixin.component();
   & {
-    display: inline-block;
     font-size: #{theme.$font-size-s-m}px;
-    text-align: center;
-    white-space: nowrap;
   }
 }
 

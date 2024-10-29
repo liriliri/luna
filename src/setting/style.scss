@@ -1,7 +1,7 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 .luna-setting {
-  @include component();
+  @include mixin.component();
   min-width: 320px;
 }
 

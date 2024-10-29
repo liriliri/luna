@@ -1,11 +1,12 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-cropper {
-  @include component();
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC');
   position: relative;
   min-height: 150px;
   touch-action: none;
+  @include mixin.component();
 }
 
 .preview {
@@ -62,7 +63,7 @@
 .view-box {
   display: block;
   height: 100%;
-  outline: 1px solid $color-primary;
+  outline: 1px solid theme.$color-primary;
   overflow: hidden;
   width: 100%;
 }
@@ -136,7 +137,7 @@
 }
 
 .line {
-  background: $color-primary;
+  background: theme.$color-primary;
   &.line-e {
     cursor: ew-resize;
     right: -3px;
@@ -164,7 +165,7 @@
 }
 
 .point {
-  background-color: $color-primary;
+  background-color: theme.$color-primary;
   border: 2px solid #fff;
   height: 6px;
   opacity: 1;

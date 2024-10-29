@@ -1,7 +1,7 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 .luna-window {
-  @include component();
+  @include mixin.component();
   position: absolute;
   pointer-events: all;
   display: flex;

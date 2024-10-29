@@ -1,7 +1,7 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 .luna-music-player {
-  @include component();
+  @include mixin.component();
   min-width: 375px;
   border: 1px solid $color-border;
   font-size: 14px;

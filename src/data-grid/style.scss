@@ -1,12 +1,15 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-data-grid {
-  @include component();
   position: relative;
-  font-size: #{$font-size-s-m}px;
-  border: 1px solid $color-border;
+  border: 1px solid theme.$color-border;
   overflow: hidden;
   outline: none;
+  @include mixin.component();
+  & {
+    font-size: #{theme.$font-size-s-m}px;
+  }
 
   table {
     width: 100%;
@@ -19,7 +22,7 @@
   th,
   td {
     padding: 1px 4px;
-    border-left: 1px solid $color-border;
+    border-left: 1px solid theme.$color-border;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -30,12 +33,12 @@
 
   th {
     font-weight: normal;
-    border-bottom: 1px solid $color-border;
+    border-bottom: 1px solid theme.$color-border;
     text-align: left;
-    background: $color-fill-secondary;
+    background: theme.$color-fill-secondary;
     position: relative;
     &.sortable {
-      padding-right: $padding-s-m;
+      padding-right: theme.$padding-s-m;
       &:hover,
       &:active {
         background: #e6e6e6;
@@ -114,13 +117,13 @@
 }
 
 .theme-dark {
-  border-color: $color-border-dark;
+  border-color: theme.$color-border-dark;
   th,
   td {
-    border-color: $color-border-dark;
+    border-color: theme.$color-border-dark;
   }
   th {
-    background: $color-fill-secondary-dark;
+    background: theme.$color-fill-secondary-dark;
     &.sortable {
       &:hover {
         background: #303030;

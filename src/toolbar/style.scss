@@ -1,7 +1,7 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 .luna-toolbar {
-  @include component();
+  @include mixin.component();
   height: 31px;
   display: flex;
   white-space: nowrap;

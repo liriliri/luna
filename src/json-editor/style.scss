@@ -1,17 +1,20 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-json-editor {
-  @include component();
-  background: transparent;
   position: relative;
   margin-left: 12px;
-  font-family: $font-family-code;
-  font-size: 12px;
   line-height: 16px;
   cursor: default;
   color: #727272;
   white-space: nowrap;
   user-select: none;
+  @include mixin.component();
+  & {
+    background: transparent;
+    font-family: theme.$font-family-code;
+    font-size: 12px;
+  }
   & > div {
     display: inline-block;
   }

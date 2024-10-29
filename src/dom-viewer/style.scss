@@ -1,16 +1,19 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-dom-viewer {
-  @include component();
-  @include overflow-auto(y);
-  background: transparent;
   overflow-x: hidden;
   word-wrap: break-word;
   padding: 0 0 0 12px;
-  font-size: #{$font-size-s-m}px;
-  font-family: $font-family-code;
   cursor: default;
   list-style: none;
+  @include mixin.overflow-auto(y);
+  @include mixin.component();
+  & {
+    background: transparent;
+    font-size: #{theme.$font-size-s-m}px;
+    font-family: theme.$font-family-code;
+  }
   ul {
     list-style: none;
   }
@@ -112,7 +115,7 @@
 }
 
 .text-node {
-  @include code-color;
+  @include mixin.code-color;
 }
 
 .theme-dark {
@@ -151,6 +154,6 @@
     }
   }
   .text-node {
-    @include code-color(true);
+    @include mixin.code-color(true);
   }
 }

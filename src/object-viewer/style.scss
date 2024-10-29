@@ -1,4 +1,4 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 .luna-object-viewer {
   @include overflow-auto(x);

@@ -1,9 +1,12 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-gallery {
-  @include component();
   position: relative;
-  background: black;
+  @include mixin.component();
+  & {
+    background: black;
+  }
   &.full {
     position: fixed;
     background: rgba(0, 0, 0, 50%);

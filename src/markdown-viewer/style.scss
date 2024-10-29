@@ -1,8 +1,8 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 // https://github.com/sindresorhus/github-markdown-css
 .luna-markdown-viewer {
-  @include component();
+  @include mixin.component();
   background: transparent;
   &.theme-dark {
     background: transparent;

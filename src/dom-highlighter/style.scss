@@ -1,3 +1,5 @@
+@use 'sass:string';
+
 .luna-dom-highlighter {
   position: fixed;
   left: 0;
@@ -50,7 +52,7 @@
   border-radius: 3px;
   box-sizing: border-box;
   min-width: 100px;
-  max-width: unquote('min(300px, 100% - 4px)');
+  max-width: string.unquote('min(300px, 100% - 4px)');
   z-index: 2;
   background-clip: padding-box;
   will-change: transform;

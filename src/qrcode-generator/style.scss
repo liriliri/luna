@@ -1,7 +1,7 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 .luna-qrcode-generator {
-  @include component();
+  @include mixin.component();
   border: 1px solid $color-border;
   display: flex;
   height: 250px;

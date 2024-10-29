@@ -1,10 +1,11 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-color-picker {
-  @include component();
+  border: 1px solid theme.$color-border;
   touch-action: none;
   width: 225px;
-  border: 1px solid $color-border;
+  @include mixin.component();
 }
 
 .saturation {

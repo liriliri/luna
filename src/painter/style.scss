@@ -1,7 +1,7 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 .luna-painter {
-  @include component();
+  @include mixin.component();
   position: relative;
   padding-left: 40px;
   padding-top: 30px;

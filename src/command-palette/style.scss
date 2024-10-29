@@ -1,7 +1,7 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-command-palette {
-  @include component();
   position: fixed;
   top: 0;
   left: 0;
@@ -12,14 +12,17 @@
   align-items: flex-start;
   padding-top: 10px;
   overflow: hidden;
-  background: transparent !important;
+  @include mixin.component();
+  & {
+    background: transparent !important;
+  }
 }
 
 .body {
   max-width: 100%;
-  box-shadow: $box-shadow;
+  box-shadow: theme.$box-shadow;
   font-size: 12px;
-  background: $color-bg-container;
+  background: theme.$color-bg-container;
 }
 
 .input {
@@ -27,9 +30,9 @@
   outline: none;
   width: 100%;
   border: none;
-  border-bottom: 1px solid $color-border;
+  border-bottom: 1px solid theme.$color-border;
   padding: 10px 4px;
-  color: $color-text;
+  color: theme.$color-text;
 }
 
 .list {
@@ -43,11 +46,11 @@
     cursor: pointer;
     display: flex;
     &:hover {
-      background: $color-fill-secondary;
+      background: theme.$color-fill-secondary;
     }
     &.active {
-      color: $color-white;
-      background: $color-primary;
+      color: theme.$color-white;
+      background: theme.$color-primary;
     }
     .title {
       flex: 1;
@@ -62,19 +65,19 @@
 
 .theme-dark {
   .body {
-    background: $color-bg-container-dark;
+    background: theme.$color-bg-container-dark;
   }
   .input {
-    background: $color-bg-container-dark;
-    border-color: $color-border-dark;
+    background: theme.$color-bg-container-dark;
+    border-color: theme.$color-border-dark;
   }
   li {
     &:hover {
-      background: $color-fill-secondary-dark;
+      background: theme.$color-fill-secondary-dark;
     }
     &.active {
-      color: $color-white;
-      background: $color-primary;
+      color: theme.$color-white;
+      background: theme.$color-primary;
     }
   }
 }

@@ -1,7 +1,7 @@
-@import '../share/mixin';
+@use '../share/mixin' as mixin;
 
 .luna-video-player {
-  @include component();
+  @include mixin.component();
   background: #000;
   min-height: 150px;
   position: relative;

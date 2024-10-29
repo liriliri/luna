@@ -29,7 +29,7 @@ const def = story(
     readme,
     story: __STORY__,
     ReactComponent() {
-      const { wrapLongLines, maxNum, filter } = createKnobs()
+      const { wrapLongLines, maxNum, filter, view } = createKnobs()
 
       return (
         <LunaLogcat
@@ -37,6 +37,7 @@ const def = story(
           wrapLongLines={wrapLongLines}
           maxNum={maxNum}
           filter={filter}
+          view={view}
           onCreate={(logcat) => each(logs, (log) => logcat.append(log))}
         />
       )

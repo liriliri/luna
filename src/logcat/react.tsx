@@ -14,12 +14,13 @@ const LunaLogcat: FC<IILogcatProps> = (props) => {
   const logcat = useRef<Logcat>()
 
   useEffect(() => {
-    const { maxNum, wrapLongLines, filter, entries } = props
+    const { maxNum, wrapLongLines, filter, entries, view } = props
     logcat.current = new Logcat(logcatRef.current!, {
       filter,
       maxNum,
       wrapLongLines,
       entries,
+      view,
     })
     props.onCreate && props.onCreate(logcat.current)
 

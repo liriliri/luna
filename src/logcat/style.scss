@@ -2,17 +2,18 @@
 @use '../share/theme' as theme;
 
 .luna-logcat {
+  padding-left: #{theme.$padding-x-x-s}px;
+  unicode-bidi: embed;
+  position: relative;
+  overflow: auto;
+  line-height: #{theme.$line-height-l-g}em;
+  border: 1px solid theme.$color-border;
+  white-space: pre;
+  user-select: auto;
+  will-change: transform;
   @include mixin.component();
   & {
-    padding-left: #{theme.$padding-x-x-s}px;
     font-family: theme.$font-family-code;
-    unicode-bidi: embed;
-    position: relative;
-    overflow: auto;
-    line-height: #{theme.$line-height-l-g}em;
-    border: 1px solid theme.$color-border;
-    white-space: pre;
-    user-select: text;
   }
   &.wrap-long-lines {
     white-space: pre-wrap;

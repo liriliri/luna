@@ -59,6 +59,10 @@ Append entry.
 
 Clear all entries.
 
+### scrollToEnd(): void
+
+Scroll to end.
+
 ## Types
 
 ### IFilter

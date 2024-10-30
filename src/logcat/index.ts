@@ -51,7 +51,10 @@ interface IEntry extends IBaseEntry {
 
 interface IInnerEntry extends IBaseEntry {
   date: Date
+  container: HTMLElement
 }
+
+const MIN_APPEND_INTERVAL = 200
 
 /**
  * Android logcat viewer.
@@ -71,19 +74,24 @@ interface IInnerEntry extends IBaseEntry {
 export default class Logcat extends Component<IOptions> {
   private isAtBottom = true
   private render: types.AnyFn
-  private entries: Array<{
-    container: HTMLElement
-    entry: IInnerEntry
-  }> = []
+  private entries: Array<IInnerEntry> = []
+  private displayEntries: Array<IInnerEntry> = []
+  private appendTimer: NodeJS.Timeout | null = null
+  private removeThreshold = 1000
+  private frag: DocumentFragment = document.createDocumentFragment()
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'logcat' })
 
     this.initOptions(options, {
-      maxNum: 0,
+      maxNum: 5000,
       view: 'standard',
       entries: [],
       wrapLongLines: false,
     })
+
+    if (this.options.maxNum !== 0) {
+      this.removeThreshold = Math.round(this.options.maxNum / 10)
+    }
 
     this.render = throttle(() => this._render(), 16)
     if (this.options.entries) {
@@ -104,8 +112,7 @@ export default class Logcat extends Component<IOptions> {
   }
   /** Append entry. */
   append(entry: IEntry) {
-    const { c, entries } = this
-    const { maxNum, view } = this.options
+    const { c, entries, displayEntries } = this
 
     const date: Date = isDate(entry.date)
       ? (entry.date as Date)
@@ -115,16 +122,21 @@ export default class Logcat extends Component<IOptions> {
     const e = {
       ...entry,
       date,
-    }
-    entries.push({
       container,
-      entry: e,
-    })
+    }
+    entries.push(e)
 
-    if (maxNum !== 0 && entries.length > maxNum) {
-      const entry = entries.shift()
-      if (entry) {
-        $(entry.container).remove()
+    const { maxNum, view } = this.options
+
+    if (maxNum !== 0 && entries.length >= maxNum + this.removeThreshold) {
+      for (let i = 0; i < this.removeThreshold; i++) {
+        const entry = entries.shift()
+        if (entry) {
+          if (displayEntries[0] === entry) {
+            displayEntries.shift()
+            $(entry.container).remove()
+          }
+        }
       }
     }
 
@@ -132,24 +144,38 @@ export default class Logcat extends Component<IOptions> {
       view === 'standard' ? this.formatStandard(e) : this.formatCompact(e)
 
     if (this.filterEntry(e)) {
-      const isAtBottom = this.isAtBottom
-      this.container.appendChild(container)
-      if (isAtBottom) {
-        this.scrollToBottom()
+      this.displayEntries.push(e)
+      if (this.appendTimer) {
+        this.frag.appendChild(container)
+      } else {
+        this.appendTimer = setTimeout(this._append, MIN_APPEND_INTERVAL)
       }
     }
   }
   /** Clear all entries. */
   clear() {
+    if (this.appendTimer) {
+      clearTimeout(this.appendTimer)
+      this.frag = document.createDocumentFragment()
+    }
     this.entries = []
     this.$container.html('')
   }
-  private scrollToBottom() {
+  /** Scroll to end. */
+  scrollToEnd() {
     const { container } = this
     const { scrollHeight, scrollTop, offsetHeight } = container
     if (scrollTop <= scrollHeight - offsetHeight) {
       container.scrollTop = 10000000
       this.isAtBottom = true
+    }
+  }
+  private _append = () => {
+    const isAtBottom = this.isAtBottom
+    this.container.appendChild(this.frag)
+    this.appendTimer = null
+    if (isAtBottom) {
+      this.scrollToEnd()
     }
   }
   private filterEntry(entry: IBaseEntry) {
@@ -201,13 +227,19 @@ export default class Logcat extends Component<IOptions> {
           each(entries, (entry) => {
             const html =
               val === 'standard'
-                ? this.formatStandard(entry.entry)
-                : this.formatCompact(entry.entry)
+                ? this.formatStandard(entry)
+                : this.formatCompact(entry)
 
             entry.container.innerHTML = html
           })
           break
         case 'filter':
+          this.displayEntries = []
+          each(entries, (entry) => {
+            if (this.filterEntry(entry)) {
+              this.displayEntries.push(entry)
+            }
+          })
           this.render()
           break
       }
@@ -261,13 +293,13 @@ export default class Logcat extends Component<IOptions> {
     this.$container.html('')
     this.isAtBottom = true
 
-    each(this.entries, (entry) => {
-      if (this.filterEntry(entry.entry)) {
-        container.appendChild(entry.container)
-      }
+    const frag = document.createDocumentFragment()
+    each(this.displayEntries, (entry) => {
+      frag.appendChild(entry.container)
     })
+    container.appendChild(frag)
 
-    this.scrollToBottom()
+    this.scrollToEnd()
   }
 }
 

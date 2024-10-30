@@ -4,6 +4,8 @@ import readme from './README.md'
 import story from '../share/story'
 import each from 'licia/each'
 import $ from 'licia/$'
+import random from 'licia/random'
+import randomItem from 'licia/randomItem'
 import { boolean, number, select, text } from '@storybook/addon-knobs'
 import LunaLogcat from './react'
 import logs from './logcat.json'
@@ -21,7 +23,19 @@ const def = story(
       view,
       wrapLongLines,
     })
-    each(logs, (log) => logcat.append(log))
+
+    let destroyed = false
+
+    function append() {
+      logcat.append(randomItem(logs))
+      if (destroyed) {
+        return
+      }
+      setTimeout(append, random(10, 100))
+    }
+    append()
+
+    logcat.on('destroy', () => (destroyed = true))
 
     return logcat
   },

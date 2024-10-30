@@ -146,9 +146,8 @@ export default class Logcat extends Component<IOptions> {
 
     if (this.filterEntry(e)) {
       this.displayEntries.push(e)
-      if (this.appendTimer) {
-        this.frag.appendChild(container)
-      } else {
+      this.frag.appendChild(container)
+      if (!this.appendTimer) {
         this.appendTimer = setTimeout(this._append, MIN_APPEND_INTERVAL)
       }
     }

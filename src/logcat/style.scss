@@ -9,10 +9,11 @@
   line-height: #{theme.$line-height-l-g}em;
   border: 1px solid theme.$color-border;
   white-space: pre;
-  user-select: auto;
   will-change: transform;
+  transform: translate3d(0, 0, 0);
   @include mixin.component();
   & {
+    user-select: auto;
     font-family: theme.$font-family-code;
   }
   &.wrap-long-lines {

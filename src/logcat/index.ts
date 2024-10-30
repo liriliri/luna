@@ -54,7 +54,7 @@ interface IInnerEntry extends IBaseEntry {
   container: HTMLElement
 }
 
-const MIN_APPEND_INTERVAL = 200
+const MIN_APPEND_INTERVAL = 100
 
 /**
  * Android logcat viewer.
@@ -77,7 +77,7 @@ export default class Logcat extends Component<IOptions> {
   private entries: Array<IInnerEntry> = []
   private displayEntries: Array<IInnerEntry> = []
   private appendTimer: NodeJS.Timeout | null = null
-  private removeThreshold = 1000
+  private removeThreshold = 1
   private frag: DocumentFragment = document.createDocumentFragment()
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'logcat' })
@@ -89,8 +89,9 @@ export default class Logcat extends Component<IOptions> {
       wrapLongLines: false,
     })
 
-    if (this.options.maxNum !== 0) {
-      this.removeThreshold = Math.round(this.options.maxNum / 10)
+    const maxNum = this.options.maxNum
+    if (maxNum !== 0 && maxNum > 500) {
+      this.removeThreshold = Math.round(maxNum / 10)
     }
 
     this.render = throttle(() => this._render(), 16)

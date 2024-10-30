@@ -6,8 +6,8 @@ on:
     branches:
       - 'master'
     paths:
-      - 'src/**/*'
-      - 'lib/**/*'
+      - 'src/**/*.{js,ts,tsx}'
+      - 'lib/**/*.js'
 
 jobs:
   ci:

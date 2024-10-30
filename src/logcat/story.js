@@ -6,7 +6,7 @@ import each from 'licia/each'
 import $ from 'licia/$'
 import random from 'licia/random'
 import randomItem from 'licia/randomItem'
-import { boolean, number, select, text } from '@storybook/addon-knobs'
+import { boolean, number, select, text, button } from '@storybook/addon-knobs'
 import LunaLogcat from './react'
 import logs from './logcat.json'
 
@@ -36,6 +36,11 @@ const def = story(
     append()
 
     logcat.on('destroy', () => (destroyed = true))
+
+    button('Clear', () => {
+      logcat.clear()
+      return false
+    })
 
     return logcat
   },

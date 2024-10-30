@@ -156,6 +156,7 @@ export default class Logcat extends Component<IOptions> {
   clear() {
     if (this.appendTimer) {
       clearTimeout(this.appendTimer)
+      this.appendTimer = null
       this.frag = document.createDocumentFragment()
     }
     this.entries = []

@@ -20,7 +20,7 @@ import Toolbar, {
 } from './index'
 import $ from 'licia/$'
 import isUndef from 'licia/isUndef'
-import { useForceUpdate } from '../share/hooks'
+import { useForceUpdate, usePrevious } from '../share/hooks'
 import { IComponentOptions } from '../share/Component'
 import { createPortal } from 'react-dom'
 
@@ -33,16 +33,28 @@ const LunaToolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
   const toolbarRef = useRef<HTMLDivElement>(null)
   const toolbar = useRef<Toolbar>()
   const forceUpdate = useForceUpdate()
+  const prevProps = usePrevious(props)
 
   useEffect(() => {
     toolbar.current = new Toolbar(toolbarRef.current!)
-    toolbar.current.on('change', (key, val, oldVal) => {
-      props.onChange && props.onChange(key, val, oldVal)
-    })
+    if (props.onChange) {
+      toolbar.current.on('change', props.onChange)
+    }
     forceUpdate()
 
     return () => toolbar.current?.destroy()
   }, [])
+
+  useEffect(() => {
+    if (toolbar.current) {
+      if (prevProps?.onChange) {
+        toolbar.current.off('change', prevProps.onChange)
+      }
+      if (props.onChange) {
+        toolbar.current.on('change', props.onChange)
+      }
+    }
+  }, [props.onChange])
 
   useEffect(() => {
     if (toolbar.current) {

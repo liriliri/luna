@@ -13,7 +13,7 @@
   transform: translate3d(0, 0, 0);
   @include mixin.component();
   & {
-    user-select: auto;
+    user-select: text;
     font-family: theme.$font-family-code;
   }
   &.wrap-long-lines {

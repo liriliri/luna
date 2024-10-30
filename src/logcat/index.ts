@@ -3,6 +3,7 @@ import escape from 'licia/escape'
 import h from 'licia/h'
 import types from 'licia/types'
 import throttle from 'licia/throttle'
+import trim from 'licia/trim'
 import isDate from 'licia/isDate'
 import each from 'licia/each'
 import strHash from 'licia/strHash'
@@ -190,14 +191,16 @@ export default class Logcat extends Component<IOptions> {
       return false
     }
 
-    if (filter.package) {
-      if (!contain(lowerCase(entry.package), lowerCase(filter.package))) {
+    const pkg = trim(filter.package || '')
+    if (pkg) {
+      if (!contain(lowerCase(entry.package), lowerCase(pkg))) {
         return false
       }
     }
 
-    if (filter.tag) {
-      if (!contain(lowerCase(entry.tag), lowerCase(filter.tag))) {
+    const tag = trim(filter.tag || '')
+    if (tag) {
+      if (!contain(lowerCase(entry.tag), lowerCase(tag))) {
         return false
       }
     }

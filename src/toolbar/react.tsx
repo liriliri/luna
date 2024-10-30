@@ -19,6 +19,7 @@ import Toolbar, {
   IButtonState,
 } from './index'
 import $ from 'licia/$'
+import isUndef from 'licia/isUndef'
 import { useForceUpdate } from '../share/hooks'
 import { IComponentOptions } from '../share/Component'
 import { createPortal } from 'react-dom'
@@ -117,7 +118,7 @@ export const LunaToolbarButton: FC<PropsWithChildren<IToolbarButtonProps>> = (
   }, [props.toolbar])
 
   useEffect(() => {
-    if (toolbarButton.current && props.state) {
+    if (toolbarButton.current && !isUndef(props.state)) {
       toolbarButton.current.setState(props.state)
     }
   }, [props.state])

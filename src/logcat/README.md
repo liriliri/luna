@@ -59,6 +59,14 @@ Append entry.
 
 Clear all entries.
 
+### getSelection(): string
+
+Get selected text.
+
+### hasSelection(): boolean
+
+Check if there is any selection.
+
 ### scrollToEnd(): void
 
 Scroll to end.

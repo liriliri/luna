@@ -172,6 +172,24 @@ export default class Logcat extends Component<IOptions> {
       this.isAtBottom = true
     }
   }
+  /** Check if there is any selection. */
+  hasSelection() {
+    const selection = window.getSelection()
+    if (selection && selection.anchorNode) {
+      if (this.container.contains(selection.anchorNode)) {
+        return true
+      }
+    }
+    return false
+  }
+  /** Get selected text. */
+  getSelection() {
+    if (!this.hasSelection()) {
+      return ''
+    }
+    const selection = window.getSelection()
+    return selection ? selection.toString() : ''
+  }
   private _append = () => {
     const isAtBottom = this.isAtBottom
     this.container.appendChild(this.frag)
@@ -249,7 +267,9 @@ export default class Logcat extends Component<IOptions> {
       }
     })
 
-    this.$container.on('scroll', this.onScroll)
+    this.$container
+      .on('scroll', this.onScroll)
+      .on('click', () => (this.isAtBottom = false))
   }
   private onScroll = () => {
     const { scrollHeight, clientHeight, scrollTop } = this

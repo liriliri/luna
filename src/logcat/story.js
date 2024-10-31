@@ -57,6 +57,7 @@ const def = story(
           maxNum={maxNum}
           filter={filter}
           view={view}
+          onContextMenu={() => console.log('context menu')}
           onCreate={(logcat) => each(logs, (log) => logcat.append(log))}
         />
       )

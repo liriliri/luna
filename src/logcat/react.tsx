@@ -1,4 +1,4 @@
-import { CSSProperties, FC, useEffect, useRef } from 'react'
+import { CSSProperties, FC, MouseEventHandler, useEffect, useRef } from 'react'
 import each from 'licia/each'
 import Logcat, { IOptions } from './index'
 import { useNonInitialEffect } from '../share/hooks'
@@ -6,6 +6,7 @@ import { useNonInitialEffect } from '../share/hooks'
 interface IILogcatProps extends IOptions {
   style?: CSSProperties
   className?: string
+  onContextMenu?: MouseEventHandler<HTMLDivElement>
   onCreate?: (logcat: Logcat) => void
 }
 
@@ -39,6 +40,7 @@ const LunaLogcat: FC<IILogcatProps> = (props) => {
     <div
       className={props.className || ''}
       ref={logcatRef}
+      onContextMenu={props.onContextMenu}
       style={props.style}
     ></div>
   )

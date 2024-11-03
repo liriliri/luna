@@ -125,6 +125,7 @@ export default function story(
         {
           Light: 'light',
           Dark: 'dark',
+          Auto: 'auto',
         },
         themes
       ),

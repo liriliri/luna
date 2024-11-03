@@ -5,6 +5,7 @@ import each from 'licia/each'
 import extend from 'licia/extend'
 import defaults from 'licia/defaults'
 import remove from 'licia/remove'
+import theme from 'licia/theme'
 import startWith from 'licia/startWith'
 
 interface IOptions {
@@ -23,11 +24,12 @@ export default class Component<
   $container: $.$
   private subComponents: Component[] = []
   private compName: string
+  private theme = ''
   protected options: Required<Options>
   constructor(
     container: Element,
     { compName }: IOptions,
-    { theme = 'light' }: IComponentOptions = {}
+    { theme: t = 'light' }: IComponentOptions = {}
   ) {
     super()
     this.compName = compName
@@ -41,19 +43,22 @@ export default class Component<
       this.c(`platform-${getPlatform()}`),
     ])
 
-    this.on('optionChange', (name, val, oldVal) => {
-      const c = this.c
+    this.on('optionChange', (name, val) => {
       if (name === 'theme') {
-        this.$container
-          .rmClass(c(`theme-${oldVal}`))
-          .addClass(c(`theme-${val}`))
+        let t = val
+        if (val === 'auto') {
+          t = theme.get()
+        }
+        this.setTheme(t)
         each(this.subComponents, (component) =>
           component.setOption('theme', val)
         )
       }
     })
 
-    this.setOption('theme', theme)
+    theme.on('change', this.onThemeChange)
+
+    this.setOption('theme', t)
   }
   destroy() {
     this.destroySubComponents()
@@ -67,6 +72,7 @@ export default class Component<
     $container.html('')
     this.emit('destroy')
     this.removeAllListeners()
+    theme.off('change', this.onThemeChange)
   }
   setOption(name: string | Partial<Options>, val?: any) {
     const options: any = this.options
@@ -79,6 +85,9 @@ export default class Component<
     each(newOptions, (val, name: string) => {
       const oldVal = options[name]
       options[name] = val
+      if (val === oldVal) {
+        return
+      }
       this.emit('optionChange', name, val, oldVal)
     })
   }
@@ -102,5 +111,20 @@ export default class Component<
   }
   protected find(selector: string) {
     return this.$container.find(this.c(selector))
+  }
+  private setTheme(theme: string) {
+    const { c, $container } = this
+
+    if (this.theme) {
+      $container.rmClass(c(`theme-${this.theme}`))
+    }
+
+    $container.addClass(c(`theme-${theme}`))
+    this.theme = theme
+  }
+  private onThemeChange = (t: string) => {
+    if (this.options.theme === 'auto') {
+      this.setTheme(t)
+    }
   }
 }

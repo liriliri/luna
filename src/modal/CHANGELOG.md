@@ -1,3 +1,7 @@
+## 1.3.0 (3 Nov 2024)
+
+* feat: add auto theme
+
 ## 1.2.3 (10 May 2024)
 
 * fix: react onClose unable to update

@@ -44,7 +44,7 @@ export default class Component<
     ])
 
     this.on('optionChange', (name, val) => {
-      if (name === 'theme') {
+      if (name === 'theme' && val) {
         let t = val
         if (val === 'auto') {
           t = theme.get()

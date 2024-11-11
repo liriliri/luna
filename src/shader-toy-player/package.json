@@ -1,6 +1,6 @@
 {
   "name": "shader-toy-player",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Shader toy player",
   "luna": {
     "icon": true,

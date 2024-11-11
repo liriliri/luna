@@ -345,7 +345,7 @@
     "icon": true,
     "vue": true,
     "test": false,
-    "version": "0.5.0",
+    "version": "0.5.1",
     "style": true,
     "install": false,
     "react": false,

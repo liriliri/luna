@@ -60,7 +60,8 @@
       "luna-mask-editor": ["src/mask-editor/index"],
       "luna-image-list": ["src/image-list/index"],
       "luna-lrc-player": ["src/lrc-player/index"],
-      "luna-logcat": ["src/logcat/index"]
+      "luna-logcat": ["src/logcat/index"],
+      "luna-file-list": ["src/file-list/index"]
     }
   }
 }

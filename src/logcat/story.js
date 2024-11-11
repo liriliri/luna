@@ -9,6 +9,7 @@ import randomItem from 'licia/randomItem'
 import { boolean, number, select, text, button } from '@storybook/addon-knobs'
 import LunaLogcat from './react'
 import logs from './logcat.json'
+import { useEffect, useRef } from 'react'
 
 const def = story(
   'logcat',
@@ -27,7 +28,9 @@ const def = story(
     let destroyed = false
 
     function append() {
-      logcat.append(randomItem(logs))
+      const log = randomItem(logs)
+      log.date = new Date()
+      logcat.append(log)
       if (destroyed) {
         return
       }
@@ -49,6 +52,26 @@ const def = story(
     story: __STORY__,
     ReactComponent() {
       const { wrapLongLines, maxNum, filter, view } = createKnobs()
+      const logcatRef = useRef(null)
+
+      useEffect(() => {
+        let destroyed = false
+
+        if (logcatRef.current) {
+          function append() {
+            const log = randomItem(logs)
+            log.date = new Date()
+            logcatRef.current.append(log)
+            if (destroyed) {
+              return
+            }
+            setTimeout(append, random(10, 100))
+          }
+          append()
+        }
+
+        return () => (destroyed = true)
+      }, [])
 
       return (
         <LunaLogcat
@@ -58,7 +81,7 @@ const def = story(
           filter={filter}
           view={view}
           onContextMenu={() => console.log('context menu')}
-          onCreate={(logcat) => each(logs, (log) => logcat.append(log))}
+          onCreate={(logcat) => (logcatRef.current = logcat)}
         />
       )
     },

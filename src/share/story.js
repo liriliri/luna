@@ -92,6 +92,7 @@ export default function story(
       window.componentName = upperFirst(camelCase(`react-${name}`))
 
       ReactDOM.render(<ReactComponent theme={theme} />, container)
+      window.reactComponent = container
 
       updateBackground(theme)
 
@@ -110,7 +111,9 @@ export default function story(
       delete window.component
       window.componentName = upperFirst(camelCase(`vue-${name}`))
 
-      createApp(VueComponent({ theme })).mount(container)
+      const app = createApp(VueComponent({ theme }))
+      app.mount(container)
+      window.vueComponent = app
 
       updateBackground(theme)
 
@@ -175,6 +178,12 @@ function fixKnobs(name) {
       })
     }
     each(window.components, (component) => component.destroy())
+    if (window.reactComponent) {
+      ReactDOM.unmountComponentAtNode(window.reactComponent)
+    }
+    if (window.vueComponent) {
+      window.vueComponent.unmount()
+    }
   }
 }
 

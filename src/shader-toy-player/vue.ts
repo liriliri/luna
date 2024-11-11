@@ -1,4 +1,4 @@
-import { defineComponent, h, onBeforeMount, onMounted, shallowRef } from 'vue'
+import { defineComponent, h, onBeforeUnmount, onMounted, shallowRef } from 'vue'
 import ShaderToyPlayer from './index'
 
 const LunaShaderToyPlayer = defineComponent({
@@ -30,7 +30,7 @@ const LunaShaderToyPlayer = defineComponent({
       context.emit('create', shaderToyPlayer.value)
     })
 
-    onBeforeMount(() => {
+    onBeforeUnmount(() => {
       shaderToyPlayer.value?.destroy()
     })
 

@@ -25,3 +25,8 @@ npm install luna-file-list --save
 import 'luna-file-list/luna-file-list.css'
 import LunaFileList from 'luna-file-list'
 ```
+
+## Configuration
+
+* directory(string): Current directory.
+* files(IFile[]): File list.

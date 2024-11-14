@@ -63,6 +63,8 @@ export interface IDataGridNodeOptions {
   selectable?: boolean
 }
 
+const MIN_APPEND_INTERVAL = 100
+
 /**
  * Grid for displaying datasets.
  *
@@ -102,11 +104,14 @@ export default class DataGrid extends Component<IOptions> {
   private onResize: () => void
   private tableBody: HTMLElement
   private nodes: DataGridNode[] = []
+  private displayNodes: DataGridNode[] = []
   private colWidthsInitialized = false
   private colMap: types.PlainObj<IColumn> = {}
   private sortId?: string
   private selectedNode: DataGridNode | null = null
   private isAscending = true
+  private appendTimer: NodeJS.Timeout | null = null
+  private frag: DocumentFragment = document.createDocumentFragment()
   private colWidths: number[] = []
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'data-grid' }, options)
@@ -179,21 +184,34 @@ export default class DataGrid extends Component<IOptions> {
     const node = new DataGridNode(this, data, options)
     this.nodes.push(node)
 
+    const isVisible = this.filterNode(node)
+    if (isVisible) {
+      this.displayNodes.push(node)
+    }
+
     if (this.sortId) {
       this.sortNodes(this.sortId, this.isAscending)
     } else {
-      if (this.filterNode(node)) {
-        this.tableBody.insertBefore(node.container, this.fillerRow)
-        this.updateHeight()
+      if (isVisible) {
+        this.frag.appendChild(node.container)
+        if (!this.appendTimer) {
+          this.appendTimer = setTimeout(this._append, MIN_APPEND_INTERVAL)
+        }
       }
     }
 
     return node
   }
+  private _append = () => {
+    this.tableBody.insertBefore(this.frag, this.fillerRow)
+    this.appendTimer = null
+    this.updateHeight()
+  }
   /** Clear all data. */
   clear() {
-    each(this.nodes, (node) => node.detach())
+    this.detachAll()
     this.nodes = []
+    this.displayNodes = []
     this.selectNode(null)
 
     this.updateHeight()
@@ -366,6 +384,15 @@ export default class DataGrid extends Component<IOptions> {
           this.updateHeight()
           break
         case 'filter':
+          this.displayNodes = []
+          each(this.nodes, (node) => {
+            if (this.filterNode(node)) {
+              this.displayNodes.push(node)
+            }
+          })
+          if (this.selectedNode && !this.filterNode(this.selectedNode)) {
+            this.selectNode(null)
+          }
           this.renderData()
           break
       }
@@ -375,7 +402,7 @@ export default class DataGrid extends Component<IOptions> {
     const column = this.colMap[id]
 
     const comparator = column.comparator || naturalOrderComparator
-    this.nodes.sort(function (a, b) {
+    function sortFn(a: DataGridNode, b: DataGridNode) {
       let aVal = a.data[id]
       let bVal = b.data[id]
       if (isEl(aVal)) {
@@ -386,7 +413,9 @@ export default class DataGrid extends Component<IOptions> {
       }
 
       return isAscending ? comparator(aVal, bVal) : comparator(bVal, aVal)
-    })
+    }
+    this.nodes.sort(sortFn)
+    this.displayNodes.sort(sortFn)
 
     this.renderData()
 
@@ -460,19 +489,21 @@ export default class DataGrid extends Component<IOptions> {
     }
   }
   private renderData() {
-    const { tableBody, nodes, fillerRow } = this
+    const { tableBody, displayNodes, fillerRow } = this
 
-    each(nodes, (node) => node.detach())
-    each(nodes, (node) => {
-      if (this.filterNode(node)) {
-        tableBody.insertBefore(node.container, fillerRow)
-      }
+    this.detachAll()
+    const frag = document.createDocumentFragment()
+    each(displayNodes, (node) => {
+      frag.appendChild(node.container)
     })
-    if (this.selectedNode && !this.filterNode(this.selectedNode)) {
-      this.selectNode(null)
-    }
+    tableBody.insertBefore(frag, fillerRow)
 
     this.updateHeight()
+  }
+  private detachAll() {
+    const { tableBody } = this
+    tableBody.innerHTML = ''
+    tableBody.appendChild(this.fillerRow)
   }
   private filterNode(node: DataGridNode) {
     let { filter } = this.options

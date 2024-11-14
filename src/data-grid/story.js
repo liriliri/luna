@@ -11,10 +11,10 @@ import { object, number, button, text } from '@storybook/addon-knobs'
 const def = story(
   'data-grid',
   (container) => {
-    const { columns, maxHeight, minHeight, filter } = createKnobs()
+    const { maxHeight, minHeight, filter } = createKnobs()
 
     const dataGrid = new DataGrid(container, {
-      columns,
+      columns: getColumns(),
       maxHeight,
       minHeight,
       filter,
@@ -44,7 +44,7 @@ const def = story(
     changelog,
     source: __STORY__,
     ReactComponent() {
-      const { columns, minHeight, maxHeight, filter } = createKnobs()
+      const { minHeight, maxHeight, filter } = createKnobs()
 
       return (
         <LunaDataGrid
@@ -54,7 +54,7 @@ const def = story(
           onDeselect={() => {
             console.log('deselect')
           }}
-          columns={columns}
+          columns={getColumns()}
           minHeight={minHeight}
           maxHeight={maxHeight}
           filter={filter}
@@ -64,6 +64,27 @@ const def = story(
     },
   }
 )
+
+function getColumns() {
+  return [
+    {
+      id: 'index',
+      title: 'Index',
+      weight: 20,
+      sortable: true,
+    },
+    {
+      id: 'name',
+      title: 'Name',
+      sortable: true,
+      weight: 30,
+    },
+    {
+      id: 'site',
+      title: 'Site',
+    },
+  ]
+}
 
 function getData() {
   return [
@@ -111,25 +132,6 @@ function getData() {
 }
 
 function createKnobs() {
-  const columns = object('Columns', [
-    {
-      id: 'index',
-      title: 'Index',
-      weight: 20,
-      sortable: true,
-    },
-    {
-      id: 'name',
-      title: 'Name',
-      sortable: true,
-      weight: 30,
-    },
-    {
-      id: 'site',
-      title: 'Site',
-    },
-  ])
-
   const minHeight = number('Min Height', 80, {
     range: true,
     min: 23,
@@ -144,7 +146,6 @@ function createKnobs() {
   const filter = text('Filter', '')
 
   return {
-    columns,
     minHeight,
     maxHeight,
     filter,

@@ -87,7 +87,10 @@ export default function story(
 
       fixKnobs(`react-${name}`)
 
-      const { theme } = createKnobs()
+      const { theme, language } = createKnobs()
+      if (language) {
+        i18n.locale(language)
+      }
       window.components = []
       delete window.component
       window.componentName = upperFirst(camelCase(`react-${name}`))

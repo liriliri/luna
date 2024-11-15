@@ -1,6 +1,7 @@
 import { CSSProperties, FC, useEffect, useRef } from 'react'
 import MaskEditor, { IOptions } from './index'
-import { useNonInitialEffect } from '../share/hooks'
+import each from 'licia/each'
+import { useEvent, useOption, usePrevious } from '../share/hooks'
 
 interface IMaskEditorProps extends IOptions {
   style?: CSSProperties
@@ -11,33 +12,29 @@ interface IMaskEditorProps extends IOptions {
 const LunaMaskEditor: FC<IMaskEditorProps> = (props) => {
   const maskEditorRef = useRef<HTMLDivElement>(null)
   const maskEditor = useRef<MaskEditor>()
+  const prevProps = usePrevious(props)
 
   useEffect(() => {
-    const { image, mask } = props
+    const { image, mask, theme } = props
     maskEditor.current = new MaskEditor(maskEditorRef.current!, {
       image,
       mask,
+      theme,
     })
     props.onCreate && props.onCreate(maskEditor.current)
-
-    if (props.onChange) {
-      maskEditor.current.on('change', props.onChange)
-    }
 
     return () => maskEditor.current?.destroy()
   }, [])
 
-  useNonInitialEffect(() => {
-    if (maskEditor.current) {
-      maskEditor.current.setOption('image', props.image)
-    }
-  }, [props.image])
-
-  useNonInitialEffect(() => {
-    if (maskEditor.current) {
-      maskEditor.current.setOption('mask', props.mask)
-    }
-  }, [props.mask])
+  useEvent<MaskEditor>(
+    maskEditor,
+    'change',
+    prevProps?.onChange,
+    props.onChange
+  )
+  each(['theme', 'image', 'mask'], (key: keyof IMaskEditorProps) => {
+    useOption<MaskEditor, IMaskEditorProps>(maskEditor, key, props[key])
+  })
 
   return <div ref={maskEditorRef} style={props.style}></div>
 }

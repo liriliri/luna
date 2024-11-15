@@ -43,7 +43,7 @@ const def = story(
     readme,
     changelog,
     source: __STORY__,
-    ReactComponent() {
+    ReactComponent({ theme }) {
       const { minHeight, maxHeight, filter } = createKnobs()
 
       return (
@@ -58,6 +58,7 @@ const def = story(
           minHeight={minHeight}
           maxHeight={maxHeight}
           filter={filter}
+          theme={theme}
           selectable={true}
           data={getData()}
         />

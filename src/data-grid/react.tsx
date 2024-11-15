@@ -1,8 +1,12 @@
 import { FC, useEffect, useRef } from 'react'
 import DataGrid, { DataGridNode, IOptions } from './index'
 import each from 'licia/each'
-import lowerCase from 'licia/lowerCase'
-import { useNonInitialEffect, usePrevious } from '../share/hooks'
+import {
+  useEvent,
+  useNonInitialEffect,
+  useOption,
+  usePrevious,
+} from '../share/hooks'
 
 interface IDataGridProps extends IOptions {
   onSelect?: (node: DataGridNode) => void
@@ -25,13 +29,8 @@ const LunaDataGrid: FC<IDataGridProps> = (props) => {
       minHeight: props.minHeight,
       filter: props.filter,
       selectable: props.selectable,
+      theme: props.theme,
     })
-    if (props.onSelect) {
-      dataGrid.current.on('select', props.onSelect)
-    }
-    if (props.onDeselect) {
-      dataGrid.current.on('deselect', props.onDeselect)
-    }
     dataGrid.current.setData(props.data, props.uniqueId)
   }, [])
 
@@ -41,28 +40,18 @@ const LunaDataGrid: FC<IDataGridProps> = (props) => {
     }
   }, [props.data])
 
-  each(['onSelect', 'onDeselect'], (key: 'onSelect' | 'onDeselect') => {
-    useNonInitialEffect(() => {
-      if (dataGrid.current) {
-        const event = lowerCase(key.slice(2))
-        if (prevProps?.[key]) {
-          dataGrid.current.off(event, prevProps[key])
-        }
-        if (props[key]) {
-          dataGrid.current.on(event, props[key])
-        }
-      }
-    }, [props[key]])
-  })
+  useEvent<DataGrid>(dataGrid, 'select', prevProps?.onSelect, props.onSelect)
+  useEvent<DataGrid>(
+    dataGrid,
+    'deselect',
+    prevProps?.onDeselect,
+    props.onDeselect
+  )
 
   each(
-    ['height', 'maxHeight', 'minHeight', 'filter'],
+    ['theme', 'height', 'maxHeight', 'minHeight', 'filter'],
     (key: keyof IDataGridProps) => {
-      useNonInitialEffect(() => {
-        if (dataGrid.current) {
-          dataGrid.current.setOption(key, props[key])
-        }
-      }, [props[key]])
+      useOption<DataGrid, IDataGridProps>(dataGrid, key, props[key])
     }
   )
 

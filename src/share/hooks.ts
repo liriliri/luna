@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import Component from './Component'
 
 export function useForceUpdate() {
   const [_, setForceUpdateValue] = useState(0)
@@ -39,4 +40,34 @@ export function useNonInitialEffect(
       return effectReturns
     }
   }, deps)
+}
+
+export function useEvent<C extends Component>(
+  component: React.MutableRefObject<C | undefined>,
+  event: string,
+  prev: any,
+  prop: any
+) {
+  useEffect(() => {
+    if (component.current) {
+      if (prev) {
+        component.current.off(event, prev)
+      }
+      if (prop) {
+        component.current.on(event, prop)
+      }
+    }
+  }, [prop])
+}
+
+export function useOption<C extends Component, P>(
+  component: React.MutableRefObject<C | undefined>,
+  key: keyof P,
+  prop: any
+) {
+  useNonInitialEffect(() => {
+    if (component.current) {
+      component.current.setOption(key as string, prop)
+    }
+  }, [prop])
 }

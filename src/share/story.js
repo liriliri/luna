@@ -5,6 +5,7 @@ import map from 'licia/map'
 import h from 'licia/h'
 import waitUntil from 'licia/waitUntil'
 import isArr from 'licia/isArr'
+import isDarkMode from 'licia/isDarkMode'
 import contain from 'licia/contain'
 import upperFirst from 'licia/upperFirst'
 import extend from 'licia/extend'
@@ -188,6 +189,10 @@ function fixKnobs(name) {
 }
 
 function updateBackground(theme) {
+  if (theme === 'auto') {
+    theme = isDarkMode() ? 'dark' : 'light'
+  }
+
   document.documentElement.style.background = contain(theme, 'dark')
     ? '#000'
     : '#fff'

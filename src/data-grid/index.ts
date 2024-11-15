@@ -599,6 +599,7 @@ export class DataGridNode {
     this.data = data
     if (options.selectable) {
       this.selectable = options.selectable
+      this.$container.addClass(dataGrid.c('selectable'))
     }
 
     this.render()

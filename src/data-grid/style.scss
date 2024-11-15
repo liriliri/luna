@@ -38,10 +38,10 @@
     background: theme.$color-fill-secondary;
     position: relative;
     &.sortable {
-      padding-right: theme.$padding-s-m;
+      padding-right: #{theme.$padding-s-m}px;
       &:hover,
       &:active {
-        background: #e6e6e6;
+        background: theme.$color-fill;
       }
     }
     .icon-caret-down,
@@ -61,15 +61,15 @@
   }
 
   &:focus {
-    .node.selected {
+    .node.selectable.selected {
       color: #fff;
-      background: #1a73e8;
+      background: theme.$color-primary;
     }
   }
 
   &:focus.theme-dark {
-    .node.selected {
-      background: #0e639c;
+    .node.selectable.selected {
+      background: theme.$color-primary-dark;
     }
   }
 }
@@ -85,7 +85,8 @@
 
 .data-container {
   overflow-y: auto;
-  .node.selected {
+  .node.selected,
+  .node.selectable:hover {
     background: #ddd;
   }
   tr:nth-child(even) {
@@ -126,12 +127,13 @@
     background: theme.$color-fill-secondary-dark;
     &.sortable {
       &:hover {
-        background: #303030;
+        background: theme.$color-fill-dark;
       }
     }
   }
   .data-container {
-    .node.selected {
+    .node.selected,
+    .node.selectable:hover {
       background: #393939;
     }
     tr:nth-child(even) {

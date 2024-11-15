@@ -59,7 +59,7 @@ dataGrid.append({
 
 ## Api
 
-### append(data: PlainObj<string | HTMLElement>, options?: IDataGridNodeOptions): DataGridNode
+### append(data: NodeData, options?: IDataGridNodeOptions): DataGridNode
 
 Append row data.
 
@@ -70,6 +70,10 @@ Clear all data.
 ### remove(node: DataGridNode): void
 
 Remove row data.
+
+### setData(data: NodeData | [], uniqueId?: string): void
+
+Set data.
 
 ## Types
 

@@ -6,7 +6,7 @@ import changelog from './CHANGELOG.md'
 import each from 'licia/each'
 import toEl from 'licia/toEl'
 import LunaDataGrid from './react'
-import { object, number, button, text } from '@storybook/addon-knobs'
+import { number, button, text } from '@storybook/addon-knobs'
 
 const def = story(
   'data-grid',
@@ -58,6 +58,7 @@ const def = story(
           minHeight={minHeight}
           maxHeight={maxHeight}
           filter={filter}
+          selectable={true}
           data={getData()}
         />
       )

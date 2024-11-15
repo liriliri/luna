@@ -2,6 +2,7 @@ import $ from 'licia/$'
 import stripIndent from 'licia/stripIndent'
 import Component, { IComponentOptions } from '../share/Component'
 import each from 'licia/each'
+import map from 'licia/map'
 import escape from 'licia/escape'
 import types from 'licia/types'
 import h from 'licia/h'
@@ -15,6 +16,7 @@ import startWith from 'licia/startWith'
 import isNull from 'licia/isNull'
 import isFn from 'licia/isFn'
 import isRegExp from 'licia/isRegExp'
+import isArr from 'licia/isArr'
 import isStr from 'licia/isStr'
 import trim from 'licia/trim'
 import contain from 'licia/contain'
@@ -55,7 +57,11 @@ export interface IOptions extends IComponentOptions {
   minHeight?: number
   /** Data filter. */
   filter?: string | RegExp | types.AnyFn
+  /** Default selectable for all nodes. */
+  selectable?: boolean
 }
+
+type NodeData = types.PlainObj<string | HTMLElement>
 
 /** IDataGridNodeOptions */
 export interface IDataGridNodeOptions {
@@ -131,6 +137,7 @@ export default class DataGrid extends Component<IOptions> {
       minHeight: 41,
       maxHeight: Infinity,
       filter: '',
+      selectable: false,
     })
     const { columns, minHeight, maxHeight } = this.options
     each(columns, (column) => {
@@ -177,10 +184,10 @@ export default class DataGrid extends Component<IOptions> {
     }
   }
   /** Append row data. */
-  append(
-    data: types.PlainObj<string | HTMLElement>,
-    options?: IDataGridNodeOptions
-  ) {
+  append(data: NodeData, options: IDataGridNodeOptions = {}) {
+    defaults(options, {
+      selectable: this.options.selectable,
+    })
     const node = new DataGridNode(this, data, options)
     this.nodes.push(node)
 
@@ -206,6 +213,75 @@ export default class DataGrid extends Component<IOptions> {
     this.tableBody.insertBefore(this.frag, this.fillerRow)
     this.appendTimer = null
     this.updateHeight()
+  }
+  /** Set data. */
+  setData(
+    data: Array<NodeData | [NodeData, IDataGridNodeOptions]>,
+    uniqueId?: string
+  ) {
+    const items = map(data, (item) => {
+      if (!isArr(item)) {
+        return [
+          item,
+          {
+            selectable: this.options.selectable,
+          },
+        ]
+      }
+
+      defaults(item[1], {
+        selectable: this.options.selectable,
+      })
+
+      return item
+    }) as Array<[NodeData, IDataGridNodeOptions]>
+
+    if (!uniqueId) {
+      this.clear()
+      each(items, (item) => {
+        const node = new DataGridNode(this, item[0], item[1])
+        this.nodes.push(node)
+        if (this.filterNode(node)) {
+          this.displayNodes.push(node)
+        }
+      })
+    } else {
+      const nodesMap: types.PlainObj<DataGridNode> = {}
+      each(this.nodes, (node) => {
+        nodesMap[node.data[uniqueId] as string] = node
+      })
+      const nodes: Array<DataGridNode> = []
+      const displayNodes: Array<DataGridNode> = []
+
+      each(items, (item) => {
+        const id = item[0][uniqueId] as string
+        let node
+        if (nodesMap[id]) {
+          node = nodesMap[id]
+          node.data = item[0]
+          node.render()
+        } else {
+          node = new DataGridNode(this, item[0], item[1])
+        }
+        nodes.push(node)
+        if (this.filterNode(node)) {
+          displayNodes.push(node)
+        }
+      })
+
+      if (this.selectedNode && !contain(nodes, this.selectedNode)) {
+        this.selectNode(null)
+      }
+
+      this.nodes = nodes
+      this.displayNodes = displayNodes
+    }
+
+    if (this.sortId) {
+      this.sortNodes(this.sortId, this.isAscending)
+    } else {
+      this.renderData()
+    }
   }
   /** Clear all data. */
   clear() {
@@ -587,9 +663,7 @@ export class DataGridNode {
   constructor(
     dataGrid: DataGrid,
     data: types.PlainObj<string | HTMLElement>,
-    options: IDataGridNodeOptions = {
-      selectable: false,
-    }
+    options: IDataGridNodeOptions
   ) {
     ;(this.container as any).dataGridNode = this
     this.$container = $(this.container)

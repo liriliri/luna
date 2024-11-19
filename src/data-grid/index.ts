@@ -12,7 +12,7 @@ import isUndef from 'licia/isUndef'
 import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
 import defaults from 'licia/defaults'
-import startWith from 'licia/startWith'
+import naturalSort from 'licia/naturalSort'
 import isNull from 'licia/isNull'
 import isFn from 'licia/isFn'
 import isRegExp from 'licia/isRegExp'
@@ -477,7 +477,7 @@ export default class DataGrid extends Component<IOptions> {
   private sortNodes(id: string, isAscending: boolean) {
     const column = this.colMap[id]
 
-    const comparator = column.comparator || naturalOrderComparator
+    const comparator = column.comparator || naturalSort.comparator
     function sortFn(a: DataGridNode, b: DataGridNode) {
       let aVal = a.data[id]
       let bVal = b.data[id]
@@ -707,59 +707,6 @@ export class DataGridNode {
       }
       container.appendChild(td)
     })
-  }
-}
-
-function naturalOrderComparator(a: any, b: any) {
-  a = toStr(a)
-  b = toStr(b)
-  if (startWith(a, '_') && !startWith(b, '_')) {
-    return 1
-  }
-  if (startWith(b, '_') && !startWith(a, '_')) {
-    return -1
-  }
-
-  const chunk = /^\d+|^\D+/
-  let chunka, chunkb, anum, bnum
-  /* eslint-disable no-constant-condition */
-  while (true) {
-    if (a) {
-      if (!b) {
-        return 1
-      }
-    } else {
-      if (b) {
-        return -1
-      }
-      return 0
-    }
-    chunka = a.match(chunk)[0]
-    chunkb = b.match(chunk)[0]
-    anum = !isNaN(chunka)
-    bnum = !isNaN(chunkb)
-    if (anum && !bnum) {
-      return -1
-    }
-    if (bnum && !anum) {
-      return 1
-    }
-    if (anum && bnum) {
-      const diff = chunka - chunkb
-      if (diff) {
-        return diff
-      }
-      if (chunka.length !== chunkb.length) {
-        if (!+chunka && !+chunkb) {
-          return chunka.length - chunkb.length
-        }
-        return chunkb.length - chunka.length
-      }
-    } else if (chunka !== chunkb) {
-      return chunka < chunkb ? -1 : 1
-    }
-    a = a.substring(chunka.length)
-    b = b.substring(chunkb.length)
   }
 }
 

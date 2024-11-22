@@ -1,3 +1,7 @@
+## 1.2.1 (22 Nov 2024)
+
+* fix: scroll position not restored
+
 ## 1.2.0 (15 Nov 2024)
 
 * feat: setData api

@@ -101,6 +101,7 @@ export default class DataGrid extends Component<IOptions> {
   private $tableBody: $.$
   private $colgroup: $.$
   private $dataContainer: $.$
+  private dataContainer: HTMLDivElement
   private $resizers: $.$
   private resizeIdx = 0
   private resizeStartX = 0
@@ -157,6 +158,7 @@ export default class DataGrid extends Component<IOptions> {
     this.tableBody = this.$tableBody.get(0) as HTMLElement
     this.$colgroup = this.$container.find('colgroup')
     this.$dataContainer = this.find('.data-container')
+    this.dataContainer = this.$dataContainer.get(0) as HTMLDivElement
 
     this.renderHeader()
     this.renderResizers()
@@ -565,7 +567,9 @@ export default class DataGrid extends Component<IOptions> {
     }
   }
   private renderData() {
-    const { tableBody, displayNodes, fillerRow } = this
+    const { tableBody, displayNodes, fillerRow, dataContainer } = this
+
+    const scrollTop = dataContainer.scrollTop
 
     this.detachAll()
     const frag = document.createDocumentFragment()
@@ -575,6 +579,8 @@ export default class DataGrid extends Component<IOptions> {
     tableBody.insertBefore(frag, fillerRow)
 
     this.updateHeight()
+
+    dataContainer.scrollTop = scrollTop
   }
   private detachAll() {
     const { tableBody } = this

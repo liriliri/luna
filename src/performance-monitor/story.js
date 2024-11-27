@@ -9,13 +9,15 @@ import raf from 'licia/raf'
 import now from 'licia/now'
 import random from 'licia/random'
 import each from 'licia/each'
-import { button } from '@storybook/addon-knobs'
+import { button, number } from '@storybook/addon-knobs'
 import LunaPerformanceMonitor from './react'
 
 const def = story(
   'performance-monitor',
   (wrapper) => {
     $(wrapper).html('')
+
+    const { height } = createKnobs()
 
     let cpu = 0
     const cpuId = setInterval(() => {
@@ -31,6 +33,7 @@ const def = story(
       title: 'CPU(Fake)',
       unit: '%',
       max: 100,
+      height,
       data: () => cpu,
     })
     cpuMonitor.start()
@@ -62,6 +65,7 @@ const def = story(
       title: 'FPS',
       color: '#00864B',
       smooth: false,
+      height,
       data: () => fps,
     })
     fpsMonitor.start()
@@ -77,6 +81,7 @@ const def = story(
         unit: 'MB',
         color: '#614d82',
         smooth: false,
+        height,
         data() {
           return (performance.memory.usedJSHeapSize / 1024 / 1024).toFixed(1)
         },
@@ -104,12 +109,15 @@ const def = story(
     changelog,
     source: __STORY__,
     ReactComponent({ theme }) {
+      const { height } = createKnobs()
+
       return (
         <LunaPerformanceMonitor
           title="Used JS heap size"
           theme={theme}
           unit="MB"
-          // color="#614d82"
+          height={height}
+          color="#614d82"
           smooth={false}
           data={() => {
             return (performance.memory.usedJSHeapSize / 1024 / 1024).toFixed(1)
@@ -119,6 +127,18 @@ const def = story(
     },
   }
 )
+
+function createKnobs() {
+  const height = number('Chart Height', 100, {
+    range: true,
+    min: 50,
+    max: 500,
+  })
+
+  return {
+    height,
+  }
+}
 
 export default def
 

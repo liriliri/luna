@@ -6,6 +6,7 @@ import perfNow from 'licia/perfNow'
 import last from 'licia/last'
 import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
+import dpr from 'licia/dpr'
 import now from 'licia/now'
 import dateFormat from 'licia/dateFormat'
 import Color from 'licia/Color'
@@ -27,6 +28,8 @@ export interface IOptions extends IComponentOptions {
   color?: string
   /** Maximum value. */
   max?: number
+  /** Chart height. */
+  height?: number
 }
 
 interface IMetric {
@@ -66,6 +69,7 @@ export default class PerformanceMonitor extends Component<IOptions> {
   private metricBuffer: IMetric[] = []
   private resizeSensor: ResizeSensor
   private $value: $.$
+  private onResize: () => void
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'performance-monitor' }, options)
 
@@ -74,6 +78,7 @@ export default class PerformanceMonitor extends Component<IOptions> {
       unit: '',
       color: '#1a73e8',
       max: 0,
+      height: 100,
     })
 
     this.initTpl()
@@ -87,12 +92,14 @@ export default class PerformanceMonitor extends Component<IOptions> {
     this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 
     this.resizeSensor = new ResizeSensor(container)
+    this.onResize = throttle(() => this.reset(), 16)
 
     this.bindEvent()
   }
   destroy() {
     this.stop()
     this.resizeSensor.destroy()
+    dpr.off('change', this.onResize)
     super.destroy()
     this.metricBuffer = []
   }
@@ -125,7 +132,8 @@ export default class PerformanceMonitor extends Component<IOptions> {
       : 'rgb(0 0 0 / 8%)'
   }
   private bindEvent() {
-    this.resizeSensor.addListener(throttle(() => this.onResize(), 16))
+    this.resizeSensor.addListener(this.onResize)
+    dpr.on('change', this.onResize)
 
     this.on('optionChange', (name) => {
       if (name === 'color') {
@@ -148,14 +156,14 @@ export default class PerformanceMonitor extends Component<IOptions> {
     }
     this.$value.text(data + this.options.unit)
   }
-  private onResize = () => {
+  private reset = () => {
     if (isHidden(this.container)) {
       return
     }
     const { canvas } = this
     this.width = canvas.offsetWidth
     canvas.width = Math.round(this.width * window.devicePixelRatio)
-    this.height = 100
+    this.height = this.options.height
     canvas.height = this.height * window.devicePixelRatio
   }
   private draw() {

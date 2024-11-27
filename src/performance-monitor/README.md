@@ -45,6 +45,7 @@ memoryMonitor.start()
 
 * color(string): Line color.
 * data(Fn<number>): Data source provider, a number should be returned.
+* height(number): Chart height.
 * max(number): Maximum value.
 * smooth(boolean): Smooth lines or not.
 * title(string): Monitor title.

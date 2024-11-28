@@ -8,7 +8,7 @@
   @include mixin.component();
 }
 
-.title {
+.header {
   font-size: #{theme.$font-size}px;
   margin-bottom: 5px;
   color: theme.$color-text;

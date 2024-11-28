@@ -1,3 +1,7 @@
+## 1.2.1 (28 Nov 2024)
+
+* fix: value disappear
+
 ## 1.2.0 (28 Nov 2024)
 
 * feat: update title

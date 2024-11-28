@@ -289,7 +289,7 @@
   },
   "performance-monitor": {
     "react": true,
-    "version": "1.2.0",
+    "version": "1.2.1",
     "style": true,
     "icon": false,
     "test": true,

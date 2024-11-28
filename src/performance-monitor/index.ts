@@ -343,7 +343,9 @@ export default class PerformanceMonitor extends Component<IOptions> {
   }
   private initTpl() {
     this.$container.html(
-      this.c(`<div class="title"><span class="value"></span></div>`)
+      this.c(
+        `<div class="header"><span class="title"></span><span class="value"></span></div>`
+      )
     )
   }
 }

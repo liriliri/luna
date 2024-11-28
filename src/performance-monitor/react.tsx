@@ -18,7 +18,7 @@ const LunaPerformanceMonitor: FC<IOptions> = (props) => {
     return () => performanceMonitor.current?.destroy()
   }, [])
 
-  each(['theme', 'color', 'height'], (key: keyof IOptions) => {
+  each(['theme', 'color', 'height', 'title'], (key: keyof IOptions) => {
     useOption<PerformanceMonitor, IOptions>(performanceMonitor, key, props[key])
   })
 

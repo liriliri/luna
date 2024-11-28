@@ -1,3 +1,7 @@
+## 1.2.0 (28 Nov 2024)
+
+* feat: update title
+
 ## 1.1.0 (27 Nov 2024)
 
 * feat: chart height option

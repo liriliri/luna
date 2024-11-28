@@ -69,6 +69,7 @@ export default class PerformanceMonitor extends Component<IOptions> {
   private metricBuffer: IMetric[] = []
   private resizeSensor: ResizeSensor
   private $value: $.$
+  private $title: $.$
   private onResize: () => void
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'performance-monitor' }, options)
@@ -83,6 +84,8 @@ export default class PerformanceMonitor extends Component<IOptions> {
 
     this.initTpl()
     this.$value = this.find('.value')
+    this.$title = this.find('.title')
+    this.updateTitle()
     this.updateColor()
 
     const canvas = document.createElement('canvas')
@@ -120,6 +123,9 @@ export default class PerformanceMonitor extends Component<IOptions> {
     clearInterval(this.pollTimer)
     raf.cancel.call(window, this.animationId)
   }
+  private updateTitle() {
+    this.$title.text(this.options.title)
+  }
   private updateColor() {
     const { color } = this.options
 
@@ -138,6 +144,8 @@ export default class PerformanceMonitor extends Component<IOptions> {
     this.on('optionChange', (name) => {
       if (name === 'color') {
         this.updateColor()
+      } else if (name === 'title') {
+        this.updateTitle()
       }
     })
   }
@@ -334,10 +342,8 @@ export default class PerformanceMonitor extends Component<IOptions> {
     }
   }
   private initTpl() {
-    const { title } = this.options
-
     this.$container.html(
-      this.c(`<div class="title">${title}<span class="value"></span></div>`)
+      this.c(`<div class="title"><span class="value"></span></div>`)
     )
   }
 }

@@ -11,7 +11,7 @@ test('performance-monitor', (container) => {
   it('basic', function (done) {
     const $title = $(container).find(performanceMonitor.c('.title'))
     setTimeout(() => {
-      expect($title.text()).to.equal('Test1')
+      expect($title.text()).to.equal('Test')
       done()
     }, 20)
   })

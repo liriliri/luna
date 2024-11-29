@@ -13,6 +13,7 @@ const LunaMaskEditor: FC<IMaskEditorProps> = (props) => {
   const maskEditorRef = useRef<HTMLDivElement>(null)
   const maskEditor = useRef<MaskEditor>()
   const prevProps = usePrevious(props)
+  console.log('LunaMaskEditor from KK')
 
   useEffect(() => {
     const { image, mask, theme } = props

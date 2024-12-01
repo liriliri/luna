@@ -50,7 +50,7 @@ const def = story(
   {
     readme,
     story: __STORY__,
-    ReactComponent() {
+    ReactComponent({ theme }) {
       const { wrapLongLines, maxNum, filter, view } = createKnobs()
       const logcatRef = useRef(null)
 
@@ -75,6 +75,7 @@ const def = story(
 
       return (
         <LunaLogcat
+          theme={theme}
           style={{ height: '500px' }}
           wrapLongLines={wrapLongLines}
           maxNum={maxNum}

@@ -1,7 +1,7 @@
 import { CSSProperties, FC, MouseEventHandler, useEffect, useRef } from 'react'
 import each from 'licia/each'
 import Logcat, { IOptions } from './index'
-import { useNonInitialEffect } from '../share/hooks'
+import { useOption } from '../share/hooks'
 
 interface IILogcatProps extends IOptions {
   style?: CSSProperties
@@ -15,8 +15,10 @@ const LunaLogcat: FC<IILogcatProps> = (props) => {
   const logcat = useRef<Logcat>()
 
   useEffect(() => {
-    const { maxNum, wrapLongLines, filter, entries, view } = props
+    const { theme, maxNum, wrapLongLines, filter, entries, view } = props
+
     logcat.current = new Logcat(logcatRef.current!, {
+      theme,
       filter,
       maxNum,
       wrapLongLines,
@@ -28,13 +30,12 @@ const LunaLogcat: FC<IILogcatProps> = (props) => {
     return () => logcat.current?.destroy()
   }, [])
 
-  each(['filter', 'maxNum', 'wrapLongLines', 'view'], (key: keyof IOptions) => {
-    useNonInitialEffect(() => {
-      if (logcat.current) {
-        logcat.current.setOption(key, props[key])
-      }
-    }, [props[key]])
-  })
+  each(
+    ['theme', 'filter', 'maxNum', 'wrapLongLines', 'view'],
+    (key: keyof IOptions) => {
+      useOption<Logcat, IOptions>(logcat, key, props[key])
+    }
+  )
 
   return (
     <div

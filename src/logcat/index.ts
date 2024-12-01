@@ -81,7 +81,7 @@ export default class Logcat extends Component<IOptions> {
   private removeThreshold = 1
   private frag: DocumentFragment = document.createDocumentFragment()
   constructor(container: HTMLElement, options: IOptions = {}) {
-    super(container, { compName: 'logcat' })
+    super(container, { compName: 'logcat' }, options)
 
     this.initOptions(options, {
       maxNum: 5000,
@@ -297,7 +297,7 @@ export default class Logcat extends Component<IOptions> {
       )}</span>`,
       `<span class="${c('package')}">${escape(entry.package)}</span>`,
       `<span class="${c('priority')}">${toLetter(entry.priority)}</span>`,
-      `<span class="${c('message')}">${escape(entry.message)}</span>`,
+      `<span class="${c('message')}">${escape(trim(entry.message))}</span>`,
     ].join(' ')
   }
   private formatCompact(entry: IInnerEntry) {
@@ -309,7 +309,7 @@ export default class Logcat extends Component<IOptions> {
         'HH:MM:ss.l'
       )}</span>`,
       `<span class="${c('priority')}">${toLetter(entry.priority)}</span>`,
-      `<span class="${c('message')}">${escape(entry.message)}</span>`,
+      `<span class="${c('message')}">${escape(trim(entry.message))}</span>`,
     ].join(' ')
   }
   private _render() {

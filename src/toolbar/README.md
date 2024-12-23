@@ -39,6 +39,10 @@ toolbar.appendText('Test')
 
 Append button.
 
+### appendCheckbox(key: string, value: boolean, label: string): LunaToolbarCheckbox
+
+Append checkbox.
+
 ### appendHtml(html: string | HTMLElement): LunaToolbarHtml
 
 Append html.
@@ -59,7 +63,7 @@ Append select.
 
 Append separator.
 
-### appendSpace(): ToolbarSpace
+### appendSpace(): LunaToolbarSpace
 
 Append item that fills the remaining space.
 

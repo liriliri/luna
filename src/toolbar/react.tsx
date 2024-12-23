@@ -13,6 +13,7 @@ import { Component } from '../share/react'
 import className from 'licia/className'
 import types from 'licia/types'
 import map from 'licia/map'
+import uniqId from 'licia/uniqId'
 import toStr from 'licia/toStr'
 import { IButtonState } from 'luna-toolbar'
 
@@ -201,6 +202,32 @@ export const LunaToolbarHtml: FC<PropsWithChildren<IToolbarItemProps>> = (
   return (
     <LunaToolbarItem {...props} type="html">
       {props.children}
+    </LunaToolbarItem>
+  )
+}
+
+interface IToolbarCheckboxProps extends IToolbarItemProps {
+  keyName: string
+  value: boolean
+  label: string
+}
+
+export const LunaToolbarCheckbox: FC<IToolbarCheckboxProps> = (props) => {
+  const id = uniqId(c('checkbox-'))
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.onChange && props.onChange(e.target.checked, props.value)
+  }
+
+  return (
+    <LunaToolbarItem {...props} type="checkbox">
+      <input
+        type="checkbox"
+        id={id}
+        checked={props.value}
+        onChange={onChange}
+      />
+      <label htmlFor={id}>{props.label}</label>
     </LunaToolbarItem>
   )
 }

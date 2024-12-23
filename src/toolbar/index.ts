@@ -6,6 +6,7 @@ import each from 'licia/each'
 import escape from 'licia/escape'
 import defaults from 'licia/defaults'
 import toStr from 'licia/toStr'
+import uniqId from 'licia/uniqId'
 import toNum from 'licia/toNum'
 import types, { PlainObj } from 'licia/types'
 import Component, { IComponentOptions } from '../share/Component'
@@ -96,11 +97,15 @@ export default class Toolbar extends Component {
   }
   /** Append item that fills the remaining space. */
   appendSpace() {
-    return this.append(new ToolbarSpace(this))
+    return this.append(new LunaToolbarSpace(this))
   }
   /** Append text input. */
   appendInput(key: string, value: string, placeholder = '') {
     return this.append(new LunaToolbarInput(this, key, value, placeholder))
+  }
+  /** Append checkbox. */
+  appendCheckbox(key: string, value: boolean, label: string) {
+    return this.append(new LunaToolbarCheckbox(this, key, value, label))
   }
   private append<T extends LunaToolbarItem>(item: T): T {
     this.items.push(item)
@@ -295,9 +300,35 @@ export class LunaToolbarHtml extends LunaToolbarItem {
   }
 }
 
-class ToolbarSpace extends LunaToolbarItem {
+export class LunaToolbarSpace extends LunaToolbarItem {
   constructor(toolbar: Toolbar) {
     super(toolbar, '', '', 'space')
+  }
+}
+
+export class LunaToolbarCheckbox extends LunaToolbarItem {
+  private input: HTMLInputElement
+  constructor(toolbar: Toolbar, key: string, value: boolean, label: string) {
+    super(toolbar, key, value, 'checkbox')
+
+    const { c } = toolbar
+    const id = uniqId(c('checkbox-'))
+
+    this.$container.html(
+      `<input type="checkbox" id="${id}"></input><label for="${id}">${escape(
+        label
+      )}</label>`
+    )
+    const $input = this.$container.find('input')
+    const input = $input.get(0) as HTMLInputElement
+    input.checked = value
+
+    $input.on('change', () => this.onChange(input.checked))
+    this.input = input
+  }
+  setValue(value: boolean) {
+    this.input.checked = value
+    this.value = value
   }
 }
 

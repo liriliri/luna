@@ -11,6 +11,7 @@ import LunaToolbar, {
   LunaToolbarButton,
   LunaToolbarHtml,
   LunaToolbarNumber,
+  LunaToolbarCheckbox,
 } from './react'
 
 const def = story(
@@ -54,6 +55,8 @@ const def = story(
       max: 1000,
       step: 1,
     })
+
+    toolbar.appendCheckbox('checkbox', true, 'Show all')
 
     toolbar.appendSpace()
     toolbar.appendHtml(
@@ -105,6 +108,11 @@ const def = story(
             min={1}
             max={1000}
             step={1}
+          />
+          <LunaToolbarCheckbox
+            keyName="checkbox"
+            value={true}
+            label="Show all"
           />
           <LunaToolbarSpace />
           <LunaToolbarHtml>

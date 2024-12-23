@@ -142,4 +142,9 @@
       @include mixin.input(true);
     }
   }
+  .item-checkbox {
+    input {
+      @include mixin.checkbox(true);
+    }
+  }
 }

@@ -1,10 +1,19 @@
-import { Children, cloneElement, FC, isValidElement, ReactElement } from 'react'
+import {
+  Children,
+  cloneElement,
+  FC,
+  isValidElement,
+  PropsWithChildren,
+  ReactElement,
+  useState,
+} from 'react'
 import { classPrefix } from '../share/util'
 import { IComponentOptions } from '../share/Component'
 import { Component } from '../share/react'
 import className from 'licia/className'
 import types from 'licia/types'
 import map from 'licia/map'
+import toStr from 'licia/toStr'
 import { IButtonState } from 'luna-toolbar'
 
 const c = classPrefix('toolbar')
@@ -14,13 +23,13 @@ interface IToolbarProps extends IComponentOptions {
   onChange?: (key: string, val: any, oldVal: any) => void
 }
 
-const LunaToolbar: FC<IToolbarProps> = (props) => {
+const LunaToolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
   const children = Children.map(props.children, (child) => {
     if (isValidElement(child)) {
       const childProps: Partial<any> & React.Attributes = {}
       const keyName = child.props.keyName
       if (keyName) {
-        const onChange = childProps.onChange
+        const onChange = child.props.onChange
         childProps.onChange = (val: any, oldVal: any) => {
           onChange && onChange(val, oldVal)
           props.onChange && props.onChange(keyName, val, oldVal)
@@ -84,7 +93,9 @@ interface IToolbarButtonProps extends IToolbarItemProps {
   state?: IButtonState
 }
 
-export const LunaToolbarButton: FC<IToolbarButtonProps> = (props) => {
+export const LunaToolbarButton: FC<PropsWithChildren<IToolbarButtonProps>> = (
+  props
+) => {
   return (
     <LunaToolbarItem {...props} type="button">
       <button
@@ -154,15 +165,19 @@ interface IToolbarNumberProps extends IToolbarItemProps {
 }
 
 export const LunaToolbarNumber: FC<IToolbarNumberProps> = (props) => {
+  const [value, setValue] = useState(toStr(props.value))
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.onChange && props.onChange(e.target.value, props.value)
+    if (props.onChange) {
+      setValue(e.target.value)
+      props.onChange(e.target.value, props.value)
+    }
   }
 
   return (
     <LunaToolbarItem {...props} type="number">
       <input
         type="number"
-        value={props.value}
+        value={value !== '' ? props.value : value}
         onChange={onChange}
         min={props.min || 0}
         max={props.max || 10}
@@ -180,7 +195,9 @@ export const LunaToolbarSpace: FC<IToolbarItemProps> = (props) => {
   return <div className={c('item item-space')} />
 }
 
-export const LunaToolbarHtml: FC<IToolbarItemProps> = (props) => {
+export const LunaToolbarHtml: FC<PropsWithChildren<IToolbarItemProps>> = (
+  props
+) => {
   return (
     <LunaToolbarItem {...props} type="html">
       {props.children}

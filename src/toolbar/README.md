@@ -35,13 +35,21 @@ toolbar.appendText('Test')
 
 ## Api
 
+### appendButton(content: string | HTMLElement, handler: AnyFn, state?: IButtonState): LunaToolbarButton
+
+Append button.
+
 ### appendHtml(html: string | HTMLElement): LunaToolbarHtml
 
 Append html.
 
-### appendInput(key: string, value: string, placeholder?: string): ToolbarInput
+### appendInput(key: string, value: string, placeholder?: string): LunaToolbarInput
 
 Append text input.
+
+### appendNumber(key: string, value: number, options?: INumberOptions): LunaToolbarNumber
+
+Append number.
 
 ### appendSelect(key: string, value: string, options: PlainObj<string>): LunaToolbarSelect
 
@@ -66,3 +74,11 @@ Clear all.
 ### remove(item: LunaToolbarItem): void
 
 Remove item.
+
+## Types
+
+### INumberOptions
+
+* max(number): Max value.
+* min(number): Min value.
+* step(number): Interval between legal numbers.

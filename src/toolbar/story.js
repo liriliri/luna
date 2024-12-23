@@ -10,6 +10,7 @@ import LunaToolbar, {
   LunaToolbarInput,
   LunaToolbarButton,
   LunaToolbarHtml,
+  LunaToolbarNumber,
 } from './react'
 
 const def = story(
@@ -89,6 +90,7 @@ const def = story(
             value=""
             onChange={(val) => console.log(val)}
             placeholder="Filter"
+            disabled={true}
           />
           <LunaToolbarButton
             onClick={() => console.log('trigger')}
@@ -96,6 +98,14 @@ const def = story(
           >
             Trigger
           </LunaToolbarButton>
+          <LunaToolbarText text="Size:" />
+          <LunaToolbarNumber
+            keyName="size"
+            value={50}
+            min={1}
+            max={1000}
+            step={1}
+          />
           <LunaToolbarSpace />
           <LunaToolbarHtml>
             <span

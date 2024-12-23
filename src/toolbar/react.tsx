@@ -1,83 +1,70 @@
-import {
-  PropsWithChildren,
-  FC,
-  useRef,
-  useEffect,
-  cloneElement,
-  Children,
-  ReactElement,
-  isValidElement,
-} from 'react'
-import types from 'licia/types'
-import Toolbar, {
-  LunaToolbarText as ToolbarText,
-  LunaToolbarSelect as ToolbarSelect,
-  LunaToolbarHtml as ToolbarHtml,
-  LunaToolbarInput as ToolbarInput,
-  LunaToolbarButton as ToolbarButton,
-  LunaToolbarItem,
-  IButtonState,
-} from './index'
-import $ from 'licia/$'
-import isUndef from 'licia/isUndef'
-import { useForceUpdate, usePrevious } from '../share/hooks'
+import { Children, cloneElement, FC, isValidElement, ReactElement } from 'react'
+import { classPrefix } from '../share/util'
 import { IComponentOptions } from '../share/Component'
-import { createPortal } from 'react-dom'
+import { Component } from '../share/react'
+import className from 'licia/className'
+import types from 'licia/types'
+import map from 'licia/map'
+import { IButtonState } from 'luna-toolbar'
+
+const c = classPrefix('toolbar')
 
 interface IToolbarProps extends IComponentOptions {
   className?: string
   onChange?: (key: string, val: any, oldVal: any) => void
 }
 
-const LunaToolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
-  const toolbarRef = useRef<HTMLDivElement>(null)
-  const toolbar = useRef<Toolbar>()
-  const forceUpdate = useForceUpdate()
-  const prevProps = usePrevious(props)
-
-  useEffect(() => {
-    toolbar.current = new Toolbar(toolbarRef.current!)
-    if (props.onChange) {
-      toolbar.current.on('change', props.onChange)
-    }
-    forceUpdate()
-
-    return () => toolbar.current?.destroy()
-  }, [])
-
-  useEffect(() => {
-    if (toolbar.current) {
-      if (prevProps?.onChange) {
-        toolbar.current.off('change', prevProps.onChange)
+const LunaToolbar: FC<IToolbarProps> = (props) => {
+  const children = Children.map(props.children, (child) => {
+    if (isValidElement(child)) {
+      const childProps: Partial<any> & React.Attributes = {}
+      const keyName = child.props.keyName
+      if (keyName) {
+        const onChange = childProps.onChange
+        childProps.onChange = (val: any, oldVal: any) => {
+          onChange && onChange(val, oldVal)
+          props.onChange && props.onChange(keyName, val, oldVal)
+        }
       }
-      if (props.onChange) {
-        toolbar.current.on('change', props.onChange)
-      }
-    }
-  }, [props.onChange])
 
-  useEffect(() => {
-    if (toolbar.current) {
-      toolbar.current.setOption('theme', props.theme)
+      return cloneElement(child as ReactElement, childProps)
     }
-  }, [props.theme])
+  })
 
   return (
-    <div className={props.className || ''} ref={toolbarRef}>
-      {Children.map(props.children, (child) => {
-        if (isValidElement(child)) {
-          return cloneElement(child as ReactElement, {
-            toolbar: toolbar.current,
-          })
-        }
-      })}
-    </div>
+    <Component
+      compName="toolbar"
+      theme={props.theme}
+      className={props.className}
+    >
+      {children}
+    </Component>
   )
 }
 
 interface IToolbarItemProps {
-  toolbar?: Toolbar
   disabled?: boolean
+  onChange?: (val: any, oldVal: any) => void
+}
+
+const LunaToolbarItem: FC<
+  IToolbarItemProps & {
+    type: string
+    className?: string
+    dangerouslySetInnerHTML?: { __html: string }
+  }
+> = (props) => {
+  return (
+    <div
+      className={className(
+        c(`item item-${props.type} ${props.disabled ? 'disabled' : ''}`),
+        props.className
+      )}
+      dangerouslySetInnerHTML={props.dangerouslySetInnerHTML}
+    >
+      {props.children}
+    </div>
+  )
 }
 
 interface IToolbarTextProps extends IToolbarItemProps {
@@ -85,23 +72,11 @@ interface IToolbarTextProps extends IToolbarItemProps {
 }
 
 export const LunaToolbarText: FC<IToolbarTextProps> = (props) => {
-  const toolbarText = useRef<ToolbarText>()
-
-  useEffect(() => {
-    if (props.toolbar) {
-      toolbarText.current = props.toolbar.appendText(props.text)
-    }
-
-    return () => toolbarText.current?.detach()
-  }, [props.toolbar])
-
-  useEffect(() => {
-    if (toolbarText.current) {
-      toolbarText.current.setText(props.text)
-    }
-  }, [props.text])
-
-  return null
+  return (
+    <LunaToolbarItem {...props} type="text">
+      {props.text}
+    </LunaToolbarItem>
+  )
 }
 
 interface IToolbarButtonProps extends IToolbarItemProps {
@@ -109,49 +84,17 @@ interface IToolbarButtonProps extends IToolbarItemProps {
   state?: IButtonState
 }
 
-export const LunaToolbarButton: FC<PropsWithChildren<IToolbarButtonProps>> = (
-  props
-) => {
-  const toolbarButton = useRef<ToolbarButton>()
-  const forceUpdate = useForceUpdate()
-
-  useEffect(() => {
-    if (props.toolbar) {
-      toolbarButton.current = props.toolbar.appendButton(
-        '',
-        props.onClick,
-        props.state
-      )
-      forceUpdate()
-      setDisabled(toolbarButton.current, props.disabled)
-    }
-
-    return () => toolbarButton.current?.detach()
-  }, [props.toolbar])
-
-  useEffect(() => {
-    if (toolbarButton.current && !isUndef(props.state)) {
-      toolbarButton.current.setState(props.state)
-    }
-  }, [props.state])
-
-  useEffect(() => {
-    if (toolbarButton.current && props.onClick) {
-      toolbarButton.current.setHandler(props.onClick)
-    }
-  }, [props.onClick])
-
-  useEffect(
-    () => setDisabled(toolbarButton.current, props.disabled),
-    [props.disabled]
+export const LunaToolbarButton: FC<IToolbarButtonProps> = (props) => {
+  return (
+    <LunaToolbarItem {...props} type="button">
+      <button
+        className={props.state ? c(props.state) : ''}
+        onClick={props.onClick}
+      >
+        {props.children}
+      </button>
+    </LunaToolbarItem>
   )
-
-  return toolbarButton.current
-    ? createPortal(
-        <>{props.children}</>,
-        toolbarButton.current.container.querySelector('button')!
-      )
-    : null
 }
 
 interface IToolbarSelectProps extends IToolbarItemProps {
@@ -162,139 +105,87 @@ interface IToolbarSelectProps extends IToolbarItemProps {
 }
 
 export const LunaToolbarSelect: FC<IToolbarSelectProps> = (props) => {
-  const toolbarSelect = useRef<ToolbarSelect>()
+  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    props.onChange && props.onChange(e.target.value, props.value)
+  }
 
-  useEffect(() => {
-    const { toolbar, title, keyName, value, options } = props
-    if (toolbar) {
-      if (title) {
-        toolbarSelect.current = toolbar.appendSelect(
-          keyName,
-          value,
-          title,
-          options
-        )
-      } else {
-        toolbarSelect.current = toolbar.appendSelect(keyName, value, options)
-      }
-      setDisabled(toolbarSelect.current, props.disabled)
-    }
-
-    return () => toolbarSelect.current?.detach()
-  }, [props.toolbar])
-
-  useEffect(
-    () => setDisabled(toolbarSelect.current, props.disabled),
-    [props.disabled]
+  return (
+    <LunaToolbarItem {...props} type="select">
+      <select title={props.title} value={props.value} onChange={onChange}>
+        {map(props.options, (val, key) => (
+          <option key={val} value={val}>
+            {key}
+          </option>
+        ))}
+      </select>
+    </LunaToolbarItem>
   )
-
-  useEffect(() => {
-    if (toolbarSelect.current) {
-      toolbarSelect.current.setValue(props.value)
-    }
-  }, [props.value])
-
-  useEffect(() => {
-    if (toolbarSelect.current) {
-      toolbarSelect.current.setOptions(props.options)
-    }
-  }, [props.options])
-
-  return null
 }
 
 interface IToolbarInputProps extends IToolbarItemProps {
   keyName: string
   value: string
-  onChange?: (val: string) => void
   placeholder?: string
 }
 
 export const LunaToolbarInput: FC<IToolbarInputProps> = (props) => {
-  const toolbarInput = useRef<ToolbarInput>()
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.onChange && props.onChange(e.target.value, props.value)
+  }
 
-  useEffect(() => {
-    if (props.toolbar) {
-      toolbarInput.current = props.toolbar.appendInput(
-        props.keyName,
-        props.value,
-        props.placeholder
-      )
-      setDisabled(toolbarInput.current, props.disabled)
-      toolbarInput.current.$container
-        .find('input')
-        .on('input', function (this: HTMLInputElement) {
-          if (props.onChange) {
-            props.onChange($(this).val())
-          }
-        })
-    }
-  }, [props.toolbar])
-
-  useEffect(
-    () => setDisabled(toolbarInput.current, props.disabled),
-    [props.disabled]
+  return (
+    <LunaToolbarItem {...props} type="input">
+      <input
+        type="text"
+        value={props.value}
+        onChange={onChange}
+        placeholder={props.placeholder}
+      />
+    </LunaToolbarItem>
   )
+}
 
-  return null
+interface IToolbarNumberProps extends IToolbarItemProps {
+  keyName: string
+  value: number
+  min?: number
+  max?: number
+  step?: number
+}
+
+export const LunaToolbarNumber: FC<IToolbarNumberProps> = (props) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.onChange && props.onChange(e.target.value, props.value)
+  }
+
+  return (
+    <LunaToolbarItem {...props} type="number">
+      <input
+        type="number"
+        value={props.value}
+        onChange={onChange}
+        min={props.min || 0}
+        max={props.max || 10}
+        step={props.step || 1}
+      />
+    </LunaToolbarItem>
+  )
 }
 
 export const LunaToolbarSeparator: FC<IToolbarItemProps> = (props) => {
-  useEffect(() => {
-    if (props.toolbar) {
-      props.toolbar.appendSeparator()
-    }
-  }, [props.toolbar])
-
-  return null
+  return <div className={c('item item-separator')} />
 }
 
 export const LunaToolbarSpace: FC<IToolbarItemProps> = (props) => {
-  useEffect(() => {
-    if (props.toolbar) {
-      props.toolbar.appendSpace()
-    }
-  }, [props.toolbar])
-
-  return null
+  return <div className={c('item item-space')} />
 }
 
-export const LunaToolbarHtml: FC<PropsWithChildren<IToolbarItemProps>> = (
-  props
-) => {
-  const toolbarHtml = useRef<ToolbarHtml>()
-  const forceUpdate = useForceUpdate()
-
-  useEffect(() => {
-    if (props.toolbar) {
-      toolbarHtml.current = props.toolbar.appendHtml('')
-      forceUpdate()
-      setDisabled(toolbarHtml.current, props.disabled)
-    }
-
-    return () => toolbarHtml.current?.detach()
-  }, [props.toolbar])
-
-  useEffect(
-    () => setDisabled(toolbarHtml.current, props.disabled),
-    [props.disabled]
+export const LunaToolbarHtml: FC<IToolbarItemProps> = (props) => {
+  return (
+    <LunaToolbarItem {...props} type="html">
+      {props.children}
+    </LunaToolbarItem>
   )
-
-  return toolbarHtml.current
-    ? createPortal(<>{props.children}</>, toolbarHtml.current.container)
-    : null
-}
-
-function setDisabled(item?: LunaToolbarItem, disabled = false) {
-  if (!item) {
-    return
-  }
-
-  if (disabled) {
-    item.disable()
-  } else {
-    item.enable()
-  }
 }
 
 export default LunaToolbar

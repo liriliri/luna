@@ -3,5 +3,15 @@
     "name": "test.txt",
     "size": 1024,
     "directory": false
+  },
+  {
+    "name": "folder 1",
+    "directory": true
+  },
+  {
+    "name": "picture.jpg",
+    "thumbnail": "",
+    "size": 2048,
+    "directory": false
   }
 ]

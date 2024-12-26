@@ -11,7 +11,8 @@ export interface IOptions extends IComponentOptions {
 
 export interface IFile {
   name: string
-  size: number
+  thumbnail?: string
+  size?: number
   directory: boolean
 }
 

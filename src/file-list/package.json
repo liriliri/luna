@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "List files in the directory",
   "luna": {
-    "test": false
+    "test": false,
+    "dependencies": [
+      "data-grid"
+    ]
   }
 }

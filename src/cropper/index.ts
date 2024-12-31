@@ -181,7 +181,7 @@ export default class Cropper extends Component<IOptions> {
     this.resizeSensor.addListener(this.onResize)
     this.$container.on(pointerEvent('down'), this.onCropStart)
 
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       switch (name) {
         case 'preview':
           if (val) {

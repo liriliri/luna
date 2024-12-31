@@ -66,7 +66,7 @@ export default class Tool extends Emitter {
   setOption(name: string, val: any, renderToolbar = true) {
     const oldVal = this.options[name]
     this.options[name] = val
-    this.emit('optionChange', name, val, oldVal)
+    this.emit('changeOption', name, val, oldVal)
 
     if (renderToolbar) {
       this.renderToolbar()

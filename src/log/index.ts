@@ -50,7 +50,7 @@ export default class Log extends Component<IOptions> {
     this.textViewer.append(ansiToHtml(log))
   }
   private bindEvent() {
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       switch (name) {
         case 'log':
           this.textViewer.setOption('text', ansiToHtml(val))

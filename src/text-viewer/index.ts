@@ -128,7 +128,7 @@ export default class TextViewer extends Component {
     )
   }
   private bindEvent() {
-    this.on('optionChange', (name) => {
+    this.on('changeOption', (name) => {
       switch (name) {
         case 'maxHeight':
           this.updateHeight()

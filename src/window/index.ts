@@ -321,7 +321,7 @@ export default class Window extends Component<IOptions> {
   private bindEvent() {
     const { c } = this
 
-    this.on('optionChange', (name: string) => {
+    this.on('changeOption', (name: string) => {
       switch (name) {
         case 'content':
           this.renderContent()

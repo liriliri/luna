@@ -207,7 +207,7 @@ export default class Modal extends Component<IOptions> {
   }
   private bindEvent() {
     this.$body.on('click', this.c('.icon-close'), () => this.hide())
-    this.on('optionChange', this.render)
+    this.on('changeOption', this.render)
   }
   private render = () => {
     const { options, c, $body } = this

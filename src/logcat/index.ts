@@ -228,7 +228,7 @@ export default class Logcat extends Component<IOptions> {
   private bindEvent() {
     const { c } = this
 
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       const { entries } = this
 
       switch (name) {

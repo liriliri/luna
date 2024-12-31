@@ -318,7 +318,7 @@ export default class ObjectViewer extends Component<IOptions> {
   private bindEvent() {
     this.$container.on('click', 'li', this.onItemClick)
 
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       switch (name) {
         case 'object':
           this.set(val)

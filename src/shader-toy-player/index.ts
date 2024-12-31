@@ -186,7 +186,7 @@ export default class ShaderToyPlayer extends Component<IOptions> {
 
     this.$canvas.on(pointerEvent('down'), this.onDragStart)
 
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       if (name === 'renderPass') {
         this.load(val)
       }

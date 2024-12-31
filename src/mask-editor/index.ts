@@ -145,14 +145,14 @@ export default class MaskEditor extends Component<IOptions> {
     const { painter, maskBrush } = this
 
     painter.on(
-      'canvasRender',
+      'renderCanvas',
       debounce(() => {
         this.renderMask()
         this.emit('change', this.canvas)
       }, 20)
     )
 
-    painter.on('foregroundColorChange', (color: string) => {
+    painter.on('changeForegroundColor', (color: string) => {
       const c = new Color(color)
       const rgb = Color.parse(c.toRgb()).val
 
@@ -169,14 +169,14 @@ export default class MaskEditor extends Component<IOptions> {
       painter.renderCanvas()
     })
 
-    maskBrush.on('optionChange', (name, val) => {
+    maskBrush.on('changeOption', (name, val) => {
       if (name === 'layerOpacity') {
         this.drawingLayer.opacity = val
         painter.renderCanvas()
       }
     })
 
-    this.on('optionChange', (name) => {
+    this.on('changeOption', (name) => {
       switch (name) {
         case 'image':
           this.loadImage()

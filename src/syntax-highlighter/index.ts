@@ -78,7 +78,7 @@ export default class SyntaxHighlighter extends Component {
     this.bindEvent()
   }
   private bindEvent() {
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       switch (name) {
         case 'code':
           val = this.getHighlightCode(val)

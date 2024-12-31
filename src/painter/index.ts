@@ -202,7 +202,7 @@ export default class Painter extends Component<IOptions> {
   }
   setForegroundColor(color: string) {
     this.$foregroundColor.val(color)
-    this.emit('foregroundColorChange', color)
+    this.emit('changeForegroundColor', color)
   }
   getBackgroundColor() {
     return this.$backgroundColor.val()
@@ -231,7 +231,7 @@ export default class Painter extends Component<IOptions> {
       ctx.globalCompositeOperation = 'source-over'
     })
 
-    this.emit('canvasRender')
+    this.emit('renderCanvas')
   }
   private resizeCanvas(width: number, height: number) {
     const { canvas } = this
@@ -320,7 +320,7 @@ export default class Painter extends Component<IOptions> {
       })
 
     $foregroundColor.on('change', () => {
-      this.emit('foregroundColorChange', $foregroundColor.val())
+      this.emit('changeForegroundColor', $foregroundColor.val())
     })
 
     this.resizeSensor.addListener(this.onResize)
@@ -333,7 +333,7 @@ export default class Painter extends Component<IOptions> {
       this.resetViewport()
     })
 
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       const { canvas } = this
       switch (name) {
         case 'width':

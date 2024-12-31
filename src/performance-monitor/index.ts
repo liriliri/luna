@@ -141,7 +141,7 @@ export default class PerformanceMonitor extends Component<IOptions> {
     this.resizeSensor.addListener(this.onResize)
     dpr.on('change', this.onResize)
 
-    this.on('optionChange', (name) => {
+    this.on('changeOption', (name) => {
       if (name === 'color') {
         this.updateColor()
       } else if (name === 'title') {

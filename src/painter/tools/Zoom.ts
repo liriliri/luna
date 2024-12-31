@@ -226,7 +226,7 @@ export default class Zoom extends Tool {
       }
     })
 
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       if (name === 'mode') {
         const { c } = this.painter
         const $icon = this.$cursorIcon

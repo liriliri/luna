@@ -400,7 +400,7 @@ export default class DomHighlighter extends Component<IOptions> {
     window.addEventListener('resize', this.redraw)
     window.addEventListener('scroll', this.redraw)
 
-    this.on('optionChange', () => this.redraw())
+    this.on('changeOption', () => this.redraw())
   }
   private reset = () => {
     const viewportWidth = document.documentElement.clientWidth

@@ -163,7 +163,7 @@ export default class Pencil extends Tool {
   private bindEvent() {
     const { cursorCircle } = this
 
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       if (name === 'size') {
         cursorCircle.setSize(val)
       }

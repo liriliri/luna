@@ -68,7 +68,7 @@ export default class ColorPicker extends Component<IOptions> {
     this.$saturation.on(pointerEvent('down'), this.onSaturationStart)
 
     const updateColor = throttle(this.updateColor, 50)
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       switch (name) {
         case 'color':
           this.color = new Color(val)

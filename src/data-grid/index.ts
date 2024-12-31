@@ -455,7 +455,7 @@ export default class DataGrid extends Component<IOptions> {
       self.onResizeColStart(e)
     })
 
-    this.on('optionChange', (name) => {
+    this.on('changeOption', (name) => {
       switch (name) {
         case 'minHeight':
         case 'maxHeight':

@@ -249,7 +249,7 @@ export default class ImageViewer extends Component<IOptions> {
       .on(pointerEvent('down'), this.onMoveStart)
       .on('wheel', this.onWheel)
 
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       switch (name) {
         case 'image':
           this.setImage(val)

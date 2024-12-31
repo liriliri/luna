@@ -93,7 +93,7 @@ export default class Eraser extends Tool {
   private bindEvent() {
     const { cursorCircle, painter } = this
 
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       if (name === 'size') {
         cursorCircle.setSize(val)
       }

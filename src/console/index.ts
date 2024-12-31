@@ -667,7 +667,7 @@ export default class Console extends Component<IOptions> {
       self.selectLog(this.log)
     })
 
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       const { logs } = this
       switch (name) {
         case 'maxNum':

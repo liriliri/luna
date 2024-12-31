@@ -32,7 +32,7 @@ export default class BoxModel extends Component<IOptions> {
     this.bindEvent()
   }
   private bindEvent() {
-    this.on('optionChange', (name) => {
+    this.on('changeOption', (name) => {
       switch (name) {
         case 'element':
           this.render()

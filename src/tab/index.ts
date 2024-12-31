@@ -193,7 +193,7 @@ export default class Tab extends Component<IOptions> {
   private bindEvent() {
     const { tabs, c } = this
 
-    this.on('optionChange', (name) => {
+    this.on('changeOption', (name) => {
       switch (name) {
         case 'height':
           this.updateHeight()

@@ -43,7 +43,7 @@ export default class Component<
       this.c(`platform-${getPlatform()}`),
     ])
 
-    this.on('optionChange', (name, val) => {
+    this.on('changeOption', (name, val) => {
       if (name === 'theme' && val) {
         let t = val
         if (val === 'auto') {
@@ -88,7 +88,7 @@ export default class Component<
       if (val === oldVal) {
         return
       }
-      this.emit('optionChange', name, val, oldVal)
+      this.emit('changeOption', name, val, oldVal)
     })
   }
   getOption(name: string) {

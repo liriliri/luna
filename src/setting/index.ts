@@ -264,7 +264,7 @@ export default class Setting extends Component<IOptions> {
   private bindEvent() {
     const { c } = this
 
-    this.on('optionChange', (name) => {
+    this.on('changeOption', (name) => {
       switch (name) {
         case 'filter':
           this.renderSettings()

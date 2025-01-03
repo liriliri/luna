@@ -61,7 +61,8 @@
       "luna-image-list": ["src/image-list/index"],
       "luna-lrc-player": ["src/lrc-player/index"],
       "luna-logcat": ["src/logcat/index"],
-      "luna-file-list": ["src/file-list/index"]
+      "luna-file-list": ["src/file-list/index"],
+      "luna-icon-list": ["src/icon-list/index"]
     }
   }
 }

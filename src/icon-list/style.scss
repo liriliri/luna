@@ -1,0 +1,5 @@
+@use '../share/mixin' as mixin;
+
+.luna-icon-list {
+  @include mixin.component();
+}

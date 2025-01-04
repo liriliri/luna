@@ -126,10 +126,10 @@
     "react": false
   },
   "icon-list": {
+    "test": false,
     "version": "0.1.0",
     "style": true,
     "icon": false,
-    "test": true,
     "install": false,
     "react": false,
     "dependencies": []

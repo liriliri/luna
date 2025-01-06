@@ -31,3 +31,13 @@ import LunaIconList from 'luna-icon-list'
 ```javascript
 const iconList = new LunaIconList(container)
 ```
+
+## Configuration
+
+* icons(IIcon[]): Icon list.
+* size(number): Icon size.
+
+## Types
+
+### IIcon
+

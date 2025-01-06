@@ -1,5 +1,28 @@
 @use '../share/mixin' as mixin;
 
 .luna-icon-list {
+  display: grid;
   @include mixin.component();
+}
+
+.item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  flex-direction: column;
+}
+
+.icon {
+  margin: 0 auto;
+  width: 60%;
+  overflow: hidden;
+  border-radius: 20%;
+  font-size: 0;
+  img {
+    width: 100%;
+    aspect-ratio: 1;
+  }
 }

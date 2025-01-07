@@ -1,18 +1,19 @@
 import { CSSProperties, FC, MouseEventHandler, useEffect, useRef } from 'react'
 import each from 'licia/each'
-import Logcat, { IOptions } from './index'
-import { useOption } from '../share/hooks'
+import Logcat, { IOptions, IEntry } from './index'
+import { useEvent, useOption, usePrevious } from '../share/hooks'
 
 interface IILogcatProps extends IOptions {
   style?: CSSProperties
   className?: string
-  onContextMenu?: MouseEventHandler<HTMLDivElement>
+  onContextMenu?: (e: PointerEvent, entry: IEntry) => void
   onCreate?: (logcat: Logcat) => void
 }
 
 const LunaLogcat: FC<IILogcatProps> = (props) => {
   const logcatRef = useRef<HTMLDivElement>(null)
   const logcat = useRef<Logcat>()
+  const prevProps = usePrevious(props)
 
   useEffect(() => {
     const { theme, maxNum, wrapLongLines, filter, entries, view } = props
@@ -30,6 +31,13 @@ const LunaLogcat: FC<IILogcatProps> = (props) => {
     return () => logcat.current?.destroy()
   }, [])
 
+  useEvent<Logcat>(
+    logcat,
+    'contextmenu',
+    prevProps?.onContextMenu,
+    props.onContextMenu
+  )
+
   each(
     ['theme', 'filter', 'maxNum', 'wrapLongLines', 'view'],
     (key: keyof IOptions) => {
@@ -41,7 +49,6 @@ const LunaLogcat: FC<IILogcatProps> = (props) => {
     <div
       className={props.className || ''}
       ref={logcatRef}
-      onContextMenu={props.onContextMenu}
       style={props.style}
     ></div>
   )

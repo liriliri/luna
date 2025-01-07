@@ -39,6 +39,11 @@ const def = story(
     append()
 
     logcat.on('destroy', () => (destroyed = true))
+    logcat.on('contextmenu', (e, entry) => {
+      if (entry) {
+        console.log(entry.message)
+      }
+    })
 
     button('Clear', () => {
       logcat.clear()

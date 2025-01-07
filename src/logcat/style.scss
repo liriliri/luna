@@ -1,5 +1,7 @@
 @use '../share/mixin' as mixin;
 @use '../share/theme' as theme;
+@use 'sass:meta';
+@use 'sass:map';
 
 .luna-logcat {
   padding-left: #{theme.$padding-x-x-s}px;
@@ -97,6 +99,19 @@
   }
 }
 
+$colors: 'blue', 'purple', 'cyan', 'green', 'magenta', 'pink', 'red', 'orange',
+  'yellow', 'volcano', 'geekblue', 'gold', 'lime';
+
+$variables: meta.module-variables(theme);
+@each $color in $colors {
+  @for $i from 6 through 10 {
+    .color-#{$color}-#{$i} {
+      $variable-name: #{$color}-#{$i};
+      color: map.get($variables, $variable-name);
+    }
+  }
+}
+
 .theme-dark {
   border-color: theme.$color-border-dark;
   .W {
@@ -126,6 +141,15 @@
   .I {
     .priority {
       background: theme.$color-info-text-dark;
+    }
+  }
+
+  @each $color in $colors {
+    @for $i from 6 through 10 {
+      .color-#{$color}-#{$i} {
+        $variable-name: #{$color}-#{$i}-dark;
+        color: map.get($variables, $variable-name);
+      }
     }
   }
 }

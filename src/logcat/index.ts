@@ -11,6 +11,8 @@ import $ from 'licia/$'
 import lowerCase from 'licia/lowerCase'
 import contain from 'licia/contain'
 import dateFormat from 'licia/dateFormat'
+import toNum from 'licia/toNum'
+import omit from 'licia/omit'
 import { exportCjs } from '../share/util'
 
 /** IOptions */
@@ -46,7 +48,7 @@ interface IBaseEntry {
   message: string
 }
 
-interface IEntry extends IBaseEntry {
+export interface IEntry extends IBaseEntry {
   date: string | Date
 }
 
@@ -125,7 +127,9 @@ export default class Logcat extends Component<IOptions> {
       ...entry,
       date,
       container,
+      idx: entries.length,
     }
+    container.setAttribute('data-idx', String(e.idx))
     entries.push(e)
 
     const { maxNum, view } = this.options
@@ -267,9 +271,26 @@ export default class Logcat extends Component<IOptions> {
       }
     })
 
+    const self = this
+
     this.$container
       .on('scroll', this.onScroll)
       .on('click', () => (this.isAtBottom = false))
+      .on('contextmenu', c('.entry'), function (this: HTMLDivElement, e) {
+        e.stopPropagation()
+        const idx = $(this).data('idx')
+        const entry = self.entries[toNum(idx)]
+        self.emit(
+          'contextmenu',
+          e.origEvent,
+          omit(entry, (val: any, key: string) => {
+            return key === 'container' || key === 'idx'
+          })
+        )
+      })
+      .on('contextmenu', (e) => {
+        self.emit('contextmenu', e.origEvent)
+      })
   }
   private onScroll = () => {
     const { scrollHeight, clientHeight, scrollTop } = this
@@ -292,7 +313,7 @@ export default class Logcat extends Component<IOptions> {
         'yyyy-mm-dd HH:MM:ss.l'
       )}</span>`,
       `<span class="${c('pid')}">${entry.pid}-${entry.tid}</span>`,
-      `<span class="${c('tag')}" style="color:${getColor(entry.tag)}">${escape(
+      `<span class="${c('tag')} ${c(getColor(entry.tag))}">${escape(
         entry.tag
       )}</span>`,
       `<span class="${c('package')}">${escape(entry.package)}</span>`,
@@ -335,84 +356,29 @@ function getColor(str: string) {
   return colors[strHash(str) % colors.length]
 }
 
-const colors = [
-  '#0000CC',
-  '#0000FF',
-  '#0033CC',
-  '#0033FF',
-  '#0066CC',
-  '#0066FF',
-  '#0099CC',
-  '#0099FF',
-  '#00CC00',
-  '#00CC33',
-  '#00CC66',
-  '#00CC99',
-  '#00CCCC',
-  '#00CCFF',
-  '#3300CC',
-  '#3300FF',
-  '#3333CC',
-  '#3333FF',
-  '#3366CC',
-  '#3366FF',
-  '#3399CC',
-  '#3399FF',
-  '#33CC00',
-  '#33CC33',
-  '#33CC66',
-  '#33CC99',
-  '#33CCCC',
-  '#33CCFF',
-  '#6600CC',
-  '#6600FF',
-  '#6633CC',
-  '#6633FF',
-  '#66CC00',
-  '#66CC33',
-  '#9900CC',
-  '#9900FF',
-  '#9933CC',
-  '#9933FF',
-  '#99CC00',
-  '#99CC33',
-  '#CC0000',
-  '#CC0033',
-  '#CC0066',
-  '#CC0099',
-  '#CC00CC',
-  '#CC00FF',
-  '#CC3300',
-  '#CC3333',
-  '#CC3366',
-  '#CC3399',
-  '#CC33CC',
-  '#CC33FF',
-  '#CC6600',
-  '#CC6633',
-  '#CC9900',
-  '#CC9933',
-  '#CCCC00',
-  '#CCCC33',
-  '#FF0000',
-  '#FF0033',
-  '#FF0066',
-  '#FF0099',
-  '#FF00CC',
-  '#FF00FF',
-  '#FF3300',
-  '#FF3333',
-  '#FF3366',
-  '#FF3399',
-  '#FF33CC',
-  '#FF33FF',
-  '#FF6600',
-  '#FF6633',
-  '#FF9900',
-  '#FF9933',
-  '#FFCC00',
-  '#FFCC33',
-]
+const colors: string[] = []
+each(
+  [
+    'blue',
+    'purple',
+    'cyan',
+    'green',
+    'magenta',
+    'pink',
+    'red',
+    'orange',
+    'yellow',
+    'volcano',
+    'geekblue',
+    'gold',
+    'lime',
+  ],
+  (color) => {
+    for (let i = 6; i <= 10; i++) {
+      colors.push(`color-${color}-${i}`)
+    }
+  }
+)
 
 if (typeof module !== 'undefined') {
   exportCjs(module, Logcat)

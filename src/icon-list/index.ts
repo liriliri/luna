@@ -1,6 +1,7 @@
 import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs } from '../share/util'
 import map from 'licia/map'
+import ResizeSensor from 'licia/ResizeSensor'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -16,7 +17,7 @@ export interface IIcon {
   name: string
 }
 
-const MIN_GAP = 20
+const GAP = 20
 
 /**
  * Show list of icons and their names.
@@ -25,38 +26,61 @@ const MIN_GAP = 20
  * const iconList = new LunaIconList(container)
  */
 export default class IconList extends Component<IOptions> {
+  private resizeSensor: ResizeSensor
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'icon-list' }, options)
 
+    this.resizeSensor = new ResizeSensor(container)
+
     this.initOptions(options, {
       icons: [],
-      size: 48,
+      size: 72,
     })
 
     this.updateColumnCount()
     this.render()
+
+    this.bindEvent()
   }
-  private updateColumnCount() {
-    const { $container } = this
-    const { size } = this.options
+  destroy() {
+    super.destroy()
+    this.resizeSensor.destroy()
+  }
+  private bindEvent() {
+    this.resizeSensor.addListener(this.updateColumnCount)
+  }
+  private updateColumnCount = () => {
+    const { $container, c } = this
+    const { size, icons } = this.options
     const containerWidth = $container.offset().width
 
-    const columnCount = Math.floor(containerWidth / (size + MIN_GAP))
-    const gap = Math.floor((containerWidth - columnCount * size) / columnCount)
+    const columnCount = Math.floor(containerWidth / (size + GAP))
 
-    $container.css({
-      gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
-      gap: `${gap}px ${gap}px`,
-      padding: `${gap / 2}px`,
-    })
+    if (icons.length >= columnCount) {
+      const gap = Math.floor(
+        (containerWidth - columnCount * size) / columnCount
+      )
+      $container.addClass(c('grid'))
+      $container.css({
+        gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
+        gap: `${GAP}px ${gap}px`,
+        padding: `0 ${gap / 2}px`,
+      })
+    } else {
+      $container.rmClass(c('grid'))
+      $container.css({
+        gap: '0',
+        padding: `0 ${GAP / 2}px`,
+      })
+    }
   }
   private render() {
     const { size } = this.options
 
     const html = map(this.options.icons, (icon) => {
       return this.c(`
-        <div class="item">
-          <div class="icon" style="width: ${size}px; height: ${size}px;">
+        <div class="item" style="width: ${size}px;">
+          <div class="icon" style="height: ${size}px;">
             <img src="${icon.src}"></img>
           </div>
           <div class="name">${icon.name}</div>

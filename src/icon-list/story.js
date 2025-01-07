@@ -21,12 +21,28 @@ const def = story(
 function getIcons() {
   return [
     {
-      src: '/icon.png',
+      src: '/logo.png',
       name: 'Luna',
     },
     {
-      src: 'https://licia.liriliri.io/icon.png',
+      src: 'https://eruda.liriliri.io/logo.png',
+      name: 'Eruda',
+    },
+    {
+      src: 'https://chii.liriliri.io/logo.png',
+      name: 'Chii',
+    },
+    {
+      src: 'https://licia.liriliri.io/logo.png',
       name: 'Licia',
+    },
+    {
+      src: 'https://aya.liriliri.io/logo.png',
+      name: 'Aya',
+    },
+    {
+      src: 'https://vivy.liriliri.io/logo.png',
+      name: 'Vivy',
     },
   ]
 }

@@ -1,13 +1,28 @@
 @use '../share/mixin' as mixin;
+@use '../share/theme' as theme;
 
 .luna-icon-list {
-  display: grid;
+  display: flex;
+  width: 100%;
   @include mixin.component();
+  &.grid {
+    display: grid;
+    &::after {
+      display: none;
+    }
+    .item {
+      margin-right: 0;
+    }
+  }
+  &::after {
+    content: '';
+    flex-grow: 1;
+  }
 }
 
 .item {
+  margin-right: 20px;
   display: flex;
-  width: 100%;
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
@@ -17,12 +32,22 @@
 
 .icon {
   margin: 0 auto;
-  width: 60%;
+  width: 100%;
+  padding: #{theme.$padding-x-s}px;
   overflow: hidden;
-  border-radius: 20%;
   font-size: 0;
+  margin-bottom: 2px;
   img {
     width: 100%;
     aspect-ratio: 1;
   }
+}
+
+.name {
+  width: 100%;
+  white-space: nowrap;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: #{theme.$font-size-s-m}px;
 }

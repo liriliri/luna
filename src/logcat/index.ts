@@ -180,7 +180,10 @@ export default class Logcat extends Component<IOptions> {
   hasSelection() {
     const selection = window.getSelection()
     if (selection && selection.anchorNode) {
-      if (this.container.contains(selection.anchorNode)) {
+      if (
+        this.container.contains(selection.anchorNode) &&
+        selection.toString() !== ''
+      ) {
         return true
       }
     }

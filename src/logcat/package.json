@@ -1,6 +1,6 @@
 {
   "name": "logcat",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Android logcat viewer",
   "luna": {
     "react": true

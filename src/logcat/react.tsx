@@ -1,4 +1,4 @@
-import { CSSProperties, FC, MouseEventHandler, useEffect, useRef } from 'react'
+import { CSSProperties, FC, useEffect, useRef } from 'react'
 import each from 'licia/each'
 import Logcat, { IOptions, IEntry } from './index'
 import { useEvent, useOption, usePrevious } from '../share/hooks'

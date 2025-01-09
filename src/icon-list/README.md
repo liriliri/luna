@@ -30,12 +30,29 @@ import LunaIconList from 'luna-icon-list'
 
 ```javascript
 const iconList = new LunaIconList(container)
+iconList.setIcons([
+  {
+    src: '/logo.png',
+    name: 'Luna',
+  },
+])
 ```
 
 ## Configuration
 
-* icons(IIcon[]): Icon list.
+* filter(string | RegExp | AnyFn): Icon filter.
+* selectable(boolean): Whether icon is selectable.
 * size(number): Icon size.
+
+## Api
+
+### append(data: IIcon): void
+
+Append icon.
+
+### clear(): void
+
+Clear all icons.
 
 ## Types
 

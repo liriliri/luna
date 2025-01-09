@@ -4,7 +4,17 @@
 .luna-icon-list {
   display: flex;
   width: 100%;
+  padding-top: #{theme.$padding-x-s}px;
+  padding-bottom: #{theme.$padding-x-s}px;
+  overflow-x: hidden;
+  @include mixin.overflow-auto(y);
   @include mixin.component();
+  & {
+    background-color: transparent;
+  }
+  &.theme-dark {
+    background-color: transparent;
+  }
   &.grid {
     display: grid;
     &::after {
@@ -28,6 +38,15 @@
   aspect-ratio: 1;
   box-sizing: border-box;
   flex-direction: column;
+  &.selected {
+    .icon {
+      background-color: #{theme.$color-border};
+    }
+    .name {
+      background-color: #{theme.$color-primary};
+      color: theme.$color-white;
+    }
+  }
 }
 
 .icon {
@@ -37,17 +56,34 @@
   overflow: hidden;
   font-size: 0;
   margin-bottom: 2px;
+  border-radius: #{theme.$border-radius-s-m}px;
   img {
+    object-fit: contain;
     width: 100%;
-    aspect-ratio: 1;
+    height: 100%;
   }
 }
 
 .name {
-  width: 100%;
+  max-width: 100%;
   white-space: nowrap;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-radius: #{theme.$border-radius-s-m}px;
+  padding: 2px;
   font-size: #{theme.$font-size-s-m}px;
+}
+
+.theme-dark {
+  .item {
+    &.selected {
+      .icon {
+        background-color: #{theme.$color-border-dark};
+      }
+      .name {
+        background-color: #{theme.$color-primary-dark};
+      }
+    }
+  }
 }

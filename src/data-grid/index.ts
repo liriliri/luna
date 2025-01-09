@@ -337,16 +337,22 @@ export default class DataGrid extends Component<IOptions> {
     if (!isNull(node) && !node?.selectable) {
       return
     }
+
+    if (this.selectedNode === node) {
+      return
+    }
+
     if (this.selectedNode) {
       this.selectedNode.deselect()
       this.selectedNode = null
+      if (isNull(node)) {
+        this.emit('deselect')
+      }
     }
     if (!isNull(node)) {
       this.selectedNode = node
-      this.selectedNode?.select()
+      node.select()
       this.emit('select', node)
-    } else {
-      this.emit('deselect')
     }
   }
   private onResizeColStart(e: any) {

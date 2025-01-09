@@ -2,12 +2,38 @@ import 'luna-icon-list.css'
 import story from '../share/story'
 import IconList from 'luna-icon-list.js'
 import readme from './README.md'
+import LunaIconList from './react'
+import $ from 'licia/$'
+import { number, text, boolean } from '@storybook/addon-knobs'
 
 const def = story(
   'icon-list',
   (container) => {
+    const { size, filter, selectable } = createKnobs()
+
+    $(container).css('maxHeight', 400)
+
     const iconList = new IconList(container, {
-      icons: getIcons(),
+      size,
+      filter,
+      selectable,
+    })
+    iconList.setIcons(getIcons())
+
+    iconList.on('select', (icon) => {
+      console.log('select', icon)
+    })
+    iconList.on('deselect', () => {
+      console.log('deselect')
+    })
+    iconList.on('click', (e, icon) => {
+      console.log('click', icon)
+    })
+    iconList.on('dblclick', (e, icon) => {
+      console.log('dblclick', icon)
+    })
+    iconList.on('contextmenu', (e, icon) => {
+      console.log('contextmenu', icon)
     })
 
     return iconList
@@ -15,6 +41,35 @@ const def = story(
   {
     readme,
     source: __STORY__,
+    ReactComponent({ theme }) {
+      const { size, filter, selectable } = createKnobs()
+
+      return (
+        <LunaIconList
+          style={{ maxHeight: 400 }}
+          onSelect={(icon) => {
+            console.log('select', icon)
+          }}
+          onDeselect={(icon) => {
+            console.log('deselect', icon)
+          }}
+          onClick={(e, icon) => {
+            console.log('click', icon)
+          }}
+          onDoubleClick={(e, icon) => {
+            console.log('dblclick', icon)
+          }}
+          onContextMenu={(e, icon) => {
+            console.log('contextmenu', icon)
+          }}
+          filter={filter}
+          theme={theme}
+          selectable={selectable}
+          size={size}
+          icons={getIcons()}
+        />
+      )
+    },
   }
 )
 
@@ -23,6 +78,22 @@ function getIcons() {
     {
       src: '/logo.png',
       name: 'Luna',
+    },
+    {
+      src: '/pic1.png',
+      name: 'Pic1',
+    },
+    {
+      src: '/pic2.png',
+      name: 'Pic2',
+    },
+    {
+      src: '/pic3.png',
+      name: 'Pic3',
+    },
+    {
+      src: '/pic4.png',
+      name: 'Pic4',
     },
     {
       src: 'https://eruda.liriliri.io/logo.png',
@@ -47,6 +118,25 @@ function getIcons() {
   ]
 }
 
+function createKnobs() {
+  const size = number('Size', 72, {
+    range: true,
+    min: 32,
+    max: 256,
+    step: 1,
+  })
+
+  const filter = text('Filter', '')
+
+  const selectable = boolean('Selectable', true)
+
+  return {
+    size,
+    filter,
+    selectable,
+  }
+}
+
 export default def
 
-export const { iconList } = def
+export const { iconList: html, react } = def

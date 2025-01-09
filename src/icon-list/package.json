@@ -1,8 +1,5 @@
 {
   "name": "icon-list",
   "version": "0.1.0",
-  "description": "Show list of icons and their names",
-  "luna": {
-    "test": false
-  }
+  "description": "Show list of icons and their names"
 }

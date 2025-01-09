@@ -37,6 +37,7 @@ UI library.
 * [dom-viewer](./src/dom-viewer/README.md): Dom tree navigator.
 * [editor](./src/editor/README.md): Wysiwyg editor.
 * [gallery](./src/gallery/README.md): Lightweight gallery.
+* [icon-list](./src/icon-list/README.md): Show list of icons and their names.
 * [image-list](./src/image-list/README.md): Show list of images.
 * [image-viewer](./src/image-viewer/README.md): Single image viewer.
 * [json-editor](./src/json-editor/README.md): JSON editor.

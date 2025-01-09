@@ -28,6 +28,7 @@ export interface IOptions extends IComponentOptions {
 export interface IIcon {
   src: string
   name: string
+  style?: types.PlainObj<any>
 }
 
 const GAP = 20
@@ -243,6 +244,8 @@ export default class IconList extends Component<IOptions> {
   private render() {
     const { displayIcons, $container, container } = this
 
+    const scrollTop = container.scrollTop
+
     const frag = document.createDocumentFragment()
     $container.html('')
     each(displayIcons, (icon) => {
@@ -250,6 +253,8 @@ export default class IconList extends Component<IOptions> {
     })
     container.appendChild(frag)
     this.updateColumnCount()
+
+    container.scrollTop = scrollTop
   }
 }
 
@@ -269,6 +274,7 @@ export class Icon {
 
     this.render()
     this.$icon = this.$container.find(iconList.c('.icon'))
+    this.$icon.find('img').css(data.style || {})
   }
   setSize(size: number) {
     const width = `${size + 16}px`

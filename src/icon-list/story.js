@@ -82,14 +82,23 @@ function getIcons() {
     {
       src: '/pic1.png',
       name: 'Pic1',
+      style: {
+        filter: 'grayscale(100%)',
+      },
     },
     {
       src: '/pic2.png',
       name: 'Pic2',
+      style: {
+        borderRadius: '50%',
+      },
     },
     {
       src: '/pic3.png',
       name: 'Pic3',
+      style: {
+        border: '1px solid red',
+      },
     },
     {
       src: '/pic4.png',

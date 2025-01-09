@@ -91,6 +91,10 @@ module.exports = function (
             test: /\.css/,
             loaders: [MiniCssExtractPlugin.loader, 'css-loader', postcssLoader],
           },
+          {
+            test: /\.(svg)$/i,
+            loader: 'url-loader',
+          },
         ],
       },
       externals,

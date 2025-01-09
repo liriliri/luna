@@ -5,7 +5,8 @@
   "luna": {
     "test": false,
     "dependencies": [
-      "data-grid"
+      "data-grid",
+      "icon-list"
     ]
   }
 }

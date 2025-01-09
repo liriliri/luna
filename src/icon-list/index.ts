@@ -63,7 +63,7 @@ export default class IconList extends Component<IOptions> {
     }, 16)
 
     this.initOptions(options, {
-      size: 72,
+      size: 48,
       selectable: true,
     })
 

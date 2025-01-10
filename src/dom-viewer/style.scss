@@ -8,9 +8,8 @@
   cursor: default;
   list-style: none;
   @include mixin.overflow-auto(y);
-  @include mixin.component();
+  @include mixin.component(true);
   & {
-    background: transparent;
     font-size: #{theme.$font-size-s-m}px;
     font-family: theme.$font-family-code;
   }
@@ -19,7 +18,6 @@
   }
   &.theme-dark {
     color: #e8eaed;
-    background: transparent;
   }
 }
 

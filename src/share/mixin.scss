@@ -9,9 +9,13 @@
   -webkit-overflow-scrolling: touch;
 }
 
-@mixin component {
+@mixin component($transparent: false) {
   color: theme.$color-text;
-  background-color: theme.$color-bg-container;
+  @if $transparent {
+    background-color: transparent;
+  } @else {
+    background-color: theme.$color-bg-container;
+  }
   font-family: theme.$font-family;
   box-sizing: border-box;
   user-select: none;
@@ -30,7 +34,11 @@
   &.theme-dark {
     color-scheme: dark;
     color: theme.$color-text-dark;
-    background-color: theme.$color-bg-container-dark;
+    @if $transparent {
+      background-color: transparent;
+    } @else {
+      background-color: theme.$color-bg-container-dark;
+    }
   }
 }
 

@@ -8,13 +8,7 @@
   padding-bottom: #{theme.$padding-x-s}px;
   overflow-x: hidden;
   @include mixin.overflow-auto(y);
-  @include mixin.component();
-  & {
-    background-color: transparent;
-  }
-  &.theme-dark {
-    background-color: transparent;
-  }
+  @include mixin.component(true);
   &.grid {
     display: grid;
     &::after {

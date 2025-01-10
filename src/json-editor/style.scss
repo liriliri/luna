@@ -9,9 +9,8 @@
   color: #727272;
   white-space: nowrap;
   user-select: none;
-  @include mixin.component();
+  @include mixin.component(true);
   & {
-    background: transparent;
     font-family: theme.$font-family-code;
     font-size: 12px;
   }
@@ -33,7 +32,6 @@
     display: none;
   }
   &.theme-dark {
-    background: transparent;
     color: #fff;
   }
 }

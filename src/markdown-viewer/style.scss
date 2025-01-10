@@ -12,13 +12,7 @@
   line-height: 1.5;
   word-wrap: break-word;
   overflow-y: auto;
-  @include mixin.component();
-  & {
-    background: transparent;
-  }
-  &.theme-dark {
-    background: transparent;
-  }
+  @include mixin.component(true);
   details,
   figcaption,
   figure {

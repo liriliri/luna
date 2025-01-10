@@ -64,11 +64,13 @@ export default class FileList extends Component<IOptions> {
       ],
       selectable: true,
     })
+    this.addSubComponent(this.dataGrid)
 
     const iconListContainer = this.find('.icon-view').get(0) as HTMLElement
     this.iconList = new LunaIconList(iconListContainer, {
       size: 48,
     })
+    this.addSubComponent(this.iconList)
 
     this.render()
   }

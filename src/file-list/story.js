@@ -1,5 +1,6 @@
 import 'luna-file-list.css'
 import FileList from 'luna-file-list.js'
+import $ from 'licia/$'
 import readme from './README.md'
 import story from '../share/story'
 import { boolean } from '@storybook/addon-knobs'
@@ -7,6 +8,11 @@ import { boolean } from '@storybook/addon-knobs'
 const def = story(
   'file-list',
   (container) => {
+    $(container).css({
+      width: '100%',
+      height: '200px',
+    })
+
     const listView = boolean('List View', false)
 
     const fileList = new FileList(container, {

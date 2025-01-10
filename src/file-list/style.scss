@@ -1,0 +1,5 @@
+@use '../share/mixin' as mixin;
+
+.luna-file-list {
+  @include mixin.component(true);
+}

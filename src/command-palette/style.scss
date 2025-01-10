@@ -12,10 +12,7 @@
   align-items: flex-start;
   padding-top: 10px;
   overflow: hidden;
-  @include mixin.component();
-  & {
-    background: transparent !important;
-  }
+  @include mixin.component(true);
 }
 
 .body {

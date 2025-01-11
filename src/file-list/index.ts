@@ -19,8 +19,6 @@ export interface IOptions extends IComponentOptions {
   files: IFile[]
   /** Show files in list view. */
   listView?: boolean
-  /** Current directory. */
-  directory?: string
 }
 
 /** IFile */
@@ -49,7 +47,6 @@ export default class FileList extends Component<IOptions> {
     this.initOptions(options, {
       files: [],
       listView: false,
-      directory: '',
     })
 
     this.initTpl()

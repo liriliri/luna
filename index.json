@@ -109,7 +109,7 @@
   },
   "file-list": {
     "test": false,
-    "dependencies": ["data-grid"],
+    "dependencies": ["data-grid", "icon-list"],
     "version": "0.1.0",
     "style": true,
     "icon": false,

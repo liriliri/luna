@@ -4,14 +4,19 @@ import LunaDataGrid from 'luna-data-grid'
 import LunaIconList from 'luna-icon-list'
 import { exportCjs } from '../share/util'
 import map from 'licia/map'
+import splitPath from 'licia/splitPath'
 import fileSize from 'licia/fileSize'
-import folderIcon from './folder.svg'
-import fileIcon from './file.svg'
+import asset from './asset'
+import mime from 'licia/mime'
+import startWith from 'licia/startWith'
+
+const folderIcon = asset['folder.svg']
+const fileIcon = asset['file.svg']
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
   /** File list. */
-  files?: IFile[]
+  files: IFile[]
   /** Show files in list view. */
   listView?: boolean
   /** Current directory. */
@@ -26,8 +31,10 @@ export interface IFile {
   mtime: number
   /** File size. */
   size?: number
+  /** Thumbnail. */
+  thumbnail?: string
   /** Whether file is a directory. */
-  directory: boolean
+  directory?: boolean
 }
 
 /**
@@ -36,7 +43,7 @@ export interface IFile {
 export default class FileList extends Component<IOptions> {
   private dataGrid: LunaDataGrid
   private iconList: LunaIconList
-  constructor(container: HTMLElement, options: IOptions = {}) {
+  constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'file-list' }, options)
 
     this.initOptions(options, {
@@ -96,12 +103,35 @@ export default class FileList extends Component<IOptions> {
     this.iconList.$container.show()
 
     const icons = map(files, (file) => {
+      let src = folderIcon
+      if (!file.directory) {
+        src = file.thumbnail || this.getIcon(file.name)
+      }
+
       return {
-        src: file.directory ? folderIcon : fileIcon,
+        src,
         name: file.name,
       }
     })
     this.iconList.setIcons(icons)
+  }
+  private getIcon(name: string) {
+    const ext = splitPath(name).ext
+    const type = mime(ext.slice(1))
+
+    if (type) {
+      if (startWith(type, 'image')) {
+        return asset['image.svg']
+      } else if (startWith(type, 'text')) {
+        return asset['text.svg']
+      } else if (startWith(type, 'video')) {
+        return asset['video.svg']
+      } else if (startWith(type, 'audio')) {
+        return asset['audio.svg']
+      }
+    }
+
+    return fileIcon
   }
   private renderListView(files: IFile[]) {
     this.iconList.$container.hide()

@@ -2,6 +2,10 @@
 
 const program = require('commander')
 const fs = require('licia/fs')
+const dataUrl = require('licia/dataUrl')
+const mime = require('licia/mime')
+const convertBin = require('licia/convertBin')
+const path = require('path')
 const {
   runScript,
   wrap,
@@ -54,6 +58,21 @@ const lint = wrap(async function (component) {
   await runScript('eslint', [`src/${component}/**/*.ts`])
 })
 
+const genAsset = wrap(async function (component) {
+  const input = resolve(`../src/${component}/asset`)
+  const files = await fs.readdir(input)
+  const output = {}
+  for (let i = 0, len = files.length; i < len; i++) {
+    const file = files[i]
+    const buf = await fs.readFile(path.resolve(input, file))
+    const ext = path.extname(file).slice(1)
+    const mimeType = mime(ext)
+    output[file] = dataUrl.stringify(convertBin(buf, 'base64'), mimeType)
+  }
+  const outputStr = `export default ${JSON.stringify(output, null, 2)}`
+  await fs.writeFile(resolve(`../src/${component}/asset.ts`), outputStr)
+})
+
 const genIcon = wrap(async function (component) {
   await runScript('lsla', [
     'genIcon',
@@ -102,6 +121,11 @@ program
   .command('genIcon [component]')
   .description('generate icon file')
   .action(genIcon)
+
+program
+  .command('genAsset [component]')
+  .description('generate asset file')
+  .action(genAsset)
 
 program
   .command('test [component]')

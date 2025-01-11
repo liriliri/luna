@@ -45,6 +45,24 @@ function getFiles() {
       size: 2048,
       directory: false,
     },
+    {
+      name: 'pic1.png',
+      thumbnail: '/pic1.png',
+    },
+    {
+      name: 'binary',
+      size: 4096,
+      directory: false,
+    },
+    {
+      name: 'video.mp4',
+      size: 8192,
+      directory: false,
+    },
+    {
+      name: 'audio.mp3',
+      size: 16384,
+    },
   ]
 }
 

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "List files in the directory",
   "luna": {
-    "test": false,
+    "react": true,
     "dependencies": [
       "data-grid",
       "icon-list"

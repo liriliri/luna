@@ -108,13 +108,13 @@
     "dependencies": []
   },
   "file-list": {
-    "test": false,
+    "react": true,
     "dependencies": ["data-grid", "icon-list"],
     "version": "0.1.0",
     "style": true,
     "icon": false,
-    "install": false,
-    "react": false
+    "test": true,
+    "install": false
   },
   "gallery": {
     "icon": true,

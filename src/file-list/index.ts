@@ -13,6 +13,7 @@ import throttle from 'licia/throttle'
 import ResizeSensor from 'licia/ResizeSensor'
 import dateFormat from 'licia/dateFormat'
 import toEl from 'licia/toEl'
+import each from 'licia/each'
 
 const folderIcon = asset['folder.svg']
 const fileIcon = asset['file.svg']
@@ -41,6 +42,14 @@ export interface IFile {
 
 /**
  * List files in the directory.
+ *
+ * @example
+ * const fileList = new LunaFileList(container, {
+ *  listView: true,
+ *  files: [
+ *   { name: 'file1.txt', mtime: new Date(), size: 1024 },
+ *  ],
+ * })
  */
 export default class FileList extends Component<IOptions> {
   private dataGrid: LunaDataGrid
@@ -186,14 +195,33 @@ export default class FileList extends Component<IOptions> {
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
 
-    this.iconList.on('contextmenu', (e, icon) => {
-      this.emit('contextmenu', e, icon.data.file)
+    each(['select', 'deselect'], (event) => {
+      this.iconList.on(event, (icon) => {
+        if (event === 'select') {
+          this.emit(event, icon.data.file)
+        } else {
+          this.emit(event)
+        }
+      })
+      this.dataGrid.on(event, (node) => {
+        if (event === 'select') {
+          this.emit(event, node.data.file)
+        } else {
+          this.emit(event)
+        }
+      })
     })
-    this.dataGrid.on('contextmenu', (e, node) => {
-      this.emit('contextmenu', e, node.data.file)
+    each(['click', 'dblclick', 'contextmenu'], (event) => {
+      this.iconList.on(event, (e, icon) => {
+        this.emit(event, e, icon.data.file)
+      })
+      this.dataGrid.on(event, (e, node) => {
+        this.emit(event, e, node.data.file)
+      })
     })
 
     this.$container.on('contextmenu', (e) => {
+      e.preventDefault()
       this.emit('contextmenu', e)
     })
 

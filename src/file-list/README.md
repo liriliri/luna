@@ -32,6 +32,17 @@ import 'luna-file-list/luna-file-list.css'
 import LunaFileList from 'luna-file-list'
 ```
 
+## Usage
+
+```javascript
+const fileList = new LunaFileList(container, {
+ listView: true,
+ files: [
+  { name: 'file1.txt', mtime: new Date(), size: 1024 },
+ ],
+})
+```
+
 ## Configuration
 
 * files(IFile[]): File list.
@@ -42,7 +53,7 @@ import LunaFileList from 'luna-file-list'
 ### IFile
 
 * directory(boolean): Whether file is a directory.
-* mtime(number): Modified timestamp.
+* mtime(Date): Modified timestamp.
 * name(string): File name.
 * size(number): File size.
 * thumbnail(string): Thumbnail.

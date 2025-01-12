@@ -36,6 +36,7 @@ UI library.
 * [dom-highlighter](./src/dom-highlighter/README.md): Highlighter for html elements.
 * [dom-viewer](./src/dom-viewer/README.md): Dom tree navigator.
 * [editor](./src/editor/README.md): Wysiwyg editor.
+* [file-list](./src/file-list/README.md): List files in the directory.
 * [gallery](./src/gallery/README.md): Lightweight gallery.
 * [icon-list](./src/icon-list/README.md): Show list of icons and their names.
 * [image-list](./src/image-list/README.md): Show list of images.

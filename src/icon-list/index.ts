@@ -186,6 +186,7 @@ export default class IconList extends Component<IOptions> {
       .on('click', () => this.selectIcon(null))
       .on('contextmenu', itemClass, function (this: any, e: any) {
         e.preventDefault()
+        e.stopPropagation()
         const icon = this.parentNode.icon
         self.selectIcon(icon)
         self.emit('contextmenu', e.origEvent, icon)

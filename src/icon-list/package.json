@@ -1,6 +1,6 @@
 {
   "name": "icon-list",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Show list of icons and their names",
   "luna": {
     "react": true

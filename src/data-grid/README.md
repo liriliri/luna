@@ -56,6 +56,7 @@ dataGrid.append({
 * height(number): Table height.
 * maxHeight(number): Max table height.
 * minHeight(number): Min table height.
+* selectable(boolean): Default selectable for all nodes.
 
 ## Api
 

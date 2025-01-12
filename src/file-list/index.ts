@@ -133,6 +133,7 @@ export default class FileList extends Component<IOptions> {
       return {
         src: this.getIcon(file),
         name: file.name,
+        file,
       }
     })
     this.iconList.setIcons(icons)
@@ -177,12 +178,24 @@ export default class FileList extends Component<IOptions> {
         ) as HTMLElement,
         size: file.size ? fileSize(file.size) : '--',
         mtime: dateFormat(file.mtime, 'yyyy-mm-dd HH:MM:ss'),
+        file,
       }
     })
-    this.dataGrid.setData(data)
+    this.dataGrid.setData(data as any)
   }
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
+
+    this.iconList.on('contextmenu', (e, icon) => {
+      this.emit('contextmenu', e, icon.data.file)
+    })
+    this.dataGrid.on('contextmenu', (e, node) => {
+      this.emit('contextmenu', e, node.data.file)
+    })
+
+    this.$container.on('contextmenu', (e) => {
+      this.emit('contextmenu', e)
+    })
 
     this.on('changeOption', (name) => {
       switch (name) {

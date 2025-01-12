@@ -417,9 +417,30 @@ export default class DataGrid extends Component<IOptions> {
 
     const self = this
 
-    $tableBody.on('click', c('.node'), function (this: any) {
-      self.selectNode(this.dataGridNode)
-    })
+    $tableBody
+      .on('click', c('.node'), function (this: any, e: any) {
+        self.selectNode(this.dataGridNode)
+        setTimeout(() => {
+          if (this.hasDoubleClick) {
+            return
+          }
+          self.emit('click', e.origEvent, this.dataGridNode)
+        }, 200)
+      })
+      .on('dblclick', c('.node'), function (this: any, e: any) {
+        e.stopPropagation()
+        this.hasDoubleClick = true
+        self.emit('dblclick', e.origEvent, this.dataGridNode)
+        setTimeout(() => {
+          this.hasDoubleClick = false
+        }, 300)
+      })
+      .on('contextmenu', c('.node'), function (this: any, e: any) {
+        e.preventDefault()
+        e.stopPropagation()
+        self.selectNode(this.dataGridNode)
+        self.emit('contextmenu', e.origEvent, this.dataGridNode)
+      })
 
     $headerRow.on(
       'click',

@@ -23,8 +23,17 @@ const def = story(
     each(getData(), (item) => dataGrid.append(item, { selectable: true }))
 
     let selectedNode
-    dataGrid.on('select', (node) => (selectedNode = node))
-    dataGrid.on('deselect', () => (selectedNode = null))
+    dataGrid.on('select', (node) => {
+      selectedNode = node
+      console.log('select', node)
+    })
+    dataGrid.on('deselect', () => {
+      selectedNode = null
+      console.log('deselect')
+    })
+    dataGrid.on('click', (e, node) => console.log('click', node))
+    dataGrid.on('dblclick', (e, node) => console.log('dblclick', node))
+    dataGrid.on('contextmenu', (e, node) => console.log('contextmenu', node))
     button('Remove Selected', () => {
       if (selectedNode) {
         dataGrid.remove(selectedNode)
@@ -53,6 +62,15 @@ const def = story(
           }}
           onDeselect={() => {
             console.log('deselect')
+          }}
+          onClick={(e, node) => {
+            console.log('click', node)
+          }}
+          onDoubleClick={(e, node) => {
+            console.log('dblclick', node)
+          }}
+          onContextMenu={(e, node) => {
+            console.log('contextmenu', node)
           }}
           columns={getColumns()}
           minHeight={minHeight}

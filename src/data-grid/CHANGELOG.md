@@ -1,3 +1,8 @@
+## 1.3.0 (12 Jan 2025)
+
+* feat: contextmenu event
+* feat: click and dblclick event
+
 ## 1.2.1 (22 Nov 2024)
 
 * fix: scroll position not restored

@@ -11,6 +11,9 @@ import {
 interface IDataGridProps extends IOptions {
   onSelect?: (node: DataGridNode) => void
   onDeselect?: () => void
+  onClick?: (e: MouseEvent, node: DataGridNode) => void
+  onDoubleClick?: (e: MouseEvent, node: DataGridNode) => void
+  onContextMenu?: (e: PointerEvent, node: DataGridNode) => void
   className?: string
   uniqueId?: string
   data: any[]
@@ -46,6 +49,19 @@ const LunaDataGrid: FC<IDataGridProps> = (props) => {
     'deselect',
     prevProps?.onDeselect,
     props.onDeselect
+  )
+  useEvent<DataGrid>(dataGrid, 'click', prevProps?.onClick, props.onClick)
+  useEvent<DataGrid>(
+    dataGrid,
+    'dblclick',
+    prevProps?.onDoubleClick,
+    props.onDoubleClick
+  )
+  useEvent<DataGrid>(
+    dataGrid,
+    'contextmenu',
+    prevProps?.onContextMenu,
+    props.onContextMenu
   )
 
   each(

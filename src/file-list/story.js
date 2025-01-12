@@ -20,6 +20,10 @@ const def = story(
       files: getFiles(),
     })
 
+    fileList.on('contextmenu', (e, file) => {
+      console.log('contextmenu', file)
+    })
+
     return fileList
   },
   {

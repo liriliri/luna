@@ -50,6 +50,21 @@ const def = story(
           style={{
             height: 200,
           }}
+          onSelect={(file) => {
+            console.log('select', file)
+          }}
+          onDeselect={() => {
+            console.log('deselect')
+          }}
+          onClick={(e, file) => {
+            console.log('click', file)
+          }}
+          onDoubleClick={(e, file) => {
+            console.log('dblclick', file)
+          }}
+          onContextMenu={(e, file) => {
+            console.log('contextmenu', file)
+          }}
           listView={listView}
           files={getFiles()}
         />

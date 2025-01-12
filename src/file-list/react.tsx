@@ -22,6 +22,7 @@ const LunaFileList: FC<IFileListProps> = (props) => {
     fileList.current = new FileList(fileListRef.current!, {
       files: props.files,
       listView: props.listView,
+      theme: props.theme,
     })
 
     return () => fileList.current?.destroy()

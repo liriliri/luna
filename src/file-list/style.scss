@@ -2,4 +2,23 @@
 
 .luna-file-list {
   @include mixin.component(true);
+  .luna-icon-list {
+    max-height: 100%;
+  }
+  .luna-data-grid {
+    img {
+      height: 14px;
+      width: 14px;
+      margin: 0;
+      padding: 0;
+      margin-right: 2px;
+      flex-shrink: 0;
+      object-fit: contain;
+      vertical-align: top;
+    }
+  }
+}
+
+.hidden {
+  display: none !important;
 }

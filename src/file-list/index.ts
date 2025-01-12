@@ -9,6 +9,10 @@ import fileSize from 'licia/fileSize'
 import asset from './asset'
 import mime from 'licia/mime'
 import startWith from 'licia/startWith'
+import throttle from 'licia/throttle'
+import ResizeSensor from 'licia/ResizeSensor'
+import dateFormat from 'licia/dateFormat'
+import toEl from 'licia/toEl'
 
 const folderIcon = asset['folder.svg']
 const fileIcon = asset['file.svg']
@@ -26,7 +30,7 @@ export interface IFile {
   /** File name. */
   name: string
   /** Modified timestamp. */
-  mtime: number
+  mtime: Date
   /** File size. */
   size?: number
   /** Thumbnail. */
@@ -41,6 +45,8 @@ export interface IFile {
 export default class FileList extends Component<IOptions> {
   private dataGrid: LunaDataGrid
   private iconList: LunaIconList
+  private onResize: () => void
+  private resizeSensor: ResizeSensor
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'file-list' }, options)
 
@@ -57,12 +63,17 @@ export default class FileList extends Component<IOptions> {
         {
           id: 'name',
           title: 'Name',
-          weight: 20,
+          weight: 60,
           sortable: true,
         },
         {
           id: 'size',
           title: 'Size',
+          weight: 20,
+        },
+        {
+          id: 'mtime',
+          title: 'Date Modified',
           weight: 20,
         },
       ],
@@ -76,7 +87,25 @@ export default class FileList extends Component<IOptions> {
     })
     this.addSubComponent(this.iconList)
 
+    this.resizeSensor = new ResizeSensor(container)
+    this.onResize = throttle(() => {
+      this.updateListHeight()
+    }, 100)
+
+    this.bindEvent()
     this.render()
+    this.updateListHeight()
+  }
+  destroy() {
+    super.destroy()
+    this.resizeSensor.destroy()
+  }
+  private updateListHeight() {
+    const height = this.$container.offset().height
+    this.dataGrid.setOption({
+      maxHeight: height,
+      minHeight: height,
+    })
   }
   private initTpl() {
     this.$container.html(
@@ -96,23 +125,29 @@ export default class FileList extends Component<IOptions> {
     }
   }
   private renderIconView(files: IFile[]) {
-    this.dataGrid.$container.hide()
-    this.iconList.$container.show()
+    const hidden = this.c('hidden')
+    this.dataGrid.$container.addClass(hidden)
+    this.iconList.$container.rmClass(hidden)
 
     const icons = map(files, (file) => {
-      let src = folderIcon
-      if (!file.directory) {
-        src = file.thumbnail || this.getIcon(file.name)
-      }
-
       return {
-        src,
+        src: this.getIcon(file),
         name: file.name,
       }
     })
     this.iconList.setIcons(icons)
   }
-  private getIcon(name: string) {
+  private getIcon(file: IFile) {
+    const { name } = file
+
+    if (file.directory) {
+      return folderIcon
+    }
+
+    if (file.thumbnail) {
+      return file.thumbnail
+    }
+
     const ext = splitPath(name).ext
     const type = mime(ext.slice(1))
 
@@ -131,16 +166,32 @@ export default class FileList extends Component<IOptions> {
     return fileIcon
   }
   private renderListView(files: IFile[]) {
-    this.iconList.$container.hide()
-    this.dataGrid.$container.show()
+    const hidden = this.c('hidden')
+    this.iconList.$container.addClass(hidden)
+    this.dataGrid.$container.rmClass(hidden)
 
     const data = map(files, (file) => {
       return {
-        name: file.name,
+        name: toEl(
+          `<span><img src="${this.getIcon(file)}" />${file.name}</span>`
+        ) as HTMLElement,
         size: file.size ? fileSize(file.size) : '--',
+        mtime: dateFormat(file.mtime, 'yyyy-mm-dd HH:MM:ss'),
       }
     })
     this.dataGrid.setData(data)
+  }
+  private bindEvent() {
+    this.resizeSensor.addListener(this.onResize)
+
+    this.on('changeOption', (name) => {
+      switch (name) {
+        case 'files':
+        case 'listView':
+          this.render()
+          break
+      }
+    })
   }
 }
 

@@ -115,7 +115,7 @@ const def = story(
             label="Show all"
           />
           <LunaToolbarSpace />
-          <LunaToolbarHtml>
+          <LunaToolbarHtml className="custom-class">
             <span
               style={{
                 color: 'green',

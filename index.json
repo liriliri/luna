@@ -398,7 +398,7 @@
   },
   "toolbar": {
     "react": true,
-    "version": "0.9.0",
+    "version": "0.9.1",
     "style": true,
     "icon": false,
     "test": true,

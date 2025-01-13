@@ -55,12 +55,12 @@ const LunaToolbar: FC<PropsWithChildren<IToolbarProps>> = (props) => {
 interface IToolbarItemProps {
   disabled?: boolean
   onChange?: (val: any, oldVal: any) => void
+  className?: string
 }
 
 const LunaToolbarItem: FC<
   IToolbarItemProps & {
     type: string
-    className?: string
     dangerouslySetInnerHTML?: { __html: string }
   }
 > = (props) => {

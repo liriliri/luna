@@ -3,7 +3,7 @@
 .luna-file-list {
   @include mixin.component(true);
   .luna-icon-list {
-    max-height: 100%;
+    height: 100%;
   }
   .luna-data-grid {
     img {

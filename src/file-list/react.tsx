@@ -22,6 +22,7 @@ const LunaFileList: FC<IFileListProps> = (props) => {
     fileList.current = new FileList(fileListRef.current!, {
       files: props.files,
       listView: props.listView,
+      filter: props.filter,
       theme: props.theme,
     })
 
@@ -49,7 +50,7 @@ const LunaFileList: FC<IFileListProps> = (props) => {
     props.onContextMenu
   )
 
-  each(['theme', 'files', 'listView'], (key: keyof IOptions) => {
+  each(['theme', 'filter', 'files', 'listView'], (key: keyof IOptions) => {
     useOption<FileList, IOptions>(fileList, key, props[key])
   })
 

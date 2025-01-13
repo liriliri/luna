@@ -14,6 +14,9 @@ import ResizeSensor from 'licia/ResizeSensor'
 import dateFormat from 'licia/dateFormat'
 import toEl from 'licia/toEl'
 import each from 'licia/each'
+import types from 'licia/types'
+import wrap from 'licia/wrap'
+import isFn from 'licia/isFn'
 
 const folderIcon = asset['folder.svg']
 const fileIcon = asset['file.svg']
@@ -24,6 +27,8 @@ export interface IOptions extends IComponentOptions {
   files: IFile[]
   /** Show files in list view. */
   listView?: boolean
+  /** File filter. */
+  filter?: string | RegExp | types.AnyFn
 }
 
 /** IFile */
@@ -104,10 +109,23 @@ export default class FileList extends Component<IOptions> {
     this.bindEvent()
     this.render()
     this.updateListHeight()
+
+    if (this.options.filter) {
+      this.setFilter(this.options.filter)
+    }
   }
   destroy() {
     super.destroy()
     this.resizeSensor.destroy()
+  }
+  private setFilter(filter: string | RegExp | types.AnyFn) {
+    if (isFn(filter)) {
+      filter = wrap(filter, function (fn, data: any) {
+        return fn(data.data.file)
+      })
+    }
+    this.iconList.setOption('filter', filter)
+    this.dataGrid.setOption('filter', filter)
   }
   private updateListHeight() {
     const height = this.$container.offset().height
@@ -225,11 +243,14 @@ export default class FileList extends Component<IOptions> {
       this.emit('contextmenu', e)
     })
 
-    this.on('changeOption', (name) => {
+    this.on('changeOption', (name, val) => {
       switch (name) {
         case 'files':
         case 'listView':
           this.render()
+          break
+        case 'filter':
+          this.setFilter(val)
           break
       }
     })

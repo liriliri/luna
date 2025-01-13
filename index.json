@@ -110,7 +110,7 @@
   "file-list": {
     "react": true,
     "dependencies": ["data-grid", "icon-list"],
-    "version": "0.1.1",
+    "version": "0.2.0",
     "style": true,
     "icon": false,
     "test": true,

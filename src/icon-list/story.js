@@ -11,7 +11,7 @@ const def = story(
   (container) => {
     const { size, filter, selectable } = createKnobs()
 
-    $(container).css('maxHeight', 400)
+    $(container).css('height', 400)
 
     const iconList = new IconList(container, {
       size,

@@ -31,6 +31,8 @@ const LunaIconList: FC<IIconListProps> = (props) => {
       filter: props.filter,
     })
     iconList.current.setIcons(props.icons)
+
+    return () => iconList.current?.destroy()
   }, [])
 
   useNonInitialEffect(() => {

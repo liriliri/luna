@@ -2,13 +2,16 @@
 @use '../share/theme' as theme;
 
 .luna-icon-list {
-  display: flex;
   width: 100%;
   padding-top: #{theme.$padding-x-s}px;
   padding-bottom: #{theme.$padding-x-s}px;
   overflow-x: hidden;
   @include mixin.overflow-auto(y);
   @include mixin.component(true);
+}
+
+.icon-container {
+  display: flex;
   &.grid {
     display: grid;
     &::after {

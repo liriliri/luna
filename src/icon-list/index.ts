@@ -53,6 +53,8 @@ export default class IconList extends Component<IOptions> {
   private frag: DocumentFragment = document.createDocumentFragment()
   private appendTimer: NodeJS.Timeout | null = null
   private onResize: () => void
+  private $iconContainer: $.$
+  private iconContainer: HTMLElement
   private selectedIcon: Icon | null = null
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'icon-list' }, options)
@@ -66,6 +68,10 @@ export default class IconList extends Component<IOptions> {
       size: 48,
       selectable: true,
     })
+
+    this.initTpl()
+    this.$iconContainer = this.find('.icon-container')
+    this.iconContainer = this.$iconContainer.get(0) as HTMLElement
 
     this.bindEvent()
   }
@@ -87,7 +93,7 @@ export default class IconList extends Component<IOptions> {
   }
   /** Clear all icons. */
   clear() {
-    this.$container.html('')
+    this.$iconContainer.html('')
     this.icons = []
     this.displayIcons = []
     this.selectIcon(null)
@@ -111,7 +117,7 @@ export default class IconList extends Component<IOptions> {
     }
   }
   private _append = () => {
-    this.container.appendChild(this.frag)
+    this.iconContainer.appendChild(this.frag)
     this.appendTimer = null
     this.updateColumnCount()
   }
@@ -154,13 +160,16 @@ export default class IconList extends Component<IOptions> {
 
     return true
   }
+  private initTpl() {
+    this.$container.html(this.c('<div class="icon-container"></div>'))
+  }
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
 
     const self = this
     const itemClass = this.c('.icon, .name')
 
-    this.$container
+    this.$iconContainer
       .on('click', itemClass, function (this: any, e: any) {
         e.stopPropagation()
         const item = this.parentNode
@@ -183,7 +192,6 @@ export default class IconList extends Component<IOptions> {
           item.hasDoubleClick = false
         }, 300)
       })
-      .on('click', () => this.selectIcon(null))
       .on('contextmenu', itemClass, function (this: any, e: any) {
         e.preventDefault()
         e.stopPropagation()
@@ -191,6 +199,8 @@ export default class IconList extends Component<IOptions> {
         self.selectIcon(icon)
         self.emit('contextmenu', e.origEvent, icon)
       })
+
+    this.$container.on('click', () => this.selectIcon(null))
 
     this.on('changeOption', (name) => {
       switch (name) {
@@ -216,8 +226,8 @@ export default class IconList extends Component<IOptions> {
     })
   }
   private updateColumnCount = () => {
-    const { $container, c } = this
-    const containerWidth = $container.offset().width
+    const { $iconContainer, c } = this
+    const containerWidth = $iconContainer.offset().width
 
     const size = this.options.size + 16
     const columnCount = Math.floor(containerWidth / (size + GAP))
@@ -226,16 +236,16 @@ export default class IconList extends Component<IOptions> {
       const gap = Math.floor(
         (containerWidth - columnCount * size) / columnCount
       )
-      $container.addClass(c('grid'))
-      $container.css({
+      $iconContainer.addClass(c('grid'))
+      $iconContainer.css({
         gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
         gap: `${GAP}px ${gap}px`,
         paddingLeft: `${gap / 2}px`,
         paddingRight: `${gap / 2}px`,
       })
     } else {
-      $container.rmClass(c('grid'))
-      $container.css({
+      $iconContainer.rmClass(c('grid'))
+      $iconContainer.css({
         gap: '0',
         paddingLeft: `${GAP / 2}px`,
         paddingRight: `${GAP / 2}px`,
@@ -243,16 +253,16 @@ export default class IconList extends Component<IOptions> {
     }
   }
   private render() {
-    const { displayIcons, $container, container } = this
+    const { displayIcons, $iconContainer, iconContainer, container } = this
 
     const scrollTop = container.scrollTop
 
     const frag = document.createDocumentFragment()
-    $container.html('')
+    $iconContainer.html('')
     each(displayIcons, (icon) => {
       frag.appendChild(icon.container)
     })
-    container.appendChild(frag)
+    iconContainer.appendChild(frag)
     this.updateColumnCount()
 
     container.scrollTop = scrollTop

@@ -101,10 +101,9 @@ export default class FileList extends Component<IOptions> {
           sortable: true,
         },
         {
-          id: 'size',
-          title: FileList.i18n.t('size'),
+          id: 'mtime',
+          title: FileList.i18n.t('dateModified'),
           weight: 20,
-          comparator: (a: string, b: string) => fileSize(a) - fileSize(b),
           sortable: true,
         },
         {
@@ -114,9 +113,10 @@ export default class FileList extends Component<IOptions> {
           sortable: true,
         },
         {
-          id: 'mtime',
-          title: FileList.i18n.t('dateModified'),
+          id: 'size',
+          title: FileList.i18n.t('size'),
           weight: 20,
+          comparator: (a: string, b: string) => fileSize(a) - fileSize(b),
           sortable: true,
         },
       ],

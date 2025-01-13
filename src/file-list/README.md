@@ -46,6 +46,7 @@ const fileList = new LunaFileList(container, {
 ## Configuration
 
 * files(IFile[]): File list.
+* filter(string | RegExp | AnyFn): File filter.
 * listView(boolean): Show files in list view.
 
 ## Types

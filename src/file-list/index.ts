@@ -4,6 +4,7 @@ import LunaDataGrid from 'luna-data-grid'
 import LunaIconList from 'luna-icon-list'
 import { exportCjs } from '../share/util'
 import map from 'licia/map'
+import I18n from 'licia/I18n'
 import splitPath from 'licia/splitPath'
 import fileSize from 'licia/fileSize'
 import asset from './asset'
@@ -16,6 +17,7 @@ import toEl from 'licia/toEl'
 import each from 'licia/each'
 import types from 'licia/types'
 import wrap from 'licia/wrap'
+import upperCase from 'licia/upperCase'
 import isFn from 'licia/isFn'
 
 const folderIcon = asset['folder.svg']
@@ -57,6 +59,24 @@ export interface IFile {
  * })
  */
 export default class FileList extends Component<IOptions> {
+  static i18n = new I18n(navigator.language !== 'zh-CN' ? 'en-US' : 'zh-CN', {
+    'en-US': {
+      name: 'Name',
+      size: 'Size',
+      type: 'Type',
+      directory: 'Directory',
+      file: 'File',
+      dateModified: 'Date Modified',
+    },
+    'zh-CN': {
+      name: '名称',
+      size: '大小',
+      type: '类型',
+      directory: '文件夹',
+      file: '文件',
+      dateModified: '修改日期',
+    },
+  })
   private dataGrid: LunaDataGrid
   private iconList: LunaIconList
   private onResize: () => void
@@ -76,19 +96,28 @@ export default class FileList extends Component<IOptions> {
       columns: [
         {
           id: 'name',
-          title: 'Name',
-          weight: 60,
+          title: FileList.i18n.t('name'),
+          weight: 40,
           sortable: true,
         },
         {
           id: 'size',
-          title: 'Size',
+          title: FileList.i18n.t('size'),
           weight: 20,
+          comparator: (a: string, b: string) => fileSize(a) - fileSize(b),
+          sortable: true,
+        },
+        {
+          id: 'type',
+          title: FileList.i18n.t('type'),
+          weight: 20,
+          sortable: true,
         },
         {
           id: 'mtime',
-          title: 'Date Modified',
+          title: FileList.i18n.t('dateModified'),
           weight: 20,
+          sortable: true,
         },
       ],
       selectable: true,
@@ -203,12 +232,25 @@ export default class FileList extends Component<IOptions> {
         name: toEl(
           `<span><img src="${this.getIcon(file)}" />${file.name}</span>`
         ) as HTMLElement,
+        type: this.getType(file),
         size: file.size ? fileSize(file.size) : '--',
         mtime: dateFormat(file.mtime, 'yyyy-mm-dd HH:MM:ss'),
         file,
       }
     })
     this.dataGrid.setData(data as any)
+  }
+  private getType(file: IFile) {
+    if (file.directory) {
+      return FileList.i18n.t('directory')
+    }
+
+    const ext = splitPath(file.name).ext
+    if (ext) {
+      return upperCase(ext.slice(1))
+    }
+
+    return FileList.i18n.t('file')
   }
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)

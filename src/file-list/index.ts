@@ -282,7 +282,7 @@ export default class FileList extends Component<IOptions> {
 
     this.$container.on('contextmenu', (e) => {
       e.preventDefault()
-      this.emit('contextmenu', e)
+      this.emit('contextmenu', e.origEvent)
     })
 
     this.on('changeOption', (name, val) => {

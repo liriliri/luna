@@ -36,12 +36,12 @@
     "dependencies": []
   },
   "command-palette": {
-    "version": "0.1.0",
+    "react": true,
+    "version": "0.2.0",
     "style": true,
     "icon": false,
     "test": true,
     "install": false,
-    "react": false,
     "dependencies": []
   },
   "console": {

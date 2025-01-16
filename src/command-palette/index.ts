@@ -11,6 +11,7 @@ import hotKey from 'licia/hotkey'
 import lowerCase from 'licia/lowerCase'
 import types from 'licia/types'
 import keyCode from 'licia/keyCode'
+import { exportCjs } from '../share/util'
 
 /** ICommand */
 export interface ICommand {
@@ -80,6 +81,7 @@ export default class CommandPalette extends Component<IOptions> {
     this.$list = this.find('.list')
 
     this.bindEvent()
+    this.bindCommands()
   }
   /** Hide command palette. */
   hide = () => {
@@ -87,7 +89,7 @@ export default class CommandPalette extends Component<IOptions> {
     this.$container.addClass(this.c('hidden'))
   }
   /** Show command palette. */
-  show = (e: any) => {
+  show = (e?: any) => {
     if (e && e.preventDefault) {
       e.preventDefault()
     }
@@ -106,21 +108,16 @@ export default class CommandPalette extends Component<IOptions> {
     if (shortcut) {
       hotKey.off(lowerCase(shortcut), this.show)
     }
-    each(commands, (command) => {
-      const { shortcut, handler } = command
-      if (shortcut) {
-        hotKey.off(lowerCase(shortcut), handler)
-      }
-    })
+    this.unbindCommands(commands)
     this.$container.off('click', this.hide)
     super.destroy()
   }
   private bindEvent() {
-    const { shortcut, commands } = this.options
+    const { shortcut } = this.options
 
     this.$input.on('input', this.onInput).on('keydown', this.onKeydown)
     this.$body.on('click', (e) => e.stopPropagation())
-    this.$container.on('click', this.hide)
+    this.$container.on('click', () => this.hide())
     const self = this
     this.$list.on('click', 'li', function (this: any) {
       const $this = $(this)
@@ -133,6 +130,29 @@ export default class CommandPalette extends Component<IOptions> {
     if (shortcut) {
       hotKey.on(lowerCase(shortcut), this.show)
     }
+
+    this.on('changeOption', (name, val, oldVal) => {
+      switch (name) {
+        case 'commands':
+          this.unbindCommands(oldVal)
+          this.bindCommands()
+          this.render()
+          break
+      }
+    })
+  }
+  private unbindCommands(commands?: ICommand[]) {
+    commands = commands || this.options.commands
+
+    each(commands, (command) => {
+      const { shortcut, handler } = command
+      if (shortcut) {
+        hotKey.off(lowerCase(shortcut), handler)
+      }
+    })
+  }
+  private bindCommands() {
+    const { commands } = this.options
 
     each(commands, (command) => {
       const { shortcut, handler } = command
@@ -254,5 +274,6 @@ export default class CommandPalette extends Component<IOptions> {
   }
 }
 
-module.exports = CommandPalette
-module.exports.default = CommandPalette
+if (typeof module !== 'undefined') {
+  exportCjs(module, CommandPalette)
+}

@@ -1,5 +1,8 @@
 {
   "name": "command-palette",
-  "version": "0.1.0",
-  "description": "Command palette"
+  "version": "0.2.0",
+  "description": "Command palette",
+  "luna": {
+    "react": true
+  }
 }

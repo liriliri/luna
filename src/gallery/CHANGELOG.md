@@ -1,3 +1,7 @@
+## 1.0.2 (23 Jan 2025)
+
+* chore: update dependencies
+
 ## 1.0.1 (7 Sep 2024)
 
 * fix: esm import

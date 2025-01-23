@@ -119,7 +119,7 @@
   "gallery": {
     "icon": true,
     "dependencies": ["carousel", "image-viewer", "toolbar"],
-    "version": "1.0.1",
+    "version": "1.0.2",
     "style": true,
     "test": true,
     "install": false,
@@ -137,7 +137,7 @@
   "image-list": {
     "vue": true,
     "dependencies": ["gallery"],
-    "version": "0.3.2",
+    "version": "0.3.3",
     "style": true,
     "icon": false,
     "test": true,

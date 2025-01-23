@@ -7,7 +7,7 @@ import toArr from 'licia/toArr'
 import h from 'licia/h'
 import idxOf from 'licia/idxOf'
 import toNum from 'licia/toNum'
-import { executeAfterTransition } from '../share/util'
+import { executeAfterTransition, exportCjs } from '../share/util'
 import isUndef from 'licia/isUndef'
 import toBool from 'licia/toBool'
 
@@ -241,5 +241,6 @@ export default class Carousel extends Component<IOptions> {
   }
 }
 
-module.exports = Carousel
-module.exports.default = Carousel
+if (typeof module !== 'undefined') {
+  exportCjs(module, Carousel)
+}

@@ -10,7 +10,7 @@
   },
   "carousel": {
     "icon": true,
-    "version": "0.2.0",
+    "version": "0.3.0",
     "style": true,
     "test": true,
     "install": false,
@@ -135,8 +135,9 @@
     "dependencies": []
   },
   "image-list": {
+    "vue": true,
     "dependencies": ["gallery"],
-    "version": "0.2.1",
+    "version": "0.3.0",
     "style": true,
     "icon": false,
     "test": true,

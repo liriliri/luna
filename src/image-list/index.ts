@@ -4,6 +4,7 @@ import last from 'licia/last'
 import $ from 'licia/$'
 import toStr from 'licia/toStr'
 import toNum from 'licia/toNum'
+import each from 'licia/each'
 import LunaGallery from 'luna-gallery'
 import Component, { IComponentOptions } from '../share/Component'
 import { exportCjs } from '../share/util'
@@ -64,6 +65,16 @@ export default class ImageList extends Component<IOptions> {
 
     this.bindEvent()
   }
+  /** Set images. */
+  setImages(
+    images: Array<{
+      src: string
+      title?: string
+    }>
+  ) {
+    this.clear()
+    each(images, ({ src, title }) => this.append(src, title))
+  }
   /** Clear all images. */
   clear() {
     this.images = []
@@ -90,6 +101,7 @@ export default class ImageList extends Component<IOptions> {
 
     const $item = $(item)
     $item.css({
+      display: 'none',
       marginRight: horizontalMargin + 'px',
       marginBottom: verticalMargin + 'px',
     })
@@ -99,18 +111,17 @@ export default class ImageList extends Component<IOptions> {
       const ratio = img.width / img.height
       const width = imageHeight * ratio
       $item.css('flex-basis', width + 'px')
-      this.$images.append(item)
-
-      $item.data('idx', toStr(this.images.length))
-
-      this.images.push({
-        src,
-        title: title || '',
-        container: item,
-      })
-
-      this.gallery.append(src, title)
+      $item.css('display', 'inline-flex')
     }
+
+    this.$images.append(item)
+    $item.data('idx', toStr(this.images.length))
+    this.images.push({
+      src,
+      title: title || '',
+      container: item,
+    })
+    this.gallery.append(src, title)
   }
   private initTpl() {
     this.$container.html(

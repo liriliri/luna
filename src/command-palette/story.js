@@ -101,4 +101,5 @@ function createKnobs() {
 }
 
 export default def
+
 export const { commandPalette: html, react } = def

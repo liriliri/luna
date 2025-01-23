@@ -61,3 +61,7 @@ Append image.
 ### clear(): void
 
 Clear all images.
+
+### setImages(images: object[]): void
+
+Set images.

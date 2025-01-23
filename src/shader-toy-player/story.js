@@ -5,7 +5,7 @@ import story from '../share/story'
 import $ from 'licia/$'
 import shaders, { cube } from './shaders'
 import LunaShaderToyPlayer from './vue'
-import { defineComponent, h } from 'vue'
+import { h } from 'vue'
 import { text, optionsKnob, button, boolean } from '@storybook/addon-knobs'
 
 const def = story(
@@ -45,22 +45,18 @@ const def = story(
         return false
       })
 
-      return defineComponent({
-        render() {
-          return h(LunaShaderToyPlayer, {
-            renderPass: example,
-            controls,
-            style: {
-              maxWidth: '640px',
-              width: '100%',
-              margin: '0 auto',
-              minHeight: '150px',
-              aspectRatio: '1280/720',
-            },
-            onCreate(instance) {
-              shaderToyPlayer = instance
-            },
-          })
+      return h(LunaShaderToyPlayer, {
+        renderPass: example,
+        controls,
+        style: {
+          maxWidth: '640px',
+          width: '100%',
+          margin: '0 auto',
+          minHeight: '150px',
+          aspectRatio: '1280/720',
+        },
+        onCreate(instance) {
+          shaderToyPlayer = instance
         },
       })
     },

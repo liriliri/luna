@@ -17,4 +17,5 @@ const def = story(
 )
 
 export default def
+
 export const { lrcPlayer } = def

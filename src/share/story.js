@@ -16,7 +16,7 @@ import now from 'licia/now'
 import ReactDOM from 'react-dom'
 import * as registerKnobs from '@storybook/addon-knobs/dist/registerKnobs'
 import { optionsKnob } from '@storybook/addon-knobs'
-import { createApp } from 'vue'
+import { createApp, defineComponent } from 'vue'
 
 export default function story(
   name,
@@ -115,7 +115,13 @@ export default function story(
       delete window.component
       window.componentName = upperFirst(camelCase(`vue-${name}`))
 
-      const app = createApp(VueComponent({ theme }))
+      const app = createApp(
+        defineComponent({
+          render() {
+            return VueComponent({ theme })
+          },
+        })
+      )
       app.mount(container)
       window.vueComponent = app
 

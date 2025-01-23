@@ -39,7 +39,7 @@ export default class ImageList extends Component<IOptions> {
   private gallery: LunaGallery
   private $images: $.$
   constructor(container: HTMLElement, options: IOptions = {}) {
-    super(container, { compName: 'image-list' })
+    super(container, { compName: 'image-list' }, options)
 
     this.initOptions(options, {
       rowHeight: 200,

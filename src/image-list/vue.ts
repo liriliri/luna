@@ -12,6 +12,10 @@ import ImageList from './index'
 const LunaImageList = defineComponent({
   name: 'LunaImageList',
   props: {
+    theme: {
+      type: String,
+      default: 'light',
+    },
     images: {
       type: Array<{
         src: string
@@ -43,6 +47,7 @@ const LunaImageList = defineComponent({
 
     onMounted(() => {
       imageList.value = new ImageList(container.value!, {
+        theme: props.theme,
         rowHeight: props.rowHeight,
         verticalMargin: props.verticalMargin,
         horizontalMargin: props.horizontalMargin,
@@ -60,7 +65,13 @@ const LunaImageList = defineComponent({
       )
 
       each(
-        ['rowHeight', 'verticalMargin', 'horizontalMargin', 'showTitle'],
+        [
+          'theme',
+          'rowHeight',
+          'verticalMargin',
+          'horizontalMargin',
+          'showTitle',
+        ],
         (key: keyof typeof props) => {
           watch(
             () => props[key],

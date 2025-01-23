@@ -33,7 +33,7 @@ const def = story(
   {
     readme,
     source: __STORY__,
-    VueComponent() {
+    VueComponent({ theme }) {
       const { rowHeight, verticalMargin, horizontalMargin, showTitle } =
         createKnobs()
 
@@ -45,6 +45,7 @@ const def = story(
       })
 
       return h(LunaImageList, {
+        theme,
         rowHeight,
         verticalMargin,
         horizontalMargin,

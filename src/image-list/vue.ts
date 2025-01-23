@@ -21,15 +21,19 @@ const LunaImageList = defineComponent({
     },
     rowHeight: {
       type: Number,
+      default: 200,
     },
     verticalMargin: {
       type: Number,
+      default: 20,
     },
     horizontalMargin: {
       type: Number,
+      default: 20,
     },
     showTitle: {
       type: Boolean,
+      default: true,
     },
   },
   emits: ['create'],

@@ -4,7 +4,7 @@ import $ from 'licia/$'
 import readme from './README.md'
 import story from '../share/story'
 import LunaFileList from './react'
-import { boolean, text } from '@storybook/addon-knobs'
+import { boolean, text, object } from '@storybook/addon-knobs'
 
 const def = story(
   'file-list',
@@ -13,12 +13,13 @@ const def = story(
       height: '200px',
     })
 
-    const { listView, filter } = createKnobs()
+    const { listView, filter, columns } = createKnobs()
 
     const fileList = new FileList(container, {
       listView,
       filter,
       files: getFiles(),
+      columns,
     })
 
     fileList.on('select', (file) => {
@@ -44,12 +45,13 @@ const def = story(
     i18n: FileList.i18n,
     story: __STORY__,
     ReactComponent({ theme }) {
-      const { listView, filter } = createKnobs()
+      const { listView, filter, columns } = createKnobs()
 
       return (
         <LunaFileList
           theme={theme}
           filter={filter}
+          columns={columns}
           style={{
             height: 200,
           }}
@@ -83,6 +85,7 @@ function getFiles() {
       size: 1024,
       directory: false,
       mtime: randomDate(),
+      mode: 33188,
     },
     {
       name: 'folder 1',
@@ -128,10 +131,12 @@ function randomDate() {
 function createKnobs() {
   const filter = text('Filter', '')
   const listView = boolean('List View', false)
+  const columns = object('Columns', ['name', 'mode', 'mtime', 'type', 'size'])
 
   return {
     filter,
     listView,
+    columns,
   }
 }
 

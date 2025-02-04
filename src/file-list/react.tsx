@@ -23,6 +23,7 @@ const LunaFileList: FC<IFileListProps> = (props) => {
       files: props.files,
       listView: props.listView,
       filter: props.filter,
+      columns: props.columns,
       theme: props.theme,
     })
 

@@ -19,9 +19,12 @@ import types from 'licia/types'
 import wrap from 'licia/wrap'
 import upperCase from 'licia/upperCase'
 import isFn from 'licia/isFn'
+import isEmpty from 'licia/isEmpty'
 
 const folderIcon = asset['folder.svg']
 const fileIcon = asset['file.svg']
+
+type Column = 'name' | 'mtime' | 'type' | 'size' | 'mode'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -29,6 +32,8 @@ export interface IOptions extends IComponentOptions {
   files: IFile[]
   /** Show files in list view. */
   listView?: boolean
+  /** List view columns. */
+  columns?: Column[]
   /** File filter. */
   filter?: string | RegExp | types.AnyFn
 }
@@ -45,6 +50,8 @@ export interface IFile {
   thumbnail?: string
   /** Whether file is a directory. */
   directory?: boolean
+  /** File mode. */
+  mode?: number
 }
 
 /**
@@ -67,6 +74,7 @@ export default class FileList extends Component<IOptions> {
       directory: 'Directory',
       file: 'File',
       dateModified: 'Date Modified',
+      permissions: 'Permissions',
     },
     'zh-CN': {
       name: '名称',
@@ -75,6 +83,7 @@ export default class FileList extends Component<IOptions> {
       directory: '文件夹',
       file: '文件',
       dateModified: '修改日期',
+      permissions: '权限',
     },
   })
   private dataGrid: LunaDataGrid
@@ -84,42 +93,58 @@ export default class FileList extends Component<IOptions> {
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'file-list' }, options)
 
+    const defaultColumns: Column[] = ['name', 'mtime', 'type', 'size']
     this.initOptions(options, {
       files: [],
+      columns: defaultColumns,
       listView: false,
     })
+    if (isEmpty(this.options.columns)) {
+      this.options.columns = defaultColumns
+    }
 
     this.initTpl()
 
+    const COLUMNS = {
+      name: {
+        id: 'name',
+        title: FileList.i18n.t('name'),
+        weight: 40,
+        sortable: true,
+      },
+      mtime: {
+        id: 'mtime',
+        title: FileList.i18n.t('dateModified'),
+        weight: 20,
+        sortable: true,
+      },
+      type: {
+        id: 'type',
+        title: FileList.i18n.t('type'),
+        weight: 20,
+        sortable: true,
+      },
+      size: {
+        id: 'size',
+        title: FileList.i18n.t('size'),
+        weight: 20,
+        comparator: (a: string, b: string) => fileSize(a) - fileSize(b),
+        sortable: true,
+      },
+      mode: {
+        id: 'mode',
+        title: FileList.i18n.t('permissions'),
+        weight: 20,
+        sortable: true,
+      },
+    }
+
     const dataGridContainer = this.find('.list-view').get(0) as HTMLElement
     this.dataGrid = new LunaDataGrid(dataGridContainer, {
-      columns: [
-        {
-          id: 'name',
-          title: FileList.i18n.t('name'),
-          weight: 40,
-          sortable: true,
-        },
-        {
-          id: 'mtime',
-          title: FileList.i18n.t('dateModified'),
-          weight: 20,
-          sortable: true,
-        },
-        {
-          id: 'type',
-          title: FileList.i18n.t('type'),
-          weight: 20,
-          sortable: true,
-        },
-        {
-          id: 'size',
-          title: FileList.i18n.t('size'),
-          weight: 20,
-          comparator: (a: string, b: string) => fileSize(a) - fileSize(b),
-          sortable: true,
-        },
-      ],
+      columns: map(
+        this.options.columns,
+        (column: keyof typeof COLUMNS) => COLUMNS[column]
+      ),
       selectable: true,
     })
     this.addSubComponent(this.dataGrid)
@@ -235,6 +260,7 @@ export default class FileList extends Component<IOptions> {
         type: this.getType(file),
         size: file.size ? fileSize(file.size) : '--',
         mtime: dateFormat(file.mtime, 'yyyy-mm-dd HH:MM:ss'),
+        mode: file.mode ? file.mode.toString(8) : '--',
         file,
       }
     })

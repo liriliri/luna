@@ -1,12 +1,16 @@
 {
   "name": "file-list",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "List files in the directory",
   "luna": {
     "react": true,
+    "install": true,
     "dependencies": [
       "data-grid",
       "icon-list"
     ]
+  },
+  "dependencies": {
+    "stat-mode": "^1.0.0"
   }
 }

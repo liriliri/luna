@@ -20,6 +20,7 @@ import wrap from 'licia/wrap'
 import upperCase from 'licia/upperCase'
 import isFn from 'licia/isFn'
 import isEmpty from 'licia/isEmpty'
+import statMode from 'stat-mode'
 
 const folderIcon = asset['folder.svg']
 const fileIcon = asset['file.svg']
@@ -253,6 +254,11 @@ export default class FileList extends Component<IOptions> {
     this.dataGrid.$container.rmClass(hidden)
 
     const data = map(files, (file) => {
+      let mode = '--'
+      if (file.mode) {
+        mode = statMode(file.mode).toString()
+      }
+
       return {
         name: toEl(
           `<span><img src="${this.getIcon(file)}" />${file.name}</span>`
@@ -260,7 +266,7 @@ export default class FileList extends Component<IOptions> {
         type: this.getType(file),
         size: file.size ? fileSize(file.size) : '--',
         mtime: dateFormat(file.mtime, 'yyyy-mm-dd HH:MM:ss'),
-        mode: file.mode ? file.mode.toString(8) : '--',
+        mode,
         file,
       }
     })

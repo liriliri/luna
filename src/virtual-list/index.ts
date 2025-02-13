@@ -52,13 +52,6 @@ export default class VirtualList extends Component<IOptions> {
       autoScroll: false,
     })
 
-    this.$container.css({
-      overflowY: 'auto',
-      '-webkit-overflow-scrolling': 'touch',
-      willChange: 'scroll-position',
-      height: '100%',
-    })
-
     this.initTpl()
 
     this.$el = this.find('.items')

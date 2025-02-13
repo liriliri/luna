@@ -38,3 +38,21 @@ virtualList.append(document.createElement('div'))
 ## Configuration
 
 * autoScroll(boolean): Auto scroll if at bottom.
+
+## Api
+
+### append(el: HTMLElement): void
+
+Append item.
+
+### clear(): void
+
+Clear all items.
+
+### setItems(els: HTMLElement[]): void
+
+Set items.
+
+### update(): void
+
+Recalculate all heights.

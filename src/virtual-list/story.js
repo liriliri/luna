@@ -4,6 +4,7 @@ import story from '../share/story'
 import h from 'licia/h'
 import toStr from 'licia/toStr'
 import $ from 'licia/$'
+import each from 'licia/each'
 import random from 'licia/random'
 import randomColor from 'licia/randomColor'
 import readme from './README.md'
@@ -28,8 +29,10 @@ const def = story(
     const virtualList = new VirtualList(container)
 
     function randomItems(count) {
+      const items = []
+
       for (let i = 0; i < count; i++) {
-        virtualList.append(
+        items.push(
           h(
             'div',
             {
@@ -45,12 +48,24 @@ const def = story(
           )
         )
       }
+
+      return items
     }
 
-    randomItems(100)
+    each(randomItems(100), (item) => virtualList.append(item))
 
     button('Append 10000 items', () => {
-      randomItems(10000)
+      each(randomItems(10000), (item) => virtualList.append(item))
+      return false
+    })
+
+    button('Set 10000 items', () => {
+      virtualList.setItems(randomItems(10000))
+      return false
+    })
+
+    button('Clear', () => {
+      virtualList.clear()
       return false
     })
 

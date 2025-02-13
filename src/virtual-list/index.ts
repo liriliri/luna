@@ -5,10 +5,10 @@ import isHidden from 'licia/isHidden'
 import now from 'licia/now'
 import ResizeSensor from 'licia/ResizeSensor'
 import isEmpty from 'licia/isEmpty'
-import unique from 'licia/unique'
 import map from 'licia/map'
-import debounce from 'licia/debounce'
 import each from 'licia/each'
+import clone from 'licia/clone'
+import some from 'licia/some'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -34,6 +34,7 @@ export default class VirtualList extends Component<IOptions> {
   private $space: $.$
   private space: HTMLElement
   private spaceHeight = 0
+  private spaceWidth = 0
   private topSpaceHeight = 0
   // @ts-ignore
   private bottomSpaceHeight = 0
@@ -45,7 +46,7 @@ export default class VirtualList extends Component<IOptions> {
   private isAtBottom = true
   private updateTimer: NodeJS.Timeout | null = null
   private updateItems: Item[] = []
-  private resizeSensor: ResizeSensor
+  private displayItems: Item[] = []
   private scrollTimer: NodeJS.Timeout | null = null
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'virtual-list' }, options)
@@ -63,34 +64,35 @@ export default class VirtualList extends Component<IOptions> {
     this.$space = this.find('.items-space')
     this.space = this.$space.get(0) as HTMLElement
 
-    this.resizeSensor = new ResizeSensor(this.space)
-
     this.bindEvent()
   }
+  /** Clear all items. */
   clear() {
     this.items = []
-    this.render()
+    this.el.textContent = ''
   }
+  /** Append item. */
   append(el: HTMLElement) {
     const item = new Item(el, this.el)
     this.items.push(item)
     this.updateSize(item)
   }
+  /** Set items. */
   setItems(els: HTMLElement[]) {
     each(this.items, (item) => item.destroy())
     this.items = map(els, (el) => new Item(el, this.el))
     this.updateItems = []
-    this.updateAllSize()
   }
-  private updateAllSize = debounce(() => {
-    this.updateItems.push(...this.items)
-    this.updateItems = unique(this.updateItems)
-    if (!this.updateTimer) {
-      this._updateSize()
+  /** Recalculate all heights. */
+  update() {
+    this.updateSize()
+  }
+  private updateSize(item?: Item) {
+    if (item) {
+      this.updateItems.push(item)
+    } else {
+      this.updateItems = clone(this.items)
     }
-  }, 1000)
-  private updateSize(item: Item) {
-    this.updateItems.push(item)
     if (!this.updateTimer) {
       this._updateSize()
     }
@@ -135,17 +137,16 @@ export default class VirtualList extends Component<IOptions> {
   private updateBottomSpace(height: number) {
     this.bottomSpaceHeight = height
   }
-  private updateSpace(height: number) {
-    if (this.spaceHeight === height) return
+  private updateSpace(height: number, width: number) {
+    if (this.spaceHeight === height && this.spaceWidth === width) {
+      return
+    }
     this.spaceHeight = height
+    this.spaceWidth = width
     this.space.style.height = height + 'px'
+    this.space.style.width = width + 'px'
   }
   private bindEvent() {
-    this.resizeSensor.addListener(
-      throttle(() => {
-        this.updateAllSize()
-      }, 100)
-    )
     this.$container.on('scroll', this.onScroll)
   }
   private render = throttle(
@@ -164,28 +165,42 @@ export default class VirtualList extends Component<IOptions> {
       let topSpaceHeight = 0
       let bottomSpaceHeight = 0
       let currentHeight = 0
+      let currentWidth = this.spaceWidth
 
       const len = items.length
 
-      const frag = document.createDocumentFragment()
+      const displayItems = []
       for (let i = 0; i < len; i++) {
         const item = items[i]
-        const { el, height } = item
+        const { height, width } = item
 
         if (currentHeight > bottom) {
           bottomSpaceHeight += height
         } else if (currentHeight + height > top) {
-          frag.appendChild(el)
+          displayItems.push(item)
         } else if (currentHeight < top) {
           topSpaceHeight += height
         }
 
         currentHeight += height
+
+        if (currentWidth < width) {
+          currentWidth = width
+        }
       }
 
-      this.updateSpace(currentHeight)
+      this.updateSpace(currentHeight, currentWidth)
       this.updateTopSpace(topSpaceHeight)
       this.updateBottomSpace(bottomSpaceHeight)
+
+      if (!some(displayItems, (item, idx) => item !== this.displayItems[idx])) {
+        return
+      }
+
+      const frag = document.createDocumentFragment()
+      for (let i = 0, len = displayItems.length; i < len; i++) {
+        frag.appendChild(displayItems[i].el)
+      }
 
       el.textContent = ''
       el.appendChild(frag)
@@ -278,7 +293,7 @@ class Item {
 
     this.resizeSensor = new ResizeSensor(el)
     this.resizeSensor.addListener(() => {
-      if (el.parentNode === container && !isHidden(el)) {
+      if (el.parentNode === container) {
         this.updateSize()
       }
     })
@@ -287,6 +302,9 @@ class Item {
     this.resizeSensor.destroy()
   }
   updateSize() {
+    if (isHidden(this.el)) {
+      return
+    }
     const { width, height } = this.el.getBoundingClientRect()
     this.width = width
     this.height = height

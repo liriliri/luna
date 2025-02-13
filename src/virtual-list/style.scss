@@ -1,11 +1,10 @@
 @use '../share/mixin' as mixin;
 
 .luna-virtual-list {
-  @include mixin.overflow-auto(y);
+  @include mixin.overflow-auto();
   height: 100%;
   position: relative;
   will-change: scroll-position;
-  -webkit-overflow-scrolling: touch;
 }
 
 .fake-items {
@@ -14,10 +13,8 @@
   top: 0;
   pointer-events: none;
   visibility: hidden;
-  width: 100%;
 }
 
 .items {
   position: absolute;
-  width: 100%;
 }

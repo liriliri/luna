@@ -35,8 +35,10 @@ const def = story(
             {
               style: {
                 color: '#fff',
+                width: '100%',
                 background: randomColor({ lightness: 0.5 }),
-                wordBreak: 'break-all',
+                minHeight: random(30, 100) + 'px',
+                lineHeight: '1.5em',
               },
             },
             toStr(i) + ' ' + randomId(random(30, 1000))

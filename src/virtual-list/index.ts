@@ -1,20 +1,19 @@
 import Component, { IComponentOptions } from '../share/Component'
 import $ from 'licia/$'
-import types from 'licia/types'
 import throttle from 'licia/throttle'
 import isHidden from 'licia/isHidden'
 import now from 'licia/now'
+import ResizeSensor from 'licia/ResizeSensor'
+import isEmpty from 'licia/isEmpty'
+import unique from 'licia/unique'
+import map from 'licia/map'
+import debounce from 'licia/debounce'
+import each from 'licia/each'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
   /** Auto scroll if at bottom. */
   autoScroll?: boolean
-}
-
-interface IItem {
-  el: HTMLElement
-  height: number
-  width: number
 }
 
 /**
@@ -27,8 +26,7 @@ interface IItem {
  * virtualList.append(document.createElement('div'))
  */
 export default class VirtualList extends Component<IOptions> {
-  render: types.AnyFn
-  private items: IItem[] = []
+  private items: Item[] = []
   private $el: $.$
   private el: HTMLElement
   private $fakeEl: $.$
@@ -45,6 +43,10 @@ export default class VirtualList extends Component<IOptions> {
   private maxSpeedTolerance = 2000
   private minSpeedTolerance = 100
   private isAtBottom = true
+  private updateTimer: NodeJS.Timeout | null = null
+  private updateItems: Item[] = []
+  private resizeSensor: ResizeSensor
+  private scrollTimer: NodeJS.Timeout | null = null
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'virtual-list' }, options)
 
@@ -61,7 +63,7 @@ export default class VirtualList extends Component<IOptions> {
     this.$space = this.find('.items-space')
     this.space = this.$space.get(0) as HTMLElement
 
-    this.render = throttle((options: any) => this._render(options), 16)
+    this.resizeSensor = new ResizeSensor(this.space)
 
     this.bindEvent()
   }
@@ -69,13 +71,55 @@ export default class VirtualList extends Component<IOptions> {
     this.items = []
     this.render()
   }
-  append(item: HTMLElement) {
-    this.items.push({
-      el: item,
-      height: 0,
-      width: 0,
-    })
+  append(el: HTMLElement) {
+    const item = new Item(el, this.el)
+    this.items.push(item)
+    this.updateSize(item)
+  }
+  setItems(els: HTMLElement[]) {
+    each(this.items, (item) => item.destroy())
+    this.items = map(els, (el) => new Item(el, this.el))
+    this.updateItems = []
+    this.updateAllSize()
+  }
+  private updateAllSize = debounce(() => {
+    this.updateItems.push(...this.items)
+    this.updateItems = unique(this.updateItems)
+    if (!this.updateTimer) {
+      this._updateSize()
+    }
+  }, 1000)
+  private updateSize(item: Item) {
+    this.updateItems.push(item)
+    if (!this.updateTimer) {
+      this._updateSize()
+    }
+  }
+  private _updateSize = () => {
+    const items = this.updateItems.splice(0, 1000)
+    if (isEmpty(items)) {
+      return
+    }
+
+    const len = items.length
+    const { fakeEl } = this
+    const fakeFrag = document.createDocumentFragment()
+    for (let i = 0; i < len; i++) {
+      fakeFrag.appendChild(items[i].el)
+    }
+    fakeEl.appendChild(fakeFrag)
+    for (let i = 0; i < len; i++) {
+      items[i].updateSize()
+    }
+    fakeEl.textContent = ''
+
     this.render()
+
+    if (!isEmpty(this.updateItems)) {
+      this.updateTimer = setTimeout(() => this._updateSize(), 100)
+    } else {
+      this.updateTimer = null
+    }
   }
   private initTpl() {
     this.$container.html(
@@ -97,77 +141,64 @@ export default class VirtualList extends Component<IOptions> {
     this.space.style.height = height + 'px'
   }
   private bindEvent() {
+    this.resizeSensor.addListener(
+      throttle(() => {
+        this.updateAllSize()
+      }, 100)
+    )
     this.$container.on('scroll', this.onScroll)
   }
-  private _render({ topTolerance = 500, bottomTolerance = 500 } = {}) {
-    const { el, container, space } = this
-    if (isHidden(container)) return
-    const { scrollTop, offsetHeight } = container as HTMLElement
-    const containerWidth = space.getBoundingClientRect().width
-    const top = scrollTop - topTolerance
-    const bottom = scrollTop + offsetHeight + bottomTolerance
-
-    const { items } = this
-
-    let topSpaceHeight = 0
-    let bottomSpaceHeight = 0
-    let currentHeight = 0
-
-    const len = items.length
-
-    const { fakeEl } = this
-    const fakeFrag = document.createDocumentFragment()
-    const updateItems = []
-    for (let i = 0; i < len; i++) {
-      const item = items[i]
-      const { width, height } = item
-      if (height === 0 || width !== containerWidth) {
-        fakeFrag.appendChild(item.el)
-        updateItems.push(item)
-      }
-    }
-    if (updateItems.length > 0) {
-      fakeEl.appendChild(fakeFrag)
-      for (let i = 0, len = updateItems.length; i < len; i++) {
-        this.updateItemSize(updateItems[i])
-      }
-      fakeEl.textContent = ''
-    }
-
-    const frag = document.createDocumentFragment()
-    for (let i = 0; i < len; i++) {
-      const item = items[i]
-      const { el, height } = item
-
-      if (currentHeight > bottom) {
-        bottomSpaceHeight += height
-      } else if (currentHeight + height > top) {
-        frag.appendChild(el)
-      } else if (currentHeight < top) {
-        topSpaceHeight += height
+  private render = throttle(
+    ({ topTolerance = 500, bottomTolerance = 500 } = {}) => {
+      const { el, container } = this
+      if (isHidden(container)) {
+        return
       }
 
-      currentHeight += height
-    }
+      const { scrollTop, offsetHeight } = container as HTMLElement
+      const top = scrollTop - topTolerance
+      const bottom = scrollTop + offsetHeight + bottomTolerance
 
-    this.updateSpace(currentHeight)
-    this.updateTopSpace(topSpaceHeight)
-    this.updateBottomSpace(bottomSpaceHeight)
+      const { items } = this
 
-    while (el.firstChild) {
-      if (el.lastChild) {
-        el.removeChild(el.lastChild)
+      let topSpaceHeight = 0
+      let bottomSpaceHeight = 0
+      let currentHeight = 0
+
+      const len = items.length
+
+      const frag = document.createDocumentFragment()
+      for (let i = 0; i < len; i++) {
+        const item = items[i]
+        const { el, height } = item
+
+        if (currentHeight > bottom) {
+          bottomSpaceHeight += height
+        } else if (currentHeight + height > top) {
+          frag.appendChild(el)
+        } else if (currentHeight < top) {
+          topSpaceHeight += height
+        }
+
+        currentHeight += height
       }
-    }
-    el.appendChild(frag)
 
-    if (this.options.autoScroll) {
-      const { scrollHeight } = container
-      if (this.isAtBottom && scrollTop <= scrollHeight - offsetHeight) {
-        container.scrollTop = 10000000
+      this.updateSpace(currentHeight)
+      this.updateTopSpace(topSpaceHeight)
+      this.updateBottomSpace(bottomSpaceHeight)
+
+      el.textContent = ''
+      el.appendChild(frag)
+
+      if (this.options.autoScroll) {
+        const { scrollHeight } = container
+        if (this.isAtBottom && scrollTop <= scrollHeight - offsetHeight) {
+          container.scrollTop = 10000000
+        }
       }
-    }
-  }
+    },
+    16
+  )
   private onScroll = () => {
     const { scrollHeight, offsetHeight, scrollTop } = this
       .container as HTMLElement
@@ -225,14 +256,39 @@ export default class VirtualList extends Component<IOptions> {
       topTolerance: topTolerance * 2,
       bottomTolerance: bottomTolerance * 2,
     })
+
+    if (this.scrollTimer) {
+      clearTimeout(this.scrollTimer)
+    }
+    this.scrollTimer = setTimeout(() => {
+      this.render()
+    }, 100)
   }
-  private updateItemSize(item: IItem) {
-    const { width, height } = item.el.getBoundingClientRect()
-    if (item.height !== height) {
-      item.height = height
-    }
-    if (item.width !== width) {
-      item.width = width
-    }
+}
+
+class Item {
+  el: HTMLElement
+  width: number
+  height: number
+  private resizeSensor: ResizeSensor
+  constructor(el: HTMLElement, container: HTMLElement) {
+    this.el = el
+    this.width = 0
+    this.height = 0
+
+    this.resizeSensor = new ResizeSensor(el)
+    this.resizeSensor.addListener(() => {
+      if (el.parentNode === container && !isHidden(el)) {
+        this.updateSize()
+      }
+    })
+  }
+  destroy() {
+    this.resizeSensor.destroy()
+  }
+  updateSize() {
+    const { width, height } = this.el.getBoundingClientRect()
+    this.width = width
+    this.height = height
   }
 }

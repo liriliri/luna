@@ -9,12 +9,14 @@
 
 .fake-items {
   position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
   pointer-events: none;
   visibility: hidden;
 }
 
 .items {
   position: absolute;
+  top: 0;
+  left: 0;
 }

@@ -49,10 +49,14 @@ Append item.
 
 Clear all items.
 
+### remove(el: HTMLElement): void
+
+Remove item.
+
 ### setItems(els: HTMLElement[]): void
 
 Set items.
 
-### update(): void
+### update(el?: HTMLElement): void
 
-Recalculate all heights.
+Update heights.

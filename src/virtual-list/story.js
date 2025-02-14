@@ -9,7 +9,7 @@ import random from 'licia/random'
 import randomColor from 'licia/randomColor'
 import readme from './README.md'
 import randomId from 'licia/randomId'
-import { button } from '@storybook/addon-knobs'
+import { boolean, button } from '@storybook/addon-knobs'
 
 const def = story(
   'virtual-list',
@@ -26,7 +26,11 @@ const def = story(
     const container = h('div')
     wrapper.appendChild(container)
 
-    const virtualList = new VirtualList(container)
+    const autoScroll = boolean('Auto scroll', false)
+
+    const virtualList = new VirtualList(container, {
+      autoScroll,
+    })
 
     function randomItems(count) {
       const items = []
@@ -38,10 +42,10 @@ const def = story(
             {
               style: {
                 color: '#fff',
-                width: '100%',
                 background: randomColor({ lightness: 0.5 }),
                 minHeight: random(30, 100) + 'px',
                 lineHeight: '1.5em',
+                textWrap: 'nowrap',
               },
             },
             toStr(i) + ' ' + randomId(random(30, 1000))

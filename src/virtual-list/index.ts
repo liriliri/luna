@@ -3,9 +3,7 @@ import $ from 'licia/$'
 import throttle from 'licia/throttle'
 import isHidden from 'licia/isHidden'
 import now from 'licia/now'
-import ResizeSensor from 'licia/ResizeSensor'
 import isEmpty from 'licia/isEmpty'
-import map from 'licia/map'
 import each from 'licia/each'
 import clone from 'licia/clone'
 import some from 'licia/some'
@@ -69,35 +67,45 @@ export default class VirtualList extends Component<IOptions> {
   /** Clear all items. */
   clear() {
     this.items = []
-    this.el.textContent = ''
+    this.render()
   }
   /** Append item. */
   append(el: HTMLElement) {
-    const item = new Item(el, this.el)
+    const item: Item = (el as any).virtualListItem || new Item(el)
     this.items.push(item)
-    this.updateSize(item)
+    this.update(el)
   }
   /** Set items. */
   setItems(els: HTMLElement[]) {
-    each(this.items, (item) => item.destroy())
-    this.items = map(els, (el) => new Item(el, this.el))
     this.updateItems = []
+    each(els, el => this.append(el))
   }
-  /** Recalculate all heights. */
-  update() {
-    this.updateSize()
+  /** Remove item. */
+  remove(el: HTMLElement) {
+    const item = (el as any).virtualListItem
+    if (!item) {
+      return
+    }
+    const idx = this.items.indexOf(item)
+    if (idx === -1) {
+      return
+    }
+    this.items.splice(idx, 1)
+    item.destroy()
+    this.render()
   }
-  private updateSize(item?: Item) {
-    if (item) {
-      this.updateItems.push(item)
+  /** Update heights. */
+  update(el?: HTMLElement) {
+    if (el) {
+      this.updateItems.push((el as any).virtualListItem)
     } else {
       this.updateItems = clone(this.items)
     }
     if (!this.updateTimer) {
-      this._updateSize()
+      this._update()
     }
   }
-  private _updateSize = () => {
+  private _update = () => {
     const items = this.updateItems.splice(0, 1000)
     if (isEmpty(items)) {
       return
@@ -111,14 +119,14 @@ export default class VirtualList extends Component<IOptions> {
     }
     fakeEl.appendChild(fakeFrag)
     for (let i = 0; i < len; i++) {
-      items[i].updateSize()
+      items[i].update()
     }
     fakeEl.textContent = ''
 
     this.render()
 
     if (!isEmpty(this.updateItems)) {
-      this.updateTimer = setTimeout(() => this._updateSize(), 100)
+      this.updateTimer = setTimeout(() => this._update(), 16)
     } else {
       this.updateTimer = null
     }
@@ -165,7 +173,7 @@ export default class VirtualList extends Component<IOptions> {
       let topSpaceHeight = 0
       let bottomSpaceHeight = 0
       let currentHeight = 0
-      let currentWidth = this.spaceWidth
+      let currentWidth = 0
 
       const len = items.length
 
@@ -193,7 +201,10 @@ export default class VirtualList extends Component<IOptions> {
       this.updateTopSpace(topSpaceHeight)
       this.updateBottomSpace(bottomSpaceHeight)
 
-      if (!some(displayItems, (item, idx) => item !== this.displayItems[idx])) {
+      if (
+        len > 0 &&
+        !some(displayItems, (item, idx) => item !== this.displayItems[idx])
+      ) {
         return
       }
 
@@ -209,22 +220,23 @@ export default class VirtualList extends Component<IOptions> {
         const { scrollHeight } = container
         if (this.isAtBottom && scrollTop <= scrollHeight - offsetHeight) {
           container.scrollTop = 10000000
+          this.render()
         }
       }
     },
     16
   )
   private onScroll = () => {
-    const { scrollHeight, offsetHeight, scrollTop } = this
+    const { scrollHeight, clientHeight, scrollTop } = this
       .container as HTMLElement
     // safari bounce effect
     if (scrollTop <= 0) return
-    if (offsetHeight + scrollTop > scrollHeight) return
+    if (clientHeight + scrollTop > scrollHeight) return
 
     let isAtBottom = false
-    if (scrollHeight === offsetHeight) {
+    if (scrollHeight === clientHeight) {
       isAtBottom = true
-    } else if (Math.abs(scrollHeight - offsetHeight - scrollTop) < 1) {
+    } else if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1) {
       isAtBottom = true
     }
     this.isAtBottom = isAtBottom
@@ -262,7 +274,7 @@ export default class VirtualList extends Component<IOptions> {
     if (
       this.topSpaceHeight < scrollTop - topTolerance &&
       this.topSpaceHeight + this.el.offsetHeight >
-        scrollTop + offsetHeight + bottomTolerance
+        scrollTop + clientHeight + bottomTolerance
     ) {
       return
     }
@@ -285,26 +297,16 @@ class Item {
   el: HTMLElement
   width: number
   height: number
-  private resizeSensor: ResizeSensor
-  constructor(el: HTMLElement, container: HTMLElement) {
+  constructor(el: HTMLElement) {
     this.el = el
+    ;(el as any).virtualListItem = this
     this.width = 0
     this.height = 0
-
-    this.resizeSensor = new ResizeSensor(el)
-    this.resizeSensor.addListener(() => {
-      if (el.parentNode === container) {
-        this.updateSize()
-      }
-    })
   }
   destroy() {
-    this.resizeSensor.destroy()
+    delete (this.el as any).virtualListItem
   }
-  updateSize() {
-    if (isHidden(this.el)) {
-      return
-    }
+  update() {
     const { width, height } = this.el.getBoundingClientRect()
     this.width = width
     this.height = height

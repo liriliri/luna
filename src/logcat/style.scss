@@ -4,15 +4,12 @@
 @use 'sass:map';
 
 .luna-logcat {
-  padding-left: #{theme.$padding-x-x-s}px;
   unicode-bidi: embed;
   position: relative;
-  overflow: auto;
   line-height: #{theme.$line-height-l-g}em;
   border: 1px solid theme.$color-border;
   white-space: pre;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
+  overflow: hidden;
   @include mixin.component();
   & {
     user-select: text;
@@ -28,6 +25,7 @@
 }
 
 .entry {
+  padding-left: #{theme.$padding-x-x-s}px;
   font-size: #{theme.$font-size-s-m}px;
 }
 

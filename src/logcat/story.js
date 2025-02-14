@@ -2,7 +2,6 @@ import 'luna-logcat.css'
 import Logcat from 'luna-logcat.js'
 import readme from './README.md'
 import story from '../share/story'
-import each from 'licia/each'
 import $ from 'licia/$'
 import random from 'licia/random'
 import randomItem from 'licia/randomItem'
@@ -34,7 +33,7 @@ const def = story(
       if (destroyed) {
         return
       }
-      setTimeout(append, random(10, 100))
+      setTimeout(append, random(100, 500))
     }
     append()
 
@@ -70,7 +69,7 @@ const def = story(
             if (destroyed) {
               return
             }
-            setTimeout(append, random(10, 100))
+            setTimeout(append, random(100, 500))
           }
           append()
         }

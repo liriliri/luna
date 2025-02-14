@@ -45,6 +45,7 @@ export default class VirtualList extends Component<IOptions> {
   private updateTimer: NodeJS.Timeout | null = null
   private updateItems: Item[] = []
   private displayItems: Item[] = []
+  private hasScrollbar = false
   private scrollTimer: NodeJS.Timeout | null = null
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'virtual-list' }, options)
@@ -78,7 +79,7 @@ export default class VirtualList extends Component<IOptions> {
   /** Set items. */
   setItems(els: HTMLElement[]) {
     this.updateItems = []
-    each(els, el => this.append(el))
+    each(els, (el) => this.append(el))
   }
   /** Remove item. */
   remove(el: HTMLElement) {
@@ -105,6 +106,15 @@ export default class VirtualList extends Component<IOptions> {
       this._update()
     }
   }
+  /** Scroll to end. */
+  scrollToEnd() {
+    const { container } = this
+    const { scrollTop, scrollHeight, clientHeight } = container
+    if (scrollTop <= scrollHeight - clientHeight) {
+      container.scrollTop = 10000000
+      this.render()
+    }
+  }
   private _update = () => {
     const items = this.updateItems.splice(0, 1000)
     if (isEmpty(items)) {
@@ -115,7 +125,12 @@ export default class VirtualList extends Component<IOptions> {
     const { fakeEl } = this
     const fakeFrag = document.createDocumentFragment()
     for (let i = 0; i < len; i++) {
-      fakeFrag.appendChild(items[i].el)
+      const item = items[i]
+      if (item.el.parentNode === this.el) {
+        item.update()
+      } else {
+        fakeFrag.appendChild(item.el)
+      }
     }
     fakeEl.appendChild(fakeFrag)
     for (let i = 0; i < len; i++) {
@@ -155,7 +170,9 @@ export default class VirtualList extends Component<IOptions> {
     this.space.style.width = width + 'px'
   }
   private bindEvent() {
-    this.$container.on('scroll', this.onScroll)
+    this.$container
+      .on('scroll', this.onScroll)
+      .on('click', () => (this.isAtBottom = false))
   }
   private render = throttle(
     ({ topTolerance = 500, bottomTolerance = 500 } = {}) => {
@@ -164,9 +181,9 @@ export default class VirtualList extends Component<IOptions> {
         return
       }
 
-      const { scrollTop, offsetHeight } = container as HTMLElement
+      const { scrollTop, scrollHeight, clientHeight } = container as HTMLElement
       const top = scrollTop - topTolerance
-      const bottom = scrollTop + offsetHeight + bottomTolerance
+      const bottom = scrollTop + clientHeight + bottomTolerance
 
       const { items } = this
 
@@ -207,6 +224,7 @@ export default class VirtualList extends Component<IOptions> {
       ) {
         return
       }
+      this.displayItems = displayItems
 
       const frag = document.createDocumentFragment()
       for (let i = 0, len = displayItems.length; i < len; i++) {
@@ -216,12 +234,14 @@ export default class VirtualList extends Component<IOptions> {
       el.textContent = ''
       el.appendChild(frag)
 
-      if (this.options.autoScroll) {
-        const { scrollHeight } = container
-        if (this.isAtBottom && scrollTop <= scrollHeight - offsetHeight) {
-          container.scrollTop = 10000000
-          this.render()
-        }
+      if (this.options.autoScroll && this.isAtBottom) {
+        this.scrollToEnd()
+      }
+
+      const hasScrollbar = scrollHeight > clientHeight
+      if (this.hasScrollbar !== hasScrollbar) {
+        this.hasScrollbar = hasScrollbar
+        this.update()
       }
     },
     16

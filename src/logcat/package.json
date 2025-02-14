@@ -3,6 +3,9 @@
   "version": "0.5.1",
   "description": "Android logcat viewer",
   "luna": {
-    "react": true
+    "react": true,
+    "dependencies": [
+      "virtual-list"
+    ]
   }
 }

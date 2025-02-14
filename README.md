@@ -67,6 +67,7 @@ UI library.
 * [text-viewer](./src/text-viewer/README.md): Text viewer with line number.
 * [toolbar](./src/toolbar/README.md): Application toolbar.
 * [video-player](./src/video-player/README.md): Video player.
+* [virtual-list](./src/virtual-list/README.md): Vertical list with virtual scrolling.
 * [window](./src/window/README.md): HTML5 window manager.
 
 All these components is published individually. You can use any of them by adding traditional scripts and style links or installing npm packages.

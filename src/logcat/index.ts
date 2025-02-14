@@ -13,6 +13,9 @@ import contain from 'licia/contain'
 import dateFormat from 'licia/dateFormat'
 import toNum from 'licia/toNum'
 import omit from 'licia/omit'
+import ResizeSensor from 'licia/ResizeSensor'
+import debounce from 'licia/debounce'
+import LunaVirtualList from 'luna-virtual-list'
 import { exportCjs } from '../share/util'
 
 /** IOptions */
@@ -57,8 +60,6 @@ interface IInnerEntry extends IBaseEntry {
   container: HTMLElement
 }
 
-const MIN_APPEND_INTERVAL = 100
-
 /**
  * Android logcat viewer.
  *
@@ -75,22 +76,30 @@ const MIN_APPEND_INTERVAL = 100
  * })
  */
 export default class Logcat extends Component<IOptions> {
-  private isAtBottom = true
   private render: types.AnyFn
   private entries: Array<IInnerEntry> = []
   private displayEntries: Array<IInnerEntry> = []
-  private appendTimer: NodeJS.Timeout | null = null
   private removeThreshold = 1
-  private frag: DocumentFragment = document.createDocumentFragment()
+  private virtualList: LunaVirtualList
+  private resizeSensor: ResizeSensor
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'logcat' }, options)
 
     this.initOptions(options, {
-      maxNum: 5000,
+      maxNum: 10000,
       view: 'standard',
       entries: [],
       wrapLongLines: false,
     })
+
+    this.resizeSensor = new ResizeSensor(container)
+
+    this.initTpl()
+    this.virtualList = new LunaVirtualList(
+      this.find('.virtual-list').get(0) as HTMLElement,
+      { autoScroll: true }
+    )
+    this.addSubComponent(this.virtualList)
 
     const maxNum = this.options.maxNum
     if (maxNum !== 0 && maxNum > 500) {
@@ -111,7 +120,7 @@ export default class Logcat extends Component<IOptions> {
     this.bindEvent()
   }
   destroy() {
-    this.$container.off('scroll', this.onScroll)
+    this.resizeSensor.destroy()
     super.destroy()
   }
   /** Append entry. */
@@ -140,7 +149,7 @@ export default class Logcat extends Component<IOptions> {
         if (entry) {
           if (displayEntries[0] === entry) {
             displayEntries.shift()
-            $(entry.container).remove()
+            this.virtualList.remove(entry.container)
           }
         }
       }
@@ -151,30 +160,17 @@ export default class Logcat extends Component<IOptions> {
 
     if (this.filterEntry(e)) {
       this.displayEntries.push(e)
-      this.frag.appendChild(container)
-      if (!this.appendTimer) {
-        this.appendTimer = setTimeout(this._append, MIN_APPEND_INTERVAL)
-      }
+      this.virtualList.append(container)
     }
   }
   /** Clear all entries. */
   clear() {
-    if (this.appendTimer) {
-      clearTimeout(this.appendTimer)
-      this.appendTimer = null
-      this.frag = document.createDocumentFragment()
-    }
     this.entries = []
-    this.$container.html('')
+    this.virtualList.clear()
   }
   /** Scroll to end. */
   scrollToEnd() {
-    const { container } = this
-    const { scrollHeight, scrollTop, offsetHeight } = container
-    if (scrollTop <= scrollHeight - offsetHeight) {
-      container.scrollTop = 10000000
-      this.isAtBottom = true
-    }
+    this.virtualList.scrollToEnd()
   }
   /** Check if there is any selection. */
   hasSelection() {
@@ -196,14 +192,6 @@ export default class Logcat extends Component<IOptions> {
     }
     const selection = window.getSelection()
     return selection ? selection.toString() : ''
-  }
-  private _append = () => {
-    const isAtBottom = this.isAtBottom
-    this.container.appendChild(this.frag)
-    this.appendTimer = null
-    if (isAtBottom) {
-      this.scrollToEnd()
-    }
   }
   private filterEntry(entry: IBaseEntry) {
     const { filter } = this.options
@@ -232,8 +220,15 @@ export default class Logcat extends Component<IOptions> {
 
     return true
   }
+  private initTpl() {
+    this.$container.html(this.c('<div class="virtual-list"></div>'))
+  }
   private bindEvent() {
     const { c } = this
+
+    this.resizeSensor.addListener(
+      debounce(() => this.virtualList.update(), 100)
+    )
 
     this.on('changeOption', (name, val) => {
       const { entries } = this
@@ -277,8 +272,6 @@ export default class Logcat extends Component<IOptions> {
     const self = this
 
     this.$container
-      .on('scroll', this.onScroll)
-      .on('click', () => (this.isAtBottom = false))
       .on('contextmenu', c('.entry'), function (this: HTMLDivElement, e) {
         e.stopPropagation()
         const idx = $(this).data('idx')
@@ -294,18 +287,6 @@ export default class Logcat extends Component<IOptions> {
       .on('contextmenu', (e) => {
         self.emit('contextmenu', e.origEvent)
       })
-  }
-  private onScroll = () => {
-    const { scrollHeight, clientHeight, scrollTop } = this
-      .container as HTMLElement
-
-    let isAtBottom = false
-    if (scrollHeight === clientHeight) {
-      isAtBottom = true
-    } else if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1) {
-      isAtBottom = true
-    }
-    this.isAtBottom = isAtBottom
   }
   private formatStandard(entry: IInnerEntry) {
     const { c } = this
@@ -339,7 +320,6 @@ export default class Logcat extends Component<IOptions> {
   private _render() {
     const { container } = this
     this.$container.html('')
-    this.isAtBottom = true
 
     const frag = document.createDocumentFragment()
     each(this.displayEntries, (entry) => {

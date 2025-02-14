@@ -1,7 +1,6 @@
 import Component, { IComponentOptions } from '../share/Component'
 import escape from 'licia/escape'
 import h from 'licia/h'
-import types from 'licia/types'
 import throttle from 'licia/throttle'
 import trim from 'licia/trim'
 import isDate from 'licia/isDate'
@@ -76,7 +75,6 @@ interface IInnerEntry extends IBaseEntry {
  * })
  */
 export default class Logcat extends Component<IOptions> {
-  private render: types.AnyFn
   private entries: Array<IInnerEntry> = []
   private displayEntries: Array<IInnerEntry> = []
   private removeThreshold = 1
@@ -106,7 +104,6 @@ export default class Logcat extends Component<IOptions> {
       this.removeThreshold = Math.round(maxNum / 10)
     }
 
-    this.render = throttle(() => this._render(), 16)
     if (this.options.entries) {
       each(this.options.entries, (entry) => {
         this.append(entry)
@@ -240,6 +237,7 @@ export default class Logcat extends Component<IOptions> {
           } else {
             this.$container.rmClass(c('wrap-long-lines'))
           }
+          this.virtualList.update()
           break
         case 'maxNum':
           if (val > 0 && entries.length > val) {
@@ -256,6 +254,7 @@ export default class Logcat extends Component<IOptions> {
 
             entry.container.innerHTML = html
           })
+          this.virtualList.update()
           break
         case 'filter':
           this.displayEntries = []
@@ -317,18 +316,15 @@ export default class Logcat extends Component<IOptions> {
       `<span class="${c('message')}">${escape(trim(entry.message))}</span>`,
     ].join(' ')
   }
-  private _render() {
-    const { container } = this
-    this.$container.html('')
-
-    const frag = document.createDocumentFragment()
+  private render = throttle(() => {
+    const items: HTMLElement[] = []
     each(this.displayEntries, (entry) => {
-      frag.appendChild(entry.container)
+      items.push(entry.container)
     })
-    container.appendChild(frag)
+    this.virtualList.setItems(items)
 
     this.scrollToEnd()
-  }
+  }, 16)
 }
 
 function toLetter(priority: number) {

@@ -67,7 +67,7 @@ export default class VirtualList extends Component<IOptions> {
   }
   /** Clear all items. */
   clear() {
-    this.items = []
+    this.reset()
     this.render()
   }
   /** Append item. */
@@ -78,7 +78,7 @@ export default class VirtualList extends Component<IOptions> {
   }
   /** Set items. */
   setItems(els: HTMLElement[]) {
-    this.updateItems = []
+    this.reset()
     each(els, (el) => this.append(el))
   }
   /** Remove item. */
@@ -95,6 +95,15 @@ export default class VirtualList extends Component<IOptions> {
     item.destroy()
     this.render()
   }
+  /** Scroll to end. */
+  scrollToEnd() {
+    const { container } = this
+    const { scrollTop, scrollHeight, clientHeight } = container
+    if (scrollTop <= scrollHeight - clientHeight) {
+      container.scrollTop = 10000000
+      this.render()
+    }
+  }
   /** Update heights. */
   update(el?: HTMLElement) {
     if (el) {
@@ -106,14 +115,14 @@ export default class VirtualList extends Component<IOptions> {
       this._update()
     }
   }
-  /** Scroll to end. */
-  scrollToEnd() {
-    const { container } = this
-    const { scrollTop, scrollHeight, clientHeight } = container
-    if (scrollTop <= scrollHeight - clientHeight) {
-      container.scrollTop = 10000000
-      this.render()
-    }
+  private reset() {
+    this.items = []
+    this.updateItems = []
+    this.displayItems = []
+    this.isAtBottom = true
+    this.hasScrollbar = false
+    this.lastScrollTop = 0
+    this.lastTimestamp = 0
   }
   private _update = () => {
     const items = this.updateItems.splice(0, 1000)

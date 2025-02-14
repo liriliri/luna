@@ -1,8 +1,5 @@
 {
   "name": "virtual-list",
-  "version": "0.1.0",
-  "description": "Vertical list with virtual scrolling",
-  "luna": {
-    "test": false
-  }
+  "version": "0.1.1",
+  "description": "Vertical list with virtual scrolling"
 }

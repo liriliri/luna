@@ -53,6 +53,10 @@ Clear all items.
 
 Remove item.
 
+### scrollToEnd(): void
+
+Scroll to end.
+
 ### setItems(els: HTMLElement[]): void
 
 Set items.

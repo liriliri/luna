@@ -183,7 +183,7 @@
   "logcat": {
     "react": true,
     "dependencies": ["virtual-list"],
-    "version": "0.6.1",
+    "version": "0.6.2",
     "style": true,
     "icon": false,
     "test": true,
@@ -416,10 +416,10 @@
     "dependencies": []
   },
   "virtual-list": {
-    "test": false,
-    "version": "0.1.0",
+    "version": "0.1.1",
     "style": true,
     "icon": false,
+    "test": true,
     "install": false,
     "react": false,
     "dependencies": []

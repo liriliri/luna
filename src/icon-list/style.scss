@@ -35,15 +35,6 @@
   aspect-ratio: 1;
   box-sizing: border-box;
   flex-direction: column;
-  &.selected {
-    .icon {
-      background-color: #{theme.$color-border};
-    }
-    .name {
-      background-color: #{theme.$color-primary};
-      color: theme.$color-white;
-    }
-  }
 }
 
 .icon {
@@ -72,14 +63,17 @@
   font-size: #{theme.$font-size-s-m}px;
 }
 
-.theme-dark {
-  .item {
-    &.selected {
-      .icon {
-        background-color: #{theme.$color-border-dark};
-      }
-      .name {
-        background-color: #{theme.$color-primary-dark};
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    .item {
+      &.selected {
+        .icon {
+          @include mixin.theme-rule(background-color, color-border, $theme);
+        }
+        .name {
+          @include mixin.theme-rule(background-color, color-primary, $theme);
+          @include mixin.theme-rule(color, color-white, $theme);
+        }
       }
     }
   }

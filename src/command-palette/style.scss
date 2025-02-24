@@ -51,8 +51,7 @@
   display: none;
 }
 
-$themes: 'light', 'dark';
-@each $theme in $themes {
+@each $theme in ('light', 'dark') {
   .theme-#{$theme} {
     .body {
       @include mixin.theme-rule(background-color, color-bg-container, $theme);

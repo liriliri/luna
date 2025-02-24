@@ -1,4 +1,6 @@
 @use './theme' as theme;
+@use 'sass:meta';
+@use 'sass:map';
 
 @mixin overflow-auto($direction: 'both') {
   @if $direction == 'both' {
@@ -9,12 +11,22 @@
   -webkit-overflow-scrolling: touch;
 }
 
+$themeVariables: meta.module-variables(theme);
+@mixin theme-rule($name, $value, $theme: 'light') {
+  $suffix: if($theme == 'dark', '-dark', '');
+  #{$name}: map.get($themeVariables, #{$value}#{$suffix});
+  #{$name}: var(
+    --luna-#{$value},
+    map.get($themeVariables, #{$value}#{$suffix})
+  );
+}
+
 @mixin component($transparent: false) {
-  color: theme.$color-text;
+  @include theme-rule(color, color-text);
   @if $transparent {
     background-color: transparent;
   } @else {
-    background-color: theme.$color-bg-container;
+    @include theme-rule(background-color, color-bg-container);
   }
   font-family: theme.$font-family;
   box-sizing: border-box;
@@ -33,11 +45,11 @@
   }
   &.theme-dark {
     color-scheme: dark;
-    color: theme.$color-text-dark;
+    @include theme-rule(color, color-text-dark);
     @if $transparent {
       background-color: transparent;
     } @else {
-      background-color: theme.$color-bg-container-dark;
+      @include theme-rule(background-color, color-bg-container-dark);
     }
   }
 }

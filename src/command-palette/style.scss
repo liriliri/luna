@@ -19,7 +19,6 @@
   max-width: 100%;
   box-shadow: theme.$box-shadow;
   font-size: 12px;
-  background: theme.$color-bg-container;
 }
 
 .input {
@@ -27,9 +26,8 @@
   outline: none;
   width: 100%;
   border: none;
-  border-bottom: 1px solid theme.$color-border;
+  border-bottom: 1px solid;
   padding: 10px 4px;
-  color: theme.$color-text;
 }
 
 .list {
@@ -42,13 +40,6 @@
     padding: 5px;
     cursor: pointer;
     display: flex;
-    &:hover {
-      background: theme.$color-fill-secondary;
-    }
-    &.active {
-      color: theme.$color-white;
-      background: theme.$color-primary;
-    }
     .title {
       flex: 1;
       overflow: hidden;
@@ -60,22 +51,33 @@
   display: none;
 }
 
-.theme-dark {
-  .body {
-    background: theme.$color-bg-container-dark;
-  }
-  .input {
-    background: theme.$color-bg-container-dark;
-    border-color: theme.$color-border-dark;
-    color: theme.$color-text-dark;
-  }
-  li {
-    &:hover {
-      background: theme.$color-fill-secondary-dark;
+$themes: 'light', 'dark';
+@each $theme in $themes {
+  .theme-#{$theme} {
+    .body {
+      @include mixin.theme-rule(background-color, color-bg-container, $theme);
     }
-    &.active {
-      color: theme.$color-white;
-      background: theme.$color-primary;
+
+    .input {
+      @include mixin.theme-rule(background-color, color-bg-container, $theme);
+      @include mixin.theme-rule(border-color, color-border, $theme);
+      @include mixin.theme-rule(color, color-text, $theme);
+    }
+
+    .list {
+      li {
+        &:hover {
+          @include mixin.theme-rule(
+            background-color,
+            color-fill-secondary,
+            $theme
+          );
+        }
+        &.active {
+          @include mixin.theme-rule(color, color-white, $theme);
+          @include mixin.theme-rule(background-color, color-primary, $theme);
+        }
+      }
     }
   }
 }

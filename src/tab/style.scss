@@ -9,7 +9,7 @@
 }
 
 .tabs-container {
-  border-bottom: 1px solid theme.$color-border;
+  border-bottom: 1px solid;
 }
 
 .tabs {
@@ -41,19 +41,27 @@
 .slider {
   transition: left 0.3s, width 0.3s;
   height: 1px;
-  background: #1a73e8;
   position: absolute;
   bottom: 0;
   left: 0;
 }
 
-.theme-dark {
-  .tabs-container {
-    border-color: theme.$color-border-dark;
-  }
-  .item {
-    &:hover {
-      background: theme.$color-fill-secondary-dark;
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    .tabs-container {
+      @include mixin.theme-rule(border-color, color-border, $theme);
+    }
+    .item {
+      &.luna-tab-selected {
+        @include mixin.theme-rule(color, color-primary, $theme);
+      }
+      &:hover {
+        @include mixin.theme-rule(color, color-text, $theme);
+        @include mixin.theme-rule(background-color, color-fill-secondary, $theme);
+      }
+    }
+    .slider {
+      @include mixin.theme-rule(background-color, color-primary, $theme);
     }
   }
 }

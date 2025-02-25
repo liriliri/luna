@@ -1,6 +1,6 @@
 {
   "name": "tab",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Easy tabs",
   "luna": {
     "react": true

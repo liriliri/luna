@@ -100,16 +100,16 @@
 
 @each $theme in ('light', 'dark') {
   .theme-#{$theme} {
-    @include mixin.theme-rule(border-color, color-border, $theme);
+    @include mixin.theme-var(border-color, color-border, $theme);
     th,
     td {
-      @include mixin.theme-rule(border-color, color-border, $theme);
+      @include mixin.theme-var(border-color, color-border, $theme);
     }
     th {
-      @include mixin.theme-rule(background-color, color-fill-secondary, $theme);
+      @include mixin.theme-var(background-color, color-fill-secondary, $theme);
       &.sortable {
         &:hover {
-          @include mixin.theme-rule(background-color, color-fill, $theme);
+          @include mixin.theme-var(background-color, color-fill, $theme);
         }
       }
     }
@@ -124,7 +124,7 @@
     }
     &:focus {
       .node.selectable.selected {
-        @include mixin.theme-rule(background-color, color-primary, $theme);
+        @include mixin.theme-var(background-color, color-primary, $theme);
       }
     }
   }

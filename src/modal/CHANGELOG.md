@@ -1,3 +1,7 @@
+## 1.3.1 (26 Feb 2025)
+
+* refactor: theme
+
 ## 1.3.0 (3 Nov 2024)
 
 * feat: add auto theme

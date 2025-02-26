@@ -68,11 +68,11 @@
     .item {
       &.selected {
         .icon {
-          @include mixin.theme-rule(background-color, color-border, $theme);
+          @include mixin.theme-var(background-color, color-border, $theme);
         }
         .name {
-          @include mixin.theme-rule(background-color, color-primary, $theme);
-          @include mixin.theme-rule(color, color-white, $theme);
+          @include mixin.theme-var(background-color, color-primary, $theme);
+          @include mixin.theme-var(color, color-white, $theme);
         }
       }
     }

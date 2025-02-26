@@ -1,3 +1,4 @@
+@use './theme' as *;
 @use './theme' as theme;
 @use 'sass:meta';
 @use 'sass:map';
@@ -11,27 +12,33 @@
   -webkit-overflow-scrolling: touch;
 }
 
-$themeVariables: meta.module-variables(theme);
-@mixin theme-rule($name, $value, $theme: 'light') {
+$theme-variables: meta.module-variables(theme);
+@mixin theme-var($name, $value, $theme: 'light') {
   $suffix: if($theme == 'dark', '-dark', '');
-  #{$name}: map.get($themeVariables, #{$value}#{$suffix});
+  #{$name}: map.get($theme-variables, #{$value}#{$suffix});
   #{$name}: var(
     --luna-#{$value},
-    map.get($themeVariables, #{$value}#{$suffix})
+    map.get($theme-variables, #{$value}#{$suffix})
   );
 }
 
+@mixin theme-vars($vars, $theme) {
+  @each $name, $value in $vars {
+    @include theme-var($name, $value, $theme);
+  }
+}
+
 @mixin component($transparent: false) {
-  @include theme-rule(color, color-text);
+  @include theme-var(color, color-text);
   @if $transparent {
     background-color: transparent;
   } @else {
-    @include theme-rule(background-color, color-bg-container);
+    @include theme-var(background-color, color-bg-container);
   }
-  font-family: theme.$font-family;
+  @include theme-var(font-family, font-family);
   box-sizing: border-box;
   user-select: none;
-  font-size: #{theme.$font-size}px;
+  font-size: #{$font-size}px;
   &.hidden,
   .hidden {
     display: none;
@@ -45,11 +52,11 @@ $themeVariables: meta.module-variables(theme);
   }
   &.theme-dark {
     color-scheme: dark;
-    @include theme-rule(color, color-text-dark);
+    @include theme-var(color, color-text-dark);
     @if $transparent {
       background-color: transparent;
     } @else {
-      @include theme-rule(background-color, color-bg-container-dark);
+      @include theme-var(background-color, color-bg-container-dark);
     }
   }
 }
@@ -168,30 +175,30 @@ $themeVariables: meta.module-variables(theme);
 
 @mixin input($dark: false) {
   @if $dark {
-    background: theme.$color-border-dark;
-    border-color: theme.$color-border-dark;
-    color: theme.$color-text-dark;
+    background: $color-border-dark;
+    border-color: $color-border-dark;
+    color: $color-text-dark;
   } @else {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    color: theme.$color-text;
+    color: $color-text;
     appearance: none;
-    border: 1px solid theme.$color-border;
+    border: 1px solid $color-border;
     outline: none;
     padding: 2px 8px;
-    border-radius: #{theme.$border-radius-x-s}px;
-    font-size: #{theme.$font-size}px;
-    background: theme.$color-bg-container;
+    border-radius: #{$border-radius-x-s}px;
+    font-size: #{$font-size}px;
+    background: $color-bg-container;
   }
 }
 
 @mixin checkbox($dark: false) {
   @if $dark {
-    border-color: theme.$color-border-dark;
+    border-color: $color-border-dark;
   } @else {
     appearance: none;
     width: 14px;
     height: 14px;
-    border: 1px solid theme.$color-border;
+    border: 1px solid $color-border;
     border-radius: 0;
     position: relative;
     outline: none;
@@ -199,8 +206,8 @@ $themeVariables: meta.module-variables(theme);
     margin-right: 8px;
     transition: background-color 0.1s;
     &:checked {
-      background-color: theme.$color-primary;
-      border-color: theme.$color-primary;
+      background-color: $color-primary;
+      border-color: $color-primary;
       &:after {
         content: '';
         width: 100%;
@@ -220,26 +227,26 @@ $themeVariables: meta.module-variables(theme);
 @mixin select($dark: false) {
   @if $dark {
     select {
-      color: theme.$color-text-dark;
-      border-color: theme.$color-border-dark;
-      background: theme.$color-border-dark;
+      color: $color-text-dark;
+      border-color: $color-border-dark;
+      background: $color-border-dark;
     }
     &:after {
-      border-top-color: theme.$color-text-dark;
+      border-top-color: $color-text-dark;
     }
   } @else {
     position: relative;
     select {
       margin: 0;
-      font-size: #{theme.$font-size}px;
-      background: theme.$color-bg-container;
+      font-size: #{$font-size}px;
+      background: $color-bg-container;
       appearance: none;
-      border: 1px solid theme.$color-border;
+      border: 1px solid $color-border;
       padding: 2px 8px;
       padding-right: 18px;
       outline: none;
-      color: theme.$color-text;
-      border-radius: #{theme.$border-radius-x-s}px;
+      color: $color-text;
+      border-radius: #{$border-radius-x-s}px;
       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
     &:after {
@@ -248,7 +255,7 @@ $themeVariables: meta.module-variables(theme);
       height: 0;
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
-      border-top: 5px solid theme.$color-text;
+      border-top: 5px solid $color-text;
       position: absolute;
       top: 0;
       bottom: 0;
@@ -261,29 +268,29 @@ $themeVariables: meta.module-variables(theme);
 
 @mixin button($dark: false) {
   @if $dark {
-    background: theme.$color-bg-container-dark;
-    border-color: theme.$color-border-dark;
+    background: $color-bg-container-dark;
+    border-color: $color-border-dark;
     &:hover,
     &:active {
-      background: theme.$color-fill-secondary-dark;
+      background: $color-fill-secondary-dark;
     }
     &:active {
-      border: 1px solid theme.$color-primary;
+      border: 1px solid $color-primary;
     }
   } @else {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    background: theme.$color-bg-container;
-    border: 1px solid theme.$color-border;
+    background: $color-bg-container;
+    border: 1px solid $color-border;
     padding: 2px 8px;
-    color: theme.$color-primary;
-    font-size: #{theme.$font-size}px;
-    border-radius: #{theme.$border-radius-x-s}px;
+    color: $color-primary;
+    font-size: #{$font-size}px;
+    border-radius: #{$border-radius-x-s}px;
     &:hover,
     &:active {
-      background: theme.$color-fill-secondary;
+      background: $color-fill-secondary;
     }
     &:active {
-      border: 1px solid theme.$color-primary;
+      border: 1px solid $color-primary;
     }
   }
 }

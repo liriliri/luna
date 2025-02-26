@@ -54,27 +54,27 @@
 @each $theme in ('light', 'dark') {
   .theme-#{$theme} {
     .body {
-      @include mixin.theme-rule(background-color, color-bg-container, $theme);
+      @include mixin.theme-var(background-color, color-bg-container, $theme);
     }
 
     .input {
-      @include mixin.theme-rule(background-color, color-bg-container, $theme);
-      @include mixin.theme-rule(border-color, color-border, $theme);
-      @include mixin.theme-rule(color, color-text, $theme);
+      @include mixin.theme-var(background-color, color-bg-container, $theme);
+      @include mixin.theme-var(border-color, color-border, $theme);
+      @include mixin.theme-var(color, color-text, $theme);
     }
 
     .list {
       li {
         &:hover {
-          @include mixin.theme-rule(
+          @include mixin.theme-var(
             background-color,
             color-fill-secondary,
             $theme
           );
         }
         &.active {
-          @include mixin.theme-rule(color, color-white, $theme);
-          @include mixin.theme-rule(background-color, color-primary, $theme);
+          @include mixin.theme-var(color, color-white, $theme);
+          @include mixin.theme-var(background-color, color-primary, $theme);
         }
       }
     }

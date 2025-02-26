@@ -1,5 +1,5 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-modal {
   position: fixed;
@@ -10,7 +10,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  @include mixin.component();
+  @include component();
   & {
     background: rgba(0, 0, 0, 0.5);
   }
@@ -26,11 +26,11 @@
 
 .body {
   position: relative;
-  background: theme.$color-bg-container;
   max-height: 100%;
   display: flex;
   flex-direction: column;
   border-radius: 4px;
+  border: 1px solid;
   &.no-title {
     position: static;
     .title {
@@ -81,19 +81,17 @@
 
 .button {
   padding: 0 12px;
-  background: #e9ecef;
   cursor: default;
   position: relative;
   user-select: none;
   margin: 0 4px;
-  font-size: #{theme.$font-size-s-m}px;
+  font-size: #{$font-size-s-m}px;
   border-radius: 4px;
   overflow: hidden;
   height: 28px;
   line-height: 28px;
   &:active {
     &::before {
-      background: theme.$color-primary;
       content: '';
       opacity: 0.4;
       position: absolute;
@@ -105,13 +103,10 @@
     }
   }
   &.secondary {
-    color: theme.$color-primary;
-    border: 1px solid theme.$color-border;
-    background: #fff;
+    border: 1px solid;
   }
   &.primary {
     color: #fff;
-    background: theme.$color-primary;
   }
 }
 
@@ -121,14 +116,52 @@
   width: 100%;
   font-size: 16px;
   padding: 6px 12px;
-  border: 1px solid theme.$color-border;
+  border: 1px solid;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
-.theme-dark {
-  .body {
-    background: theme.$color-bg-container-dark;
-    border: 1px solid theme.$color-border-dark;
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    .body {
+      @include theme-vars(
+        (
+          background-color: color-bg-container,
+          border-color: color-border,
+        ),
+        $theme
+      );
+    }
+    .button {
+      @include theme-var(background-color, color-bg-container, $theme);
+      &:active {
+        &::before {
+          @include theme-var(background-color, color-primary, $theme);
+        }
+      }
+      &.secondary {
+        @include theme-vars(
+          (
+            color: color-primary,
+            border-color: color-border,
+            background-color: color-bg-container,
+          ),
+          $theme
+        );
+      }
+      &.primary {
+        @include theme-var(background-color, color-primary, $theme);
+      }
+    }
+    .input {
+      @include theme-vars(
+        (
+          background-color: color-bg-container,
+          color: color-text,
+          border-color: color-border,
+        ),
+        $theme
+      );
+    }
   }
 }

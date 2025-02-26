@@ -3,7 +3,7 @@
 
 .luna-data-grid {
   position: relative;
-  border: 1px solid theme.$color-border;
+  border: 1px solid;
   overflow: hidden;
   outline: none;
   @include mixin.component();
@@ -22,7 +22,7 @@
   th,
   td {
     padding: 1px 4px;
-    border-left: 1px solid theme.$color-border;
+    border-left: 1px solid;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -33,16 +33,11 @@
 
   th {
     font-weight: normal;
-    border-bottom: 1px solid theme.$color-border;
+    border-bottom: 1px solid;
     text-align: left;
-    background: theme.$color-fill-secondary;
     position: relative;
     &.sortable {
       padding-right: #{theme.$padding-s-m}px;
-      &:hover,
-      &:active {
-        background: theme.$color-fill;
-      }
     }
     .icon-caret-down,
     .icon-caret-up {
@@ -63,13 +58,6 @@
   &:focus {
     .node.selectable.selected {
       color: #fff;
-      background: theme.$color-primary;
-    }
-  }
-
-  &:focus.theme-dark {
-    .node.selectable.selected {
-      background: theme.$color-primary-dark;
     }
   }
 }
@@ -85,13 +73,6 @@
 
 .data-container {
   overflow-y: auto;
-  .node.selected,
-  .node.selectable:hover {
-    background: #ddd;
-  }
-  tr:nth-child(even) {
-    background: #f2f7fd;
-  }
 }
 
 .filler-row {
@@ -117,27 +98,34 @@
   }
 }
 
-.theme-dark {
-  border-color: theme.$color-border-dark;
-  th,
-  td {
-    border-color: theme.$color-border-dark;
-  }
-  th {
-    background: theme.$color-fill-secondary-dark;
-    &.sortable {
-      &:hover {
-        background: theme.$color-fill-dark;
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    @include mixin.theme-rule(border-color, color-border, $theme);
+    th,
+    td {
+      @include mixin.theme-rule(border-color, color-border, $theme);
+    }
+    th {
+      @include mixin.theme-rule(background-color, color-fill-secondary, $theme);
+      &.sortable {
+        &:hover {
+          @include mixin.theme-rule(background-color, color-fill, $theme);
+        }
       }
     }
-  }
-  .data-container {
-    .node.selected,
-    .node.selectable:hover {
-      background: #393939;
+    .data-container {
+      .node.selected,
+      .node.selectable:hover {
+        background-color: if($theme == 'light', #ddd, #393939);
+      }
+      tr:nth-child(even) {
+        background-color: if($theme == 'light', #f2f7fd, #0b2544);
+      }
     }
-    tr:nth-child(even) {
-      background: #0b2544;
+    &:focus {
+      .node.selectable.selected {
+        @include mixin.theme-rule(background-color, color-primary, $theme);
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
-@use '../share/mixin' as mixin;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 @use '../share/theme' as theme;
 @use 'sass:meta';
 @use 'sass:map';
@@ -6,14 +7,14 @@
 .luna-logcat {
   unicode-bidi: embed;
   position: relative;
-  line-height: #{theme.$line-height-l-g}em;
-  border: 1px solid theme.$color-border;
+  line-height: #{$line-height-l-g}em;
+  border: 1px solid;
   white-space: pre;
   overflow: hidden;
-  @include mixin.component();
+  @include component();
   & {
     user-select: text;
-    font-family: theme.$font-family-code;
+    font-family: $font-family-code;
   }
   &.wrap-long-lines {
     white-space: pre-wrap;
@@ -25,8 +26,8 @@
 }
 
 .entry {
-  padding-left: #{theme.$padding-x-x-s}px;
-  font-size: #{theme.$font-size-s-m}px;
+  padding-left: #{$padding-x-x-s}px;
+  font-size: #{$font-size-s-m}px;
 }
 
 .date,
@@ -48,7 +49,7 @@
 }
 
 .date {
-  margin-right: #{theme.$margin-x-x-s}px;
+  margin-right: #{$margin-x-x-s}px;
 }
 
 .pid {
@@ -64,89 +65,56 @@
 }
 
 .priority {
-  padding: 0 #{theme.$padding-x-s}px;
+  padding: 0 #{$padding-x-s}px;
 }
 
-.W {
-  .priority {
-    background: theme.$color-warning-text;
-  }
-  .message {
-    color: theme.$color-warning-text;
-  }
-}
-
-.E {
-  .priority {
-    background: theme.$color-error-text;
-  }
-  .message {
-    color: theme.$color-error-text;
-  }
-}
-
-.D {
-  .priority {
-    background: theme.$color-success-text;
-  }
-}
-
-.I {
-  .priority {
-    background: theme.$color-info-text;
-  }
-}
-
-$colors: 'blue', 'purple', 'cyan', 'green', 'magenta', 'pink', 'red', 'orange',
-  'yellow', 'volcano', 'geekblue', 'gold', 'lime';
-
-$variables: meta.module-variables(theme);
-@each $color in $colors {
-  @for $i from 6 through 10 {
-    .color-#{$color}-#{$i} {
-      $variable-name: #{$color}-#{$i};
-      color: map.get($variables, $variable-name);
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    @include theme-var(border-color, color-border, $theme);
+    .W {
+      .priority {
+        @include theme-var(background-color, color-warning-text, $theme);
+      }
+      .message {
+        @include theme-var(color, color-warning-text, $theme);
+      }
     }
-  }
-}
 
-.theme-dark {
-  border-color: theme.$color-border-dark;
-  .W {
-    .priority {
-      background: theme.$color-warning-text-dark;
+    .E {
+      .priority {
+        @include theme-var(background-color, color-error-text, $theme);
+      }
+      .message {
+        @include theme-var(color, color-error-text, $theme);
+      }
     }
-    .message {
-      color: theme.$color-warning-text-dark;
-    }
-  }
 
-  .E {
-    .priority {
-      background: theme.$color-error-text-dark;
+    .D {
+      .priority {
+        @include theme-var(background-color, color-success-text, $theme);
+      }
     }
-    .message {
-      color: theme.$color-error-text-dark;
-    }
-  }
 
-  .D {
-    .priority {
-      background: theme.$color-success-text-dark;
+    .I {
+      .priority {
+        @include theme-var(background-color, color-info-text, $theme);
+      }
     }
-  }
 
-  .I {
-    .priority {
-      background: theme.$color-info-text-dark;
-    }
-  }
+    $colors: 'blue', 'purple', 'cyan', 'green', 'magenta', 'pink', 'red',
+      'orange', 'yellow', 'volcano', 'geekblue', 'gold', 'lime';
 
-  @each $color in $colors {
-    @for $i from 6 through 10 {
-      .color-#{$color}-#{$i} {
-        $variable-name: #{$color}-#{$i}-dark;
-        color: map.get($variables, $variable-name);
+    $theme-variables: meta.module-variables(theme);
+    @each $color in $colors {
+      @for $i from 6 through 10 {
+        .color-#{$color}-#{$i} {
+          $variable-name: if(
+            $theme == 'dark',
+            #{$color}-#{$i}-dark,
+            #{$color}-#{$i}
+          );
+          color: map.get($theme-variables, $variable-name);
+        }
       }
     }
   }

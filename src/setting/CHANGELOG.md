@@ -1,3 +1,7 @@
+## 2.0.2 (27 Feb 2025)
+
+* refactor: theme
+
 ## 2.0.1 (11 Jun 2024)
 
 * fix: react custom className not working

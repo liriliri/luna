@@ -1,18 +1,14 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-setting {
   min-width: 320px;
-  @include mixin.component();
+  @include component(true);
 }
 
 .item {
-  &:hover,
-  &.selected {
-    background: theme.$color-fill-secondary;
-  }
   &.selected:focus {
-    outline: 1px solid theme.$color-primary;
+    outline: 1px solid;
   }
   .title {
     line-height: 1.4em;
@@ -29,13 +25,12 @@
     }
     a {
       background-color: transparent;
-      color: #0969da;
       text-decoration: none;
     }
   }
   .description,
   .control {
-    font-size: #{theme.$font-size-s-m}px;
+    font-size: #{$font-size-s-m}px;
   }
   .description {
     margin-bottom: 8px;
@@ -76,7 +71,7 @@
     }
   }
   input {
-    @include mixin.input();
+    @include input();
     width: 100%;
   }
 }
@@ -92,7 +87,7 @@
     }
   }
   input[type='number'] {
-    @include mixin.input();
+    @include input();
     width: 200px;
     padding: 2px;
   }
@@ -108,14 +103,12 @@
       left: 0;
       top: 4px;
       .range-track-bar {
-        background: theme.$color-border;
         border-radius: 2px;
         overflow: hidden;
         width: 100%;
         height: 4px;
         .range-track-progress {
           height: 100%;
-          background: theme.$color-primary;
           width: 50%;
         }
       }
@@ -140,14 +133,7 @@
       border: none;
       height: 16px;
       border-radius: 10px;
-      border: 1px solid theme.$color-border;
-      background: radial-gradient(
-        circle at center,
-        #eee 0,
-        #eee 15%,
-        #fff 22%,
-        #fff 100%
-      );
+      border: 1px solid;
     }
   }
 }
@@ -159,7 +145,7 @@
     }
   }
   input {
-    @include mixin.checkbox();
+    @include checkbox();
     align-self: flex-start;
     flex-shrink: 0;
   }
@@ -178,7 +164,7 @@
     }
   }
   .select {
-    @include mixin.select();
+    @include select();
     select {
       width: 300px;
     }
@@ -187,69 +173,87 @@
 
 .item-button {
   button {
-    @include mixin.button();
+    @include button();
   }
 }
 
 .item-separator {
-  border-bottom: 1px solid theme.$color-border;
+  border-bottom: 1px solid;
 }
 
-.theme-dark {
-  .item {
-    &:hover,
-    &.selected {
-      background: theme.$color-fill-secondary-dark;
-    }
-    .description {
-      a {
-        background-color: transparent;
-        color: #58a6ff;
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    .item {
+      &:hover,
+      &.selected {
+        @include theme-var(background-color, color-fill-secondary, $theme);
       }
-    }
-  }
-  .item-separator {
-    border-color: theme.$color-border-dark;
-  }
-  .item-input {
-    input {
-      @include mixin.input(true);
-    }
-  }
-  .item-checkbox {
-    input {
-      @include mixin.checkbox(true);
-    }
-  }
-  .item-select {
-    .select {
-      @include mixin.select(true);
-    }
-  }
-  .item-button {
-    button {
-      @include mixin.button(true);
-    }
-  }
-  .item-number {
-    input[type='number'] {
-      @include mixin.input(true);
-    }
-    .range-container {
-      .range-track {
-        .range-track-bar {
-          background: theme.$color-border-dark;
+      &.selected:focus {
+        @include theme-var(outline-color, color-primary, $theme);
+      }
+      .description,
+      &.item-markdown {
+        a {
+          @include theme-var(color, color-primary, $theme);
         }
       }
-      input::-webkit-slider-thumb {
-        border-color: theme.$color-border-dark;
-        background: radial-gradient(
-          circle at center,
-          #aaa 0,
-          #aaa 15%,
-          #ccc 22%,
-          #ccc 100%
-        );
+    }
+    .item-separator {
+      @include theme-var(border-color, color-border, $theme);
+    }
+    .item-input {
+      input {
+        @include input-theme($theme);
+      }
+    }
+    .item-checkbox {
+      input {
+        @include checkbox-theme($theme);
+      }
+    }
+    .item-select {
+      .select {
+        @include select-theme($theme);
+      }
+    }
+    .item-button {
+      button {
+        @include button-theme($theme);
+      }
+    }
+    .item-number {
+      input[type='number'] {
+        @include input-theme($theme);
+      }
+      .range-container {
+        .range-track {
+          .range-track-bar {
+            @include theme-var(background-color, color-border, $theme);
+            .range-track-progress {
+              @include theme-var(background-color, color-primary, $theme);
+            }
+          }
+        }
+        input::-webkit-slider-thumb {
+          @include theme-var(border-color, color-border, $theme);
+          @if ($theme == 'light') {
+            background: radial-gradient(
+              circle at center,
+              #eee 0,
+              #eee 15%,
+              #fff 22%,
+              #fff 100%
+            );
+          } @else {
+            background: radial-gradient(
+              circle at center,
+              #aaa 0,
+              #aaa 15%,
+              #ccc 22%,
+              #ccc 100%
+            );
+          }
+        }
       }
     }
   }

@@ -1,36 +1,35 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-toolbar {
   height: 31px;
   display: flex;
   white-space: nowrap;
   overflow-x: hidden;
-  border-bottom: 1px solid theme.$color-border;
-  @include mixin.component();
+  border-bottom: 1px solid;
+  @include component(true);
   & {
-    font-size: #{theme.$font-size-s-m}px;
+    font-size: #{$font-size-s-m}px;
   }
 }
 
 .item {
   display: flex;
-  margin: 0 #{theme.$margin-x-x-s}px;
+  margin: 0 #{$margin-x-x-s}px;
 }
 
 .item-separator {
-  background: theme.$color-border;
   width: 1px;
   height: 22px;
   margin-top: 4px;
 }
 
 .item-select {
-  @include mixin.select();
+  @include select();
   margin-top: 4px;
   margin-bottom: 4px;
   select {
-    font-size: #{theme.$font-size-s-m}px;
+    font-size: #{$font-size-s-m}px;
     max-width: 200px;
   }
 }
@@ -41,7 +40,7 @@
 
 .item-input {
   input {
-    @include mixin.input();
+    @include input();
     height: 22px;
     margin-top: 4px;
     margin-bottom: 4px;
@@ -51,7 +50,7 @@
 
 .item-number {
   input[type='number'] {
-    @include mixin.input();
+    @include input();
     width: 60px;
     padding: 2px;
     height: 22px;
@@ -64,26 +63,15 @@
   button {
     display: flex;
     align-items: center;
-    font-size: #{theme.$font-size-s-m}px;
+    font-size: #{$font-size-s-m}px;
     padding: 0 2px;
-    color: theme.$color-text;
     height: 22px;
     margin-top: 4px;
     margin-bottom: 4px;
     border: none;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: #{theme.$border-radius-x-s}px;
-    &:hover,
-    &.hover {
-      background: theme.$color-fill-tertiary;
-      border-color: theme.$color-border;
-    }
-    &:active,
-    &.active {
-      border-color: theme.$color-border;
-      background: theme.$color-fill-secondary;
-    }
+    border-radius: #{$border-radius-x-s}px;
   }
 }
 
@@ -94,7 +82,7 @@
 .item-checkbox {
   align-items: center;
   input {
-    @include mixin.checkbox();
+    @include checkbox();
   }
   label {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -109,42 +97,48 @@
   opacity: 0.6;
 }
 
-.theme-dark {
-  border-bottom-color: theme.$color-border-dark;
-  .item-separator {
-    background: theme.$color-border-dark;
-  }
-  .item-button {
-    button {
-      color: theme.$color-text-dark;
-      &:hover,
-      &.hover {
-        background: theme.$color-fill-secondary-dark;
-        border-color: theme.$color-border-dark;
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    @include theme-var(border-bottom-color, color-border, $theme);
+    .item-separator {
+      @include theme-var(background-color, color-border, $theme);
+    }
+    .item-button {
+      button {
+        @include theme-var(color, color-text, $theme);
+        &:hover,
+        &.hover {
+          @include theme-vars((
+            background-color: color-fill-secondary-dark,
+            border-color: color-border
+          ), $theme)
+        }
+        &:active,
+        &.active {
+          @include theme-vars((
+            border-color: color-border,
+            background-color: color-fill-tertiary
+          ), $theme);
+        }
       }
-      &:active,
-      &.active {
-        border-color: theme.$color-border-dark;
-        background: theme.$color-fill-tertiary-dark;
+    }
+    .item-select {
+      @include select-theme($theme);
+    }
+    .item-input {
+      input {
+        @include input-theme($theme);
       }
     }
-  }
-  .item-select {
-    @include mixin.select(true);
-  }
-  .item-input {
-    input {
-      @include mixin.input(true);
+    .item-number {
+      input[type='number'] {
+        @include input-theme($theme);
+      }
     }
-  }
-  .item-number {
-    input[type='number'] {
-      @include mixin.input(true);
-    }
-  }
-  .item-checkbox {
-    input {
-      @include mixin.checkbox(true);
+    .item-checkbox {
+      input {
+        @include checkbox-theme($theme);
+      }
     }
   }
 }

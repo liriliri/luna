@@ -399,7 +399,7 @@
   },
   "toolbar": {
     "react": true,
-    "version": "0.9.1",
+    "version": "0.9.2",
     "style": true,
     "icon": false,
     "test": true,

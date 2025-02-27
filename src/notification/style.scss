@@ -1,5 +1,5 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-notification {
   position: relative;
@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  @include mixin.component(true);
+  @include component(true);
   &.full {
     position: fixed;
     top: 0;
@@ -20,11 +20,9 @@
 
 .item {
   display: flex;
-  border: 1px solid theme.$color-border;
+  border: 1px solid;
   padding: 10px 16px;
-  color: theme.$color-text;
   align-items: center;
-  background: theme.$color-bg-container;
 }
 
 .lower {
@@ -44,7 +42,6 @@
   text-align: center;
   line-height: 16px;
   &.info {
-    background: theme.$color-info;
     .icon {
       position: relative;
       top: -2px;
@@ -52,7 +49,6 @@
     }
   }
   &.success {
-    background: theme.$color-success;
     .icon {
       position: relative;
       top: -1px;
@@ -62,7 +58,6 @@
   &.warning {
     position: relative;
     top: -2px;
-    color: theme.$color-warning;
     .icon {
       font-size: 14px;
     }
@@ -70,32 +65,38 @@
   &.error {
     position: relative;
     top: -1px;
-    color: theme.$color-error;
     .icon {
       font-size: 14px;
     }
   }
 }
 
-.theme-dark {
-  .item {
-    border-color: theme.$color-border-dark;
-    box-shadow: theme.$box-shadow-dark;
-    color: theme.$color-text-dark;
-    background: theme.$color-bg-container-dark;
-  }
-  .icon-container {
-    &.info {
-      background: theme.$color-info-dark;
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    .item {
+      @include theme-vars(
+        (
+          border-color: color-border,
+          box-shadow: box-shadow,
+          color: color-text,
+          background-color: color-bg-container,
+        ),
+        $theme
+      );
     }
-    &.success {
-      background: theme.$color-success-dark;
-    }
-    &.warning {
-      color: theme.$color-warning-dark;
-    }
-    &.error {
-      color: theme.$color-error-dark;
+    .icon-container {
+      &.info {
+        @include theme-var(background-color, color-info, $theme);
+      }
+      &.success {
+        @include theme-var(background-color, color-success, $theme);
+      }
+      &.warning {
+        @include theme-var(color, color-warning, $theme);
+      }
+      &.error {
+        @include theme-var(color, color-error, $theme);
+      }
     }
   }
 }

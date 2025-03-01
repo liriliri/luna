@@ -1,13 +1,13 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-icon-list {
   width: 100%;
-  padding-top: #{theme.$padding-x-s}px;
-  padding-bottom: #{theme.$padding-x-s}px;
+  padding-top: #{$padding-x-s}px;
+  padding-bottom: #{$padding-x-s}px;
   overflow-x: hidden;
-  @include mixin.overflow-auto(y);
-  @include mixin.component(true);
+  @include overflow-auto(y);
+  @include component(true);
 }
 
 .icon-container {
@@ -40,11 +40,11 @@
 .icon {
   margin: 0 auto;
   width: 100%;
-  padding: #{theme.$padding-x-s}px;
+  padding: #{$padding-x-s}px;
   overflow: hidden;
   font-size: 0;
   margin-bottom: 2px;
-  border-radius: #{theme.$border-radius-s-m}px;
+  border-radius: #{$border-radius-s-m}px;
   img {
     object-fit: contain;
     width: 100%;
@@ -58,9 +58,9 @@
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-radius: #{theme.$border-radius-s-m}px;
+  border-radius: #{$border-radius-s-m}px;
   padding: 2px;
-  font-size: #{theme.$font-size-s-m}px;
+  font-size: #{$font-size-s-m}px;
 }
 
 @each $theme in ('light', 'dark') {
@@ -68,11 +68,11 @@
     .item {
       &.selected {
         .icon {
-          @include mixin.theme-var(background-color, color-border, $theme);
+          @include theme-var(background-color, color-border, $theme);
         }
         .name {
-          @include mixin.theme-var(background-color, color-primary, $theme);
-          @include mixin.theme-var(color, color-white, $theme);
+          @include theme-var(background-color, color-primary, $theme);
+          @include theme-var(color, color-white, $theme);
         }
       }
     }

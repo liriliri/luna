@@ -1,3 +1,7 @@
+## 1.2.2 (2 Mar 2025)
+
+* refactor: theme
+
 ## 1.2.1 (28 Nov 2024)
 
 * fix: value disappear

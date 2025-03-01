@@ -1,5 +1,5 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-command-palette {
   position: fixed;
@@ -12,12 +12,12 @@
   align-items: flex-start;
   padding-top: 10px;
   overflow: hidden;
-  @include mixin.component(true);
+  @include component(true);
 }
 
 .body {
   max-width: 100%;
-  box-shadow: theme.$box-shadow;
+  box-shadow: $box-shadow;
   font-size: 12px;
 }
 
@@ -54,27 +54,23 @@
 @each $theme in ('light', 'dark') {
   .theme-#{$theme} {
     .body {
-      @include mixin.theme-var(background-color, color-bg-container, $theme);
+      @include theme-var(background-color, color-bg-container, $theme);
     }
 
     .input {
-      @include mixin.theme-var(background-color, color-bg-container, $theme);
-      @include mixin.theme-var(border-color, color-border, $theme);
-      @include mixin.theme-var(color, color-text, $theme);
+      @include theme-var(background-color, color-bg-container, $theme);
+      @include theme-var(border-color, color-border, $theme);
+      @include theme-var(color, color-text, $theme);
     }
 
     .list {
       li {
         &:hover {
-          @include mixin.theme-var(
-            background-color,
-            color-fill-secondary,
-            $theme
-          );
+          @include theme-var(background-color, color-fill-secondary, $theme);
         }
         &.active {
-          @include mixin.theme-var(color, color-white, $theme);
-          @include mixin.theme-var(background-color, color-primary, $theme);
+          @include theme-var(color, color-white, $theme);
+          @include theme-var(background-color, color-primary, $theme);
         }
       }
     }

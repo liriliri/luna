@@ -1,11 +1,11 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-tab {
   position: relative;
   overflow: hidden;
   width: 100%;
-  @include mixin.component();
+  @include component();
 }
 
 .tabs-container {
@@ -13,7 +13,7 @@
 }
 
 .tabs {
-  @include mixin.overflow-auto(x);
+  @include overflow-auto(x);
   overflow-y: hidden;
   width: 100%;
   height: 100%;
@@ -30,11 +30,11 @@
   cursor: pointer;
   display: inline-block;
   padding: 0 10px;
-  font-size: #{theme.$font-size-s-m}px;
+  font-size: #{$font-size-s-m}px;
   text-align: center;
   text-transform: capitalize;
   &:hover {
-    background: theme.$color-fill-secondary;
+    background: $color-fill-secondary;
   }
 }
 
@@ -49,23 +49,19 @@
 @each $theme in ('light', 'dark') {
   .theme-#{$theme} {
     .tabs-container {
-      @include mixin.theme-var(border-color, color-border, $theme);
+      @include theme-var(border-color, color-border, $theme);
     }
     .item {
       &.luna-tab-selected {
-        @include mixin.theme-var(color, color-primary, $theme);
+        @include theme-var(color, color-primary, $theme);
       }
       &:hover {
-        @include mixin.theme-var(color, color-text, $theme);
-        @include mixin.theme-var(
-          background-color,
-          color-fill-secondary,
-          $theme
-        );
+        @include theme-var(color, color-text, $theme);
+        @include theme-var(background-color, color-fill-secondary, $theme);
       }
     }
     .slider {
-      @include mixin.theme-var(background-color, color-primary, $theme);
+      @include theme-var(background-color, color-primary, $theme);
     }
   }
 }

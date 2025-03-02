@@ -1,14 +1,14 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-data-grid {
   position: relative;
   border: 1px solid;
   overflow: hidden;
   outline: none;
-  @include mixin.component();
+  @include component();
   & {
-    font-size: #{theme.$font-size-s-m}px;
+    font-size: #{$font-size-s-m}px;
   }
 
   table {
@@ -37,7 +37,7 @@
     text-align: left;
     position: relative;
     &.sortable {
-      padding-right: #{theme.$padding-s-m}px;
+      padding-right: #{$padding-s-m}px;
     }
     .icon-caret-down,
     .icon-caret-up {
@@ -100,16 +100,16 @@
 
 @each $theme in ('light', 'dark') {
   .theme-#{$theme} {
-    @include mixin.theme-var(border-color, color-border, $theme);
+    @include theme-var(border-color, color-border, $theme);
     th,
     td {
-      @include mixin.theme-var(border-color, color-border, $theme);
+      @include theme-var(border-color, color-border, $theme);
     }
     th {
-      @include mixin.theme-var(background-color, color-fill-secondary, $theme);
+      @include theme-var(background-color, color-fill-secondary, $theme);
       &.sortable {
         &:hover {
-          @include mixin.theme-var(background-color, color-fill, $theme);
+          @include theme-var(background-color, color-fill, $theme);
         }
       }
     }
@@ -124,7 +124,7 @@
     }
     &:focus {
       .node.selectable.selected {
-        @include mixin.theme-var(background-color, color-primary, $theme);
+        @include theme-var(background-color, color-primary, $theme);
       }
     }
   }

@@ -68,7 +68,7 @@ export default class ImageViewer extends Component<IOptions> {
   private isWheeling = false
   private ratioHideTimer: any = 0
   constructor(container: HTMLElement, options: IOptions) {
-    super(container, { compName: 'image-viewer' })
+    super(container, { compName: 'image-viewer' }, options)
     this.initOptions(options, {
       initialCoverage: 0.9,
       zoomOnWheel: true,

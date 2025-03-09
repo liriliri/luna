@@ -1,6 +1,7 @@
 import 'luna-image-viewer.css'
 import ImageViewer from 'luna-image-viewer.js'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 import story from '../share/story'
 import $ from 'licia/$'
 import { text, number, button, boolean } from '@storybook/addon-knobs'
@@ -53,12 +54,14 @@ const def = story(
   },
   {
     readme,
+    changelog,
     source: __STORY__,
-    ReactComponent() {
+    ReactComponent({ theme }) {
       const { image, initialCoverage, zoomOnWheel } = createKnobs()
 
       return (
         <LunaImageViewer
+          theme={theme}
           style={{
             width: '100%',
             maxWidth: 640,

@@ -1,6 +1,6 @@
 {
   "name": "image-viewer",
-  "version": "0.5.2",
+  "version": "1.0.0",
   "description": "Single image viewer",
   "luna": {
     "react": true

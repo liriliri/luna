@@ -1,12 +1,11 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
 
 .luna-image-viewer {
   overflow: hidden;
   touch-action: none;
-  border: 1px solid theme.$color-border;
+  border: 1px solid;
   position: relative;
-  @include mixin.component();
+  @include component();
 }
 
 .image {
@@ -41,6 +40,8 @@
   transition: all 0.3s;
 }
 
-.theme-dark {
-  border: 1px solid theme.$color-border-dark;
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    @include theme-var(border-color, color-border, $theme);
+  }
 }

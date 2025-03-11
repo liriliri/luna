@@ -220,7 +220,7 @@
     "dependencies": ["painter"],
     "style": false,
     "react": true,
-    "version": "0.5.0",
+    "version": "0.5.1",
     "icon": false,
     "test": true,
     "install": false

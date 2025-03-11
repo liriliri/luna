@@ -40,6 +40,7 @@ const maskEditor = new LunaMaskEditor(container)
 ## Configuration
 
 * image(string): Image src.
+* mask(string): Mask src.
 
 ## Api
 

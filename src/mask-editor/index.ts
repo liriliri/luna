@@ -2,7 +2,7 @@ import Component, { IComponentOptions } from '../share/Component'
 import LunaPainter, { Layer, Zoom, Hand } from 'luna-painter'
 import debounce from 'licia/debounce'
 import Color from 'licia/Color'
-import { loadImage } from '../share/util'
+import { exportCjs, loadImage } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -246,4 +246,8 @@ class MaskPaintBucket extends LunaPainter.PaintBucket {
     super(painter)
     this.options.tolerance = 100
   }
+}
+
+if (typeof module !== 'undefined') {
+  exportCjs(module, MaskEditor)
 }

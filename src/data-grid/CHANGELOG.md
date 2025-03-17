@@ -1,3 +1,7 @@
+## 1.4.0 (17 Mar 2025)
+
+* feat: virtual list
+
 ## 1.3.2 (2 Mar 2025)
 
 * refactor: theme

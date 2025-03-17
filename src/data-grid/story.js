@@ -34,6 +34,24 @@ const def = story(
     dataGrid.on('click', (e, node) => console.log('click', node))
     dataGrid.on('dblclick', (e, node) => console.log('dblclick', node))
     dataGrid.on('contextmenu', (e, node) => console.log('contextmenu', node))
+
+    button('Append 10000 items', () => {
+      for (let i = 0; i < 10000; i++) {
+        dataGrid.append(
+          {
+            index: i,
+            name: 'Luna',
+            site: 'luna.liriliri.io',
+          },
+          {
+            selectable: true,
+          }
+        )
+      }
+
+      return false
+    })
+
     button('Remove Selected', () => {
       if (selectedNode) {
         dataGrid.remove(selectedNode)

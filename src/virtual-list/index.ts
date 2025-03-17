@@ -34,8 +34,6 @@ export default class VirtualList extends Component<IOptions> {
   private spaceHeight = 0
   private spaceWidth = 0
   private topSpaceHeight = 0
-  // @ts-ignore
-  private bottomSpaceHeight = 0
   private lastScrollTop = 0
   private lastTimestamp = 0
   private speedToleranceFactor = 100
@@ -166,9 +164,6 @@ export default class VirtualList extends Component<IOptions> {
     this.topSpaceHeight = height
     this.el.style.top = height + 'px'
   }
-  private updateBottomSpace(height: number) {
-    this.bottomSpaceHeight = height
-  }
   private updateSpace(height: number, width: number) {
     if (this.spaceHeight === height && this.spaceWidth === width) {
       return
@@ -197,7 +192,6 @@ export default class VirtualList extends Component<IOptions> {
       const { items } = this
 
       let topSpaceHeight = 0
-      let bottomSpaceHeight = 0
       let currentHeight = 0
       let currentWidth = 0
 
@@ -208,13 +202,13 @@ export default class VirtualList extends Component<IOptions> {
         const item = items[i]
         const { height, width } = item
 
-        if (currentHeight > bottom) {
-          bottomSpaceHeight += height
-        } else if (currentHeight + height > top) {
-          displayItems.push(item)
-        } else if (currentHeight < top) {
-          topSpaceHeight += height
-        }
+        if (currentHeight <= bottom) {
+          if (currentHeight + height > top) {
+            displayItems.push(item)
+          } else if (currentHeight < top) {
+            topSpaceHeight += height
+          }
+        } 
 
         currentHeight += height
 
@@ -225,7 +219,6 @@ export default class VirtualList extends Component<IOptions> {
 
       this.updateSpace(currentHeight, currentWidth)
       this.updateTopSpace(topSpaceHeight)
-      this.updateBottomSpace(bottomSpaceHeight)
 
       if (
         len > 0 &&

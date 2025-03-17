@@ -25,6 +25,9 @@ import lowerCase from 'licia/lowerCase'
 import clamp from 'licia/clamp'
 import max from 'licia/max'
 import min from 'licia/min'
+import isOdd from 'licia/isOdd'
+import now from 'licia/now'
+import remove from 'licia/remove'
 import pointerEvent from 'licia/pointerEvent'
 import { exportCjs, eventClient, pxToNum } from '../share/util'
 
@@ -69,7 +72,7 @@ export interface IDataGridNodeOptions {
   selectable?: boolean
 }
 
-const MIN_APPEND_INTERVAL = 100
+const ROW_HEIGHT = 20
 
 /**
  * Grid for displaying datasets.
@@ -117,9 +120,19 @@ export default class DataGrid extends Component<IOptions> {
   private sortId?: string
   private selectedNode: DataGridNode | null = null
   private isAscending = true
-  private appendTimer: NodeJS.Timeout | null = null
-  private frag: DocumentFragment = document.createDocumentFragment()
   private colWidths: number[] = []
+  private $space: $.$
+  private $data: $.$
+  private data: HTMLElement
+  private space: HTMLElement
+  private spaceHeight = 0
+  private topSpaceHeight = 0
+  private lastScrollTop = 0
+  private lastTimestamp = 0
+  private speedToleranceFactor = 100
+  private maxSpeedTolerance = 2000
+  private minSpeedTolerance = 100
+  private scrollTimer: NodeJS.Timeout | null = null
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'data-grid' }, options)
     this.$container.attr('tabindex', '0')
@@ -154,11 +167,15 @@ export default class DataGrid extends Component<IOptions> {
     this.$headerRow = this.find('.header').find('tr')
     this.$fillerRow = this.find('.filler-row')
     this.fillerRow = this.$fillerRow.get(0) as HTMLElement
-    this.$tableBody = this.find('.data').find('tbody')
+    this.$data = this.find('.data')
+    this.data = this.$data.get(0) as HTMLElement
+    this.$tableBody = this.$data.find('tbody')
     this.tableBody = this.$tableBody.get(0) as HTMLElement
     this.$colgroup = this.$container.find('colgroup')
     this.$dataContainer = this.find('.data-container')
     this.dataContainer = this.$dataContainer.get(0) as HTMLDivElement
+    this.$space = this.find('.data-space')
+    this.space = this.$space.get(0) as HTMLElement
 
     this.renderHeader()
     this.renderResizers()
@@ -174,16 +191,14 @@ export default class DataGrid extends Component<IOptions> {
   }
   /** Remove row data. */
   remove(node: DataGridNode) {
-    const { nodes } = this
-    const pos = nodes.indexOf(node)
-    if (pos > -1) {
-      node.detach()
-      nodes.splice(pos, 1)
-      if (node === this.selectedNode) {
-        this.selectNode(nodes[pos] || nodes[pos - 1] || null)
-      }
-      this.updateHeight()
+    const { nodes, displayNodes } = this
+    remove(nodes, (n) => n === node)
+    remove(displayNodes, (n) => n === node)
+    if (node === this.selectedNode) {
+      this.selectNode(null)
     }
+    this.renderData()
+    this.updateHeight()
   }
   /** Append row data. */
   append(data: NodeData, options: IDataGridNodeOptions = {}) {
@@ -202,19 +217,13 @@ export default class DataGrid extends Component<IOptions> {
       this.sortNodes(this.sortId, this.isAscending)
     } else {
       if (isVisible) {
-        this.frag.appendChild(node.container)
-        if (!this.appendTimer) {
-          this.appendTimer = setTimeout(this._append, MIN_APPEND_INTERVAL)
-        }
+        this.renderData()
       }
     }
 
-    return node
-  }
-  private _append = () => {
-    this.tableBody.insertBefore(this.frag, this.fillerRow)
-    this.appendTimer = null
     this.updateHeight()
+
+    return node
   }
   /** Set data. */
   setData(
@@ -287,18 +296,16 @@ export default class DataGrid extends Component<IOptions> {
   }
   /** Clear all data. */
   clear() {
-    this.detachAll()
     this.nodes = []
     this.displayNodes = []
     this.selectNode(null)
 
+    this.renderData()
     this.updateHeight()
   }
   private updateHeight() {
-    const { $fillerRow, c, $container } = this
+    const { $fillerRow, $container } = this
     let { maxHeight, minHeight } = this.options
-
-    this.$dataContainer.css({ height: 'auto' })
 
     const headerHeight = this.$headerRow.offset().height
     const borderTopWidth = pxToNum($container.css('border-top-width'))
@@ -311,12 +318,10 @@ export default class DataGrid extends Component<IOptions> {
     }
     maxHeight -= minusHeight
 
-    const $tr = this.$dataContainer.find(c('.node'))
-    const len = ($tr as any).length
+    const len = this.displayNodes.length
     let height = 0
     if (len > 0) {
-      const rowHeight = $tr.offset().height
-      height = rowHeight * len
+      height = ROW_HEIGHT * len
     }
 
     if (height > minHeight) {
@@ -411,9 +416,11 @@ export default class DataGrid extends Component<IOptions> {
     $document.off(pointerEvent('up'), this.onResizeColEnd)
   }
   private bindEvent() {
-    const { c, $headerRow, $tableBody, $resizers } = this
+    const { c, $headerRow, $tableBody, $resizers, $dataContainer } = this
 
     this.resizeSensor.addListener(this.onResize)
+
+    $dataContainer.on('scroll', this.onScroll)
 
     const self = this
 
@@ -593,26 +600,120 @@ export default class DataGrid extends Component<IOptions> {
       this.$resizers.eq(i).css('left', resizerLeft[i] + 'px')
     }
   }
-  private renderData() {
-    const { tableBody, displayNodes, fillerRow, dataContainer } = this
+  private onScroll = () => {
+    const { scrollHeight, clientHeight, scrollTop } = this
+      .dataContainer as HTMLElement
+    // safari bounce effect
+    if (scrollTop <= 0) return
+    if (clientHeight + scrollTop > scrollHeight) return
 
-    const scrollTop = dataContainer.scrollTop
+    const lastScrollTop = this.lastScrollTop
+    const lastTimestamp = this.lastTimestamp
 
-    this.detachAll()
-    const frag = document.createDocumentFragment()
-    each(displayNodes, (node) => {
-      frag.appendChild(node.container)
+    const timestamp = now()
+    const duration = timestamp - lastTimestamp
+    const distance = scrollTop - lastScrollTop
+    const speed = Math.abs(distance / duration)
+    let speedTolerance = speed * this.speedToleranceFactor
+    if (duration > 1000) {
+      speedTolerance = 1000
+    }
+    if (speedTolerance > this.maxSpeedTolerance) {
+      speedTolerance = this.maxSpeedTolerance
+    }
+    if (speedTolerance < this.minSpeedTolerance) {
+      speedTolerance = this.minSpeedTolerance
+    }
+    this.lastScrollTop = scrollTop
+    this.lastTimestamp = timestamp
+
+    let topTolerance = 0
+    let bottomTolerance = 0
+    if (lastScrollTop < scrollTop) {
+      topTolerance = this.minSpeedTolerance
+      bottomTolerance = speedTolerance
+    } else {
+      topTolerance = speedTolerance
+      bottomTolerance = this.minSpeedTolerance
+    }
+
+    if (
+      this.topSpaceHeight < scrollTop - topTolerance &&
+      this.topSpaceHeight + this.data.offsetHeight >
+        scrollTop + clientHeight + bottomTolerance
+    ) {
+      return
+    }
+
+    this.renderData({
+      topTolerance: topTolerance * 2,
+      bottomTolerance: bottomTolerance * 2,
     })
-    tableBody.insertBefore(frag, fillerRow)
 
-    this.updateHeight()
-
-    dataContainer.scrollTop = scrollTop
+    if (this.scrollTimer) {
+      clearTimeout(this.scrollTimer)
+    }
+    this.scrollTimer = setTimeout(() => {
+      this.renderData()
+    }, 100)
   }
-  private detachAll() {
-    const { tableBody } = this
-    tableBody.innerHTML = ''
-    tableBody.appendChild(this.fillerRow)
+  private renderData = throttle(
+    ({ topTolerance = 500, bottomTolerance = 500 } = {}) => {
+      const { dataContainer, displayNodes, tableBody } = this
+      const { scrollTop, clientHeight } = dataContainer
+      const top = scrollTop - topTolerance
+      const bottom = scrollTop + clientHeight + bottomTolerance
+
+      let topSpaceHeight = 0
+      let currentHeight = 0
+
+      const len = displayNodes.length
+
+      const renderNodes = []
+      const height = ROW_HEIGHT
+
+      for (let i = 0; i < len; i++) {
+        const node = displayNodes[i]
+
+        if (currentHeight <= bottom) {
+          if (currentHeight + height > top) {
+            if (renderNodes.length === 0 && isOdd(i)) {
+              renderNodes.push(displayNodes[i - 1])
+              topSpaceHeight -= height
+            }
+            renderNodes.push(node)
+          } else if (currentHeight < top) {
+            topSpaceHeight += height
+          }
+        }
+
+        currentHeight += height
+      }
+
+      this.updateSpace(currentHeight)
+      this.updateTopSpace(topSpaceHeight)
+
+      const frag = document.createDocumentFragment()
+      for (let i = 0, len = renderNodes.length; i < len; i++) {
+        frag.appendChild(renderNodes[i].container)
+      }
+      frag.appendChild(this.fillerRow)
+
+      tableBody.textContent = ''
+      tableBody.appendChild(frag)
+    },
+    16
+  )
+  private updateTopSpace(height: number) {
+    this.topSpaceHeight = height
+    this.data.style.top = height + 'px'
+  }
+  private updateSpace(height: number) {
+    if (this.spaceHeight === height) {
+      return
+    }
+    this.spaceHeight = height
+    this.space.style.height = height + 'px'
   }
   private filterNode(node: DataGridNode) {
     let { filter } = this.options
@@ -675,12 +776,14 @@ export default class DataGrid extends Component<IOptions> {
           </table>
         </div>
         <div class="data-container">
-          <table class="data">
-            <colgroup></colgroup>
-            <tbody>
-              <tr class="filler-row"></tr>
-            </tbody>
-          </table>
+          <div class="data-space">
+            <table class="data">
+              <colgroup></colgroup>
+              <tbody>
+                <tr class="filler-row"></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       `)
     )
@@ -713,9 +816,6 @@ export class DataGridNode {
   }
   text() {
     return this.$container.text()
-  }
-  detach() {
-    this.$container.remove()
   }
   select() {
     this.$container.addClass(this.dataGrid.c('selected'))

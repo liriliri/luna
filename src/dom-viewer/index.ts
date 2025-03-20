@@ -35,6 +35,8 @@ export interface IOptions extends IComponentOptions {
   ignore?: types.AnyFn
   /** Enable hotkey. */
   hotkey?: boolean
+  /** Observe dom mutation. */
+  observe?: boolean
   parent?: DomViewer | null
   isEndTag?: boolean
   rootContainer?: HTMLElement
@@ -65,6 +67,7 @@ export default class DomViewer extends Component<IOptions> {
       node: document.documentElement,
       parent: null,
       isEndTag: false,
+      observe: true,
       rootContainer: container,
       rootDomViewer: this,
       ignore: () => false,
@@ -75,7 +78,7 @@ export default class DomViewer extends Component<IOptions> {
 
     this.initTpl()
     this.bindEvent()
-    if (!this.options.isEndTag) {
+    if (!this.options.isEndTag && this.options.observe) {
       this.initObserver()
     }
   }
@@ -445,7 +448,7 @@ export default class DomViewer extends Component<IOptions> {
   private renderChildNodes() {
     const node = this.options.node as HTMLElement
 
-    const { rootContainer, ignore, rootDomViewer } = this.options
+    const { rootContainer, ignore, rootDomViewer, observe } = this.options
     const $container = this.$children
     const container = $container.get(0)
     const oldChildNodes = this.childNodes
@@ -471,6 +474,7 @@ export default class DomViewer extends Component<IOptions> {
       } else {
         domViewer = new DomViewer(container as HTMLElement, {
           node,
+          observe,
           parent: this,
           rootContainer,
           rootDomViewer,

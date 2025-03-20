@@ -1,3 +1,7 @@
+## 1.6.0 (20 Mar 2025)
+
+* feat: observe option
+
 ## 1.5.0 (20 Mar 2025)
 
 * feat: support react

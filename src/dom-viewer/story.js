@@ -5,6 +5,7 @@ import LunaDomViewer from './react'
 import story from '../share/story'
 import readme from './README.md'
 import changelog from './CHANGELOG.md'
+import { boolean } from '@storybook/addon-knobs'
 
 const def = story(
   'dom-viewer',
@@ -13,8 +14,11 @@ const def = story(
     const root = test.attachShadow({ mode: 'open' })
     root.innerHTML = `<span style="display:none;">Shadow DOM</span>`
 
+    const { observe } = createKnobs()
+
     const container = h('div')
     const domViewer = new DomViewer(container, {
+      observe,
       ignore(node) {
         if (node.tagName === 'STYLE') {
           return true
@@ -34,15 +38,24 @@ const def = story(
     changelog,
     source: __STORY__,
     ReactComponent({ theme }) {
+      const { observe } = createKnobs()
+
       return (
         <LunaDomViewer
           theme={theme}
+          observe={observe}
           onCreate={(domViewer) => domViewer.expand()}
         />
       )
     },
   }
 )
+
+function createKnobs() {
+  const observe = boolean('Observe', true)
+
+  return { observe }
+}
 
 export default def
 

@@ -39,6 +39,7 @@ domViewer.expand()
 * hotkey(boolean): Enable hotkey.
 * ignore(AnyFn): Predicate function which removes the matching child nodes.
 * node(ChildNode): Html element to navigate.
+* observe(boolean): Observe dom mutation.
 
 ## Api
 

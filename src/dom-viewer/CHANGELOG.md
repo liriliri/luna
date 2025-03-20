@@ -1,3 +1,7 @@
+## 1.7.0 (20 Mar 2025)
+
+* feat: ignoreAttr option
+
 ## 1.6.0 (20 Mar 2025)
 
 * feat: observe option

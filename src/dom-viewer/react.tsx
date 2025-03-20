@@ -16,6 +16,8 @@ const LunaDomViewer: FC<IDomViewerProps> = (props) => {
       theme: props.theme,
       hotkey: props.hotkey,
       node: props.node,
+      ignore: props.ignore,
+      ignoreAttr: props.ignoreAttr,
       observe: props.observe,
     })
     props.onCreate && props.onCreate(domViewer.current)

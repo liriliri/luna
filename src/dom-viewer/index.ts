@@ -33,6 +33,8 @@ export interface IOptions extends IComponentOptions {
   node?: ChildNode
   /** Predicate function which removes the matching child nodes. */
   ignore?: types.AnyFn
+  /** Predicate function which removes the matching node attributes. */
+  ignoreAttr?: types.AnyFn
   /** Enable hotkey. */
   hotkey?: boolean
   /** Observe dom mutation. */
@@ -71,6 +73,7 @@ export default class DomViewer extends Component<IOptions> {
       rootContainer: container,
       rootDomViewer: this,
       ignore: () => false,
+      ignoreAttr: () => false,
       hotkey: true,
     })
 
@@ -509,6 +512,9 @@ export default class DomViewer extends Component<IOptions> {
     }
   }
   private renderHtmlTag(data: IHtmlTagData) {
+    data.attributes = filter(data.attributes, (attribute) => {
+      return !this.options.ignoreAttr(data.el, attribute.name, attribute.value)
+    })
     const attributes = map(data.attributes, (attribute) => {
       const { name, value, isLink } = attribute
 
@@ -601,6 +607,7 @@ interface IBasicHtmlTagData {
 }
 
 interface IHtmlTagData extends IBasicHtmlTagData {
+  el: HTMLElement
   text?: string
   hasTail?: boolean
   hasToggleButton?: boolean
@@ -608,6 +615,7 @@ interface IHtmlTagData extends IBasicHtmlTagData {
 
 function getHtmlTagData(el: HTMLElement) {
   const ret: IHtmlTagData = {
+    el,
     tagName: '',
     attributes: [],
   }

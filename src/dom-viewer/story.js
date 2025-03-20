@@ -19,12 +19,8 @@ const def = story(
     const container = h('div')
     const domViewer = new DomViewer(container, {
       observe,
-      ignore(node) {
-        if (node.tagName === 'STYLE') {
-          return true
-        }
-        return false
-      },
+      ignore,
+      ignoreAttr,
     })
     domViewer.expand()
 
@@ -44,12 +40,28 @@ const def = story(
         <LunaDomViewer
           theme={theme}
           observe={observe}
+          ignore={ignore}
+          ignoreAttr={ignoreAttr}
           onCreate={(domViewer) => domViewer.expand()}
         />
       )
     },
   }
 )
+
+function ignore(node) {
+  if (node.tagName === 'STYLE') {
+    return true
+  }
+  return false
+}
+
+function ignoreAttr(el, name, value) {
+  if (name === 'lang') {
+    return true
+  }
+  return false
+}
 
 function createKnobs() {
   const observe = boolean('Observe', true)

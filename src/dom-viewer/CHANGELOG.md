@@ -1,3 +1,7 @@
+## 1.7.1 (20 Mar 2025)
+
+* fix: ignoreAttr
+
 ## 1.7.0 (20 Mar 2025)
 
 * feat: ignoreAttr option

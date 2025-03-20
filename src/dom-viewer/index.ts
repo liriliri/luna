@@ -451,7 +451,8 @@ export default class DomViewer extends Component<IOptions> {
   private renderChildNodes() {
     const node = this.options.node as HTMLElement
 
-    const { rootContainer, ignore, rootDomViewer, observe } = this.options
+    const { rootContainer, ignore, ignoreAttr, rootDomViewer, observe } =
+      this.options
     const $container = this.$children
     const container = $container.get(0)
     const oldChildNodes = this.childNodes
@@ -482,6 +483,7 @@ export default class DomViewer extends Component<IOptions> {
           rootContainer,
           rootDomViewer,
           ignore,
+          ignoreAttr,
         })
       }
       domViewer.attach()

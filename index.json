@@ -91,11 +91,11 @@
   },
   "dom-viewer": {
     "icon": true,
-    "version": "1.4.0",
+    "react": true,
+    "version": "1.5.0",
     "style": true,
     "test": true,
     "install": false,
-    "react": false,
     "dependencies": []
   },
   "editor": {

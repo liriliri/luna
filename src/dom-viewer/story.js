@@ -1,6 +1,7 @@
 import 'luna-dom-viewer.css'
 import h from 'licia/h'
 import DomViewer from 'luna-dom-viewer.js'
+import LunaDomViewer from './react'
 import story from '../share/story'
 import readme from './README.md'
 import changelog from './CHANGELOG.md'
@@ -32,9 +33,17 @@ const def = story(
     readme,
     changelog,
     source: __STORY__,
+    ReactComponent({ theme }) {
+      return (
+        <LunaDomViewer
+          theme={theme}
+          onCreate={(domViewer) => domViewer.expand()}
+        />
+      )
+    },
   }
 )
 
 export default def
 
-export const { domViewer } = def
+export const { domViewer: html, react } = def

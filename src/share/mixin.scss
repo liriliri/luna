@@ -137,8 +137,8 @@ $theme-variables: meta.module-variables(theme);
   }
 }
 
-@mixin code-color($dark: false) {
-  @if $dark {
+@mixin code-color($theme: 'light') {
+  @if $theme == 'dark' {
     .keyword {
       color: #e36eec;
     }
@@ -235,7 +235,7 @@ $theme-variables: meta.module-variables(theme);
   }
 }
 
-@mixin select($dark: false) {
+@mixin select() {
   position: relative;
   select {
     margin: 0;

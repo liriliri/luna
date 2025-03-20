@@ -1,5 +1,5 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-dom-viewer {
   overflow-x: hidden;
@@ -7,17 +7,14 @@
   padding: 0 0 0 12px;
   cursor: default;
   list-style: none;
-  @include mixin.overflow-auto(y);
-  @include mixin.component(true);
+  @include overflow-auto(y);
+  @include component(true);
   & {
-    font-size: #{theme.$font-size-s-m}px;
-    font-family: theme.$font-family-code;
+    font-size: #{$font-size-s-m}px;
+    font-family: $font-family-code;
   }
   ul {
     list-style: none;
-  }
-  &.theme-dark {
-    color: #e8eaed;
   }
 }
 
@@ -44,21 +41,6 @@
       display: block;
     }
   }
-  &:hover {
-    .selection {
-      background: #f2f7fd;
-    }
-  }
-  &.selected {
-    .selection {
-      background: #e0e0e0;
-    }
-  }
-  &.selected:focus {
-    .selection {
-      background: #cfe8fc;
-    }
-  }
   .icon-caret-down {
     display: none;
   }
@@ -72,27 +54,10 @@
   }
 }
 
-.html-tag {
-  color: #881280;
-}
-
-.tag-name {
-  color: #881280;
-}
-
-.attribute-name {
-  color: #994500;
-}
-
 .attribute-value {
-  color: #1a1aa6;
   &.attribute-underline {
     text-decoration: underline;
   }
-}
-
-.html-comment {
-  color: #236e25;
 }
 
 .selection {
@@ -112,46 +77,48 @@
   padding-left: 15px;
 }
 
-.text-node {
-  @include mixin.code-color;
-}
-
-.theme-dark {
-  .icon-caret-down,
-  .icon-caret-right {
-    color: #9aa0a6;
-  }
-  .html-tag,
-  .tag-name {
-    color: #5db0d7;
-  }
-  .attribute-name {
-    color: #9bbbdc;
-  }
-  .attribute-value {
-    color: #f29766;
-  }
-  .html-comment {
-    color: #898989;
-  }
-  .tree-item {
-    &:hover {
-      .selection {
-        background: #083c69;
+@each $theme in ('light', 'dark') {
+  $dark: $theme == 'dark';
+  .theme-#{$theme} {
+    @if $dark {
+      color: #e8eaed;
+    }
+    .icon-caret-down,
+    .icon-caret-right {
+      color: #9aa0a6;
+    }
+    .html-tag,
+    .tag-name {
+      color: if($dark, #5db0d7, #881280);
+    }
+    .attribute-name {
+      color: if($dark, #9bbbdc, #994500);
+    }
+    .attribute-value {
+      color: if($dark, #f29766, #1a1aa6);
+    }
+    .html-comment {
+      color: if($dark, #898989, #236e25);
+    }
+    .tree-item {
+      &:hover {
+        .selection {
+          background: if($dark, #083c69, #e8eaed);
+        }
+      }
+      &.selected {
+        .selection {
+          background: if($dark, #454545, #e0e0e0);
+        }
+      }
+      &.selected:focus {
+        .selection {
+          background: if($dark, #073d69, #cfe8fc);
+        }
       }
     }
-    &.selected {
-      .selection {
-        background: #454545;
-      }
+    .text-node {
+      @include code-color($theme);
     }
-    &.selected:focus {
-      .selection {
-        background: #073d69;
-      }
-    }
-  }
-  .text-node {
-    @include mixin.code-color(true);
   }
 }

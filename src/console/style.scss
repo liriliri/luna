@@ -295,7 +295,7 @@ $console-selected-border-dark: #4173b4;
     color: $foreground-dark;
     border-bottom-color: $border-dark;
     .code {
-      @include mixin.code-color(true);
+      @include mixin.code-color('dark');
     }
     &.error {
       background: $console-error-background-dark;

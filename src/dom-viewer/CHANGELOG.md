@@ -1,3 +1,7 @@
+## 1.5.0 (20 Mar 2025)
+
+* feat: support react
+
 ## 1.4.0 (27 Sep 2024)
 
 * feat: shadow root support

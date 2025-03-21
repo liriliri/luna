@@ -1,3 +1,7 @@
+## 1.7.2 (21 Mar 2025)
+
+* fix: react event
+
 ## 1.7.1 (20 Mar 2025)
 
 * fix: ignoreAttr

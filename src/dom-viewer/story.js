@@ -24,6 +24,13 @@ const def = story(
     })
     domViewer.expand()
 
+    domViewer.on('select', (node) => {
+      console.log('select', node)
+    })
+    domViewer.on('deselect', () => {
+      console.log('deselect')
+    })
+
     wrapper.appendChild(test)
     wrapper.appendChild(container)
 
@@ -42,6 +49,8 @@ const def = story(
           observe={observe}
           ignore={ignore}
           ignoreAttr={ignoreAttr}
+          onSelect={(node) => console.log('select', node)}
+          onDeselect={() => console.log('deselect')}
           onCreate={(domViewer) => domViewer.expand()}
         />
       )

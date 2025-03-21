@@ -1,15 +1,18 @@
 import { FC, useEffect, useRef } from 'react'
 import each from 'licia/each'
 import DomViewer, { IOptions } from './index'
-import { useOption } from '../share/hooks'
+import { useEvent, useOption, usePrevious } from '../share/hooks'
 
 interface IDomViewerProps extends IOptions {
   onCreate?: (domViewer: DomViewer) => void
+  onSelect?: (node: Node) => void
+  onDeselect?: () => void
 }
 
 const LunaDomViewer: FC<IDomViewerProps> = (props) => {
   const domViewerRef = useRef<HTMLDivElement>(null)
   const domViewer = useRef<DomViewer>()
+  const prevProps = usePrevious(props)
 
   useEffect(() => {
     domViewer.current = new DomViewer(domViewerRef.current!, {
@@ -24,6 +27,14 @@ const LunaDomViewer: FC<IDomViewerProps> = (props) => {
 
     return () => domViewer.current?.destroy()
   }, [])
+
+  useEvent<DomViewer>(domViewer, 'select', prevProps?.onSelect, props.onSelect)
+  useEvent<DomViewer>(
+    domViewer,
+    'deselect',
+    prevProps?.onDeselect,
+    props.onDeselect
+  )
 
   each(['theme'], (key: keyof IDomViewerProps) => {
     useOption<DomViewer, IDomViewerProps>(domViewer, key, props[key])

@@ -506,6 +506,7 @@ export default class DataGrid extends Component<IOptions> {
             this.selectNode(null)
           }
           this.renderData()
+          this.updateHeight()
           break
       }
     })

@@ -1,3 +1,7 @@
+## 1.4.1 (23 Mar 2025)
+
+* fix: Incorrect display when setting filter
+
 ## 1.4.0 (17 Mar 2025)
 
 * feat: virtual list

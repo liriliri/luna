@@ -7,13 +7,14 @@ import raf from 'licia/raf'
 import loadImg from 'licia/loadImg'
 import isHidden from 'licia/isHidden'
 import debounce from 'licia/debounce'
+import isStr from 'licia/isStr'
 
 const $document = $(document as any)
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
   /** Image src. */
-  image: string
+  image: string | HTMLImageElement | HTMLCanvasElement
   /** Initial coverage. */
   initialCoverage?: number
   /** Enable to zoom the image by mouse wheel. */
@@ -61,7 +62,7 @@ export default class ImageViewer extends Component<IOptions> {
   }
   private resizeSensor: ResizeSensor
   private $image: $.$
-  private image: HTMLImageElement
+  private image: HTMLImageElement | HTMLCanvasElement
   private $ratio: $.$
   private startX = 0
   private startY = 0
@@ -77,8 +78,6 @@ export default class ImageViewer extends Component<IOptions> {
     this.resizeSensor = new ResizeSensor(container)
 
     this.initTpl()
-    this.$image = this.find('.image')
-    this.image = this.$image.get(0) as HTMLImageElement
     this.$ratio = this.find('.ratio')
 
     this.bindEvent()
@@ -140,8 +139,9 @@ export default class ImageViewer extends Component<IOptions> {
     const { image, $container, $image, c } = this
     const { initialCoverage } = this.options
     const { width: viewerWidth, height: viewerHeight } = $container.offset()
-    const naturalWidth = image.naturalWidth || image.width
-    const naturalHeight = image.naturalHeight || image.height
+    const naturalWidth = (image as HTMLImageElement).naturalWidth || image.width
+    const naturalHeight =
+      (image as HTMLImageElement).naturalHeight || image.height
     const aspectRatio = naturalWidth / naturalHeight
 
     let width = viewerWidth
@@ -228,21 +228,39 @@ export default class ImageViewer extends Component<IOptions> {
     this.$container.off(pointerEvent('move'), this.onMove)
     $document.off(pointerEvent('up'), this.onMoveEnd)
   }
-  private setImage(image: string) {
-    loadImg(image, (err) => {
-      if (image !== this.options.image) {
-        return
-      }
-      if (err) {
-        this.emit('error', err)
-      } else {
-        this.$image.attr('src', image)
-      }
-    })
+  private setImage(image: string | HTMLImageElement | HTMLCanvasElement) {
+    const { $container } = this
+
+    if (this.$image) {
+      this.$image.remove()
+    }
+
+    if (isStr(image)) {
+      const img = new Image()
+      img.onload = () => this.reset()
+      this.image = img
+      this.$image = $(img)
+      this.$image.addClass(this.c('image'))
+      loadImg(image, (err) => {
+        if (image !== this.options.image) {
+          return
+        }
+        if (err) {
+          this.emit('error', err)
+        } else {
+          this.$image.attr('src', image)
+        }
+      })
+      $container.prepend(this.image)
+    } else {
+      this.image = image
+      this.$image = $(image)
+      this.$image.addClass(this.c('image'))
+      this.reset()
+      $container.prepend(this.image)
+    }
   }
   private bindEvent() {
-    this.image.onload = () => this.reset()
-
     this.resizeSensor.addListener(debounce(this.reset, 20))
 
     this.$container
@@ -292,12 +310,7 @@ export default class ImageViewer extends Component<IOptions> {
     })
   }
   private initTpl() {
-    this.$container.html(
-      this.c(`
-        <img class="image"></img>
-        <div class="ratio"></div>
-      `)
-    )
+    this.$container.html(this.c(`<div class="ratio"></div>`))
   }
 }
 

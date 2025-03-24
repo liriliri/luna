@@ -35,6 +35,8 @@ const LunaDataGrid: FC<IDataGridProps> = (props) => {
       theme: props.theme,
     })
     dataGrid.current.setData(props.data, props.uniqueId)
+
+    return () => dataGrid.current?.destroy()
   }, [])
 
   useNonInitialEffect(() => {

@@ -37,7 +37,7 @@ imageViewer.zoom(0.1)
 
 ## Configuration
 
-* image(string): Image src.
+* image(string | HTMLCanvasElement | HTMLImageElement): Image src.
 * initialCoverage(number): Initial coverage.
 * zoomOnWheel(boolean): Enable to zoom the image by mouse wheel.
 

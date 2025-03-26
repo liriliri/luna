@@ -1,3 +1,7 @@
+## 1.8.1 (27 Mar 2025)
+
+* fix: lowerCaseTagName not working properly
+
 ## 1.8.0 (26 Mar 2025)
 
 * feat: lowerCaseTagName Option

@@ -570,7 +570,7 @@ export default class DomViewer extends Component<IOptions> {
         data.hasTail ? '…' : ''
       }<span class="html-tag">&lt;<span class="tag-name">/${tagName}</span>&gt;</span>`
     } else if (!this.isExpandable()) {
-      tail = `<span class="html-tag">&lt;<span class="tag-name">/${data.tagName}</span>&gt;</span>`
+      tail = `<span class="html-tag">&lt;<span class="tag-name">/${tagName}</span>&gt;</span>`
     }
 
     return this.c(stripIndent`

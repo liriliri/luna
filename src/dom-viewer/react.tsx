@@ -22,6 +22,7 @@ const LunaDomViewer: FC<IDomViewerProps> = (props) => {
       ignore: props.ignore,
       ignoreAttr: props.ignoreAttr,
       observe: props.observe,
+      lowerCaseTagName: props.lowerCaseTagName,
     })
     props.onCreate && props.onCreate(domViewer.current)
 

@@ -17,6 +17,7 @@ import escape from 'licia/escape'
 import trim from 'licia/trim'
 import every from 'licia/every'
 import hotkey from 'licia/hotkey'
+import lowerCase from 'licia/lowerCase'
 import { exportCjs, getPlatform, hasTouchSupport } from '../share/util'
 
 const emptyHighlightStyle = {
@@ -39,6 +40,8 @@ export interface IOptions extends IComponentOptions {
   hotkey?: boolean
   /** Observe dom mutation. */
   observe?: boolean
+  /** Whether to convert tag name to lower case. */
+  lowerCaseTagName?: boolean
   parent?: DomViewer | null
   isEndTag?: boolean
   rootContainer?: HTMLElement
@@ -74,6 +77,7 @@ export default class DomViewer extends Component<IOptions> {
       rootDomViewer: this,
       ignore: () => false,
       ignoreAttr: () => false,
+      lowerCaseTagName: true,
       hotkey: true,
     })
 
@@ -136,23 +140,38 @@ export default class DomViewer extends Component<IOptions> {
       this.$children.remove()
     }
   }
-  expand = () => {
-    if (!this.isExpandable() || this.isExpanded) {
+  expand = (recursive = false) => {
+    if (!this.isExpandable()) {
       return
     }
-    this.isExpanded = true
 
-    this.renderExpandTag()
+    if (!this.isExpanded) {
+      this.isExpanded = true
+      this.renderExpandTag()
+      this.renderChildNodes()
+    }
 
-    this.renderChildNodes()
+    if (recursive) {
+      each(this.childNodeDomViewers, (domViewer) => {
+        domViewer.expand(true)
+      })
+    }
   }
-  collapse = () => {
-    if (!this.isExpandable() || !this.isExpanded) {
+  collapse = (recursive = false) => {
+    if (!this.isExpandable()) {
       return
     }
-    this.isExpanded = false
 
-    this.renderCollapseTag()
+    if (this.isExpanded) {
+      this.isExpanded = false
+      this.renderCollapseTag()
+    }
+
+    if (recursive) {
+      each(this.childNodeDomViewers, (domViewer) => {
+        domViewer.collapse(true)
+      })
+    }
   }
   toggle = () => {
     if (this.isExpanded) {
@@ -403,18 +422,20 @@ export default class DomViewer extends Component<IOptions> {
   }
   private initTpl() {
     const { container, c } = this
-    const { node, isEndTag } = this.options
+    const { node, isEndTag, lowerCaseTagName } = this.options
 
     const $tag = $(h('li'))
     $tag.addClass(c('tree-item'))
     this.$tag = $tag
 
     if (isEndTag) {
+      let tagName = (node as HTMLElement).tagName
+      if (lowerCaseTagName) {
+        tagName = lowerCase(tagName)
+      }
       $tag.html(
         c(
-          `<span class="html-tag" style="margin-left: -15px;">&lt;<span class="tag-name">/${(
-            node as HTMLElement
-          ).tagName.toLocaleLowerCase()}</span>&gt;</span><span class="selection"></span>`
+          `<span class="html-tag" style="margin-left: -15px;">&lt;<span class="tag-name">/${tagName}</span>&gt;</span><span class="selection"></span>`
         )
       )
     } else if (node.nodeType === Node.ELEMENT_NODE) {
@@ -451,8 +472,14 @@ export default class DomViewer extends Component<IOptions> {
   private renderChildNodes() {
     const node = this.options.node as HTMLElement
 
-    const { rootContainer, ignore, ignoreAttr, rootDomViewer, observe } =
-      this.options
+    const {
+      rootContainer,
+      ignore,
+      ignoreAttr,
+      rootDomViewer,
+      observe,
+      lowerCaseTagName,
+    } = this.options
     const $container = this.$children
     const container = $container.get(0)
     const oldChildNodes = this.childNodes
@@ -484,6 +511,7 @@ export default class DomViewer extends Component<IOptions> {
           rootDomViewer,
           ignore,
           ignoreAttr,
+          lowerCaseTagName,
         })
       }
       domViewer.attach()
@@ -514,6 +542,8 @@ export default class DomViewer extends Component<IOptions> {
     }
   }
   private renderHtmlTag(data: IHtmlTagData) {
+    const { lowerCaseTagName } = this.options
+
     data.attributes = filter(data.attributes, (attribute) => {
       return !this.options.ignoreAttr(data.el, attribute.name, attribute.value)
     })
@@ -531,21 +561,21 @@ export default class DomViewer extends Component<IOptions> {
     }).join('')
 
     let tail = ''
+    let tagName = data.tagName
+    if (lowerCaseTagName) {
+      tagName = lowerCase(tagName)
+    }
     if (data.hasTail) {
       tail = `${
         data.hasTail ? '…' : ''
-      }<span class="html-tag">&lt;<span class="tag-name">/${
-        data.tagName
-      }</span>&gt;</span>`
+      }<span class="html-tag">&lt;<span class="tag-name">/${tagName}</span>&gt;</span>`
     } else if (!this.isExpandable()) {
       tail = `<span class="html-tag">&lt;<span class="tag-name">/${data.tagName}</span>&gt;</span>`
     }
 
     return this.c(stripIndent`
       ${data.hasToggleButton ? this.renderToggle() : ''}
-      <span class="html-tag">&lt;<span class="tag-name">${
-        data.tagName
-      }</span>${attributes}&gt;</span>${tail}
+      <span class="html-tag">&lt;<span class="tag-name">${tagName}</span>${attributes}&gt;</span>${tail}
       <span class="selection"></span>`)
   }
   private renderTextNode(node: ChildNode) {
@@ -622,7 +652,7 @@ function getHtmlTagData(el: HTMLElement) {
     attributes: [],
   }
 
-  ret.tagName = el.tagName.toLocaleLowerCase()
+  ret.tagName = el.tagName
   const attributes: IAttribute[] = []
   each(el.attributes, (attribute) => {
     const { name, value } = attribute

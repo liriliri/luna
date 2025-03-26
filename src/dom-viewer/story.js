@@ -14,13 +14,14 @@ const def = story(
     const root = test.attachShadow({ mode: 'open' })
     root.innerHTML = `<span style="display:none;">Shadow DOM</span>`
 
-    const { observe } = createKnobs()
+    const { observe, lowerCaseTagName } = createKnobs()
 
     const container = h('div')
     const domViewer = new DomViewer(container, {
       observe,
       ignore,
       ignoreAttr,
+      lowerCaseTagName,
     })
     domViewer.expand()
 
@@ -41,7 +42,7 @@ const def = story(
     changelog,
     source: __STORY__,
     ReactComponent({ theme }) {
-      const { observe } = createKnobs()
+      const { observe, lowerCaseTagName } = createKnobs()
 
       return (
         <LunaDomViewer
@@ -49,6 +50,7 @@ const def = story(
           observe={observe}
           ignore={ignore}
           ignoreAttr={ignoreAttr}
+          lowerCaseTagName={lowerCaseTagName}
           onSelect={(node) => console.log('select', node)}
           onDeselect={() => console.log('deselect')}
           onCreate={(domViewer) => domViewer.expand()}
@@ -74,8 +76,9 @@ function ignoreAttr(el, name, value) {
 
 function createKnobs() {
   const observe = boolean('Observe', true)
+  const lowerCaseTagName = boolean('Lower Case Tag Name', true)
 
-  return { observe }
+  return { observe, lowerCaseTagName }
 }
 
 export default def

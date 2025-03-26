@@ -1,3 +1,8 @@
+## 1.8.0 (26 Mar 2025)
+
+* feat: lowerCaseTagName Option
+* feat: expand and collapse recursively
+
 ## 1.7.2 (21 Mar 2025)
 
 * fix: react event

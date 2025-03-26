@@ -39,6 +39,7 @@ domViewer.expand()
 * hotkey(boolean): Enable hotkey.
 * ignore(AnyFn): Predicate function which removes the matching child nodes.
 * ignoreAttr(AnyFn): Predicate function which removes the matching node attributes.
+* lowerCaseTagName(boolean): Whether to convert tag name to lower case.
 * node(ChildNode): Html element to navigate.
 * observe(boolean): Observe dom mutation.
 

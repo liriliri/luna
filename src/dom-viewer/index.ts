@@ -533,6 +533,7 @@ export default class DomViewer extends Component<IOptions> {
           node,
           parent: this,
           isEndTag: true,
+          lowerCaseTagName,
           rootContainer,
           rootDomViewer,
           ignore,

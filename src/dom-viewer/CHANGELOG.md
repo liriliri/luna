@@ -1,3 +1,7 @@
+## 1.8.2 (4 Apr 2025)
+
+* fix: lowerCaseTagName not working for end tag
+
 ## 1.8.1 (27 Mar 2025)
 
 * fix: lowerCaseTagName not working properly

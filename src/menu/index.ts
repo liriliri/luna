@@ -182,7 +182,7 @@ export default class Menu extends Component {
 
     $el.text(item.label as string)
     $el.append(
-      `<span class="${c('icon icon-arrow-right')}${
+      `<span class="${c('icon icon-caret-right')}${
         item.type === 'submenu' ? '' : ' ' + c('invisible')
       }"></span>`
     )

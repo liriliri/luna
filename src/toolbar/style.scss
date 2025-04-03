@@ -108,17 +108,23 @@
         @include theme-var(color, color-text, $theme);
         &:hover,
         &.hover {
-          @include theme-vars((
-            background-color: color-fill-secondary-dark,
-            border-color: color-border
-          ), $theme)
+          @include theme-vars(
+            (
+              background-color: color-fill-secondary-dark,
+              border-color: color-border,
+            ),
+            $theme
+          );
         }
         &:active,
         &.active {
-          @include theme-vars((
-            border-color: color-border,
-            background-color: color-fill-tertiary
-          ), $theme);
+          @include theme-vars(
+            (
+              border-color: color-border,
+              background-color: color-fill-tertiary,
+            ),
+            $theme
+          );
         }
       }
     }

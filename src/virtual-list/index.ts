@@ -208,7 +208,7 @@ export default class VirtualList extends Component<IOptions> {
           } else if (currentHeight < top) {
             topSpaceHeight += height
           }
-        } 
+        }
 
         currentHeight += height
 

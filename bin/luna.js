@@ -77,7 +77,7 @@ const genIcon = wrap(async function (component) {
   await runScript('lsla', [
     'genIcon',
     '--input',
-    `src/${component}/icon`,
+    `src/${component}/`,
     '--output',
     `src/${component}/icon.css`,
     '--name',

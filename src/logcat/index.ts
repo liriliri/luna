@@ -15,7 +15,7 @@ import omit from 'licia/omit'
 import ResizeSensor from 'licia/ResizeSensor'
 import debounce from 'licia/debounce'
 import LunaVirtualList from 'luna-virtual-list'
-import { exportCjs } from '../share/util'
+import { exportCjs, hasSelection } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -171,16 +171,7 @@ export default class Logcat extends Component<IOptions> {
   }
   /** Check if there is any selection. */
   hasSelection() {
-    const selection = window.getSelection()
-    if (selection && selection.anchorNode) {
-      if (
-        this.container.contains(selection.anchorNode) &&
-        selection.toString() !== ''
-      ) {
-        return true
-      }
-    }
-    return false
+    return hasSelection(this.container)
   }
   /** Get selected text. */
   getSelection() {

@@ -160,3 +160,19 @@ export function loadImage(url: string): Promise<HTMLImageElement> {
     })
   })
 }
+
+export function hasSelection(node: Node) {
+  const selection = window.getSelection()
+
+  if (!selection || selection.type !== 'Range' || selection.toString() === '') {
+    return false
+  }
+
+  const { anchorNode, focusNode } = selection
+
+  return (
+    selection.containsNode(node, true) ||
+    (anchorNode && node.contains(anchorNode)) ||
+    (focusNode && node.contains(focusNode))
+  )
+}

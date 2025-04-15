@@ -24,7 +24,7 @@ import Visitor from './Visitor'
 import { encode, getFnAbstract } from './util'
 import Static from './Static'
 import Component, { IComponentOptions } from '../share/Component'
-import { exportCjs } from '../share/util'
+import { exportCjs, hasSelection } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -333,6 +333,9 @@ export default class ObjectViewer extends Component<IOptions> {
   }
   private onItemClick = (e: any) => {
     const { map, c } = this
+    if (hasSelection(e.curTarget)) {
+      return
+    }
     const $this = $(e.curTarget)
     const circularId = $this.data('object-id')
     const $firstSpan: any = $this.find('span').eq(0)

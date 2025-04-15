@@ -53,6 +53,7 @@ import isBool from 'licia/isBool'
 import isSymbol from 'licia/isSymbol'
 import isRegExp from 'licia/isRegExp'
 import Console from './index'
+import { hasSelection } from '../share/util'
 
 export interface IGroup {
   id: string
@@ -309,6 +310,9 @@ export default class Log extends Emitter {
       .on('click', c('.dom-viewer'), (e) => e.stopPropagation())
       .on('click', c('.preview'), function (this: HTMLElement, e) {
         e.stopPropagation()
+        if (hasSelection(this)) {
+          return
+        }
         const $this = $(this)
         const $icon = $this.find(c('.preview-icon-container')).find(c('.icon'))
         let icon = 'caret-down'
@@ -436,10 +440,14 @@ export default class Log extends Emitter {
         break
       case 'group':
       case 'groupCollapsed':
-        console.toggleGroup(this)
+        if (!hasSelection(this.container)) {
+          console.toggleGroup(this)
+        }
         break
       case 'error':
-        $container.find(c('.stack')).toggleClass(c('hidden'))
+        if (!hasSelection(this.container)) {
+          $container.find(c('.stack')).toggleClass(c('hidden'))
+        }
         break
     }
   }
@@ -790,9 +798,11 @@ export default class Log extends Emitter {
     return args
   }
   private formatJs(val: string) {
-    return `<pre class="${this.console.c('code')}">${this.console.c(
-      highlight(val, 'js', emptyHighlightStyle)
-    )}</pre>`
+    let hightlighted = highlight(val, 'js', emptyHighlightStyle)
+    if (hightlighted !== val) {
+      hightlighted = this.console.c(hightlighted)
+    }
+    return `<pre class="${this.console.c('code')}">${hightlighted}</pre>`
   }
   private formatFn(val: types.AnyFn) {
     return `<pre style="display:inline">${this.formatJs(val.toString())}</pre>`

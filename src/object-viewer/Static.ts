@@ -16,6 +16,7 @@ import lowerCase from 'licia/lowerCase'
 import naturalSort from 'licia/naturalSort'
 import { encode, getFnAbstract } from './util'
 import Component from '../share/Component'
+import { hasSelection } from '../share/util'
 
 export default class JsonViewer extends Component {
   private data: any
@@ -154,6 +155,9 @@ export default class JsonViewer extends Component {
   }
   private onItemClick = (e: any) => {
     const { map, c } = this
+    if (hasSelection(e.curTarget)) {
+      return
+    }
     const $this = $(e.curTarget)
     const circularId = $this.data('object-id')
     const $firstSpan: any = $this.find('span').eq(0)

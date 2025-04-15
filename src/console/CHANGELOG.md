@@ -1,3 +1,8 @@
+## 1.3.6 (15 Apr 2025)
+
+* fix: errors cannot be copied [#26](https://github.com/liriliri/luna/issues/26)
+* fix: luna-console added to variable names [#25](https://github.com/liriliri/luna/issues/25) 
+
 ## 1.3.5 (10 Oct 2024)
 
 * fix: DOMException not treated as error [#18](https://github.com/liriliri/luna/issues/18)

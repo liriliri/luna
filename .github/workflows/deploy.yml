@@ -1,0 +1,36 @@
+name: Deploy Luna 
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: project/luna
+        lfs: true
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '18.x' 
+    - working-directory: ./project/luna
+      run: |
+        npm i
+        npm link
+        luna install
+        npm run build
+        npm run build:storybook
+        mkdir -p ../../page/luna
+        cp -r .storybook/out/* ../../page/luna
+    - name: Copy file via ssh password
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        source: "page/luna/"
+        target: "/root/"    
+    

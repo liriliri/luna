@@ -54,6 +54,10 @@ Append icon.
 
 Clear all icons.
 
+### setIcons(icons: IIcon[]): void
+
+Set icons.
+
 ## Types
 
 ### IIcon

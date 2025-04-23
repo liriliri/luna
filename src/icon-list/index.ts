@@ -79,8 +79,12 @@ export default class IconList extends Component<IOptions> {
     super.destroy()
     this.resizeSensor.destroy()
   }
+  /** Set icons. */
   setIcons(icons: Array<IIcon>) {
-    this.clear()
+    this.icons = []
+    this.displayIcons = []
+    this.selectedIcon = null
+
     each(icons, (data) => {
       const icon = new Icon(this, data)
       icon.setSize(this.options.size)
@@ -89,6 +93,7 @@ export default class IconList extends Component<IOptions> {
         this.displayIcons.push(icon)
       }
     })
+
     this.render()
   }
   /** Clear all icons. */

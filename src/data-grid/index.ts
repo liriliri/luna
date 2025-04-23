@@ -120,6 +120,7 @@ export default class DataGrid extends Component<IOptions> {
   private sortId?: string
   private selectedNode: DataGridNode | null = null
   private isAscending = true
+  private sorted = false
   private colWidths: number[] = []
   private $space: $.$
   private $data: $.$
@@ -141,6 +142,7 @@ export default class DataGrid extends Component<IOptions> {
     this.onResize = throttle(() => {
       this.updateHeight()
       this.updateWeights()
+      this.renderData()
     }, 16)
 
     if (options.height) {
@@ -213,12 +215,11 @@ export default class DataGrid extends Component<IOptions> {
       this.displayNodes.push(node)
     }
 
-    if (this.sortId) {
-      this.sortNodes(this.sortId, this.isAscending)
-    } else {
-      if (isVisible) {
-        this.renderData()
+    if (this.sortId || isVisible) {
+      if (this.sortId) {
+        this.sorted = false
       }
+      this.renderData()
     }
 
     this.updateHeight()
@@ -289,10 +290,10 @@ export default class DataGrid extends Component<IOptions> {
     }
 
     if (this.sortId) {
-      this.sortNodes(this.sortId, this.isAscending)
-    } else {
-      this.renderData()
+      this.sorted = false
     }
+
+    this.renderData()
   }
   /** Clear all data. */
   clear() {
@@ -473,6 +474,7 @@ export default class DataGrid extends Component<IOptions> {
         }
 
         self.sortNodes(id, isAscending)
+        self.renderData()
 
         $headerRow.find('th').each(function (this: HTMLTableCellElement) {
           const $this = $(this)
@@ -530,8 +532,7 @@ export default class DataGrid extends Component<IOptions> {
     this.nodes.sort(sortFn)
     this.displayNodes.sort(sortFn)
 
-    this.renderData()
-
+    this.sorted = true
     this.sortId = id
     this.isAscending = isAscending
   }
@@ -660,6 +661,10 @@ export default class DataGrid extends Component<IOptions> {
   }
   private renderData = throttle(
     ({ topTolerance = 500, bottomTolerance = 500 } = {}) => {
+      if (this.sortId && !this.sorted) {
+        this.sortNodes(this.sortId, this.isAscending)
+      }
+
       const { dataContainer, displayNodes, tableBody } = this
       const { scrollTop, clientHeight } = dataContainer
       const top = scrollTop - topTolerance

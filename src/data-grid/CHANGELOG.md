@@ -1,3 +1,7 @@
+## 1.4.2 (23 Apr 2025)
+
+* fix: sort nodes performance
+
 ## 1.4.1 (23 Mar 2025)
 
 * fix: Incorrect display when setting filter

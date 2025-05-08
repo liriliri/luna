@@ -2,19 +2,17 @@
 @use '../share/theme' as *;
 
 .luna-dom-viewer {
-  overflow-x: hidden;
-  word-wrap: break-word;
   padding: 0 0 0 12px;
   cursor: default;
   list-style: none;
-  @include overflow-auto(y);
+  min-width: 100%;
   @include component(true);
   & {
     font-size: #{$font-size-s-m}px;
     font-family: $font-family-code;
   }
   ul {
-    list-style: none;
+    display: inline-block;
   }
 }
 
@@ -30,6 +28,7 @@
 }
 
 .tree-item {
+  min-width: 200px;
   line-height: 16px;
   min-height: 16px;
   position: relative;
@@ -55,6 +54,7 @@
 }
 
 .attribute-value {
+  word-break: break-all;
   &.attribute-underline {
     text-decoration: underline;
   }
@@ -64,7 +64,7 @@
   position: absolute;
   display: none;
   left: -10000px;
-  right: -10000px;
+  right: 0;
   top: 0;
   bottom: 0;
   z-index: -1;
@@ -118,6 +118,7 @@
       }
     }
     .text-node {
+      word-break: break-all;
       @include code-color($theme);
     }
   }

@@ -1,3 +1,7 @@
+## 1.8.3 (8 May 2025)
+
+* fix: horizontal scroll
+
 ## 1.8.2 (4 Apr 2025)
 
 * fix: lowerCaseTagName not working for end tag

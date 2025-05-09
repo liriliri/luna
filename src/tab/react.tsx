@@ -8,10 +8,16 @@ import {
   useEffect,
   useRef,
 } from 'react'
-import Tab from './index'
-import { useForceUpdate, useNonInitialEffect } from '../share/hooks'
+import Tab, { IOptions } from './index'
+import {
+  useEvent,
+  useForceUpdate,
+  useOption,
+  usePrevious,
+} from '../share/hooks'
+import each from 'licia/each'
 
-interface ITabProps {
+interface ITabProps extends IOptions {
   className?: string
   height?: number
   onSelect?: (id: string) => void
@@ -22,30 +28,27 @@ interface ITabProps {
 const LunaTab: FC<PropsWithChildren<ITabProps>> = (props) => {
   const tabRef = useRef<HTMLDivElement>(null)
   const tab = useRef<Tab>()
+  const prevProps = usePrevious(props)
   const forceUpdate = useForceUpdate()
 
   useEffect(() => {
     tab.current = new Tab(tabRef.current!, {
       height: props.height,
+      theme: props.theme,
     })
     props.onCreate && props.onCreate(tab.current)
 
-    if (props.onSelect) {
-      tab.current.on('select', props.onSelect)
-    }
-    if (props.onDeselect) {
-      tab.current.on('deselect', props.onDeselect)
-    }
     forceUpdate()
 
     return () => tab.current?.destroy()
   }, [])
 
-  useNonInitialEffect(() => {
-    if (tab.current) {
-      tab.current.setOption('height', props.height)
-    }
-  }, [props.height])
+  useEvent<Tab>(tab, 'select', prevProps?.onSelect, props.onSelect)
+  useEvent<Tab>(tab, 'deselect', prevProps?.onDeselect, props.onDeselect)
+
+  each(['theme', 'height'], (key: keyof ITabProps) => {
+    useOption<Tab, ITabProps>(tab, key, props[key])
+  })
 
   return (
     <div className={props.className || ''} ref={tabRef}>

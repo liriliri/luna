@@ -33,23 +33,30 @@
   font-size: #{$font-size-s-m}px;
   text-align: center;
   text-transform: capitalize;
+  &:hover, &.selected {
+    .close-container {
+      opacity: 1;
+    }
+  }
 }
 
 .close-container {
   display: flex;
   height: 100%;
+  width: 12px;
   align-items: center;
   justify-content: center;
+  opacity: 0.2;
 }
 
 .close {
   position: relative;
   left: 4px;
   border-radius: #{$border-radius-x-s}px;
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   cursor: pointer;
-  line-height: 20px;
+  line-height: 14px;
 }
 
 .icon-close {

@@ -108,7 +108,6 @@ export default class Tab extends Component<IOptions> {
           if (self.length > 0) {
             const newIdx = idx === self.length ? idx - 1 : idx
             const id = self.$tabs.find(c('.item')).eq(newIdx).data('id')
-            console.log(id)
             self.select(id)
           } else {
             self.emit('deselect')
@@ -229,7 +228,8 @@ export default class Tab extends Component<IOptions> {
         const $item = $(this)
         self.select($item.data('id'))
       })
-      .on('click', c('.close'), function (this: HTMLElement) {
+      .on('click', c('.close'), function (this: HTMLElement, e: any) {
+        e.stopPropagation()
         const $item = $(this).parent().parent()
         self.remove($item.data('id'))
       })

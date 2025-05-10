@@ -11,6 +11,8 @@ export interface ITab {
   id: string
   /** Tab title. */
   title: string
+  /** Whether tab is closeable. */
+  closeable?: boolean
 }
 
 /** IOptions */
@@ -65,11 +67,17 @@ export default class Tab extends Component<IOptions> {
 
     const $items = $tabs.find(c('.item')) as any
     const len: number = $items.length
-    const html = `<div class="${this.c('item')}" data-id="${escape(
-      tab.id
-    )}" style="height: ${itemHeight}px; line-height: ${itemHeight}px;">${escape(
-      tab.title
-    )}</div>`
+    const html = `<div class="${c('item')}" data-id="${escape(tab.id)}" ${
+      tab.closeable ? 'data-closeable="true"' : ''
+    } style="height: ${itemHeight}px; line-height: ${itemHeight}px;"><span class="${c(
+      'title'
+    )}">${escape(tab.title)}</span>${
+      tab.closeable
+        ? `<div class="${c('close-container')}"><div class="${c(
+            'close'
+          )}"><span class="${c('icon-close')}"></span></div></div>`
+        : ''
+    }</div>`
     if (pos > len - 1) {
       $tabs.append(html)
     } else {
@@ -97,6 +105,9 @@ export default class Tab extends Component<IOptions> {
           } else {
             self.emit('deselect')
           }
+        }
+        if ($this.data('closeable')) {
+          self.emit('close', id)
         }
         $this.remove()
       }
@@ -210,6 +221,10 @@ export default class Tab extends Component<IOptions> {
       .on('click', c('.item'), function (this: HTMLElement) {
         const $item = $(this)
         self.select($item.data('id'))
+      })
+      .on('click', c('.close'), function (this: HTMLElement) {
+        const $item = $(this).parent().parent()
+        self.remove($item.data('id'))
       })
       .on('scroll', () => {
         this.updateSlider()

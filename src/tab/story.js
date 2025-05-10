@@ -13,6 +13,13 @@ const def = story(
     const tab = new Tab(container, {
       height,
     })
+    tab.on('select', (id) => {
+      console.log('select', id)
+    })
+    tab.on('close', (id) => {
+      console.log('close', id)
+    })
+
     tab.append({
       id: 'console',
       title: 'Console',
@@ -40,6 +47,7 @@ const def = story(
     tab.append({
       id: 'snippets',
       title: 'Snippets',
+      closeable: true,
     })
     tab.append({
       id: 'settings',
@@ -59,6 +67,7 @@ const def = story(
         <LunaTab
           height={height}
           onSelect={(id) => console.log('select', id)}
+          onClose={(id) => console.log('close', id)}
           onCreate={(tab) => console.log(tab)}
         >
           <LunaTabItem id="console" title="Console" selected={true} />
@@ -67,7 +76,7 @@ const def = story(
           <LunaTabItem id="resources" title="Resources" />
           <LunaTabItem id="sources" title="Sources" />
           <LunaTabItem id="info" title="Info" />
-          <LunaTabItem id="snippets" title="Snippets" />
+          <LunaTabItem id="snippets" title="Snippets" closable={true} />
           <LunaTabItem id="settings" title="Settings" />
         </LunaTab>
       )

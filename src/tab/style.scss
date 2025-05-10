@@ -27,15 +27,33 @@
 }
 
 .item {
+  display: inline-flex;
   cursor: pointer;
-  display: inline-block;
   padding: 0 10px;
   font-size: #{$font-size-s-m}px;
   text-align: center;
   text-transform: capitalize;
-  &:hover {
-    background: $color-fill-secondary;
-  }
+}
+
+.close-container {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.close {
+  position: relative;
+  left: 4px;
+  border-radius: #{$border-radius-x-s}px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  line-height: 20px;
+}
+
+.icon-close {
+  font-size: 14px;
 }
 
 .slider {
@@ -57,6 +75,12 @@
       }
       &:hover {
         @include theme-var(color, color-text, $theme);
+        @include theme-var(background-color, color-fill-secondary, $theme);
+      }
+    }
+    .close {
+      @include theme-var(color, color-text, $theme);
+      &:hover {
         @include theme-var(background-color, color-fill-secondary, $theme);
       }
     }

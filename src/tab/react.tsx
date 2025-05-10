@@ -22,6 +22,7 @@ interface ITabProps extends IOptions {
   height?: number
   onSelect?: (id: string) => void
   onDeselect?: () => void
+  onClose?: (id: string) => void
   onCreate?: (tab: Tab) => void
 }
 
@@ -45,6 +46,7 @@ const LunaTab: FC<PropsWithChildren<ITabProps>> = (props) => {
 
   useEvent<Tab>(tab, 'select', prevProps?.onSelect, props.onSelect)
   useEvent<Tab>(tab, 'deselect', prevProps?.onDeselect, props.onDeselect)
+  useEvent<Tab>(tab, 'close', prevProps?.onClose, props.onClose)
 
   each(['theme', 'height'], (key: keyof ITabProps) => {
     useOption<Tab, ITabProps>(tab, key, props[key])
@@ -68,6 +70,7 @@ interface ITabItemProps {
   selected?: boolean
   id: string
   title: string
+  closable?: boolean
 }
 
 export const LunaTabItem: FC<ITabItemProps> = (props) => {
@@ -76,6 +79,7 @@ export const LunaTabItem: FC<ITabItemProps> = (props) => {
       props.tab.append({
         id: props.id,
         title: props.title,
+        closeable: props.closable,
       })
       if (props.selected) {
         props.tab.select(props.id)

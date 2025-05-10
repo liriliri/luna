@@ -94,13 +94,21 @@ export default class Tab extends Component<IOptions> {
   remove(id: string) {
     const { c } = this
 
+    if (this.length === 1) {
+      return
+    }
+
     const self = this
-    this.$tabs.find(c('.item')).each(function (this: HTMLElement) {
+    this.$tabs.find(c('.item')).each(function (this: HTMLElement, idx: number) {
       const $this = $(this)
       if ($this.data('id') === id) {
+        $this.remove()
+
         if ($this.hasClass(c('selected'))) {
           if (self.length > 0) {
-            const id = self.$tabs.find(c('.item')).eq(0).data('id')
+            const newIdx = idx === self.length ? idx - 1 : idx
+            const id = self.$tabs.find(c('.item')).eq(newIdx).data('id')
+            console.log(id)
             self.select(id)
           } else {
             self.emit('deselect')
@@ -109,7 +117,6 @@ export default class Tab extends Component<IOptions> {
         if ($this.data('closeable')) {
           self.emit('close', id)
         }
-        $this.remove()
       }
     })
     this.updateSlider()

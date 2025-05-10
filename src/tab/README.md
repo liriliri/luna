@@ -73,5 +73,6 @@ Select tab.
 
 ### ITab
 
+* closeable(boolean): Whether tab is closeable.
 * id(string): Tab id.
 * title(string): Tab title.

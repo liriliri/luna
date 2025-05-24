@@ -1,14 +1,14 @@
 [
-  "../share/icon/play.svg",
-  "../share/icon/pause.svg",
-  "../share/icon/volume.svg",
-  "../share/icon/volume-off.svg",
-  "../share/icon/volume-down.svg",
-  "../share/icon/file.svg",
-  "../share/icon/list.svg",
-  "../share/icon/loop-all.svg",
-  "../share/icon/loop-off.svg",
-  "../share/icon/loop-one.svg",
-  "../share/icon/shuffle-disabled.svg",
-  "../share/icon/shuffle.svg"
+  "play.svg",
+  "pause.svg",
+  "volume.svg",
+  "volume-off.svg",
+  "volume-down.svg",
+  "file.svg",
+  "list.svg",
+  "loop-all.svg",
+  "loop-off.svg",
+  "loop-one.svg",
+  "shuffle-disabled.svg",
+  "shuffle.svg"
 ]

@@ -1,6 +1,1 @@
-[
-  "../share/icon/close.svg",
-  "../share/icon/maximize.svg",
-  "../share/icon/maximized.svg",
-  "../share/icon/minimize.svg"
-]
+["close.svg", "maximize.svg", "maximized.svg", "minimize.svg"]

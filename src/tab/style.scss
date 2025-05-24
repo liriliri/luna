@@ -33,7 +33,8 @@
   font-size: #{$font-size-s-m}px;
   text-align: center;
   text-transform: capitalize;
-  &:hover, &.selected {
+  &:hover,
+  &.selected {
     .close-container {
       opacity: 1;
     }

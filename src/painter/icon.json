@@ -1,14 +1,14 @@
 [
-  "../share/icon/zoom-out.svg",
-  "../share/icon/zoom-in.svg",
-  "../share/icon/brush.svg",
-  "../share/icon/crosshair.svg",
-  "../share/icon/eraser.svg",
-  "../share/icon/eyedropper.svg",
-  "../share/icon/hand.svg",
-  "../share/icon/paint-bucket.svg",
-  "../share/icon/pencil.svg",
-  "../share/icon/reset-color.svg",
-  "../share/icon/swap.svg",
-  "../share/icon/zoom.svg"
+  "zoom-out.svg",
+  "zoom-in.svg",
+  "brush.svg",
+  "crosshair.svg",
+  "eraser.svg",
+  "eyedropper.svg",
+  "hand.svg",
+  "paint-bucket.svg",
+  "pencil.svg",
+  "reset-color.svg",
+  "swap.svg",
+  "zoom.svg"
 ]

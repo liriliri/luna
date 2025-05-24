@@ -1,8 +1,8 @@
 [
-  "../share/icon/caret-down.svg",
-  "../share/icon/caret-right.svg",
-  "../share/icon/warn.svg",
-  "../share/icon/error.svg",
-  "../share/icon/input.svg",
-  "../share/icon/output.svg"
+  "caret-down.svg",
+  "caret-right.svg",
+  "warn.svg",
+  "error.svg",
+  "input.svg",
+  "output.svg"
 ]

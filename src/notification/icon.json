@@ -1,6 +1,1 @@
-[
-  "../share/icon/check.svg",
-  "../share/icon/warn.svg",
-  "../share/icon/error.svg",
-  "../share/icon/info.svg"
-]
+["check.svg", "warn.svg", "error.svg", "info.svg"]

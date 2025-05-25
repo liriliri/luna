@@ -1,0 +1,28 @@
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
+
+.luna-otp-input {
+  display: flex;
+  justify-content: space-between;
+  @include component();
+}
+
+.luna-otp-input input {
+  width: 48px;
+  height: 48px;
+  font-size: 24px;
+  border-radius: #{$border-radius-s-m}px;
+  text-align: center;
+  border: 1px solid;
+}
+
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    input {
+      @include theme-var(border-color, color-border, $theme);
+      &:focus {
+        @include theme-var(outline-color, color-primary, $theme);
+      }
+    }
+  }
+}

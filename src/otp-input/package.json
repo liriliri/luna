@@ -1,0 +1,8 @@
+{
+  "name": "otp-input",
+  "version": "0.1.0",
+  "description": "One time password input",
+  "luna": {
+    "test": false
+  }
+}

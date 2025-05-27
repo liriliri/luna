@@ -5,6 +5,7 @@ import each from 'licia/each'
 
 interface IOtpInputProps extends IOptions {
   style?: CSSProperties
+  className?: string
   onChange?: (value: string) => void
   onComplete?: (value: string) => void
 }
@@ -35,7 +36,13 @@ const LunaOtpInput: FC<IOtpInputProps> = (props) => {
     useOption<OtpInput, IOtpInputProps>(otpInput, key, props[key])
   })
 
-  return <div ref={otpInputRef} style={props.style} />
+  return (
+    <div
+      ref={otpInputRef}
+      className={props.className || ''}
+      style={props.style}
+    />
+  )
 }
 
 export default LunaOtpInput

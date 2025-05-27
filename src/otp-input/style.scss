@@ -4,6 +4,7 @@
 .luna-otp-input {
   display: flex;
   justify-content: space-between;
+  width: 100%;
   @include component(true);
 }
 
@@ -19,7 +20,14 @@
 @each $theme in ('light', 'dark') {
   .theme-#{$theme} {
     input {
-      @include theme-var(border-color, color-border, $theme);
+      @include theme-vars(
+        (
+          border-color: color-border,
+          background-color: color-bg-container,
+          color: color-text,
+        ),
+        $theme
+      );
       &:focus {
         @include theme-var(outline-color, color-primary, $theme);
       }

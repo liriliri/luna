@@ -4,7 +4,7 @@
 .luna-otp-input {
   display: flex;
   justify-content: space-between;
-  @include component();
+  @include component(true);
 }
 
 .luna-otp-input input {

@@ -25,3 +25,13 @@ npm install luna-otp-input --save
 import 'luna-otp-input/luna-otp-input.css'
 import LunaOtpInput from 'luna-otp-input'
 ```
+
+## Configuration
+
+* inputNum(number): Number of inputs.
+
+## Api
+
+### getValue(): string
+
+Get otp value.

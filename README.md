@@ -55,6 +55,7 @@ UI library.
 * [music-visualizer](./src/music-visualizer/README.md): Music visualization.
 * [notification](./src/notification/README.md): Show notifications.
 * [object-viewer](./src/object-viewer/README.md): JavaScript object viewer.
+* [otp-input](./src/otp-input/README.md): One time password input.
 * [painter](./src/painter/README.md): Simple drawing tool.
 * [performance-monitor](./src/performance-monitor/README.md): Realtime counter used for displaying cpu, fps metrics.
 * [retro-emulator](./src/retro-emulator/README.md): Retro emulator using libretro.

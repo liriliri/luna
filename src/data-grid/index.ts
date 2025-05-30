@@ -249,7 +249,7 @@ export default class DataGrid extends Component<IOptions> {
     }) as Array<[NodeData, IDataGridNodeOptions]>
 
     if (!uniqueId) {
-      this.clear()
+      this.clearData()
       each(items, (item) => {
         const node = new DataGridNode(this, item[0], item[1])
         this.nodes.push(node)
@@ -294,15 +294,18 @@ export default class DataGrid extends Component<IOptions> {
     }
 
     this.renderData()
+    this.updateHeight()
   }
   /** Clear all data. */
   clear() {
+    this.clearData()
+    this.renderData()
+    this.updateHeight()
+  }
+  private clearData() {
     this.nodes = []
     this.displayNodes = []
     this.selectNode(null)
-
-    this.renderData()
-    this.updateHeight()
   }
   private updateHeight() {
     const { $fillerRow, $container } = this

@@ -1,3 +1,7 @@
+## 1.4.3 (30 May 2025)
+
+* fix: update height multiple times when set data
+
 ## 1.4.2 (23 Apr 2025)
 
 * fix: sort nodes performance

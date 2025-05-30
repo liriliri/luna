@@ -26,6 +26,15 @@ import 'luna-otp-input/luna-otp-input.css'
 import LunaOtpInput from 'luna-otp-input'
 ```
 
+## Usage
+
+```javascript
+const otpInput = new OtpInput(container, {
+ inputNum: 6
+})
+otpInput.getValue()
+```
+
 ## Configuration
 
 * inputNum(number): Number of inputs.

@@ -14,6 +14,12 @@ export interface IOptions extends IComponentOptions {
 
 /**
  * One time password input.
+ *
+ * @example
+ * const otpInput = new OtpInput(container, {
+ *  inputNum: 6
+ * })
+ * otpInput.getValue()
  */
 export default class OtpInput extends Component<IOptions> {
   private activeIdx = 0

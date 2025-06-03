@@ -25,3 +25,25 @@ npm install luna-drag-selector --save
 import 'luna-drag-selector/luna-drag-selector.css'
 import LunaDragSelector from 'luna-drag-selector'
 ```
+
+## Usage
+
+```javascript
+const dragSelector = new DragSelector(container)
+let selectedElements = []
+dragSelector.on('select', () => {
+  selectedElements = []
+  if (dragSelector.isSelected(itemElement)) {
+    selectedElements.push(itemElement)
+  }
+})
+dragSelector.on('change', () => {
+  console.log('Selection changed:', selectedElements)
+})
+```
+
+## Api
+
+### isSelected(el: HTMLElement): boolean
+
+Check whether an element is selected.

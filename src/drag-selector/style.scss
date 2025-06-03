@@ -1,0 +1,27 @@
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
+@use 'sass:color';
+
+.luna-drag-selector {
+  position: relative;
+  user-select: none;
+}
+
+.select-area {
+  position: absolute;
+  border: 1px solid;
+  z-index: 1000;
+}
+
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    .select-area {
+      @include theme-var(border-color, color-primary, $theme);
+      background-color: if(
+        $theme == 'light',
+        color.change($color-primary, $alpha: 0.2),
+        color.change($color-primary-dark, $alpha: 0.2)
+      );
+    }
+  }
+}

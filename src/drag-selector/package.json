@@ -1,8 +1,5 @@
 {
   "name": "drag-selector",
   "version": "0.1.0",
-  "description": "Drag selector for selecting multiple items",
-  "luna": {
-    "test": false
-  }
+  "description": "Drag selector for selecting multiple items"
 }

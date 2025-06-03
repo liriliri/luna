@@ -61,7 +61,7 @@ export default function story(
         if (language) {
           i18n.locale(language)
         }
-        const story = storyFn(container)
+        const story = storyFn(container, theme)
         if (isArr(story)) {
           window.components = story
         } else {

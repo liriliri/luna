@@ -16,7 +16,7 @@
     "dev": "start-storybook -p 8080",
     "dev:no-cache": "start-storybook -p 8080 --no-manager-cache",
     "build:storybook": "build-storybook -o .storybook/out",
-    "genTheme": "lsla genTheme --input src/share/theme.json --output src/share/theme.scss && lsla prettier src/share/theme.scss --write"
+    "genTheme": "lsla genTheme --input src/share/theme.json --output src/share/theme.scss && lsla genTheme --input src/share/theme.json --output src/share/theme.js"
   },
   "repository": {
     "type": "git",

@@ -35,6 +35,7 @@ UI library.
 * [data-grid](./src/data-grid/README.md): Grid for displaying datasets.
 * [dom-highlighter](./src/dom-highlighter/README.md): Highlighter for html elements.
 * [dom-viewer](./src/dom-viewer/README.md): Dom tree navigator.
+* [drag-selector](./src/drag-selector/README.md): Drag selector for selecting multiple items.
 * [editor](./src/editor/README.md): Wysiwyg editor.
 * [file-list](./src/file-list/README.md): List files in the directory.
 * [gallery](./src/gallery/README.md): Lightweight gallery.

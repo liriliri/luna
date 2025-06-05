@@ -122,6 +122,11 @@ function getFiles() {
       size: 16384,
       mtime: randomDate(),
     },
+    {
+      name: 'empty',
+      size: 0,
+      mtime: randomDate(),
+    },
   ]
 }
 

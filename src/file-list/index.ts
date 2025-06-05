@@ -22,6 +22,7 @@ import isFn from 'licia/isFn'
 import isEmpty from 'licia/isEmpty'
 import statMode from 'stat-mode'
 import isStr from 'licia/isStr'
+import isUndef from 'licia/isUndef'
 
 const folderIcon = asset['folder.svg']
 const fileIcon = asset['file.svg']
@@ -269,7 +270,7 @@ export default class FileList extends Component<IOptions> {
           `<span><img src="${this.getIcon(file)}" />${file.name}</span>`
         ) as HTMLElement,
         type: this.getType(file),
-        size: file.size ? fileSize(file.size) : '--',
+        size: !isUndef(file.size) ? fileSize(file.size) : '--',
         mtime: dateFormat(file.mtime, 'yyyy-mm-dd HH:MM:ss'),
         mode,
         file,

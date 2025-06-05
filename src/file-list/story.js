@@ -91,6 +91,7 @@ function getFiles() {
       name: 'folder 1',
       directory: true,
       mtime: randomDate(),
+      mode: 'drwxrws---',
     },
     {
       name: 'picture.jpg',

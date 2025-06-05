@@ -55,7 +55,7 @@ const fileList = new LunaFileList(container, {
 ### IFile
 
 * directory(boolean): Whether file is a directory.
-* mode(number): File mode.
+* mode(string | number): File mode.
 * mtime(Date): Modified timestamp.
 * name(string): File name.
 * size(number): File size.

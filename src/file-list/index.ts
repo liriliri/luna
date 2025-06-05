@@ -21,6 +21,7 @@ import upperCase from 'licia/upperCase'
 import isFn from 'licia/isFn'
 import isEmpty from 'licia/isEmpty'
 import statMode from 'stat-mode'
+import isStr from 'licia/isStr'
 
 const folderIcon = asset['folder.svg']
 const fileIcon = asset['file.svg']
@@ -52,7 +53,7 @@ export interface IFile {
   /** Whether file is a directory. */
   directory?: boolean
   /** File mode. */
-  mode?: number
+  mode?: number | string
 }
 
 /**
@@ -256,7 +257,11 @@ export default class FileList extends Component<IOptions> {
     const data = map(files, (file) => {
       let mode = '--'
       if (file.mode) {
-        mode = statMode(file.mode).toString()
+        if (isStr(file.mode)) {
+          mode = file.mode
+        } else {
+          mode = statMode(file.mode).toString()
+        }
       }
 
       return {

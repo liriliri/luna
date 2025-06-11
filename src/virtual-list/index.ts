@@ -75,9 +75,9 @@ export default class VirtualList extends Component<IOptions> {
     this.update(el)
   }
   /** Set items. */
-  setItems(els: HTMLElement[]) {
+  setItems(elements: HTMLElement[]) {
     this.reset()
-    each(els, (el) => this.append(el))
+    each(elements, (el) => this.append(el))
   }
   /** Remove item. */
   remove(el: HTMLElement) {

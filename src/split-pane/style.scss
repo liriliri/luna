@@ -1,0 +1,6 @@
+@use '../share/mixin' as *;
+
+.luna-split-pane {
+  display: flex;
+  @include component(true);
+}

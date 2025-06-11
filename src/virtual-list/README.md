@@ -57,7 +57,7 @@ Remove item.
 
 Scroll to end.
 
-### setItems(els: HTMLElement[]): void
+### setItems(elements: HTMLElement[]): void
 
 Set items.
 

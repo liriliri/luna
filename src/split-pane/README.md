@@ -29,5 +29,21 @@ import LunaSplitPane from 'luna-split-pane'
 ## Usage
 
 ```javascript
-const splitPane = new SplitPane(container, {})
+const splitPane = new SplitPane(container, {
+  direction: 'horizontal', // or 'vertical',
+})
+splitPane.append(document.createElement('div'), {
+  minSize: 100,
+  weight: 50,
+})
 ```
+
+## Configuration
+
+* direction('vertical' | 'horizontal'): Direction to split.
+
+## Api
+
+### append(el: HTMLElement, options?: IElOptions): void
+
+Append an element.

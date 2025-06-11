@@ -4,7 +4,13 @@ import story from '../share/story'
 import readme from './README.md'
 import $ from 'licia/$'
 import toEl from 'licia/toEl'
-import { colorBorder, colorBorderDark } from '../share/theme'
+import {
+  colorBorder,
+  colorBorderDark,
+  red5,
+  blue5,
+  green5,
+} from '../share/theme'
 import { optionsKnob } from '@storybook/addon-knobs'
 
 const def = story(
@@ -23,13 +29,20 @@ const def = story(
     const splitPane = new SplitPane(container, {
       direction,
     })
+    splitPane.on('resize', (weights) => {
+      console.log('resize', weights)
+    })
 
-    splitPane.append(toEl('<div style="background: red;"></div>'), {
+    splitPane.append(toEl(`<div style="background: ${red5};"></div>`), {
       weight: 30,
     })
 
-    splitPane.append(toEl('<div style="background: blue;"></div>'), {
+    splitPane.append(toEl(`<div style="background: ${blue5};"></div>`), {
       weight: 70,
+    })
+
+    splitPane.append(toEl(`<div style="background: ${green5};"></div>`), {
+      weight: 30,
     })
 
     return splitPane

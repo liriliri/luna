@@ -1,10 +1,18 @@
 import Component, { IComponentOptions } from '../share/Component'
-import { exportCjs } from '../share/util'
+import { eventClient, exportCjs, pxToNum } from '../share/util'
 import $ from 'licia/$'
 import defaults from 'licia/defaults'
 import last from 'licia/last'
 import throttle from 'licia/throttle'
+import toEl from 'licia/toEl'
 import ResizeSensor from 'licia/ResizeSensor'
+import pointerEvent from 'licia/pointerEvent'
+import min from 'licia/min'
+import max from 'licia/max'
+import clamp from 'licia/clamp'
+import map from 'licia/map'
+
+const $document = $(document as any)
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -20,6 +28,8 @@ interface IElOptions {
 interface IElement extends Required<IElOptions> {
   el: HTMLElement
   $el: $.$
+  resizer?: HTMLElement
+  $resizer?: $.$
   size: number
 }
 
@@ -27,21 +37,32 @@ interface IElement extends Required<IElOptions> {
  * A component for creating resizable split panes.
  *
  * @example
- * const splitPane = new SplitPane(container, {})
+ * const splitPane = new SplitPane(container, {
+ *   direction: 'horizontal', // or 'vertical',
+ * })
+ * splitPane.append(document.createElement('div'), {
+ *   minSize: 100,
+ *   weight: 50,
+ * })
  */
 export default class SplitPane extends Component<IOptions> {
   private elements: IElement[] = []
   private onResize: () => void
   private resizeSensor: ResizeSensor
   private isHorizontal: boolean
+  private resizeIdx = 0
+  private resizeStart = 0
+  private resizeStartPos = 0
+  private resizeDelta = 0
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'split-pane' }, options)
 
     this.initOptions(options, {
       direction: 'horizontal',
     })
-    this.isHorizontal = this.options.direction === 'horizontal'
-    this.$container.css('flex-direction', this.isHorizontal ? 'row' : 'column')
+    const { direction } = this.options
+    this.isHorizontal = direction === 'horizontal'
+    this.$container.addClass(this.c(direction))
 
     this.resizeSensor = new ResizeSensor(container)
     this.onResize = throttle(() => this.applyWeights(), 16)
@@ -59,8 +80,8 @@ export default class SplitPane extends Component<IOptions> {
     defaults(options, {
       minSize: 24,
     })
+    const lastEl = last(elements)
     if (!options.weight) {
-      const lastEl = last(elements)
       if (lastEl) {
         lastEl.weight = lastEl.weight / 2
         options.weight = lastEl.weight
@@ -70,9 +91,18 @@ export default class SplitPane extends Component<IOptions> {
     }
 
     if (elements.length > 0) {
-      $container.append(
+      const resizer = toEl(
         this.c(`<div class="resizer" data-idx="${elements.length - 1}"></div>`)
       )
+      $container.append(resizer)
+      lastEl.resizer = resizer
+      lastEl.$resizer = $(resizer)
+      const self = this
+      const idx = elements.length - 1
+      lastEl.$resizer.on(pointerEvent('down'), function (e: any) {
+        self.resizeIdx = idx
+        self.onResizeStart(e)
+      })
     }
     $container.append(el)
 
@@ -85,6 +115,72 @@ export default class SplitPane extends Component<IOptions> {
     })
 
     this.applyWeights()
+  }
+  private onResizeStart(e: any) {
+    const { elements, isHorizontal } = this
+
+    e.stopPropagation()
+    e.preventDefault()
+    e = e.origEvent
+
+    const item = elements[this.resizeIdx]
+    this.resizeStart = eventClient(isHorizontal ? 'x' : 'y', e)
+    this.resizeStartPos = pxToNum(
+      item.$resizer!.css(isHorizontal ? 'left' : 'top')
+    )
+
+    $(document.body).addClass(this.c(`resizing-${this.options.direction}`))
+    $document.on(pointerEvent('move'), this.onResizeMove)
+    $document.on(pointerEvent('up'), this.onResizeEnd)
+  }
+  private onResizeMove = (e: any) => {
+    const { resizeIdx, isHorizontal, elements } = this
+    e = e.origEvent
+
+    let delta = eventClient(isHorizontal ? 'x' : 'y', e) - this.resizeStart
+    const leftItem = elements[resizeIdx]
+    const rightItem = elements[resizeIdx + 1]
+    const lowerBound = min(-leftItem.size + leftItem.minSize, 0)
+    const upperBound = max(rightItem.size - rightItem.minSize, 0)
+    delta = clamp(delta, lowerBound, upperBound)
+    leftItem.$el.css(
+      isHorizontal ? 'width' : 'height',
+      leftItem.size + delta + 'px'
+    )
+    rightItem.$el.css(
+      isHorizontal ? 'width' : 'height',
+      rightItem.size - delta + 'px'
+    )
+    this.resizeDelta = delta
+    const newPos = this.resizeStartPos + delta
+
+    leftItem.$resizer!.css(isHorizontal ? 'left' : 'top', newPos + 'px')
+  }
+  private onResizeEnd = (e: any) => {
+    this.onResizeMove(e)
+
+    const { elements, resizeIdx, resizeDelta } = this
+    const leftItem = elements[resizeIdx]
+    const rightItem = elements[resizeIdx + 1]
+
+    const leftWidth = leftItem.size + resizeDelta
+    const rightWidth = rightItem.size - resizeDelta
+    const totalWidth = leftWidth + rightWidth
+    const totalWeight =
+      (leftItem.weight as number) + (rightItem.weight as number)
+    const leftWeight = totalWeight * (leftWidth / totalWidth)
+    const rightWeight = totalWeight - leftWeight
+    leftItem.weight = leftWeight
+    rightItem.weight = rightWeight
+    this.applyWeights()
+    this.emit(
+      'resize',
+      map(elements, (item) => item.weight)
+    )
+
+    $(document.body).rmClass(this.c(`resizing-${this.options.direction}`))
+    $document.off(pointerEvent('move'), this.onResizeMove)
+    $document.off(pointerEvent('up'), this.onResizeEnd)
   }
   private applyWeights() {
     const { elements, isHorizontal } = this
@@ -105,14 +201,25 @@ export default class SplitPane extends Component<IOptions> {
       const item = elements[i]
       sum += item.weight
       const offset = ((sum * containerSize) / sumOfWeights) | 0
-      const size = Math.max(offset - lastOffset, item.minSize)
+      const size = max(offset - lastOffset, item.minSize)
       lastOffset = offset
       if (isHorizontal) {
-        item.el.style.width = `${size}px`
+        item.$el.css('width', size + 'px')
       } else {
-        item.el.style.height = `${size}px`
+        item.$el.css('height', size + 'px')
       }
       item.size = size
+    }
+
+    this.positionResizers()
+  }
+  private positionResizers() {
+    const { elements, isHorizontal } = this
+    const pos: number[] = []
+    for (let i = 0, len = elements.length - 1; i < len; i++) {
+      const item = elements[i]
+      pos[i] = (pos[i - 1] || 0) + item.size
+      item.$resizer!.css(isHorizontal ? 'left' : 'top', pos[i] + 'px')
     }
   }
   private bindEvent() {

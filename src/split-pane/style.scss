@@ -2,5 +2,44 @@
 
 .luna-split-pane {
   display: flex;
+  position: relative;
   @include component(true);
+  &.horizontal {
+    flex-direction: row;
+    .resizer {
+      width: 5px;
+      top: 0;
+      bottom: 0;
+      cursor: col-resize;
+    }
+  }
+  &.vertical {
+    flex-direction: column;
+    .resizer {
+      height: 5px;
+      left: 0;
+      right: 0;
+      cursor: row-resize;
+    }
+  }
+}
+
+.resizer {
+  position: absolute;
+  z-index: 500;
+  touch-action: none;
+}
+
+.resizing-horizontal {
+  cursor: col-resize !important;
+  .luna-split-pane * {
+    cursor: col-resize !important;
+  }
+}
+
+.resizing-vertical {
+  cursor: row-resize !important;
+  .luna-split-pane * {
+    cursor: row-resize !important;
+  }
 }

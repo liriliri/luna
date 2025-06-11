@@ -6,6 +6,7 @@ import readme from './README.md'
 import changelog from './CHANGELOG.md'
 import BoxModel from 'luna-box-model.js'
 import { text, object } from '@storybook/addon-knobs'
+import { red5, purple5 } from '../share/theme'
 
 const def = story(
   'box-model',
@@ -22,7 +23,7 @@ const def = story(
       top: 200,
     })
     const margin = text('Margin', '40px 30px 20px 10px')
-    const border = text('Border', '25px solid #614d82')
+    const border = text('Border', `25px solid ${purple5}`)
     const padding = text('Padding', '10px 20px 30px 40px')
     const size = object('Size', {
       width: 200,
@@ -45,7 +46,7 @@ const def = story(
           fontSize: 30,
           border,
           textAlign: 'center',
-          background: '#e73c5e',
+          background: red5,
         },
       },
       'Target'

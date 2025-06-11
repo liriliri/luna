@@ -5,6 +5,7 @@ import readme from './README.md'
 import LunaIconList from './react'
 import $ from 'licia/$'
 import { number, text, boolean } from '@storybook/addon-knobs'
+import { red5 } from '../share/theme'
 
 const def = story(
   'icon-list',
@@ -97,7 +98,7 @@ function getIcons() {
       src: '/pic3.png',
       name: 'Pic3',
       style: {
-        border: '1px solid red',
+        border: `1px solid ${red5}`,
       },
     },
     {

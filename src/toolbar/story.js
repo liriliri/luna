@@ -13,6 +13,7 @@ import LunaToolbar, {
   LunaToolbarNumber,
   LunaToolbarCheckbox,
 } from './react'
+import { green5 } from '../share/theme'
 
 const def = story(
   'toolbar',
@@ -60,7 +61,7 @@ const def = story(
 
     toolbar.appendSpace()
     toolbar.appendHtml(
-      '<span style="color:green;line-height:30px;">Loading</span>'
+      `<span style="color:${green5};line-height:30px;">Loading</span>`
     )
     toolbar.appendText('Status: OK')
 
@@ -118,7 +119,7 @@ const def = story(
           <LunaToolbarHtml className="custom-class">
             <span
               style={{
-                color: 'green',
+                color: green5,
                 lineHeight: '30px',
               }}
             >

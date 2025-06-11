@@ -13,6 +13,7 @@ import {
   select,
   color,
 } from '@storybook/addon-knobs'
+import { red5, purple5 } from '../share/theme'
 
 const def = story(
   'dom-highlighter',
@@ -29,9 +30,9 @@ const def = story(
       lineHeight: 150,
       padding: 20,
       fontSize: 30,
-      border: '25px solid #614d82',
+      border: `25px solid ${purple5}`,
       textAlign: 'center',
-      background: '#e73c5e',
+      background: red5,
       marginLeft: 100,
     })
 

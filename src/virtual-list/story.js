@@ -6,10 +6,19 @@ import toStr from 'licia/toStr'
 import $ from 'licia/$'
 import each from 'licia/each'
 import random from 'licia/random'
-import randomColor from 'licia/randomColor'
+import randomItem from 'licia/randomItem'
 import readme from './README.md'
 import randomId from 'licia/randomId'
 import { boolean, button } from '@storybook/addon-knobs'
+import {
+  green5,
+  red5,
+  purple5,
+  blue5,
+  orange5,
+  cyan5,
+  pink5,
+} from '../share/theme'
 
 const def = story(
   'virtual-list',
@@ -42,7 +51,15 @@ const def = story(
             {
               style: {
                 color: '#fff',
-                background: randomColor({ lightness: 0.5 }),
+                background: randomItem([
+                  green5,
+                  red5,
+                  purple5,
+                  blue5,
+                  orange5,
+                  cyan5,
+                  pink5,
+                ]),
                 minHeight: random(30, 100) + 'px',
                 lineHeight: '1.5em',
                 textWrap: 'nowrap',

@@ -5,13 +5,14 @@ import { object, color } from '@storybook/addon-knobs'
 import h from 'licia/h'
 import $ from 'licia/$'
 import { px } from './util'
+import { red5, purple5, orange5, blue5, green5 } from '../share/theme'
 
 const chartColors = {
-  primary: '#e73c5e',
-  secondary: '#614d82',
-  orange: '#EB3D21',
-  blue: '#3473FF',
-  green: '#00864B',
+  primary: red5,
+  secondary: purple5,
+  orange: orange5,
+  blue: blue5,
+  green: green5,
 }
 
 const def = story(

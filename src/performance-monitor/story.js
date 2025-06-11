@@ -11,6 +11,7 @@ import random from 'licia/random'
 import each from 'licia/each'
 import { button, number } from '@storybook/addon-knobs'
 import LunaPerformanceMonitor from './react'
+import { green5, purple5 } from '../share/theme'
 
 const def = story(
   'performance-monitor',
@@ -63,7 +64,7 @@ const def = story(
     wrapper.appendChild(fpsContainer)
     const fpsMonitor = new PerformanceMonitor(fpsContainer, {
       title: 'FPS',
-      color: '#00864B',
+      color: green5,
       smooth: false,
       height,
       data: () => fps,
@@ -79,7 +80,7 @@ const def = story(
       const memoryMonitor = new PerformanceMonitor(memoryContainer, {
         title: 'Used JS heap size',
         unit: 'MB',
-        color: '#614d82',
+        color: purple5,
         smooth: false,
         height,
         data() {

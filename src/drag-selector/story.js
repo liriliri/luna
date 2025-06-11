@@ -3,7 +3,7 @@ import LunaDragSelector from 'luna-drag-selector.js'
 import story from '../share/story'
 import readme from './README.md'
 import $ from 'licia/$'
-import { colorBorder, colorBorderDark } from '../share/theme'
+import { colorBorder, colorBorderDark, red5, blue5 } from '../share/theme'
 
 const def = story(
   'drag-selector',
@@ -20,8 +20,7 @@ const def = story(
       userSelect: 'none',
       border: `1px solid ${theme === 'light' ? colorBorder : colorBorderDark}`,
     })
-    const itemStyle =
-      'width:100px;height:100px;line-height:50px;text-align:center;margin:15px;background:red;color:white;'
+    const itemStyle = `width:100px;height:100px;line-height:50px;text-align:center;margin:15px;background:${red5};color:white;`
     for (let i = 0; i < 100; i++) {
       const num = i + 1
       $(container).append(
@@ -34,9 +33,9 @@ const def = story(
     dragSelector.on('select', function () {
       $items.each(function (i, item) {
         if (dragSelector.isSelected(item)) {
-          $(item).css('background', 'blue')
+          $(item).css('background', blue5)
         } else {
-          $(item).css('background', 'red')
+          $(item).css('background', red5)
         }
       })
     })

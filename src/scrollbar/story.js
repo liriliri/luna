@@ -4,10 +4,11 @@ import $ from 'licia/$'
 import escape from 'licia/escape'
 import story from '../share/story'
 import readme from './README.md'
+import { colorBorder, colorBorderDark } from '../share/theme'
 
 const def = story(
   'scrollbar',
-  (container) => {
+  (container, theme) => {
     $(container)
       .css({
         maxWidth: 640,
@@ -15,7 +16,9 @@ const def = story(
         width: '100%',
         aspectRatio: '4/3',
         margin: '0 auto',
-        border: '1px solid black',
+        border: `1px solid ${
+          theme === 'light' ? colorBorder : colorBorderDark
+        }`,
       })
       .html(
         `<div style="white-space:pre-wrap;min-width:400px;">${escape(

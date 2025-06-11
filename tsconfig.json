@@ -65,7 +65,8 @@
       "luna-icon-list": ["src/icon-list/index"],
       "luna-virtual-list": ["src/virtual-list/index"],
       "luna-otp-input": ["src/otp-input/index"],
-      "luna-drag-selector": ["src/drag-selector/index"]
+      "luna-drag-selector": ["src/drag-selector/index"],
+      "luna-split-pane": ["src/split-pane/index"]
     }
   }
 }

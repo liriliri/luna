@@ -100,11 +100,13 @@ interface ISettingTitleProps extends ISettingItemProps {
 }
 
 const LunaSettingItem: FC<
-  ISettingItemProps & {
-    type: string
-    className?: string
-    dangerouslySetInnerHTML?: { __html: string }
-  }
+  PropsWithChildren<
+    ISettingItemProps & {
+      type: string
+      className?: string
+      dangerouslySetInnerHTML?: { __html: string }
+    }
+  >
 > = (props) => {
   return (
     <div

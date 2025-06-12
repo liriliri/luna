@@ -59,10 +59,12 @@ interface IToolbarItemProps {
 }
 
 const LunaToolbarItem: FC<
-  IToolbarItemProps & {
-    type: string
-    dangerouslySetInnerHTML?: { __html: string }
-  }
+  PropsWithChildren<
+    IToolbarItemProps & {
+      type: string
+      dangerouslySetInnerHTML?: { __html: string }
+    }
+  >
 > = (props) => {
   return (
     <div

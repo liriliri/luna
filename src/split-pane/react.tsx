@@ -3,6 +3,7 @@ import {
   cloneElement,
   CSSProperties,
   FC,
+  PropsWithChildren,
   ReactElement,
   useEffect,
   useRef,
@@ -16,7 +17,7 @@ interface ISplitPaneProps extends IOptions {
   onResize?: (weights: number[]) => void
 }
 
-const LunaSplitPane: FC<ISplitPaneProps> = (props) => {
+const LunaSplitPane: FC<PropsWithChildren<ISplitPaneProps>> = (props) => {
   const splitPaneRef = useRef<HTMLDivElement>(null)
   const splitPane = useRef<SplitPane>()
   const forceUpdate = useForceUpdate()
@@ -57,7 +58,9 @@ interface ISplitPaneItemProps {
   className?: string
 }
 
-export const LunaSplitPaneItem: FC<ISplitPaneItemProps> = (props) => {
+export const LunaSplitPaneItem: FC<PropsWithChildren<ISplitPaneItemProps>> = (
+  props
+) => {
   const splitPaneItemRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

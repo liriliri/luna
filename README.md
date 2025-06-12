@@ -64,6 +64,7 @@ UI library.
 * [scrollbar](./src/scrollbar/README.md): Custom scrollbar.
 * [setting](./src/setting/README.md): Settings panel.
 * [shader-toy-player](./src/shader-toy-player/README.md): Shader toy player.
+* [split-pane](./src/split-pane/README.md): A component for creating resizable split panes.
 * [syntax-highlighter](./src/syntax-highlighter/README.md): Syntax highlighter using highlightjs.
 * [tab](./src/tab/README.md): Easy tabs.
 * [text-viewer](./src/text-viewer/README.md): Text viewer with line number.

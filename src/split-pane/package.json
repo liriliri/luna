@@ -3,6 +3,6 @@
   "version": "0.1.0",
   "description": "A component for creating resizable split panes",
   "luna": {
-    "test": false
+    "react": true
   }
 }

@@ -1,3 +1,7 @@
+## 1.6.2 (12 Jun 2025)
+
+* fix: use content height for fit
+
 ## 1.6.1 (12 Jun 2025)
 
 * fix: fit height

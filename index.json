@@ -74,7 +74,7 @@
   "data-grid": {
     "react": true,
     "icon": true,
-    "version": "1.6.1",
+    "version": "1.6.2",
     "style": true,
     "test": true,
     "install": false,

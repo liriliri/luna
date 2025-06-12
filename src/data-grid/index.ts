@@ -309,7 +309,7 @@ export default class DataGrid extends Component<IOptions> {
       return
     }
     const parent = this.$container.parent().get(0) as HTMLElement
-    const height = $(parent).offset().height
+    const height = pxToNum(window.getComputedStyle(parent).height)
     this.setOption({
       minHeight: height,
       maxHeight: height,

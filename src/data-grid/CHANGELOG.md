@@ -1,3 +1,7 @@
+## 1.6.1 (12 Jun 2025)
+
+* fix: fit height
+
 ## 1.6.0 (12 Jun 2025)
 
 * feat: react onCreate

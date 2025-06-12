@@ -30,6 +30,7 @@ import now from 'licia/now'
 import remove from 'licia/remove'
 import pointerEvent from 'licia/pointerEvent'
 import { exportCjs, eventClient, pxToNum } from '../share/util'
+import { isHidden } from 'licia'
 
 const $document = $(document as any)
 const MIN_COL_WIDTH = 24
@@ -304,8 +305,10 @@ export default class DataGrid extends Component<IOptions> {
   }
   /** Fit height to the containing element. */
   fit() {
-    const { $container } = this
-    const parent = $container.parent().get(0) as HTMLElement
+    if (isHidden(this.container)) {
+      return
+    }
+    const parent = this.$container.parent().get(0) as HTMLElement
     const height = $(parent).offset().height
     this.setOption({
       minHeight: height,

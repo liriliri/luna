@@ -64,6 +64,11 @@ const def = story(
       return false
     })
 
+    button('Fit', () => {
+      dataGrid.fit()
+      return false
+    })
+
     return dataGrid
   },
   {

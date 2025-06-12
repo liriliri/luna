@@ -1,3 +1,7 @@
+## 1.5.0 (12 Jun 2025)
+
+* feat: fit height to the containing element
+
 ## 1.4.3 (30 May 2025)
 
 * fix: update height multiple times when set data

@@ -68,6 +68,10 @@ Append row data.
 
 Clear all data.
 
+### fit(): void
+
+Fit height to the containing element.
+
 ### remove(node: DataGridNode): void
 
 Remove row data.

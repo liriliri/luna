@@ -302,6 +302,16 @@ export default class DataGrid extends Component<IOptions> {
     this.renderData()
     this.updateHeight()
   }
+  /** Fit height to the containing element. */
+  fit() {
+    const { $container } = this
+    const parent = $container.parent().get(0) as HTMLElement
+    const height = $(parent).offset().height
+    this.setOption({
+      minHeight: height,
+      maxHeight: height,
+    })
+  }
   private clearData() {
     this.nodes = []
     this.displayNodes = []

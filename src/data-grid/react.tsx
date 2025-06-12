@@ -14,6 +14,7 @@ interface IDataGridProps extends IOptions {
   onClick?: (e: MouseEvent, node: DataGridNode) => void
   onDoubleClick?: (e: MouseEvent, node: DataGridNode) => void
   onContextMenu?: (e: PointerEvent, node: DataGridNode) => void
+  onCreate?: (dataGrid: DataGrid) => void
   className?: string
   uniqueId?: string
   data: any[]
@@ -34,6 +35,7 @@ const LunaDataGrid: FC<IDataGridProps> = (props) => {
       selectable: props.selectable,
       theme: props.theme,
     })
+    props.onCreate && props.onCreate(dataGrid.current)
     dataGrid.current.setData(props.data, props.uniqueId)
 
     return () => dataGrid.current?.destroy()

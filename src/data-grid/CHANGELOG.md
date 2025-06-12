@@ -1,3 +1,7 @@
+## 1.6.0 (12 Jun 2025)
+
+* feat: react onCreate
+
 ## 1.5.0 (12 Jun 2025)
 
 * feat: fit height to the containing element

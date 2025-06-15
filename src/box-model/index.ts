@@ -141,10 +141,7 @@ export default class BoxModel extends Component<IOptions> {
       margin: getBoxModelValue('margin'),
       border: getBoxModelValue('border'),
       padding: getBoxModelValue('padding'),
-      content: {
-        width: boxModelValue(computedStyle['width']),
-        height: boxModelValue(computedStyle['height']),
-      },
+      content: getContentSize(element),
     }
 
     if (computedStyle['position'] !== 'static') {
@@ -170,4 +167,21 @@ function boxModelValue(val: any, type?: string) {
 
 if (typeof module !== 'undefined') {
   exportCjs(module, BoxModel)
+}
+
+export function getContentSize(el: HTMLElement) {
+  const style = window.getComputedStyle(el)
+
+  const paddingWidth = pxToNum(style.paddingLeft) + pxToNum(style.paddingRight)
+  const paddingHeight = pxToNum(style.paddingTop) + pxToNum(style.paddingBottom)
+
+  const borderWidth =
+    pxToNum(style.borderLeftWidth) + pxToNum(style.borderRightWidth)
+  const borderHeight =
+    pxToNum(style.borderTopWidth) + pxToNum(style.borderBottomWidth)
+
+  return {
+    width: boxModelValue(el.offsetWidth - paddingWidth - borderWidth),
+    height: boxModelValue(el.offsetHeight - paddingHeight - borderHeight),
+  }
 }

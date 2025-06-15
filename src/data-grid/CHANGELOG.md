@@ -1,3 +1,7 @@
+## 1.6.4 (15 Jun 2025)
+
+* fix: wrong licia import
+
 ## 1.6.3 (12 Jun 2025)
 
 * fix: wrong content height for fit

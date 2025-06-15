@@ -30,7 +30,7 @@ import now from 'licia/now'
 import remove from 'licia/remove'
 import pointerEvent from 'licia/pointerEvent'
 import { exportCjs, eventClient, pxToNum } from '../share/util'
-import { isHidden } from 'licia'
+import isHidden from 'licia/isHidden'
 
 const $document = $(document as any)
 const MIN_COL_WIDTH = 24

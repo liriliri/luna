@@ -24,7 +24,7 @@ export interface IOptions extends IComponentOptions {
   direction?: 'horizontal' | 'vertical'
 }
 
-interface IElOptions {
+export interface IElOptions {
   minSize?: number
   weight?: number
   visible?: boolean

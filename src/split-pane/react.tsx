@@ -8,8 +8,10 @@ import {
   useEffect,
   useRef,
 } from 'react'
-import SplitPane, { IOptions } from './index'
+import SplitPane, { IOptions, IElOptions } from './index'
 import { useEvent, useForceUpdate, usePrevious } from '../share/hooks'
+import pick from 'licia/pick'
+import isUndef from 'licia/isUndef'
 
 interface ISplitPaneProps extends IOptions {
   style?: CSSProperties
@@ -76,11 +78,15 @@ export const LunaSplitPaneItem: FC<PropsWithChildren<ISplitPaneItemProps>> = (
 
   useEffect(() => {
     if (props.splitPane) {
-      props.splitPane.update(splitPaneItemRef.current!, {
-        minSize: props.minSize,
-        weight: props.weight,
-        visible: props.visible,
-      })
+      const options: IElOptions = pick(
+        {
+          minSize: props.minSize,
+          weight: props.weight,
+          visible: props.visible,
+        },
+        (value: any) => !isUndef(value)
+      )
+      props.splitPane.update(splitPaneItemRef.current!, options)
     }
   }, [props.minSize, props.weight, props.visible])
 

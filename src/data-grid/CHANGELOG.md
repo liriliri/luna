@@ -1,3 +1,7 @@
+## 1.6.5 (20 Jun 2025)
+
+* fix: container resize
+
 ## 1.6.4 (15 Jun 2025)
 
 * fix: wrong licia import

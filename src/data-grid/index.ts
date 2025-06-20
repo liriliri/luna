@@ -591,7 +591,6 @@ export default class DataGrid extends Component<IOptions> {
       sumOfWeights += columns[i].weight as number
     }
 
-    const minColumnWidth = 14
     let html = ''
 
     let sum = 0
@@ -600,8 +599,12 @@ export default class DataGrid extends Component<IOptions> {
     for (let i = 0; i < len; i++) {
       const column = columns[i]
       sum += column.weight as number
-      const offset = ((sum * tableWidth) / sumOfWeights) | 0
-      const width = Math.max(offset - lastOffset, minColumnWidth)
+      let offset = ((sum * tableWidth) / sumOfWeights) | 0
+      let width = offset - lastOffset
+      if (width < MIN_COL_WIDTH) {
+        width = MIN_COL_WIDTH
+        offset = lastOffset + width
+      }
       lastOffset = offset
       html += `<col style="width:${width}px"></col>`
       this.colWidths[i] = width

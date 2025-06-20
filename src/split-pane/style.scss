@@ -8,7 +8,7 @@
   @include component(true);
   &.horizontal {
     flex-direction: row;
-    .resizer {
+    & > .resizer {
       width: 5px;
       top: 0;
       bottom: 0;
@@ -17,7 +17,7 @@
   }
   &.vertical {
     flex-direction: column;
-    .resizer {
+    & > .resizer {
       height: 5px;
       left: 0;
       right: 0;

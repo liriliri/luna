@@ -233,8 +233,12 @@ export default class SplitPane extends Component<IOptions> {
     for (let i = 0; i < len; i++) {
       const item = displayElements[i]
       sum += item.weight
-      const offset = ((sum * containerSize) / sumOfWeights) | 0
-      const size = max(offset - lastOffset, item.minSize)
+      let offset = ((sum * containerSize) / sumOfWeights) | 0
+      let size = offset - lastOffset
+      if (size < item.minSize) {
+        size = item.minSize
+        offset = lastOffset + size
+      }
       lastOffset = offset
       if (isHorizontal) {
         item.$el.css('width', size + 'px')

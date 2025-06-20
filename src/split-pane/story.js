@@ -101,6 +101,7 @@ const def = story(
           </LunaSplitPaneItem>
           <LunaSplitPaneItem
             weight={40}
+            visible={false}
             minSize={minSize}
             style={{ ...commonStyle, background: blue5 }}
           >

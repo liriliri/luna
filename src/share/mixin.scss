@@ -41,7 +41,7 @@ $theme-variables: meta.module-variables(theme);
   font-size: #{$font-size}px;
   &.hidden,
   .hidden {
-    display: none;
+    display: none !important;
   }
   &.invisible,
   .invisible {

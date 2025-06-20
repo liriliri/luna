@@ -11,6 +11,10 @@ import min from 'licia/min'
 import max from 'licia/max'
 import clamp from 'licia/clamp'
 import map from 'licia/map'
+import extend from 'licia/extend'
+import find from 'licia/find'
+import isUndef from 'licia/isUndef'
+import filter from 'licia/filter'
 
 const $document = $(document as any)
 
@@ -23,6 +27,7 @@ export interface IOptions extends IComponentOptions {
 interface IElOptions {
   minSize?: number
   weight?: number
+  visible?: boolean
 }
 
 interface IElement extends Required<IElOptions> {
@@ -47,6 +52,7 @@ interface IElement extends Required<IElOptions> {
  */
 export default class SplitPane extends Component<IOptions> {
   private elements: IElement[] = []
+  private displayElements: IElement[] = []
   private onResize: () => void
   private resizeSensor: ResizeSensor
   private isHorizontal: boolean
@@ -79,6 +85,7 @@ export default class SplitPane extends Component<IOptions> {
 
     defaults(options, {
       minSize: 24,
+      visible: true,
     })
     const lastEl = last(elements)
     if (!options.weight) {
@@ -107,23 +114,49 @@ export default class SplitPane extends Component<IOptions> {
     $container.append(el)
 
     const $el = $(el)
-    elements.push({
+    const item = {
       el,
       $el,
       size: 0,
       ...(options as Required<IElOptions>),
-    })
+    }
+    elements.push(item)
 
+    this.updateDisplayElements()
     this.applyWeights()
   }
+  /** Update an element's options. */
+  update(el: HTMLElement, options: IElOptions) {
+    const item = find(this.elements, (item) => item.el === el)
+    if (item) {
+      extend(item, options)
+      if (!isUndef(options.visible)) {
+        this.updateDisplayElements()
+      }
+      this.applyWeights()
+    }
+  }
+  private updateDisplayElements() {
+    this.displayElements = filter(this.elements, (item) => {
+      if (item.visible) {
+        item.$el.rmClass(this.c('hidden'))
+        item.$resizer?.rmClass(this.c('hidden'))
+      } else {
+        item.$el.addClass(this.c('hidden'))
+        item.$resizer?.addClass(this.c('hidden'))
+      }
+
+      return item.visible
+    })
+  }
   private onResizeStart(e: any) {
-    const { elements, isHorizontal } = this
+    const { displayElements, isHorizontal } = this
 
     e.stopPropagation()
     e.preventDefault()
     e = e.origEvent
 
-    const item = elements[this.resizeIdx]
+    const item = displayElements[this.resizeIdx]
     this.resizeStart = eventClient(isHorizontal ? 'x' : 'y', e)
     this.resizeStartPos = pxToNum(
       item.$resizer!.css(isHorizontal ? 'left' : 'top')
@@ -134,12 +167,12 @@ export default class SplitPane extends Component<IOptions> {
     $document.on(pointerEvent('up'), this.onResizeEnd)
   }
   private onResizeMove = (e: any) => {
-    const { resizeIdx, isHorizontal, elements } = this
+    const { resizeIdx, isHorizontal, displayElements } = this
     e = e.origEvent
 
     let delta = eventClient(isHorizontal ? 'x' : 'y', e) - this.resizeStart
-    const leftItem = elements[resizeIdx]
-    const rightItem = elements[resizeIdx + 1]
+    const leftItem = displayElements[resizeIdx]
+    const rightItem = displayElements[resizeIdx + 1]
     const lowerBound = min(-leftItem.size + leftItem.minSize, 0)
     const upperBound = max(rightItem.size - rightItem.minSize, 0)
     delta = clamp(delta, lowerBound, upperBound)
@@ -159,9 +192,9 @@ export default class SplitPane extends Component<IOptions> {
   private onResizeEnd = (e: any) => {
     this.onResizeMove(e)
 
-    const { elements, resizeIdx, resizeDelta } = this
-    const leftItem = elements[resizeIdx]
-    const rightItem = elements[resizeIdx + 1]
+    const { displayElements, resizeIdx, resizeDelta } = this
+    const leftItem = displayElements[resizeIdx]
+    const rightItem = displayElements[resizeIdx + 1]
 
     const leftWidth = leftItem.size + resizeDelta
     const rightWidth = rightItem.size - resizeDelta
@@ -175,7 +208,7 @@ export default class SplitPane extends Component<IOptions> {
     this.applyWeights()
     this.emit(
       'resize',
-      map(elements, (item) => item.weight)
+      map(this.elements, (item) => item.weight)
     )
 
     $(document.body).rmClass(this.c(`resizing-${this.options.direction}`))
@@ -183,12 +216,12 @@ export default class SplitPane extends Component<IOptions> {
     $document.off(pointerEvent('up'), this.onResizeEnd)
   }
   private applyWeights() {
-    const { elements, isHorizontal } = this
+    const { displayElements, isHorizontal } = this
 
     let sumOfWeights = 0
-    const len = elements.length
+    const len = displayElements.length
     for (let i = 0; i < len; i++) {
-      sumOfWeights += elements[i].weight
+      sumOfWeights += displayElements[i].weight
     }
 
     let sum = 0
@@ -198,7 +231,7 @@ export default class SplitPane extends Component<IOptions> {
       ? containerOffset.width
       : containerOffset.height
     for (let i = 0; i < len; i++) {
-      const item = elements[i]
+      const item = displayElements[i]
       sum += item.weight
       const offset = ((sum * containerSize) / sumOfWeights) | 0
       const size = max(offset - lastOffset, item.minSize)
@@ -215,6 +248,7 @@ export default class SplitPane extends Component<IOptions> {
   }
   private positionResizers() {
     const { elements, isHorizontal } = this
+
     const pos: number[] = []
     for (let i = 0, len = elements.length - 1; i < len; i++) {
       const item = elements[i]

@@ -54,6 +54,7 @@ interface ISplitPaneItemProps {
   splitPane?: SplitPane
   minSize?: number
   weight?: number
+  visible?: boolean
   style?: CSSProperties
   className?: string
 }
@@ -68,9 +69,20 @@ export const LunaSplitPaneItem: FC<PropsWithChildren<ISplitPaneItemProps>> = (
       props.splitPane.append(splitPaneItemRef.current!, {
         minSize: props.minSize,
         weight: props.weight,
+        visible: props.visible,
       })
     }
   }, [props.splitPane])
+
+  useEffect(() => {
+    if (props.splitPane) {
+      props.splitPane.update(splitPaneItemRef.current!, {
+        minSize: props.minSize,
+        weight: props.weight,
+        visible: props.visible,
+      })
+    }
+  }, [props.minSize, props.weight, props.visible])
 
   return (
     <div

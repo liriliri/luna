@@ -47,3 +47,7 @@ splitPane.append(document.createElement('div'), {
 ### append(el: HTMLElement, options?: IElOptions): void
 
 Append an element.
+
+### update(el: HTMLElement, options: IElOptions): void
+
+Update an element's options.

@@ -160,12 +160,12 @@ export default class FileList extends Component<IOptions> {
 
     this.resizeSensor = new ResizeSensor(container)
     this.onResize = throttle(() => {
-      this.updateListHeight()
+      this.dataGrid.fit()
     }, 100)
 
     this.bindEvent()
     this.render()
-    this.updateListHeight()
+    this.dataGrid.fit()
 
     if (this.options.filter) {
       this.setFilter(this.options.filter)
@@ -183,13 +183,6 @@ export default class FileList extends Component<IOptions> {
     }
     this.iconList.setOption('filter', filter)
     this.dataGrid.setOption('filter', filter)
-  }
-  private updateListHeight() {
-    const height = this.$container.offset().height
-    this.dataGrid.setOption({
-      maxHeight: height,
-      minHeight: height,
-    })
   }
   private initTpl() {
     this.$container.html(

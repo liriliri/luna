@@ -120,7 +120,7 @@
     "react": true,
     "install": true,
     "dependencies": ["data-grid", "icon-list"],
-    "version": "0.5.1",
+    "version": "0.5.2",
     "style": true,
     "icon": false,
     "test": true

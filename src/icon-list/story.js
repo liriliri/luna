@@ -10,7 +10,7 @@ import { red5 } from '../share/theme'
 const def = story(
   'icon-list',
   (container) => {
-    const { size, filter, selectable } = createKnobs()
+    const { size, filter, selectable, multiSelections } = createKnobs()
 
     $(container).css('height', 400)
 
@@ -18,6 +18,7 @@ const def = story(
       size,
       filter,
       selectable,
+      multiSelections,
     })
     iconList.setIcons(getIcons())
 
@@ -78,7 +79,7 @@ function getIcons() {
   return [
     {
       src: '/logo.png',
-      name: 'Luna',
+      name: 'Luna - "UI library"',
     },
     {
       src: '/pic1.png',
@@ -140,10 +141,13 @@ function createKnobs() {
 
   const selectable = boolean('Selectable', true)
 
+  const multiSelections = boolean('Multi Selections', false)
+
   return {
     size,
     filter,
     selectable,
+    multiSelections,
   }
 }
 

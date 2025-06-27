@@ -11,17 +11,20 @@ https://luna.liriliri.io/?path=/story/icon-list
 Add the following script and style to your page.
 
 ```html
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-drag-selector/luna-drag-selector.css" />
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-icon-list/luna-icon-list.css" />
+<script src="//cdn.jsdelivr.net/npm/luna-drag-selector/luna-drag-selector.js"></script>
 <script src="//cdn.jsdelivr.net/npm/luna-icon-list/luna-icon-list.js"></script>
 ```
 
 You can also get it on npm.
 
 ```bash
-npm install luna-icon-list --save
+npm install luna-icon-list luna-drag-selector --save
 ```
 
 ```javascript
+import 'luna-drag-selector/luna-drag-selector.css'
 import 'luna-icon-list/luna-icon-list.css'
 import LunaIconList from 'luna-icon-list'
 ```
@@ -41,6 +44,7 @@ iconList.setIcons([
 ## Configuration
 
 * filter(string | RegExp | AnyFn): Icon filter.
+* multiSelections(boolean): Allow multiple selections.
 * selectable(boolean): Whether icon is selectable.
 * size(number): Icon size.
 

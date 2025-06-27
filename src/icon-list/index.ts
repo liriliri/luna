@@ -13,6 +13,8 @@ import isNull from 'licia/isNull'
 import each from 'licia/each'
 import lowerCase from 'licia/lowerCase'
 import ResizeSensor from 'licia/ResizeSensor'
+import escape from 'licia/escape'
+import LunaDragSelector from 'luna-drag-selector'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -22,6 +24,8 @@ export interface IOptions extends IComponentOptions {
   filter?: string | RegExp | types.AnyFn
   /** Whether icon is selectable.  */
   selectable?: boolean
+  /** Allow multiple selections. */
+  multiSelections?: boolean
 }
 
 /** IIcon */
@@ -56,6 +60,7 @@ export default class IconList extends Component<IOptions> {
   private $iconContainer: $.$
   private iconContainer: HTMLElement
   private selectedIcon: Icon | null = null
+  private dragSelector: LunaDragSelector | null = null
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'icon-list' }, options)
 
@@ -67,11 +72,17 @@ export default class IconList extends Component<IOptions> {
     this.initOptions(options, {
       size: 48,
       selectable: true,
+      multiSelections: false,
     })
 
     this.initTpl()
     this.$iconContainer = this.find('.icon-container')
     this.iconContainer = this.$iconContainer.get(0) as HTMLElement
+
+    if (this.options.selectable && this.options.multiSelections) {
+      this.dragSelector = new LunaDragSelector(this.container)
+      this.addSubComponent(this.dragSelector)
+    }
 
     this.bindEvent()
   }
@@ -317,7 +328,7 @@ export class Icon {
       <div class="icon">
         <img src="${src}" draggable="false"></img>
       </div>
-      <div class="name">${name}</div>
+      <div class="name" title="${escape(name)}">${name}</div>
     `)
     )
   }

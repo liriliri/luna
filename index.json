@@ -136,12 +136,12 @@
   },
   "icon-list": {
     "react": true,
+    "dependencies": ["drag-selector"],
     "version": "0.2.5",
     "style": true,
     "icon": false,
     "test": true,
-    "install": false,
-    "dependencies": []
+    "install": false
   },
   "image-list": {
     "vue": true,

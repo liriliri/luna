@@ -321,6 +321,9 @@ export default class FileList extends Component<IOptions> {
         case 'files':
         case 'listView':
           this.render()
+          if (val) {
+            this.dataGrid.fit()
+          }
           break
         case 'filter':
           this.setFilter(val)

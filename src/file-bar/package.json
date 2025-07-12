@@ -1,0 +1,8 @@
+{
+  "name": "file-bar",
+  "version": "0.1.0",
+  "description": "File explorer address bar",
+  "luna": {
+    "test": false
+  }
+}

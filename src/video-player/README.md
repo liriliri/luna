@@ -29,7 +29,6 @@ import LunaVideoPlayer from 'luna-video-player'
 ## Usage
 
 ```javascript
-const container = document.getElementById('container')
 const videoPlayer = new LunaVideoPlayer(container, {
   url: 'https://api.dogecloud.com/player/get.mp4?vcode=9dbb405e2141b5e8&userId=2096&flsign=1c02d5e60d2a0f29e1fd2ec0c0762b8b&ext=.mp4',
 })

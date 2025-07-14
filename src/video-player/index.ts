@@ -13,6 +13,8 @@ import hotkey from 'licia/hotkey'
 import pointerEvent from 'licia/pointerEvent'
 import { eventPage, exportCjs } from '../share/util'
 import Component, { IComponentOptions } from '../share/Component'
+import ResizeSensor from 'licia/ResizeSensor'
+import nextTick from 'licia/nextTick'
 
 const $document = $(document as any)
 const isIos = detectBrowser(navigator.userAgent).name === 'ios'
@@ -55,7 +57,6 @@ const videoEvents = [
  * Elegant HTML5 video player.
  *
  * @example
- * const container = document.getElementById('container')
  * const videoPlayer = new LunaVideoPlayer(container, {
  *   url: 'https://api.dogecloud.com/player/get.mp4?vcode=9dbb405e2141b5e8&userId=2096&flsign=1c02d5e60d2a0f29e1fd2ec0c0762b8b&ext=.mp4',
  * })
@@ -65,6 +66,7 @@ const videoEvents = [
 export default class VideoPlayer extends Component<IOptions> {
   private $video: $.$
   private $controller: $.$
+  private $time: $.$
   private $curTime: $.$
   private $duration: $.$
   private $bar: $.$
@@ -78,6 +80,7 @@ export default class VideoPlayer extends Component<IOptions> {
   private video: HTMLVideoElement = document.createElement('video')
   private videoTimeUpdate = true
   private autoHideTimer: any = 0
+  private resizeSensor: ResizeSensor
   constructor(container: Element, options: IOptions = {}) {
     super(container, { compName: 'video-player' })
 
@@ -95,6 +98,7 @@ export default class VideoPlayer extends Component<IOptions> {
     this.$volumeController = this.find('.volume-controller')
     this.$volumeBarFill = this.find('.volume-bar-fill')
     this.$volumeIcon = this.$volume.find('span')
+    this.$time = this.find('.time')
     this.$curTime = this.find('.cur-time')
     this.$duration = this.find('.duration')
     this.$play = this.find('.play')
@@ -107,6 +111,7 @@ export default class VideoPlayer extends Component<IOptions> {
     video.crossOrigin = 'anonymous'
     video.setAttribute('playsinline', 'true')
 
+    this.resizeSensor = new ResizeSensor(this.container)
     this.bindEvent()
 
     if (options.url) {
@@ -131,6 +136,7 @@ export default class VideoPlayer extends Component<IOptions> {
   }
   destroy() {
     this.pause()
+    this.resizeSensor.destroy()
     this.$container.off('mousemove', this.onMouseMove)
     super.destroy()
   }
@@ -211,6 +217,18 @@ export default class VideoPlayer extends Component<IOptions> {
       $container.addClass(c('controller-hidden'))
     }, 3000)
   }
+  private onResize = () => {
+    const offset = this.$container.offset()
+    const hidden = this.c('hidden')
+    const { $time, $volume } = this
+    if (offset.width < 320) {
+      $volume.addClass(hidden)
+      $time.addClass(hidden)
+    } else {
+      $volume.rmClass(hidden)
+      $time.rmClass(hidden)
+    }
+  }
   private bindEvent() {
     const { c, container, $container } = this
 
@@ -242,6 +260,22 @@ export default class VideoPlayer extends Component<IOptions> {
     this.on('pause', this.onPause)
     this.on('canplay', this.onLoaded)
     this.on('progress', this.onLoaded)
+
+    this.resizeSensor.addListener(this.onResize)
+    this.onResize()
+
+    this.on('changeOption', (name, val) => {
+      switch (name) {
+        case 'url':
+          this.pause()
+          this.seek(0)
+          nextTick(() => {
+            this.video.src = val
+            this.video.load()
+          })
+          break
+      }
+    })
 
     if (this.options.hotkey) {
       $container.attr('tabindex', '-1')

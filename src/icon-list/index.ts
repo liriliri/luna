@@ -92,9 +92,9 @@ export default class IconList extends Component<IOptions> {
   }
   /** Set icons. */
   setIcons(icons: Array<IIcon>) {
+    this.selectIcon(null)
     this.icons = []
     this.displayIcons = []
-    this.selectedIcon = null
 
     each(icons, (data) => {
       const icon = new Icon(this, data)

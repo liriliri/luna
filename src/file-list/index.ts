@@ -23,6 +23,7 @@ import isEmpty from 'licia/isEmpty'
 import statMode from 'stat-mode'
 import isStr from 'licia/isStr'
 import isUndef from 'licia/isUndef'
+import isEqual from 'licia/isEqual'
 
 const folderIcon = asset['folder.svg']
 const fileIcon = asset['file.svg']
@@ -316,9 +317,13 @@ export default class FileList extends Component<IOptions> {
       this.emit('contextmenu', e.origEvent)
     })
 
-    this.on('changeOption', (name, val) => {
+    this.on('changeOption', (name, val, oldVal) => {
       switch (name) {
         case 'files':
+          if (!isEqual(val, oldVal)) {
+            this.render()
+          }
+          break
         case 'listView':
           this.render()
           if (val) {

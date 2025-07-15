@@ -390,7 +390,7 @@
   },
   "split-pane": {
     "react": true,
-    "version": "0.2.4",
+    "version": "0.2.5",
     "style": true,
     "icon": false,
     "test": true,
@@ -444,7 +444,7 @@
   },
   "video-player": {
     "icon": true,
-    "version": "1.0.0",
+    "version": "1.1.0",
     "style": true,
     "test": true,
     "install": false,

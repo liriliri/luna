@@ -15,6 +15,9 @@ import extend from 'licia/extend'
 import find from 'licia/find'
 import isUndef from 'licia/isUndef'
 import filter from 'licia/filter'
+import fill from 'licia/fill'
+import sum from 'licia/sum'
+import clone from 'licia/clone'
 
 const $document = $(document as any)
 
@@ -218,34 +221,27 @@ export default class SplitPane extends Component<IOptions> {
   private applyWeights() {
     const { displayElements, isHorizontal } = this
 
-    let sumOfWeights = 0
     const len = displayElements.length
-    for (let i = 0; i < len; i++) {
-      sumOfWeights += displayElements[i].weight
-    }
 
-    let sum = 0
-    let lastOffset = 0
     const containerOffset = this.$container.offset()
     const containerSize = isHorizontal
       ? containerOffset.width
       : containerOffset.height
+
+    const sizes = distributeWithMin(
+      containerSize,
+      map(displayElements, (item) => item.weight),
+      map(displayElements, (item) => item.minSize || 0)
+    )
+
     for (let i = 0; i < len; i++) {
       const item = displayElements[i]
-      sum += item.weight
-      let offset = ((sum * containerSize) / sumOfWeights) | 0
-      let size = offset - lastOffset
-      if (size < item.minSize) {
-        size = item.minSize
-        offset = lastOffset + size
-      }
-      lastOffset = offset
+      item.size = sizes[i]
       if (isHorizontal) {
-        item.$el.css('width', size + 'px')
+        item.$el.css('width', sizes[i] + 'px')
       } else {
-        item.$el.css('height', size + 'px')
+        item.$el.css('height', sizes[i] + 'px')
       }
-      item.size = size
     }
 
     this.positionResizers()
@@ -263,6 +259,56 @@ export default class SplitPane extends Component<IOptions> {
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
   }
+}
+
+function distributeWithMin(
+  total: number,
+  weights: number[],
+  mins: number[]
+): number[] {
+  const n = weights.length
+  const minTotal = sum(...mins)
+  const sizes: number[] = fill(Array(n), 0)
+
+  if (total < minTotal) {
+    const scale = total / minTotal
+    for (let i = 0; i < n; i++) {
+      mins[i] = mins[i] * scale
+    }
+  }
+
+  let remain = total
+  const remainWeights = clone(weights)
+  const locked = fill(Array(n), false)
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    let sumWeights = sum(...remainWeights)
+    let changed = false
+
+    for (let i = 0; i < n; i++) {
+      if (locked[i]) continue
+      const ideal = remain * (weights[i] / sumWeights)
+      if (ideal < mins[i]) {
+        sizes[i] = mins[i]
+        remain -= mins[i]
+        sumWeights -= remainWeights[i]
+        remainWeights[i] = 0
+        locked[i] = true
+        changed = true
+      }
+    }
+    if (!changed) break
+  }
+
+  const sumWeights = sum(...remainWeights)
+  for (let i = 0; i < n; i++) {
+    if (!locked[i]) {
+      sizes[i] = remain * (weights[i] / sumWeights)
+    }
+  }
+
+  return sizes
 }
 
 if (typeof module !== 'undefined') {

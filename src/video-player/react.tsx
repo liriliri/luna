@@ -14,7 +14,10 @@ const LunaVideoPlayer: FC<IVideoPlayerProps> = (props) => {
   const videoPlayerRef = useRef<VideoPlayer>()
 
   useEffect(() => {
-    videoPlayerRef.current = new VideoPlayer(containerRef.current!, props)
+    videoPlayerRef.current = new VideoPlayer(containerRef.current!, {
+      url: props.url,
+      hotkey: props.hotkey,
+    })
     props.onCreate && props.onCreate(videoPlayerRef.current)
 
     return () => videoPlayerRef.current?.destroy()

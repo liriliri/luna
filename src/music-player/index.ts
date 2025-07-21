@@ -112,14 +112,6 @@ export default class MusicPlayer extends Component<IOptions> {
       listFolded: false,
     })
 
-    let { audio } = this.options
-    if (audio) {
-      if (!isArr(audio)) {
-        audio = toArr(audio)
-      }
-      this.audioList = audio as IAudio[]
-    }
-
     this.initTpl()
 
     this.$body = this.find('.body')
@@ -140,12 +132,10 @@ export default class MusicPlayer extends Component<IOptions> {
 
     this.bindEvent()
 
-    if (!isEmpty(this.audioList)) {
-      this.setCur(0, false)
-    }
+    this.initAudio(this.options.audio)
 
     if (this.options.listFolded) {
-      this.$list.css('height', '0px')
+      this.$list.addClass(this.c('hidden'))
     }
   }
   getAudio() {
@@ -229,6 +219,17 @@ export default class MusicPlayer extends Component<IOptions> {
 
     this.setCur(idx)
   }
+  private initAudio(audio: IAudio | IAudio[]) {
+    if (audio) {
+      if (!isArr(audio)) {
+        audio = toArr(audio)
+      }
+      this.audioList = audio as IAudio[]
+    }
+    if (!isEmpty(this.audioList)) {
+      this.setCur(0, false)
+    }
+  }
   private getVolumeIcon() {
     const { volume } = this.audio
 
@@ -290,7 +291,22 @@ export default class MusicPlayer extends Component<IOptions> {
     return percent * this.audio.duration
   }
   private renderList() {
+    const { $list } = this
+
     let html = ''
+
+    const hiddenClass = this.c('hidden')
+    const $iconList = this.find('.icon-list')
+    const $iconShuffle = this.find('.shuffle')
+    if (this.audioList.length < 2) {
+      $list.addClass(hiddenClass)
+      $iconList.addClass(hiddenClass)
+      $iconShuffle.addClass(hiddenClass)
+    } else {
+      $list.rmClass(hiddenClass)
+      $iconList.rmClass(hiddenClass)
+      $iconShuffle.rmClass(hiddenClass)
+    }
 
     each(this.audioList, (audio, idx) => {
       html += this.c(stripIndent`
@@ -304,7 +320,7 @@ export default class MusicPlayer extends Component<IOptions> {
       `)
     })
 
-    this.$list.html(html)
+    $list.html(html)
   }
   private updateInfo() {
     if (!this.curAudio) {
@@ -323,9 +339,7 @@ export default class MusicPlayer extends Component<IOptions> {
     this.setCur(idx)
   }
   private toggleList = () => {
-    const { $list } = this
-    const { height } = $list.offset()
-    $list.css('height', height > 0 ? '0' : 'auto')
+    this.$list.toggleClass(this.c('hidden'))
   }
   private onLoopClick = (e: any) => {
     let { loop } = this
@@ -403,6 +417,14 @@ export default class MusicPlayer extends Component<IOptions> {
     this.on('ended', this.onEnded)
     this.on('canplay', this.onLoaded)
     this.on('progress', this.onLoaded)
+
+    this.on('changeOption', (name) => {
+      switch (name) {
+        case 'audio':
+          this.initAudio(this.options.audio)
+          break
+      }
+    })
   }
   private onLoaded = () => {
     const { audio } = this

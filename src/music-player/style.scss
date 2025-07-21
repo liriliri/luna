@@ -1,18 +1,16 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-music-player {
-  min-width: 375px;
-  border: 1px solid theme.$color-border;
-  cursor: default;
-  @include mixin.component();
-  & {
-    font-size: 14px;
-  }
+  @include component();
+}
+
+.body {
+  border: 1px solid;
 }
 
 .body-left {
-  background: theme.$color-primary;
+  background: $color-primary;
   width: 90px;
   height: 90px;
   float: left;
@@ -28,7 +26,7 @@
   position: absolute;
   width: 30px;
   height: 30px;
-  border: 2px solid theme.$color-white;
+  border: 2px solid $color-white;
   border-radius: 50%;
   bottom: 50%;
   right: 50%;
@@ -38,7 +36,7 @@
   .icon {
     cursor: pointer;
     position: absolute;
-    color: theme.$color-white;
+    color: $color-white;
     top: 5px;
   }
   .icon-play {
@@ -53,13 +51,14 @@
   margin-left: 90px;
   height: 90px;
   padding: 10px 7px 0;
-  border-bottom: 1px solid theme.$color-border;
 }
 
 .info {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   height: 22px;
   margin: 0 0 35px 5px;
-  color: theme.$color-text;
 }
 
 .controller {
@@ -78,16 +77,12 @@
   right: 0;
   bottom: 4px;
   height: 17px;
-  color: #999;
   padding-left: 7px;
   .icon {
     cursor: pointer;
     position: relative;
     top: 3px;
     transition: color 0.3s;
-    &:hover {
-      color: #000;
-    }
   }
 }
 
@@ -114,7 +109,6 @@
   width: 8px;
   height: 8px;
   display: inline-block;
-  background: theme.$color-primary;
   border-radius: 50%;
 }
 
@@ -130,10 +124,6 @@
 .bar-loaded {
   background: #aaa;
   transition: width 0.3s;
-}
-
-.bar-played {
-  background: theme.$color-primary;
 }
 
 .volume {
@@ -165,7 +155,6 @@
   position: relative;
   width: 5px;
   height: 0;
-  background: #aaa;
   margin: 0 auto;
   border-radius: 2.5px;
   overflow: hidden;
@@ -173,7 +162,6 @@
 }
 
 .volume-bar-fill {
-  background: theme.$color-primary;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -181,29 +169,23 @@
 }
 
 .list {
-  @include mixin.overflow-auto(y);
+  @include overflow-auto(y);
   max-height: 150px;
+  border: 1px solid;
+  border-top: none;
 }
 
 .list-item {
   position: relative;
   height: 32px;
-  line-height: 32px;
+  line-height: 31px;
   padding: 0 15px;
   font-size: 12px;
-  border-top: 1px solid theme.$color-border;
+  border-top: 1px solid;
   margin: 0;
   transition: background-color 0.3s;
-  color: theme.$color-text;
   &:first-child {
     border-top: none;
-  }
-  &.active,
-  &:hover {
-    background: theme.$color-fill-secondary;
-  }
-  &.active {
-    color: theme.$color-primary;
   }
 }
 
@@ -215,23 +197,50 @@
   float: right;
 }
 
-.theme-dark {
-  border-color: theme.$color-border-dark;
-  .body-right {
-    border-bottom-color: theme.$color-border-dark;
-  }
-  .info {
-    color: theme.$color-text-dark;
-  }
-  .list-item {
-    border-top-color: theme.$color-border-dark;
-    color: theme.$color-text-dark;
-    &.active,
-    &:hover {
-      background: theme.$color-fill-secondary-dark;
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    .body {
+      @include theme-var(border-color, color-border, $theme);
     }
-    &.active {
-      color: theme.$color-primary;
+    .list {
+      @include theme-var(border-color, color-border, $theme);
+    }
+    .info {
+      @include theme-var(color, color-text, $theme);
+    }
+    .controller-right {
+      @include theme-var(color, color-text-secondary, $theme);
+      .icon:hover {
+        @include theme-var(color, color-text, $theme);
+      }
+    }
+    .bar-thumb {
+      @include theme-var(background-color, color-primary, $theme);
+    }
+    .bar-played {
+      @include theme-var(background-color, color-primary, $theme);
+    }
+    .volume-bar {
+      @include theme-var(background-color, color-fill-secondary, $theme);
+    }
+    .volume-bar-fill {
+      @include theme-var(background-color, color-primary, $theme);
+    }
+    .list-item {
+      @include theme-vars(
+        (
+          border-top-color: color-border,
+          color: color-text,
+        ),
+        $theme
+      );
+      &.active,
+      &:hover {
+        @include theme-var(background-color, color-fill-secondary, $theme);
+      }
+      &.active {
+        @include theme-var(color, color-primary, $theme);
+      }
     }
   }
 }

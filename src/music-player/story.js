@@ -2,7 +2,7 @@ import 'luna-music-player.css'
 import story from '../share/story'
 import $ from 'licia/$'
 import MusicPlayer from 'luna-music-player.js'
-import { object } from '@storybook/addon-knobs'
+import { object, boolean } from '@storybook/addon-knobs'
 import readme from './README.md'
 
 const def = story(
@@ -14,23 +14,11 @@ const def = story(
       maxWidth: '100%',
     })
 
-    const audio = object('Audio', [
-      {
-        url: '/Get_along.mp3',
-        cover: '/Get_along.jpg',
-        title: 'Get Along',
-        artist: '林原めぐみ',
-      },
-      {
-        url: '/Give_a_reason.mp3',
-        cover: '/Give_a_reason.jpg',
-        title: 'Give a Reason',
-        artist: '林原めぐみ',
-      },
-    ])
+    const { audio, listFolded } = createKnobs()
 
     const musicPlayer = new MusicPlayer(container, {
       audio,
+      listFolded,
     })
 
     return musicPlayer
@@ -40,6 +28,30 @@ const def = story(
     source: __STORY__,
   }
 )
+
+function createKnobs() {
+  const audio = object('Audio', [
+    {
+      url: '/Get_along.mp3',
+      cover: '/Get_along.jpg',
+      title: 'Get Along',
+      artist: '林原めぐみ',
+    },
+    {
+      url: '/Give_a_reason.mp3',
+      cover: '/Give_a_reason.jpg',
+      title: 'Give a Reason',
+      artist: '林原めぐみ',
+    },
+  ])
+
+  const listFolded = boolean('List Folded', false)
+
+  return {
+    audio,
+    listFolded,
+  }
+}
 
 export default def
 

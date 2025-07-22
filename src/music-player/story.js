@@ -27,11 +27,12 @@ const def = story(
   {
     readme,
     source: __STORY__,
-    ReactComponent() {
+    ReactComponent({ theme }) {
       const { audio, listFolded } = createKnobs()
 
       return (
         <LunaMusicPlayer
+          theme={theme}
           audio={audio}
           style={{ width: 640, margin: '0 auto', maxWidth: '100%' }}
           listFolded={listFolded}

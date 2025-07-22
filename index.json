@@ -426,11 +426,11 @@
   },
   "text-viewer": {
     "icon": true,
-    "version": "0.2.1",
+    "react": true,
+    "version": "0.3.0",
     "style": true,
     "test": true,
     "install": false,
-    "react": false,
     "dependencies": []
   },
   "toolbar": {

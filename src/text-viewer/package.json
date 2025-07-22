@@ -1,8 +1,9 @@
 {
   "name": "text-viewer",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Text viewer with line number",
   "luna": {
-    "icon": true
+    "icon": true,
+    "react": true
   }
 }

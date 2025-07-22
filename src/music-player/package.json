@@ -1,6 +1,6 @@
 {
   "name": "music-player",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Music player",
   "dependencies": {
     "jsmediatags": "3.9.3"

@@ -5,7 +5,6 @@ import createUrl from 'licia/createUrl'
 import { exportCjs, eventPage } from '../share/util'
 import each from 'licia/each'
 import pointerEvent from 'licia/pointerEvent'
-import { splitName } from './util'
 import durationFormat from 'licia/durationFormat'
 import convertBin from 'licia/convertBin'
 import jsmediatags from 'jsmediatags'
@@ -18,6 +17,8 @@ import isArr from 'licia/isArr'
 import toArr from 'licia/toArr'
 import Component, { IComponentOptions } from '../share/Component'
 import ResizeSensor from 'licia/ResizeSensor'
+import contain from 'licia/contain'
+import splitPath from 'licia/splitPath'
 
 const $document = $(document as any)
 
@@ -229,6 +230,13 @@ export default class MusicPlayer extends Component<IOptions> {
       }
       this.audioList = audio as IAudio[]
     }
+    each(this.audioList, (audio) => {
+      if (!audio.artist) {
+        const { title, artist } = splitName(audio.title)
+        audio.artist = artist
+        audio.title = title
+      }
+    })
     if (!isEmpty(this.audioList)) {
       this.setCur(0, false)
     }
@@ -515,6 +523,7 @@ export default class MusicPlayer extends Component<IOptions> {
             }
 
             this.updateInfo()
+            this.renderList()
           },
         })
       }
@@ -574,6 +583,23 @@ export default class MusicPlayer extends Component<IOptions> {
       <div class="list"></div>
     `)
     )
+  }
+}
+
+function splitName(str: string) {
+  const { name, ext } = splitPath(str)
+
+  if (contain(name, ' - ')) {
+    const parts = name.replace(ext, '').split(' - ')
+    return {
+      title: parts[1],
+      artist: parts[0],
+    }
+  }
+
+  return {
+    title: name,
+    artist: '',
   }
 }
 

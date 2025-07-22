@@ -10,7 +10,6 @@
 }
 
 .body-left {
-  background: $color-primary;
   width: 90px;
   height: 90px;
   float: left;
@@ -199,6 +198,9 @@
 
 @each $theme in ('light', 'dark') {
   .theme-#{$theme} {
+    .body-left {
+      @include theme-var(background-color, color-primary, $theme);
+    }
     .body {
       @include theme-var(border-color, color-border, $theme);
     }

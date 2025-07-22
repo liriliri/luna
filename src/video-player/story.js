@@ -34,7 +34,8 @@ const def = story(
       const { url } = createKnobs()
 
       return (
-        <div
+        <LunaVideoPlayer
+          url={url}
           style={{
             maxWidth: 640,
             width: '100%',
@@ -42,9 +43,7 @@ const def = story(
             minHeight: 150,
             aspectRatio: '1280/720',
           }}
-        >
-          <LunaVideoPlayer url={url} />
-        </div>
+        />
       )
     },
   }

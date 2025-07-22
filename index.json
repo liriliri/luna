@@ -272,11 +272,11 @@
   },
   "music-player": {
     "icon": true,
+    "react": true,
     "install": true,
-    "version": "0.1.0",
+    "version": "0.2.0",
     "style": true,
     "test": true,
-    "react": false,
     "dependencies": []
   },
   "music-visualizer": {

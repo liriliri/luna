@@ -17,6 +17,7 @@ import clamp from 'licia/clamp'
 import isArr from 'licia/isArr'
 import toArr from 'licia/toArr'
 import Component, { IComponentOptions } from '../share/Component'
+import ResizeSensor from 'licia/ResizeSensor'
 
 const $document = $(document as any)
 
@@ -71,7 +72,6 @@ export interface IOptions extends IComponentOptions {
  * Music player with playlist support.
  *
  * @example
- * const container = document.getElementById('container')
  * const musicPlayer = new LunaMusicPlayer(container, {
  *   audio: {
  *     url: 'https://luna.liriliri.io/Get_along.mp3',
@@ -105,6 +105,7 @@ export default class MusicPlayer extends Component<IOptions> {
   private loop = 'all'
   private shuffle = false
   private audioTimeUpdate = true
+  private resizeSensor: ResizeSensor
   constructor(container: Element, options: IOptions = {}) {
     super(container, { compName: 'music-player' }, options)
 
@@ -130,6 +131,7 @@ export default class MusicPlayer extends Component<IOptions> {
     this.$volumeBarFill = this.find('.volume-bar-fill')
     this.$volumeIcon = this.$volume.find('span')
 
+    this.resizeSensor = new ResizeSensor(this.container)
     this.bindEvent()
 
     this.initAudio(this.options.audio)
@@ -188,8 +190,9 @@ export default class MusicPlayer extends Component<IOptions> {
     this.setCur(curIdx)
   }
   destroy() {
-    super.destroy()
     this.pause()
+    this.resizeSensor.destroy()
+    super.destroy()
   }
   seek(time: number) {
     if (!this.curAudio) {
@@ -295,17 +298,17 @@ export default class MusicPlayer extends Component<IOptions> {
 
     let html = ''
 
-    const hiddenClass = this.c('hidden')
+    const hidden = this.c('hidden')
     const $iconList = this.find('.icon-list')
     const $iconShuffle = this.find('.shuffle')
     if (this.audioList.length < 2) {
-      $list.addClass(hiddenClass)
-      $iconList.addClass(hiddenClass)
-      $iconShuffle.addClass(hiddenClass)
+      $list.addClass(hidden)
+      $iconList.addClass(hidden)
+      $iconShuffle.addClass(hidden)
     } else {
-      $list.rmClass(hiddenClass)
-      $iconList.rmClass(hiddenClass)
-      $iconShuffle.rmClass(hiddenClass)
+      $list.rmClass(hidden)
+      $iconList.rmClass(hidden)
+      $iconShuffle.rmClass(hidden)
     }
 
     each(this.audioList, (audio, idx) => {
@@ -418,6 +421,9 @@ export default class MusicPlayer extends Component<IOptions> {
     this.on('canplay', this.onLoaded)
     this.on('progress', this.onLoaded)
 
+    this.resizeSensor.addListener(this.onResize)
+    this.onResize()
+
     this.on('changeOption', (name) => {
       switch (name) {
         case 'audio':
@@ -425,6 +431,19 @@ export default class MusicPlayer extends Component<IOptions> {
           break
       }
     })
+  }
+  private onResize = () => {
+    const offset = this.$container.offset()
+    const $iconFile = this.find('.icon-file')
+    const $time = this.find('.time')
+    const hidden = this.c('hidden')
+    if (offset.width < 320) {
+      $iconFile.addClass(hidden)
+      $time.addClass(hidden)
+    } else {
+      $iconFile.rmClass(hidden)
+      $time.rmClass(hidden)
+    }
   }
   private onLoaded = () => {
     const { audio } = this

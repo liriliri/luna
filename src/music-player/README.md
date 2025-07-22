@@ -29,7 +29,6 @@ import LunaMusicPlayer from 'luna-music-player'
 ## Usage
 
 ```javascript
-const container = document.getElementById('container')
 const musicPlayer = new LunaMusicPlayer(container, {
   audio: {
     url: 'https://luna.liriliri.io/Get_along.mp3',

@@ -1,6 +1,6 @@
 {
   "name": "music-player",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Music player",
   "dependencies": {
     "jsmediatags": "3.9.3"
@@ -10,6 +10,7 @@
   },
   "luna": {
     "icon": true,
+    "react": true,
     "install": true
   }
 }

@@ -19,6 +19,7 @@ import Component, { IComponentOptions } from '../share/Component'
 import ResizeSensor from 'licia/ResizeSensor'
 import contain from 'licia/contain'
 import splitPath from 'licia/splitPath'
+import nextTick from 'licia/nextTick'
 
 const $document = $(document as any)
 
@@ -435,7 +436,11 @@ export default class MusicPlayer extends Component<IOptions> {
     this.on('changeOption', (name) => {
       switch (name) {
         case 'audio':
-          this.initAudio(this.options.audio)
+          this.pause()
+          this.seek(0)
+          nextTick(() => {
+            this.initAudio(this.options.audio)
+          })
           break
       }
     })

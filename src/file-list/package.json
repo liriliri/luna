@@ -1,6 +1,6 @@
 {
   "name": "file-list",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "List files in the directory",
   "luna": {
     "react": true,

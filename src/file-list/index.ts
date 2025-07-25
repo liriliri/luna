@@ -56,6 +56,8 @@ export interface IFile {
   directory?: boolean
   /** File mode. */
   mode?: number | string
+  /** MIME type. */
+  mime?: string
 }
 
 /**
@@ -227,8 +229,11 @@ export default class FileList extends Component<IOptions> {
       return file.thumbnail
     }
 
-    const ext = splitPath(name).ext
-    const type = mime(ext.slice(1))
+    let type = file.mime
+    if (!type) {
+      const ext = splitPath(name).ext
+      type = mime(ext.slice(1))
+    }
 
     if (type) {
       if (startWith(type, 'image')) {

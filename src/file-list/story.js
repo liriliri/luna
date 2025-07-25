@@ -116,11 +116,13 @@ function getFiles() {
       size: 8192,
       directory: false,
       mtime: randomDate(),
+      mime: 'video/mp4',
     },
     {
       name: 'audio.mp3',
       size: 16384,
       mtime: randomDate(),
+      mime: 'audio/mpeg',
     },
     {
       name: 'empty',

@@ -219,10 +219,10 @@ export default class Carousel extends Component<IOptions> {
       this.c(stripIndent`
       <div class="body"></div>
       <div class="arrow-left">
-        <span class="icon icon-arrow-left"></span>
+        <span class="icon icon-left"></span>
       </div>
       <div class="arrow-right">
-        <span class="icon icon-arrow-right"></span>
+        <span class="icon icon-right"></span>
       </div>
       <div class="indicators"><ul></ul></div>
     `)

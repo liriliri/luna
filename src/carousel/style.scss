@@ -31,6 +31,7 @@
   cursor: pointer;
   transition: background-color 0.3s, opacity 0.3s;
   opacity: 0;
+  text-align: center;
   &:hover {
     background: rgba(0, 0, 0, 0.35);
   }
@@ -44,18 +45,18 @@
   left: 20px;
 }
 
-.icon-arrow-left {
+.icon-left {
   position: relative;
-  left: 2px;
+  right: 2px;
 }
 
 .arrow-right {
   right: 20px;
 }
 
-.icon-arrow-right {
+.icon-right {
   position: relative;
-  left: 5px;
+  left: 2px;
 }
 
 .indicators {

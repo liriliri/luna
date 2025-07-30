@@ -1,0 +1,3 @@
+[submodule "src/share/icon"]
+	path = src/share/icon
+	url = https://github.com/liriliri/icon-share.git

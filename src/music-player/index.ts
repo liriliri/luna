@@ -308,7 +308,7 @@ export default class MusicPlayer extends Component<IOptions> {
     let html = ''
 
     const hidden = this.c('hidden')
-    const $iconList = this.find('.icon-list')
+    const $iconList = this.find('.icon-music-list')
     const $iconShuffle = this.find('.shuffle')
     if (this.audioList.length < 2) {
       $list.addClass(hidden)
@@ -401,7 +401,7 @@ export default class MusicPlayer extends Component<IOptions> {
     const { c } = this
     this.$body
       .on('click', c('.icon-file'), this.open)
-      .on('click', c('.icon-list'), this.toggleList)
+      .on('click', c('.icon-music-list'), this.toggleList)
       .on('click', c('.play'), this.togglePlay)
       .on('click', c('.loop'), this.onLoopClick)
       .on('click', c('.shuffle'), this.toggleShuffle)
@@ -580,7 +580,7 @@ export default class MusicPlayer extends Component<IOptions> {
               } shuffle"></span>
               <span class="icon icon-loop-${this.loop} loop"></span>
               <span class="icon icon-file"></span>
-              <span class="icon icon-list"></span>
+              <span class="icon icon-music-list"></span>
             </div>
           </div>
         </div>

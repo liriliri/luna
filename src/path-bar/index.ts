@@ -2,14 +2,14 @@ import Component from '../share/Component'
 import { exportCjs } from '../share/util'
 
 /**
- * File explorer address bar.
+ * File explorer path bar.
  */
-export default class FileBar extends Component {
+export default class PathBar extends Component {
   constructor(container: HTMLElement) {
-    super(container, { compName: 'file-bar ' })
+    super(container, { compName: 'path-bar ' })
   }
 }
 
 if (typeof module !== 'undefined') {
-  exportCjs(module, FileBar)
+  exportCjs(module, PathBar)
 }

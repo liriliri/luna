@@ -116,15 +116,6 @@
     "react": false,
     "dependencies": []
   },
-  "file-bar": {
-    "test": false,
-    "version": "0.1.0",
-    "style": true,
-    "icon": false,
-    "install": false,
-    "react": false,
-    "dependencies": []
-  },
   "file-list": {
     "react": true,
     "install": true,
@@ -323,6 +314,15 @@
     "style": true,
     "test": true,
     "install": false
+  },
+  "path-bar": {
+    "test": false,
+    "version": "0.1.0",
+    "style": true,
+    "icon": false,
+    "install": false,
+    "react": false,
+    "dependencies": []
   },
   "performance-monitor": {
     "react": true,

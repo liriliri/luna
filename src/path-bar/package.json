@@ -1,0 +1,8 @@
+{
+  "name": "path-bar",
+  "version": "0.1.0",
+  "description": "File explorer path bar",
+  "luna": {
+    "test": false
+  }
+}

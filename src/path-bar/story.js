@@ -1,14 +1,14 @@
-import 'luna-file-bar.css'
-import FileBar from 'luna-file-bar.js'
+import 'luna-path-bar.css'
+import PathBar from 'luna-path-bar.js'
 import readme from './README.md'
 import story from '../share/story'
 
 const def = story(
-  'file-bar',
+  'path-bar',
   (container) => {
-    const fileBar = new FileBar(container)
+    const pathBar = new PathBar(container)
 
-    return fileBar
+    return pathBar
   },
   {
     readme,
@@ -18,4 +18,4 @@ const def = story(
 
 export default def
 
-export const { fileBar } = def
+export const { pathBar } = def

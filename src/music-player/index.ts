@@ -20,6 +20,7 @@ import ResizeSensor from 'licia/ResizeSensor'
 import contain from 'licia/contain'
 import splitPath from 'licia/splitPath'
 import nextTick from 'licia/nextTick'
+import isNum from 'licia/isNum'
 
 const $document = $(document as any)
 
@@ -201,8 +202,12 @@ export default class MusicPlayer extends Component<IOptions> {
       return
     }
 
+    const { audio } = this
+
+    const duration = isNum(audio.duration) ? audio.duration : 0
+
     time = Math.max(time, 0)
-    time = Math.min(time, this.audio.duration)
+    time = Math.min(time, duration)
 
     this.audio.currentTime = time
   }
@@ -499,13 +504,13 @@ export default class MusicPlayer extends Component<IOptions> {
     this.$curTime.text(durationFormat(Math.round(currentTime * 1000), 'mm:ss'))
   }
   private onLoadedMetaData = () => {
-    if (this.curAudio) {
-      const { file, url, cover } = this.curAudio
+    const { curAudio } = this
+    if (curAudio) {
+      const { file, url, cover } = curAudio
       if (!cover) {
         jsmediatags.read(file || url, {
           onSuccess: (tag) => {
-            const { curAudio } = this
-            if (!curAudio) {
+            if (curAudio !== this.curAudio) {
               return
             }
             const { picture, title, artist } = tag.tags

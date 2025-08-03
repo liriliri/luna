@@ -1,3 +1,7 @@
+## 1.1.3 (3 Aug 2025)
+
+* fix: seek error
+
 ## 1.1.2 (16 Jul 2025)
 
 * fix: react

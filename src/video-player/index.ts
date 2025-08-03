@@ -15,6 +15,7 @@ import { eventPage, exportCjs } from '../share/util'
 import Component, { IComponentOptions } from '../share/Component'
 import ResizeSensor from 'licia/ResizeSensor'
 import nextTick from 'licia/nextTick'
+import isNaN from 'licia/isNaN'
 
 const $document = $(document as any)
 const isIos = detectBrowser(navigator.userAgent).name === 'ios'
@@ -146,8 +147,12 @@ export default class VideoPlayer extends Component<IOptions> {
       return
     }
 
+    const { video } = this
+
+    const duration = !isNaN(video.duration) ? video.duration : 0
+
     time = Math.max(time, 0)
-    time = Math.min(time, this.video.duration)
+    time = Math.min(time, duration)
 
     this.video.currentTime = time
   }

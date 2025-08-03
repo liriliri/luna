@@ -20,7 +20,7 @@ import ResizeSensor from 'licia/ResizeSensor'
 import contain from 'licia/contain'
 import splitPath from 'licia/splitPath'
 import nextTick from 'licia/nextTick'
-import isNum from 'licia/isNum'
+import isNaN from 'licia/isNaN'
 
 const $document = $(document as any)
 
@@ -204,7 +204,7 @@ export default class MusicPlayer extends Component<IOptions> {
 
     const { audio } = this
 
-    const duration = isNum(audio.duration) ? audio.duration : 0
+    const duration = !isNaN(audio.duration) ? audio.duration : 0
 
     time = Math.max(time, 0)
     time = Math.min(time, duration)

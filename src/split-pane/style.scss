@@ -9,7 +9,7 @@
   &.horizontal {
     flex-direction: row;
     & > .resizer {
-      width: 5px;
+      width: 4px;
       top: 0;
       bottom: 0;
       cursor: col-resize;
@@ -18,7 +18,7 @@
   &.vertical {
     flex-direction: column;
     & > .resizer {
-      height: 5px;
+      height: 4px;
       left: 0;
       right: 0;
       cursor: row-resize;
@@ -30,6 +30,7 @@
   position: absolute;
   z-index: 500;
   touch-action: none;
+  transition: background-color 0.2s;
 }
 
 .resizing-horizontal {
@@ -43,5 +44,13 @@
   cursor: row-resize !important;
   .luna-split-pane * {
     cursor: row-resize !important;
+  }
+}
+
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    .resizer:hover {
+      @include theme-var(background-color, color-primary, $theme);
+    }
   }
 }

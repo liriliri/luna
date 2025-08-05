@@ -140,17 +140,24 @@ export default class SplitPane extends Component<IOptions> {
     }
   }
   private updateDisplayElements() {
+    const hidden = this.c('hidden')
+
     this.displayElements = filter(this.elements, (item) => {
       if (item.visible) {
-        item.$el.rmClass(this.c('hidden'))
-        item.$resizer?.rmClass(this.c('hidden'))
+        item.$el.rmClass(hidden)
+        item.$resizer?.rmClass(hidden)
       } else {
-        item.$el.addClass(this.c('hidden'))
-        item.$resizer?.addClass(this.c('hidden'))
+        item.$el.addClass(hidden)
+        item.$resizer?.addClass(hidden)
       }
 
       return item.visible
     })
+
+    const lastElement = last(this.displayElements)
+    if (lastElement.$resizer) {
+      lastElement.$resizer.addClass(hidden)
+    }
   }
   private onResizeStart(e: any) {
     const { displayElements, isHorizontal } = this
@@ -253,7 +260,7 @@ export default class SplitPane extends Component<IOptions> {
     for (let i = 0, len = elements.length - 1; i < len; i++) {
       const item = elements[i]
       pos[i] = (pos[i - 1] || 0) + item.size
-      item.$resizer!.css(isHorizontal ? 'left' : 'top', pos[i] + 'px')
+      item.$resizer!.css(isHorizontal ? 'left' : 'top', pos[i] - 2 + 'px')
     }
   }
   private bindEvent() {

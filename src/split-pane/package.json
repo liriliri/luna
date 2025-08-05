@@ -1,6 +1,6 @@
 {
   "name": "split-pane",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A component for creating resizable split panes",
   "luna": {
     "react": true

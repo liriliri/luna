@@ -172,6 +172,8 @@ export default class SplitPane extends Component<IOptions> {
       item.$resizer!.css(isHorizontal ? 'left' : 'top')
     )
 
+    item.$resizer!.addClass(this.c('active'))
+
     $(document.body).addClass(this.c(`resizing-${this.options.direction}`))
     $document.on(pointerEvent('move'), this.onResizeMove)
     $document.on(pointerEvent('up'), this.onResizeEnd)
@@ -220,6 +222,8 @@ export default class SplitPane extends Component<IOptions> {
       'resize',
       map(this.elements, (item) => item.weight)
     )
+
+    leftItem.$resizer!.rmClass(this.c('active'))
 
     $(document.body).rmClass(this.c(`resizing-${this.options.direction}`))
     $document.off(pointerEvent('move'), this.onResizeMove)

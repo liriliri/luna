@@ -49,6 +49,7 @@
 
 @each $theme in ('light', 'dark') {
   .theme-#{$theme} {
+    .resizer.active,
     .resizer:hover {
       @include theme-var(background-color, color-primary, $theme);
     }

@@ -1,9 +1,11 @@
-import { FC, useEffect, useRef } from 'react'
+import { CSSProperties, FC, useEffect, useRef } from 'react'
 import PathBar, { IOptions } from './index'
 import each from 'licia/each'
 import { useEvent, useOption } from '../share/hooks'
 
 interface IPathBarProps extends IOptions {
+  style?: CSSProperties
+  className?: string
   onChange?: (path: string) => void
 }
 
@@ -26,7 +28,13 @@ const LunaPathBar: FC<IPathBarProps> = (props) => {
 
   useEvent<PathBar>(pathBarRef, 'change', undefined, props.onChange)
 
-  return <div ref={containerRef} />
+  return (
+    <div
+      className={props.className || ''}
+      style={props.style}
+      ref={containerRef}
+    />
+  )
 }
 
 export default LunaPathBar

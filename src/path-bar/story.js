@@ -3,12 +3,15 @@ import PathBar from 'luna-path-bar.js'
 import readme from './README.md'
 import story from '../share/story'
 import LunaPathBar from './react'
+import { text } from '@storybook/addon-knobs'
 
 const def = story(
   'path-bar',
   (container) => {
+    const { path } = createKnobs()
+
     const pathBar = new PathBar(container, {
-      path: '/home/user',
+      path,
     })
 
     pathBar.on('change', (path) => {
@@ -21,9 +24,11 @@ const def = story(
     readme,
     story: __STORY__,
     ReactComponent({ theme }) {
+      const { path } = createKnobs()
+
       return (
         <LunaPathBar
-          path="/home/user"
+          path={path}
           onChange={(path) => console.log('Path changed:', path)}
           theme={theme}
         />
@@ -31,6 +36,14 @@ const def = story(
     },
   }
 )
+
+function createKnobs() {
+  const path = text('Initial Path', '/home/user')
+
+  return {
+    path,
+  }
+}
 
 export default def
 

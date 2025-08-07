@@ -6,6 +6,8 @@ import trim from 'licia/trim'
 import each from 'licia/each'
 import escape from 'licia/escape'
 import toEl from 'licia/toEl'
+import filter from 'licia/filter'
+import isStrBlank from 'licia/isStrBlank'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -49,7 +51,8 @@ export default class PathBar extends Component {
 
     const paths: string[] = []
     this.$address.html('')
-    each(path.split('/'), (part) => {
+    const parts = filter(path.split('/'), (part) => !isStrBlank(part))
+    each(parts, (part) => {
       paths.push(part)
       const el = toEl(
         `<div class="${c('item')}">${escape(part)}<span class="${c(

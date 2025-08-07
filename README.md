@@ -58,6 +58,7 @@ UI library.
 * [object-viewer](./src/object-viewer/README.md): JavaScript object viewer.
 * [otp-input](./src/otp-input/README.md): One time password input.
 * [painter](./src/painter/README.md): Simple drawing tool.
+* [path-bar](./src/path-bar/README.md): File explorer path bar.
 * [performance-monitor](./src/performance-monitor/README.md): Realtime counter used for displaying cpu, fps metrics.
 * [retro-emulator](./src/retro-emulator/README.md): Retro emulator using libretro.
 * [retro-handheld](./src/retro-handheld/README.md): Retro emulator with controls ui.

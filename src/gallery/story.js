@@ -5,6 +5,8 @@ import readme from './README.md'
 import changelog from './CHANGELOG.md'
 import story from '../share/story'
 import { button, boolean } from '@storybook/addon-knobs'
+import LunaGallery from './react'
+import { useState } from 'react'
 
 const def = story(
   'gallery',
@@ -44,9 +46,36 @@ const def = story(
     readme,
     changelog,
     source: __STORY__,
+    ReactComponent() {
+      const [visible, setVisible] = useState(true)
+
+      button('Show', () => {
+        setVisible(true)
+        return false
+      })
+
+      button('Hide', () => {
+        setVisible(false)
+        return false
+      })
+
+      return (
+        <LunaGallery
+          visible={visible}
+          onClose={() => setVisible(false)}
+          current={1}
+          images={[
+            { src: '/pic1.png', title: 'pic1.png' },
+            { src: '/pic2.png', title: 'pic2.png' },
+            { src: '/pic3.png', title: 'pic3.png' },
+            { src: '/pic4.png', title: 'pic4.png' },
+          ]}
+        />
+      )
+    },
   }
 )
 
 export default def
 
-export const { gallery } = def
+export const { gallery: html, react } = def

@@ -99,6 +99,10 @@ export default class Gallery extends Component<IOptions> {
     }
     this.carousel.insert(pos, image.container)
     this.updateCounter()
+
+    if (this.carousel.getActiveIdx() === pos) {
+      image.load()
+    }
   }
   reset() {
     each(this.images, (image) => image.reset())
@@ -148,7 +152,7 @@ export default class Gallery extends Component<IOptions> {
     appendIcon('original', this.zoomToOriginal)
     appendIcon('download', this.download)
     appendIcon('fullscreen', this.toggleFullscreen)
-    appendIcon('close', this.hide)
+    appendIcon('close', () => this.hide())
   }
   private initTpl() {
     this.$container.html(
@@ -198,7 +202,13 @@ export default class Gallery extends Component<IOptions> {
   }
   private bindEvent() {
     this.resizeSensor.addListener(this.onResize)
-    this.carousel.on('slide', this.updateCounter)
+    this.carousel.on('slide', () => {
+      this.updateCounter()
+      const image = this.getActiveImage()
+      if (image) {
+        image.load()
+      }
+    })
   }
 }
 
@@ -212,6 +222,7 @@ class Image {
   private gallery: Gallery
   private src: string
   private imageViewer: LunaImageViewer
+  private loaded = false
   constructor(gallery: Gallery, src: string, title?: string) {
     this.container = h(gallery.c('.image'))
     this.$container = $(this.container)
@@ -229,10 +240,15 @@ class Image {
       image: loadingImg,
       initialCoverage: 0.8,
     })
-
-    loadImg(src, (err) => {
+  }
+  load() {
+    if (this.loaded) {
+      return
+    }
+    this.loaded = true
+    loadImg(this.src, (err) => {
       if (!err) {
-        this.imageViewer.setOption('image', src)
+        this.imageViewer.setOption('image', this.src)
       }
     })
   }

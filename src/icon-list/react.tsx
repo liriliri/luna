@@ -2,7 +2,6 @@ import { FC, useEffect, useRef } from 'react'
 import IconList, { IOptions, IIcon, Icon } from './index'
 import {
   useEvent,
-  useNonInitialEffect,
   useOption,
   usePrevious,
 } from '../share/hooks'
@@ -30,12 +29,11 @@ const LunaIconList: FC<IIconListProps> = (props) => {
       selectable: props.selectable,
       filter: props.filter,
     })
-    iconList.current.setIcons(props.icons)
 
     return () => iconList.current?.destroy()
   }, [])
 
-  useNonInitialEffect(() => {
+  useEffect(() => {
     if (iconList.current) {
       iconList.current.setIcons(props.icons)
     }

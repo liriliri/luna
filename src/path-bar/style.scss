@@ -30,9 +30,11 @@
   cursor: pointer;
   line-height: 20px;
   .icon-right {
+    margin: 0 4px;
     vertical-align: middle;
     position: relative;
     top: -1px;
+    font-size: #{$font-size-s-m}px;
   }
   &:first-child {
     padding-left: 8px;

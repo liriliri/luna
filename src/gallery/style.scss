@@ -1,9 +1,9 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-gallery {
   position: relative;
-  @include mixin.component();
+  @include component();
   & {
     background: black;
   }
@@ -17,12 +17,12 @@
     height: 100% !important;
     max-width: 100% !important;
   }
+  .luna-toolbar {
+    height: 30px;
+    border-bottom: none;
+  }
   .luna-carousel {
     background: transparent;
-  }
-  .luna-toolbar {
-    background: rgba(0, 0, 0, 0.45) !important;
-    border-bottom: none;
   }
   .luna-carousel-indicators {
     display: none;
@@ -32,7 +32,7 @@
   }
   &:hover {
     .toolbar {
-      opacity: 1;
+      opacity: 0.8;
     }
   }
 }
@@ -75,4 +75,12 @@
   left: 0;
   width: 100%;
   transition: opacity 0.3s;
+}
+
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    .toolbar.luna-toolbar {
+      @include theme-var(background-color, color-bg-container, $theme);
+    }
+  }
 }

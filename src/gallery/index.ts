@@ -136,10 +136,9 @@ export default class Gallery extends Component<IOptions> {
   }
   private initToolbar() {
     const { c } = this
+
     const $toolbar = this.find('.toolbar')
-    const toolbar = new LunaToolbar($toolbar.get(0) as HTMLElement, {
-      theme: 'dark',
-    })
+    const toolbar = new LunaToolbar($toolbar.get(0) as HTMLElement)
     function appendIcon(icon: string, handler: types.AnyFn) {
       const el = h(`span${c('.icon') + c(`.icon-${icon}`)}`)
       return toolbar.appendButton(el, handler)
@@ -153,6 +152,8 @@ export default class Gallery extends Component<IOptions> {
     appendIcon('download', this.download)
     appendIcon('fullscreen', this.toggleFullscreen)
     appendIcon('close', () => this.hide())
+
+    this.addSubComponent(toolbar)
   }
   private initTpl() {
     this.$container.html(

@@ -1,3 +1,7 @@
+## 1.1.1 (7 Aug 2025)
+
+* feat: support theme
+
 ## 1.1.0 (7 Aug 2025)
 
 * feat: support react

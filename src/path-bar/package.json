@@ -1,6 +1,6 @@
 {
   "name": "path-bar",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "File explorer path bar",
   "luna": {
     "icon": true,

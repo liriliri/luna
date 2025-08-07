@@ -1,0 +1,62 @@
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
+
+.luna-path-bar {
+  border: 1px solid;
+  height: 22px;
+  overflow: hidden;
+  @include component(true);
+}
+
+.address,
+.input {
+  height: 100%;
+  width: 100%;
+  line-height: 20px;
+  font-size: #{$font-size-s-m}px;
+}
+
+.address {
+  height: 50px;
+  cursor: text;
+  white-space: nowrap;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+.item {
+  display: inline-block;
+  height: 100%;
+  cursor: pointer;
+  line-height: 20px;
+  .icon-right {
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+  &:first-child {
+    padding-left: 8px;
+  }
+  &:last-child {
+    margin-right: 16px;
+  }
+}
+
+.input {
+  border: none;
+  background: transparent;
+  display: none;
+  outline: none;
+}
+
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    @include theme-var(border-color, color-border, $theme);
+    .item:hover {
+      @include theme-var(color, color-primary, $theme);
+      .icon-right {
+        @include theme-var(color, color-text, $theme);
+      }
+    }
+  }
+}

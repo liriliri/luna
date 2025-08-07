@@ -25,3 +25,17 @@ npm install luna-path-bar --save
 import 'luna-path-bar/luna-path-bar.css'
 import LunaPathBar from 'luna-path-bar'
 ```
+
+## Usage
+
+```javascript
+const pathBar = new LunaPathBar(container, { path: '/home/user' })
+pathBar.setOption('path', '/home/user/documents')
+pathBar.on('change', (path) => {
+  console.log('Path changed:', path)
+})
+```
+
+## Configuration
+
+* path(string): File path.

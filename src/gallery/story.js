@@ -11,14 +11,15 @@ import { useState } from 'react'
 const def = story(
   'gallery',
   (container) => {
-    $(container).css({
-      width: '100%',
-      maxWidth: 640,
-      height: 360,
-      margin: '0 auto',
-    })
-
     const inline = boolean('Inline Mode', false)
+    if (inline) {
+      $(container).css({
+        width: '100%',
+        maxWidth: 640,
+        height: 360,
+        margin: '0 auto',
+      })
+    }
 
     const gallery = new Gallery(container, {
       inline,

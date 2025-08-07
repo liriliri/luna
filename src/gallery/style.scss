@@ -12,10 +12,9 @@
     background: rgba(0, 0, 0, 50%);
     left: 0;
     top: 0;
+    right: 0;
+    bottom: 0;
     z-index: 10;
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100% !important;
   }
   .luna-toolbar {
     height: 30px;
@@ -32,7 +31,7 @@
   }
   &:hover {
     .toolbar {
-      opacity: 0.8;
+      opacity: 1;
     }
   }
 }

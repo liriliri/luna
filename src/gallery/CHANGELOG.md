@@ -1,3 +1,7 @@
+## 1.1.2 (7 Aug 2025)
+
+* fix: style
+
 ## 1.1.1 (7 Aug 2025)
 
 * feat: support theme

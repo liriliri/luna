@@ -50,11 +50,11 @@ Append menu item.
 
 Inert menu item to given position.
 
-### show(x: number, y: number, parent?: LunaComponent): void
+### show(x: number, y: number, parent?: Menu): void
 
 Show menu at target position.
 
-### static build(template: any[]): LunaComponent
+### build(template: any[]): Menu
 
 Create menu from template.
 
@@ -62,7 +62,8 @@ Create menu from template.
 
 ### IMenuItemOptions
 
+* click(object): Click event handler.
+* enabled(boolean): Wheather menu item is clickable.
 * label(string): Menu label.
-* submenu(LunaComponent): Sub menu.
+* submenu(Menu): Sub menu.
 * type('normal' | 'separator' | 'submenu'): Menu type.
-* click(function): Click event handler.

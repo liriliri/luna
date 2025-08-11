@@ -41,6 +41,7 @@ export default class Menu extends Component {
     each(template, (item) => {
       if (item.type === 'submenu') {
         item.submenu = Menu.build(item.submenu)
+        menu.addSubComponent(item.submenu)
       }
       menu.append(item)
     })
@@ -54,6 +55,7 @@ export default class Menu extends Component {
   insert(pos: number, options: IMenuItemOptions) {
     defaults(options, {
       type: 'normal',
+      enabled: true,
     })
     this.menuItems.splice(pos, 0, options)
   }
@@ -180,6 +182,10 @@ export default class Menu extends Component {
     const el = h(c('.item'))
     const $el = $(el)
 
+    if (!item.enabled) {
+      $el.addClass(c('disabled'))
+    }
+
     $el.text(item.label as string)
     $el.append(
       `<span class="${c('icon icon-caret-right')}${
@@ -239,6 +245,8 @@ export interface IMenuItemOptions {
   label?: string
   /** Sub menu. */
   submenu?: Menu
+  /** Wheather menu item is clickable. */
+  enabled?: boolean
   /** Click event handler. */
   click?: () => void
 }

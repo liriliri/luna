@@ -1,15 +1,16 @@
-@use '../share/mixin' as mixin;
-@use '../share/theme' as theme;
+@use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-menu {
   position: absolute;
   padding: 4px 0;
-  box-shadow: theme.$box-shadow;
-  border: 1px solid theme.$color-border;
+  box-shadow: $box-shadow;
+  border: 1px solid;
   padding: 4px 0;
   z-index: 4000;
   overflow-y: auto;
-  @include mixin.component();
+  border-radius: #{$border-radius}px;
+  @include component();
 }
 
 .glass-pane {
@@ -29,9 +30,8 @@
   white-space: nowrap;
   width: 100%;
   font-size: 12px;
-  &.active {
-    color: theme.$color-white;
-    background: theme.$color-primary;
+  &.disabled {
+    pointer-events: none;
   }
   .icon-caret-right {
     margin-left: auto;
@@ -44,13 +44,28 @@
 
 .separator {
   height: 1px;
-  background-color: theme.$color-border;
   margin: 5px 1px;
 }
 
-.theme-dark {
-  border-color: theme.$color-border-dark;
-  .separator {
-    background-color: theme.$color-border-dark;
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    @include theme-var(border-color, color-border, $theme);
+    .item {
+      &.active {
+        @include theme-vars(
+          (
+            background-color: color-primary,
+            color: color-white,
+          ),
+          $theme
+        );
+      }
+      &.disabled {
+        @include theme-var(color, color-text-disabled, $theme);
+      }
+    }
+    .separator {
+      @include theme-var(background-color, color-border, $theme);
+    }
   }
 }

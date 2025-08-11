@@ -82,8 +82,13 @@
         @include theme-var(color, color-primary, $theme);
       }
       &:hover {
-        @include theme-var(color, color-text, $theme);
-        @include theme-var(background-color, color-fill-secondary, $theme);
+        @include theme-vars(
+          (
+            color: color-text,
+            background-color: color-fill-secondary,
+          ),
+          $theme
+        );
       }
     }
     .close {

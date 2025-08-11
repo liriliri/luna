@@ -19,6 +19,7 @@ const def = story(
         submenu: [
           {
             label: 'index.html',
+            enabled: false,
           },
           {
             label: 'example.js',

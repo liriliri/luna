@@ -30,6 +30,8 @@ const def = story(
             submenu: [
               {
                 label: 'about.css',
+                type: 'checkbox',
+                checked: true,
               },
               {
                 label: 'index.css',

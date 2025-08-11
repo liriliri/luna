@@ -33,11 +33,18 @@
   &.disabled {
     pointer-events: none;
   }
+  .icon-check,
+  .icon-caret-right {
+    font-size: 12px;
+    position: relative;
+  }
+  .icon-check {
+    top: 1px;
+    margin-right: 5px;
+  }
   .icon-caret-right {
     margin-left: auto;
     padding-left: 10px;
-    font-size: 12px;
-    position: relative;
     top: 1px;
   }
 }

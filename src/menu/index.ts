@@ -186,7 +186,12 @@ export default class Menu extends Component {
       $el.addClass(c('disabled'))
     }
 
-    $el.text(item.label as string)
+    $el.append(
+      `<span class="${c('icon icon-check')}${
+        item.checked ? '' : ' ' + c('invisible')
+      }"></span>`
+    )
+    $el.append(item.label as string)
     $el.append(
       `<span class="${c('icon icon-caret-right')}${
         item.type === 'submenu' ? '' : ' ' + c('invisible')
@@ -212,7 +217,11 @@ export default class Menu extends Component {
       if (item.click) {
         item.click()
       }
-      if (item.type === 'normal') {
+      if (
+        item.type === 'normal' ||
+        item.type === 'checkbox' ||
+        item.type === 'radio'
+      ) {
         this.hideAll()
       }
     })
@@ -240,13 +249,15 @@ export default class Menu extends Component {
 /** IMenuItemOptions */
 export interface IMenuItemOptions {
   /** Menu type. */
-  type?: 'normal' | 'separator' | 'submenu'
+  type?: 'normal' | 'separator' | 'submenu' | 'checkbox' | 'radio'
   /** Menu label. */
   label?: string
   /** Sub menu. */
   submenu?: Menu
   /** Wheather menu item is clickable. */
   enabled?: boolean
+  /** Wheather menu item is checked. */
+  checked?: boolean
   /** Click event handler. */
   click?: () => void
 }

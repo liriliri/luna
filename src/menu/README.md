@@ -62,8 +62,9 @@ Create menu from template.
 
 ### IMenuItemOptions
 
+* checked(boolean): Wheather menu item is checked.
 * click(object): Click event handler.
 * enabled(boolean): Wheather menu item is clickable.
 * label(string): Menu label.
 * submenu(Menu): Sub menu.
-* type('normal' | 'separator' | 'submenu'): Menu type.
+* type('normal' | 'separator' | 'submenu' | 'checkbox' | 'radio'): Menu type.

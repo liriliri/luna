@@ -182,6 +182,8 @@ export default class Carousel extends Component<IOptions> {
     $activeEl.addClass(directionClass)
     $nextEl.addClass(directionClass)
 
+    this.activeIdx = nextIdx!
+
     executeAfterTransition(activeEl, () => {
       $nextEl.rmClass(orderClass)
       $nextEl.rmClass(directionClass)
@@ -197,7 +199,6 @@ export default class Carousel extends Component<IOptions> {
       }
     })
 
-    this.activeIdx = nextIdx!
     this.updateIndicators()
   }
   private updateIndicators() {

@@ -62,6 +62,7 @@ export default class ImageList extends Component<IOptions> {
 
     const galleryContainer = this.find('.gallery').get(0) as HTMLElement
     this.gallery = new LunaGallery(galleryContainer)
+    this.addSubComponent(this.gallery)
 
     this.bindEvent()
   }

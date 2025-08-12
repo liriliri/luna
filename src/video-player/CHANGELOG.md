@@ -1,3 +1,7 @@
+## 1.1.4 (12 Aug 2025)
+
+* fix: seek progress bar update issue
+
 ## 1.1.3 (3 Aug 2025)
 
 * fix: seek error

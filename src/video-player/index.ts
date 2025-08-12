@@ -155,6 +155,7 @@ export default class VideoPlayer extends Component<IOptions> {
     time = Math.min(time, duration)
 
     this.video.currentTime = time
+    this.updateTimeUi(time)
   }
   /** Set video volume. */
   volume(percentage: number) {

@@ -12,7 +12,11 @@ import {
   green5,
 } from '../share/theme'
 import { number, optionsKnob } from '@storybook/addon-knobs'
-import LunaSplitPane, { LunaSplitPaneItem } from './react'
+import ReactSplitPane, {
+  LunaSplitPaneItem as ReactSplitPaneItem,
+} from './react'
+import VueSplitPane, { LunaSplitPaneItem as VueSplitPaneItem } from './vue'
+import { h } from 'vue'
 
 const def = story(
   'split-pane',
@@ -76,7 +80,7 @@ const def = story(
       }
 
       return (
-        <LunaSplitPane
+        <ReactSplitPane
           direction={direction}
           theme={theme}
           style={{
@@ -92,29 +96,87 @@ const def = story(
             console.log('resize', weights)
           }}
         >
-          <LunaSplitPaneItem
+          <ReactSplitPaneItem
             weight={30}
             minSize={minSize}
             style={{ ...commonStyle, background: red5 }}
           >
             1
-          </LunaSplitPaneItem>
-          <LunaSplitPaneItem
+          </ReactSplitPaneItem>
+          <ReactSplitPaneItem
             weight={40}
             visible={false}
             minSize={minSize}
             style={{ ...commonStyle, background: blue5 }}
           >
             2
-          </LunaSplitPaneItem>
-          <LunaSplitPaneItem
+          </ReactSplitPaneItem>
+          <ReactSplitPaneItem
             weight={30}
             minSize={minSize}
             style={{ ...commonStyle, background: green5 }}
           >
             3
-          </LunaSplitPaneItem>
-        </LunaSplitPane>
+          </ReactSplitPaneItem>
+        </ReactSplitPane>
+      )
+    },
+    VueComponent({ theme }) {
+      const { direction, minSize } = createKnobs()
+
+      const commonStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: '48px',
+      }
+
+      return h(
+        VueSplitPane,
+        {
+          direction,
+          theme,
+          style: {
+            width: '100%',
+            maxWidth: '640px',
+            margin: '0 auto',
+            height: '360px',
+            border: `1px solid ${
+              theme === 'light' ? colorBorder : colorBorderDark
+            }`,
+          },
+        },
+        [
+          h(
+            VueSplitPaneItem,
+            {
+              weight: 30,
+              minSize,
+              style: { ...commonStyle, background: red5 },
+            },
+            () => '1'
+          ),
+          h(
+            VueSplitPaneItem,
+            {
+              weight: 40,
+              visible: false,
+              minSize,
+              style: { ...commonStyle, background: blue5 },
+            },
+            () => '2'
+          ),
+          h(
+            VueSplitPaneItem,
+            {
+              weight: 30,
+              minSize,
+              style: { ...commonStyle, background: green5 },
+            },
+            () => '3'
+          ),
+        ]
       )
     },
   }
@@ -148,4 +210,4 @@ function createKnobs() {
 
 export default def
 
-export const { splitPane: html, react } = def
+export const { splitPane: html, react, vue } = def

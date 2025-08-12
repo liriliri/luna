@@ -390,7 +390,8 @@
   },
   "split-pane": {
     "react": true,
-    "version": "0.3.1",
+    "vue": true,
+    "version": "0.4.0",
     "style": true,
     "icon": false,
     "test": true,

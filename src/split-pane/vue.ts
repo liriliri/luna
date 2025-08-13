@@ -10,10 +10,12 @@ import {
   inject,
   ShallowRef,
 } from 'vue'
-import SplitPane, { IElOptions } from './index'
+import { IElOptions } from './index'
+import type SplitPane from './index'
 import each from 'licia/each'
 import isNum from 'licia/isNum'
 import isBool from 'licia/isBool'
+import isBrowser from 'licia/isBrowser'
 
 const LunaSplitPane = defineComponent({
   name: 'LunaSplitPane',
@@ -33,7 +35,13 @@ const LunaSplitPane = defineComponent({
 
     provide('splitPane', splitPane)
 
-    onMounted(() => {
+    onMounted(async () => {
+      if (!isBrowser) {
+        return
+      }
+
+      const { default: SplitPane } = await import('./index')
+
       splitPane.value = new SplitPane(container.value!, {
         theme: props.theme,
         direction: props.direction,

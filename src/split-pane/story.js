@@ -48,7 +48,9 @@ const def = story(
     )
 
     splitPane.append(
-      toEl(`<div style="${commonStyle};background:${blue5};">2</div>`),
+      toEl(
+        `<iframe style="border:none;" src="https://en.wikipedia.org/wiki/Slayers"/>`
+      ),
       {
         weight: 40,
         minSize,

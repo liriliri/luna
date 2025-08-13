@@ -18,6 +18,7 @@ import filter from 'licia/filter'
 import fill from 'licia/fill'
 import sum from 'licia/sum'
 import clone from 'licia/clone'
+import h from 'licia/h'
 
 const $document = $(document as any)
 
@@ -63,6 +64,8 @@ export default class SplitPane extends Component<IOptions> {
   private resizeStart = 0
   private resizeStartPos = 0
   private resizeDelta = 0
+  private $overlay: $.$
+  private overlay: HTMLElement
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'split-pane' }, options)
 
@@ -72,6 +75,9 @@ export default class SplitPane extends Component<IOptions> {
     const { direction } = this.options
     this.isHorizontal = direction === 'horizontal'
     this.$container.addClass(this.c(direction))
+
+    this.overlay = h('div', { class: this.c('overlay') })
+    this.$overlay = $(this.overlay)
 
     this.resizeSensor = new ResizeSensor(container)
     this.onResize = throttle(() => this.applyWeights(), 16)
@@ -174,6 +180,8 @@ export default class SplitPane extends Component<IOptions> {
 
     item.$resizer!.addClass(this.c('active'))
 
+    this.$container.append(this.overlay)
+
     $(document.body).addClass(this.c(`resizing-${this.options.direction}`))
     $document.on(pointerEvent('move'), this.onResizeMove)
     $document.on(pointerEvent('up'), this.onResizeEnd)
@@ -224,6 +232,8 @@ export default class SplitPane extends Component<IOptions> {
     )
 
     leftItem.$resizer!.rmClass(this.c('active'))
+
+    this.$overlay.remove()
 
     $(document.body).rmClass(this.c(`resizing-${this.options.direction}`))
     $document.off(pointerEvent('move'), this.onResizeMove)

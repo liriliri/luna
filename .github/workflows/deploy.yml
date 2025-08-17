@@ -23,14 +23,14 @@ jobs:
         luna install
         npm run build
         npm run build:storybook
-        mkdir -p ../../page/luna
-        cp -r .storybook/out/* ../../page/luna
+        mkdir -p ../../liriliri/luna
+        cp -r .storybook/out/* ../../liriliri/luna
     - name: Copy file via ssh password
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        source: "page/luna/"
-        target: "/root/"    
+        source: "liriliri/luna/"
+        target: "/var/www/"    
     

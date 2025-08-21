@@ -210,6 +210,7 @@ export default class MusicPlayer extends Component<IOptions> {
     time = Math.min(time, duration)
 
     this.audio.currentTime = time
+    this.updateTimeUi(time)
   }
   next() {
     if (isEmpty(this.audioList)) {

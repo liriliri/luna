@@ -265,7 +265,7 @@
     "icon": true,
     "react": true,
     "install": true,
-    "version": "0.2.4",
+    "version": "1.0.0",
     "style": true,
     "test": true,
     "dependencies": []

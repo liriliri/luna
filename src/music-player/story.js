@@ -4,6 +4,7 @@ import $ from 'licia/$'
 import MusicPlayer from 'luna-music-player.js'
 import { object, boolean } from '@storybook/addon-knobs'
 import readme from './README.md'
+import changelog from './CHANGELOG.md'
 import LunaMusicPlayer from './react'
 
 const def = story(
@@ -26,6 +27,7 @@ const def = story(
   },
   {
     readme,
+    changelog,
     source: __STORY__,
     ReactComponent({ theme }) {
       const { audio, listFolded } = createKnobs()

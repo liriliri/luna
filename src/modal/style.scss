@@ -10,10 +10,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  backdrop-filter: blur(2px);
   @include component();
-  & {
-    background: rgba(0, 0, 0, 0.5);
-  }
 }
 
 .icon-close {
@@ -30,7 +28,6 @@
   display: flex;
   flex-direction: column;
   border-radius: 4px;
-  border: 1px solid;
   &.no-title {
     position: static;
     .title {
@@ -123,11 +120,12 @@
 
 @each $theme in ('light', 'dark') {
   .theme-#{$theme} {
+    @include theme-var(background-color, color-bg-mask, $theme);
     .body {
       @include theme-vars(
         (
           background-color: color-bg-container,
-          border-color: color-border,
+          box-shadow: box-shadow,
         ),
         $theme
       );

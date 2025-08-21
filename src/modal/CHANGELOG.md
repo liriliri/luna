@@ -1,3 +1,7 @@
+## 1.3.2 (21 Aug 2025)
+
+* fix: style
+
 ## 1.3.1 (26 Feb 2025)
 
 * refactor: theme

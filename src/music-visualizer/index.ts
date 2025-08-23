@@ -14,7 +14,7 @@ import { resetCanvasSize, exportCjs } from '../share/util'
 export interface IOptions extends IComponentOptions {
   /** Html audio element. */
   audio: HTMLAudioElement
-  image: string
+  image?: string
   fftSize?: number
 }
 
@@ -45,7 +45,7 @@ export default class MusicVisualizer extends Component<IOptions> {
 
     this.initOptions(options, {
       fftSize: 512,
-      background: '',
+      image: '',
     })
     this.audio = this.options.audio
     this.audio.crossOrigin = 'anonymous'
@@ -73,6 +73,11 @@ export default class MusicVisualizer extends Component<IOptions> {
   destroy() {
     this.resizeSensor.destroy()
     this.$container.off('mousemove', this.onMouseMove)
+    this.audio.removeEventListener('play', this.onPlay)
+    this.audio.removeEventListener('pause', this.onPause)
+    if (this.audioContext) {
+      this.audioContext.close()
+    }
     this.stop()
     super.destroy()
   }

@@ -8,7 +8,7 @@ import fullscreen from 'licia/fullscreen'
 import CircleEffect from './CircleEffect'
 import BarEffect from './BarEffect'
 import LineEffect from './LineEffect'
-import { resetCanvasSize } from '../share/util'
+import { resetCanvasSize, exportCjs } from '../share/util'
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -38,6 +38,8 @@ export default class MusicVisualizer extends Component<IOptions> {
   private animationId: number
   private autoHideTimer: any = 0
   private idx = 0
+  private audioContext: AudioContext
+  private audio: HTMLAudioElement
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'music-visualizer' })
 
@@ -45,7 +47,8 @@ export default class MusicVisualizer extends Component<IOptions> {
       fftSize: 512,
       background: '',
     })
-    this.options.audio.crossOrigin = 'anonymous'
+    this.audio = this.options.audio
+    this.audio.crossOrigin = 'anonymous'
 
     this.effects = [
       new CircleEffect(this),
@@ -99,7 +102,12 @@ export default class MusicVisualizer extends Component<IOptions> {
     this.animationId = 0
   }
   private initAudio() {
-    const { audio, fftSize } = this.options
+    const { fftSize } = this.options
+    const { audio } = this
+
+    if (this.audioContext) {
+      this.audioContext.close()
+    }
     const audioContext = new AudioContext()
     const analyser = audioContext.createAnalyser()
     this.analyser = analyser
@@ -108,6 +116,7 @@ export default class MusicVisualizer extends Component<IOptions> {
     this.freqByteData = new Uint8Array(analyser.frequencyBinCount)
     audioSource.connect(analyser)
     analyser.connect(audioContext.destination)
+    this.audioContext = audioContext
   }
   private bindEvent() {
     const { c } = this
@@ -168,8 +177,20 @@ export default class MusicVisualizer extends Component<IOptions> {
       </div>
       `)
     )
+    this.on('changeOption', (name, val) => {
+      switch (name) {
+        case 'audio':
+          this.audio.removeEventListener('play', this.onPlay)
+          this.audio.removeEventListener('pause', this.onPause)
+          this.audio = val
+          this.audio.addEventListener('play', this.onPlay)
+          this.audio.addEventListener('pause', this.onPause)
+          break
+      }
+    })
   }
 }
 
-module.exports = MusicVisualizer
-module.exports.default = MusicVisualizer
+if (typeof module !== 'undefined') {
+  exportCjs(module, MusicVisualizer)
+}

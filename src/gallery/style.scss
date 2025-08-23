@@ -9,7 +9,7 @@
   }
   &.full {
     position: fixed;
-    background: rgba(0, 0, 0, 50%);
+    backdrop-filter: blur(2px);
     left: 0;
     top: 0;
     right: 0;
@@ -78,6 +78,9 @@
 
 @each $theme in ('light', 'dark') {
   .theme-#{$theme} {
+    &.full {
+      @include theme-var(background-color, color-bg-mask, $theme);
+    }
     .toolbar.luna-toolbar {
       @include theme-var(background-color, color-bg-container, $theme);
     }

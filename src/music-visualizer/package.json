@@ -1,8 +1,9 @@
 {
   "name": "music-visualizer",
   "description": "Music visualization",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "luna": {
-    "icon": true
+    "icon": true,
+    "react": true
   }
 }

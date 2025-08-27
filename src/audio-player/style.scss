@@ -1,0 +1,13 @@
+@use '../share/mixin' as *;
+
+.luna-audio-player {
+  border: 1px solid;
+  padding: 10px;
+  @include component();
+}
+
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    @include theme-var(border-color, color-border, $theme);
+  }
+}

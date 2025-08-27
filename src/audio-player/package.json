@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "description": "Audio player",
   "luna": {
-    "icon": true
+    "icon": true,
+    "test": false,
+    "install": true
+  },
+  "dependencies": {
+    "wavesurfer.js": "^7.10.1"
   }
 }

@@ -1,0 +1,8 @@
+{
+  "name": "audio-player",
+  "version": "0.1.0",
+  "description": "Audio player",
+  "luna": {
+    "icon": true
+  }
+}

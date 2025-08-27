@@ -1,4 +1,13 @@
 {
+  "audio-player": {
+    "icon": true,
+    "version": "0.1.0",
+    "style": true,
+    "test": true,
+    "install": false,
+    "react": false,
+    "dependencies": []
+  },
   "box-model": {
     "version": "1.0.1",
     "style": true,

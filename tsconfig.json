@@ -68,7 +68,8 @@
       "luna-drag-selector": ["src/drag-selector/index"],
       "luna-split-pane": ["src/split-pane/index"],
       "luna-file-bar": ["src/file-bar/index"],
-      "luna-path-bar": ["src/path-bar/index"]
+      "luna-path-bar": ["src/path-bar/index"],
+      "luna-audio-player": ["src/audio-player/index"]
     }
   }
 }

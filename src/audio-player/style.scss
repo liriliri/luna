@@ -1,4 +1,5 @@
 @use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-audio-player {
   border: 1px solid;
@@ -6,8 +7,86 @@
   @include component();
 }
 
+.wavesurfer {
+  border-radius: #{$border-radius-x-s}px;
+}
+
+.controller {
+  height: 20px;
+  margin-top: 8px;
+  position: relative;
+}
+
+.controller-left,
+.controller-right {
+  position: absolute;
+  line-height: 20px;
+  .icon {
+    cursor: pointer;
+  }
+}
+
+.controller-left {
+  left: -4px;
+}
+
+.play,
+.volume {
+  margin-right: 4px;
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.volume {
+  height: 100%;
+  &:hover,
+  &.active {
+    .volume-controller {
+      width: 50px;
+    }
+    .volume-bar {
+      width: 45px;
+    }
+  }
+}
+
+.volume-controller {
+  touch-action: none;
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: top;
+  transition: width 0.3s;
+}
+
+.volume-bar {
+  height: 3px;
+  position: relative;
+  top: 8px;
+  border-radius: 1.5px;
+  overflow: hidden;
+  background: #aaa;
+  transition: width 0.3s;
+}
+
+.volume-bar-fill {
+  background: $color-primary;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+}
+
+.controller-right {
+  right: 0;
+}
+
 @each $theme in ('light', 'dark') {
   .theme-#{$theme} {
     @include theme-var(border-color, color-border, $theme);
+    .wavesurfer {
+      @include theme-var(background-color, color-fill-secondary, $theme);
+    }
   }
 }

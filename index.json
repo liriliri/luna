@@ -1,11 +1,11 @@
 {
   "audio-player": {
     "icon": true,
-    "test": false,
+    "react": true,
     "install": true,
     "version": "0.1.0",
     "style": true,
-    "react": false,
+    "test": true,
     "dependencies": []
   },
   "box-model": {

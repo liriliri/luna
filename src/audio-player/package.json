@@ -4,7 +4,7 @@
   "description": "Audio player",
   "luna": {
     "icon": true,
-    "test": false,
+    "react": true,
     "install": true
   },
   "dependencies": {

@@ -35,4 +35,12 @@ audioPlayer.play()
 
 ## Configuration
 
+* progressColor(string): Progress color.
 * url(string): Audio url.
+* waveColor(string): Wave color.
+
+## Api
+
+### play(): void
+
+Play audio.

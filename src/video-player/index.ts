@@ -389,7 +389,7 @@ export default class VideoPlayer extends Component<IOptions> {
     return 'volume'
   }
   private initTpl() {
-    const volumeHeight = toStr(this.video.volume * 100)
+    const volumeWidth = toStr(this.video.volume * 100)
 
     let volume = ''
     if (!isMobile()) {
@@ -397,7 +397,7 @@ export default class VideoPlayer extends Component<IOptions> {
         <span class="icon icon-${this.getVolumeIcon()}"></span>
         <div class="volume-controller">
           <div class="volume-bar">
-            <div class="volume-bar-fill" style="width: ${volumeHeight}%"></div>
+            <div class="volume-bar-fill" style="width: ${volumeWidth}%"></div>
           </div>
         </div>
       </div>`

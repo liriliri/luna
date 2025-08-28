@@ -2,6 +2,7 @@ import 'luna-audio-player.css'
 import story from '../share/story'
 import readme from './README.md'
 import AudioPlayer from 'luna-audio-player.js'
+import LunaAudioPlayer from './react'
 
 const def = story(
   'audio-player',
@@ -15,9 +16,12 @@ const def = story(
   {
     readme,
     source: __STORY__,
+    ReactComponent({ theme }) {
+      return <LunaAudioPlayer theme={theme} url="/Get_along.mp3" />
+    },
   }
 )
 
 export default def
 
-export const { audioPlayer } = def
+export const { audioPlayer: html, react } = def

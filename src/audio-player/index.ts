@@ -1,9 +1,8 @@
-import { eventPage, exportCjs } from '../share/util'
+import { eventPage, exportCjs, mediaDurationFormat } from '../share/util'
 import Component, { IComponentOptions } from '../share/Component'
 import WaveSurfer from 'wavesurfer.js'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
-import durationFormat from 'licia/durationFormat'
 import pointerEvent from 'licia/pointerEvent'
 import clamp from 'licia/clamp'
 
@@ -167,14 +166,10 @@ export default class AudioPlayer extends Component<IOptions> {
     })
     wavesurfer.on('ready', () => {
       this.renderVolume()
-      this.$duration.text(
-        durationFormat(wavesurfer.getDuration() * 1000, 'mm:ss')
-      )
+      this.$duration.text(mediaDurationFormat(wavesurfer.getDuration()))
     })
     wavesurfer.on('audioprocess', () => {
-      this.$curTime.text(
-        durationFormat(wavesurfer.getCurrentTime() * 1000, 'mm:ss')
-      )
+      this.$curTime.text(mediaDurationFormat(wavesurfer.getCurrentTime()))
     })
 
     this.on('changeOption', (name, val) => {

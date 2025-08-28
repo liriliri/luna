@@ -1,3 +1,7 @@
+## 1.1.5 (28 Aug 2025)
+
+* fix: duration display error when exceeds 1 hour
+
 ## 1.1.4 (12 Aug 2025)
 
 * fix: seek progress bar update issue

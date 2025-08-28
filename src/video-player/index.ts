@@ -7,11 +7,10 @@ import clamp from 'licia/clamp'
 import isMobile from 'licia/isMobile'
 import stripIndent from 'licia/stripIndent'
 import toStr from 'licia/toStr'
-import durationFormat from 'licia/durationFormat'
 import fullscreen from 'licia/fullscreen'
 import hotkey from 'licia/hotkey'
 import pointerEvent from 'licia/pointerEvent'
-import { eventPage, exportCjs } from '../share/util'
+import { eventPage, exportCjs, mediaDurationFormat } from '../share/util'
 import Component, { IComponentOptions } from '../share/Component'
 import ResizeSensor from 'licia/ResizeSensor'
 import nextTick from 'licia/nextTick'
@@ -315,9 +314,7 @@ export default class VideoPlayer extends Component<IOptions> {
     this.play()
   }
   private onLoadedMetaData = () => {
-    this.$duration.text(
-      durationFormat(Math.round(this.video.duration * 1000), 'mm:ss')
-    )
+    this.$duration.text(mediaDurationFormat(this.video.duration))
   }
   private onPlay = () => {
     const { c } = this
@@ -373,7 +370,7 @@ export default class VideoPlayer extends Component<IOptions> {
   private updateTimeUi(currentTime: number) {
     const percent = (currentTime / this.video.duration) * 100
     this.$barPlayed.css('width', percent.toFixed(2) + '%')
-    this.$curTime.text(durationFormat(Math.round(currentTime * 1000), 'mm:ss'))
+    this.$curTime.text(mediaDurationFormat(currentTime))
   }
   private getVolumeIcon() {
     const { volume } = this.video

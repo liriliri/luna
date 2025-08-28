@@ -1,6 +1,6 @@
 {
   "name": "video-player",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Video player",
   "luna": {
     "icon": true,

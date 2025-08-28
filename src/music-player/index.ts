@@ -2,10 +2,9 @@ import $ from 'licia/$'
 import stripIndent from 'licia/stripIndent'
 import openFile from 'licia/openFile'
 import createUrl from 'licia/createUrl'
-import { exportCjs, eventPage } from '../share/util'
+import { exportCjs, eventPage, mediaDurationFormat } from '../share/util'
 import each from 'licia/each'
 import pointerEvent from 'licia/pointerEvent'
-import durationFormat from 'licia/durationFormat'
 import convertBin from 'licia/convertBin'
 import jsmediatags from 'jsmediatags'
 import toStr from 'licia/toStr'
@@ -502,7 +501,7 @@ export default class MusicPlayer extends Component<IOptions> {
   private updateTimeUi(currentTime: number) {
     const percent = (currentTime / this.audio.duration) * 100
     this.$barPlayed.css('width', percent.toFixed(2) + '%')
-    this.$curTime.text(durationFormat(Math.round(currentTime * 1000), 'mm:ss'))
+    this.$curTime.text(mediaDurationFormat(currentTime))
   }
   private onLoadedMetaData = () => {
     const { curAudio } = this
@@ -539,9 +538,7 @@ export default class MusicPlayer extends Component<IOptions> {
         })
       }
     }
-    this.$duration.text(
-      durationFormat(Math.round(this.audio.duration * 1000), 'mm:ss')
-    )
+    this.$duration.text(mediaDurationFormat(this.audio.duration))
   }
   private initTpl() {
     const volumeHeight = toStr(this.audio.volume * 100)

@@ -8,6 +8,7 @@ import toNum from 'licia/toNum'
 import detectOs from 'licia/detectOs'
 import loadImg from 'licia/loadImg'
 import isHidden from 'licia/isHidden'
+import durationFormat from 'licia/durationFormat'
 
 export function exportCjs(module: any, clazz: any) {
   try {
@@ -175,4 +176,12 @@ export function hasSelection(node: Node) {
     (anchorNode && node.contains(anchorNode)) ||
     (focusNode && node.contains(focusNode))
   )
+}
+
+export function mediaDurationFormat(seconds: number) {
+  if (seconds > 3600) {
+    return durationFormat(Math.round(seconds * 1000), 'hh:mm:ss')
+  }
+
+  return durationFormat(Math.round(seconds * 1000), 'mm:ss')
 }

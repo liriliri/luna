@@ -1,3 +1,7 @@
+## 1.3.3 (29 Aug 2025)
+
+* fix: max height style
+
 ## 1.3.2 (21 Aug 2025)
 
 * fix: style

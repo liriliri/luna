@@ -5,6 +5,7 @@ import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import pointerEvent from 'licia/pointerEvent'
 import clamp from 'licia/clamp'
+import escape from 'licia/escape'
 
 const $document = $(document as any)
 
@@ -12,6 +13,8 @@ const $document = $(document as any)
 export interface IOptions extends IComponentOptions {
   /** Audio url. */
   url: string
+  /** Audio name. */
+  name?: string
   /** Wave color. */
   waveColor?: string
   /** Progress color. */
@@ -33,6 +36,7 @@ export default class AudioPlayer extends Component<IOptions> {
   private $volumeController: $.$
   private $volumeBarFill: $.$
   private $volumeIcon: $.$
+  private $name: $.$
   private wavesurfer: WaveSurfer
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'audio-player' }, options)
@@ -40,6 +44,7 @@ export default class AudioPlayer extends Component<IOptions> {
     this.initOptions(options, {
       waveColor: '#ccc',
       progressColor: '#1a73e8',
+      name: '',
     })
 
     this.initTpl()
@@ -51,6 +56,7 @@ export default class AudioPlayer extends Component<IOptions> {
     this.$volumeController = this.find('.volume-controller')
     this.$volumeBarFill = this.find('.volume-bar-fill')
     this.$volumeIcon = this.$volume.find('span')
+    this.$name = this.find('.name')
 
     const $wavesurfer = this.find('.wavesurfer')
 
@@ -146,6 +152,7 @@ export default class AudioPlayer extends Component<IOptions> {
           </div>
           ${volume}
         </div>
+        <div class="name">${escape(this.options.name)}</div>
         <div class="controller-right">
           <span class="cur-time">00:00</span> /
           <span class="duration">00:00</span>
@@ -178,6 +185,9 @@ export default class AudioPlayer extends Component<IOptions> {
           wavesurfer.load(val)
           this.pause()
           wavesurfer.seekTo(0)
+          break
+        case 'name':
+          this.$name.text(val)
           break
       }
     })

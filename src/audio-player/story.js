@@ -9,6 +9,7 @@ const def = story(
   (container) => {
     const audioPlayer = new AudioPlayer(container, {
       url: '/Get_along.mp3',
+      name: 'Get along',
     })
 
     return audioPlayer

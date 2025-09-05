@@ -17,6 +17,7 @@
   position: relative;
 }
 
+.name,
 .controller-left,
 .controller-right {
   position: absolute;
@@ -26,6 +27,15 @@
   }
 }
 
+.name {
+  left: 90px;
+  right: 120px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .controller-left {
   left: -4px;
 }
@@ -33,13 +43,12 @@
 .play,
 .volume {
   margin-right: 4px;
-  height: 100%;
+  height: 20px;
   display: inline-block;
   vertical-align: top;
 }
 
 .volume {
-  height: 100%;
   &:hover,
   &.active {
     .volume-controller {

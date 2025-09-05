@@ -24,7 +24,7 @@ const LunaAudioPlayer: FC<IAudioPlayerProps> = (props) => {
     return () => audioPlayerRef.current?.destroy()
   }, [])
 
-  each(['theme', 'url'], (key: keyof IAudioPlayerProps) => {
+  each(['theme', 'url', 'name'], (key: keyof IAudioPlayerProps) => {
     useOption<AudioPlayer, IAudioPlayerProps>(audioPlayerRef, key, props[key])
   })
 

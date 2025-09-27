@@ -11,17 +11,20 @@ https://luna.liriliri.io/?path=/story/data-grid
 Add the following script and style to your page.
 
 ```html
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-menu/luna-menu.css" />
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/luna-data-grid/luna-data-grid.css" />
+<script src="//cdn.jsdelivr.net/npm/luna-menu/luna-menu.js"></script>
 <script src="//cdn.jsdelivr.net/npm/luna-data-grid/luna-data-grid.js"></script>
 ```
 
 You can also get it on npm.
 
 ```bash
-npm install luna-data-grid --save
+npm install luna-data-grid luna-menu --save
 ```
 
 ```javascript
+import 'luna-menu/luna-menu.css'
 import 'luna-data-grid/luna-data-grid.css'
 import LunaDataGrid from 'luna-data-grid'
 ```
@@ -53,6 +56,7 @@ dataGrid.append({
 
 * columns(IColumn[]): Table columns.
 * filter(string | RegExp | AnyFn): Data filter.
+* headerContextMenu(boolean): Whether to show context menu on header.
 * height(number): Table height.
 * maxHeight(number): Max table height.
 * minHeight(number): Min table height.
@@ -88,6 +92,7 @@ Set data.
 * id(string): Column id.
 * sortable(boolean): Is column sortable.
 * title(string): Column display name.
+* visible(boolean): Is column initially visible.
 * weight(number): Column weight.
 
 ### IDataGridNodeOptions

@@ -18,6 +18,7 @@ const def = story(
       maxHeight,
       minHeight,
       filter,
+      headerContextMenu: true,
     })
 
     each(getData(), (item) => dataGrid.append(item, { selectable: true }))

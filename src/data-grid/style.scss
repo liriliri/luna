@@ -26,9 +26,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    &:first-child {
-      border-left: none;
-    }
   }
 
   th {

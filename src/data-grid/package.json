@@ -4,6 +4,9 @@
   "description": "Grid for displaying datasets",
   "luna": {
     "react": true,
-    "icon": true
+    "icon": true,
+    "dependencies": [
+      "menu"
+    ]
   }
 }

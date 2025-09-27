@@ -31,6 +31,10 @@ import remove from 'licia/remove'
 import pointerEvent from 'licia/pointerEvent'
 import { exportCjs, eventClient, pxToNum } from '../share/util'
 import isHidden from 'licia/isHidden'
+import filter from 'licia/filter'
+import toBool from 'licia/toBool'
+import LunaMenu from 'luna-menu'
+import randomId from 'licia/randomId'
 
 const $document = $(document as any)
 const MIN_COL_WIDTH = 24
@@ -45,6 +49,8 @@ export interface IColumn {
   weight?: number
   /** Is column sortable. */
   sortable?: boolean
+  /** Is column initially visible. */
+  visible?: boolean
   /** Column sort comparator if sortable is true. */
   comparator?: types.AnyFn
 }
@@ -63,6 +69,8 @@ export interface IOptions extends IComponentOptions {
   filter?: string | RegExp | types.AnyFn
   /** Default selectable for all nodes. */
   selectable?: boolean
+  /** Whether to show context menu on header. */
+  headerContextMenu?: boolean
 }
 
 type NodeData = types.PlainObj<string | HTMLElement>
@@ -99,15 +107,18 @@ const ROW_HEIGHT = 20
  * })
  */
 export default class DataGrid extends Component<IOptions> {
+  private id = `luna-data-grid-${randomId(6, 'abcdefghijklmnopqrstuvwxyz')}`
   private $headerRow: $.$
   private $fillerRow: $.$
   private fillerRow: HTMLElement
   private $tableBody: $.$
   private $colgroup: $.$
   private $dataContainer: $.$
+  private $style: $.$
   private dataContainer: HTMLDivElement
   private $resizers: $.$
   private resizeIdx = 0
+  private resizeRightIdx = 0
   private resizeStartX = 0
   private resizeStartLeft = 0
   private resizeDeltaX = 0
@@ -137,7 +148,10 @@ export default class DataGrid extends Component<IOptions> {
   private scrollTimer: NodeJS.Timeout | null = null
   constructor(container: HTMLElement, options: IOptions) {
     super(container, { compName: 'data-grid' }, options)
-    this.$container.attr('tabindex', '0')
+    this.$container.attr({
+      tabindex: '0',
+      id: this.id,
+    })
 
     this.resizeSensor = new ResizeSensor(container)
     this.onResize = throttle(() => {
@@ -155,11 +169,13 @@ export default class DataGrid extends Component<IOptions> {
       maxHeight: Infinity,
       filter: '',
       selectable: false,
+      headerContextMenu: false,
     })
     const { columns, minHeight, maxHeight } = this.options
     each(columns, (column) => {
       defaults(column, {
         sortable: false,
+        visible: true,
       })
       this.colMap[column.id] = column
     })
@@ -179,10 +195,11 @@ export default class DataGrid extends Component<IOptions> {
     this.dataContainer = this.$dataContainer.get(0) as HTMLDivElement
     this.$space = this.find('.data-space')
     this.space = this.$space.get(0) as HTMLElement
+    this.$style = this.$container.find('style')
 
     this.renderHeader()
     this.renderResizers()
-    this.updateWeights()
+    this.initWeights()
     this.updateHeight()
 
     this.bindEvent()
@@ -381,6 +398,18 @@ export default class DataGrid extends Component<IOptions> {
       this.emit('select', node)
     }
   }
+  private getRightIdx(leftIdx: number) {
+    const { columns } = this.options
+    const displayColumns = filter(columns, (col) => toBool(col.visible))
+    const leftCol = columns[leftIdx]
+    for (let i = 0, len = displayColumns.length; i < len; i++) {
+      if (displayColumns[i] === leftCol) {
+        return columns.indexOf(displayColumns[i + 1])
+      }
+    }
+
+    return -1
+  }
   private onResizeColStart(e: any) {
     const { c, resizeIdx, $resizers } = this
 
@@ -395,19 +424,19 @@ export default class DataGrid extends Component<IOptions> {
     $document.on(pointerEvent('up'), this.onResizeColEnd)
   }
   private onResizeColMove = (e: any) => {
-    const { resizeIdx, $resizers, colWidths, $colgroup } = this
+    const { resizeIdx, resizeRightIdx, $resizers, colWidths, $colgroup } = this
     e = e.origEvent
 
     let deltaX = eventClient('x', e) - this.resizeStartX
     const leftColWidth = colWidths[resizeIdx]
-    const rightColWidth = colWidths[resizeIdx + 1]
+    const rightColWidth = colWidths[resizeRightIdx]
     const lowerBound = min(-leftColWidth + MIN_COL_WIDTH, 0)
     const upperBound = max(rightColWidth - MIN_COL_WIDTH, 0)
     deltaX = clamp(deltaX, lowerBound, upperBound)
     $colgroup.each(function (this: HTMLTableColElement) {
       const $cols = $(this).find('col')
       $cols.eq(resizeIdx).css('width', leftColWidth + deltaX + 'px')
-      $cols.eq(resizeIdx + 1).css('width', rightColWidth - deltaX + 'px')
+      $cols.eq(resizeRightIdx).css('width', rightColWidth - deltaX + 'px')
     })
     this.resizeDeltaX = deltaX
     const newLeft = this.resizeStartLeft + deltaX
@@ -417,20 +446,20 @@ export default class DataGrid extends Component<IOptions> {
   private onResizeColEnd = (e: any) => {
     this.onResizeColMove(e)
 
-    const { c, colWidths, resizeIdx, resizeDeltaX } = this
+    const { c, colWidths, resizeIdx, resizeRightIdx, resizeDeltaX } = this
     const { columns } = this.options
     const leftCol = columns[resizeIdx]
-    const rightCol = columns[resizeIdx + 1]
+    const rightCol = columns[resizeRightIdx]
 
     const leftColWidth = colWidths[resizeIdx] + resizeDeltaX
-    const rightColWidth = colWidths[resizeIdx + 1] - resizeDeltaX
+    const rightColWidth = colWidths[resizeRightIdx] - resizeDeltaX
     const totalWidth = leftColWidth + rightColWidth
     const totalWeight = (leftCol.weight as number) + (rightCol.weight as number)
     const leftWeight = totalWeight * (leftColWidth / totalWidth)
     const rightWeight = totalWeight - leftWeight
     leftCol.weight = leftWeight
     rightCol.weight = rightWeight
-    this.applyColWeights()
+    this.updateWeights()
 
     $(document.body).rmClass(c('resizing'))
     $document.off(pointerEvent('move'), this.onResizeColMove)
@@ -505,9 +534,42 @@ export default class DataGrid extends Component<IOptions> {
       }
     )
 
+    $headerRow.on('contextmenu', (e) => {
+      e.stopPropagation()
+      e.preventDefault()
+      if (!this.options.headerContextMenu) {
+        return
+      }
+      e = e.origEvent
+      const { columns } = this.options
+      let visibleCount = 0
+      each(columns, (column) => {
+        if (toBool(column.visible)) {
+          visibleCount++
+        }
+      })
+      const menu = LunaMenu.build(
+        map(columns, (column) => {
+          const visible = toBool(column.visible)
+          return {
+            label: column.title,
+            checked: visible,
+            enabled: !visible || visibleCount > 1,
+            click() {
+              column.visible = !visible
+              self.renderHeader()
+              self.updateWeights()
+            },
+          }
+        })
+      )
+      menu.show(eventClient('x', e), eventClient('y', e))
+    })
+
     $resizers.on(pointerEvent('down'), function (this: HTMLDivElement, e) {
       const $this = $(this)
       self.resizeIdx = toNum($this.data('idx'))
+      self.resizeRightIdx = self.getRightIdx(self.resizeIdx)
       self.onResizeColStart(e)
     })
 
@@ -556,7 +618,7 @@ export default class DataGrid extends Component<IOptions> {
     this.sortId = id
     this.isAscending = isAscending
   }
-  private updateWeights() {
+  private initWeights() {
     const { container, $headerRow } = this
     const { columns } = this.options
 
@@ -574,9 +636,9 @@ export default class DataGrid extends Component<IOptions> {
       this.colWidthsInitialized = true
     }
 
-    this.applyColWeights()
+    this.updateWeights()
   }
-  private applyColWeights() {
+  private updateWeights() {
     const { container, $colgroup } = this
     const { columns } = this.options
 
@@ -588,7 +650,9 @@ export default class DataGrid extends Component<IOptions> {
     let sumOfWeights = 0
     const len = columns.length
     for (let i = 0; i < len; i++) {
-      sumOfWeights += columns[i].weight as number
+      if (columns[i].visible) {
+        sumOfWeights += columns[i].weight as number
+      }
     }
 
     let html = ''
@@ -598,16 +662,21 @@ export default class DataGrid extends Component<IOptions> {
     this.colWidths = []
     for (let i = 0; i < len; i++) {
       const column = columns[i]
-      sum += column.weight as number
-      let offset = ((sum * tableWidth) / sumOfWeights) | 0
-      let width = offset - lastOffset
-      if (width < MIN_COL_WIDTH) {
-        width = MIN_COL_WIDTH
-        offset = lastOffset + width
+      if (column.visible) {
+        sum += column.weight as number
+        let offset = ((sum * tableWidth) / sumOfWeights) | 0
+        let width = offset - lastOffset
+        if (width < MIN_COL_WIDTH) {
+          width = MIN_COL_WIDTH
+          offset = lastOffset + width
+        }
+        lastOffset = offset
+        html += `<col style="width:${width}px"></col>`
+        this.colWidths[i] = width
+      } else {
+        html += `<col style="width:0;display:none"></col>`
+        this.colWidths[i] = 0
       }
-      lastOffset = offset
-      html += `<col style="width:${width}px"></col>`
-      this.colWidths[i] = width
     }
 
     $colgroup.html(html)
@@ -616,13 +685,20 @@ export default class DataGrid extends Component<IOptions> {
   }
   private positionResizers() {
     const { colWidths } = this
+    const { columns } = this.options
     const resizerLeft: number[] = []
     const len = colWidths.length - 1
     for (let i = 0; i < len; i++) {
       resizerLeft[i] = (resizerLeft[i - 1] || 0) + colWidths[i]
     }
     for (let i = 0; i < len; i++) {
-      this.$resizers.eq(i).css('left', resizerLeft[i] + 'px')
+      const $resizer = this.$resizers.eq(i)
+      if (!columns[i].visible) {
+        $resizer.hide()
+      } else {
+        $resizer.show()
+        $resizer.css('left', resizerLeft[i] + 'px')
+      }
     }
   }
   private onScroll = () => {
@@ -765,8 +841,10 @@ export default class DataGrid extends Component<IOptions> {
   private renderHeader() {
     const { c } = this
     let html = ''
+    let style = ''
     let fillerRowHtml = ''
-    each(this.options.columns, (column) => {
+    let firstVisible = true
+    each(this.options.columns, (column, idx) => {
       const title = escape(column.title)
       if (column.sortable) {
         html += c(`
@@ -779,10 +857,22 @@ export default class DataGrid extends Component<IOptions> {
         html += `<th>${title}</th>`
       }
       fillerRowHtml += '<td></td>'
+      const nth = idx + 1
+
+      const declarations = `${column.visible ? '' : 'display:none;'}${
+        column.visible && firstVisible ? 'border-left:none;' : ''
+      }`
+      if (declarations) {
+        style += `#${this.id} th:nth-child(${nth}), #${this.id} td:nth-child(${nth}) { ${declarations} }\n`
+      }
+      if (column.visible && firstVisible) {
+        firstVisible = false
+      }
     })
 
     this.$headerRow.html(html)
     this.$fillerRow.html(fillerRowHtml)
+    this.$style.text(style)
   }
   private renderResizers() {
     let resizers = ''
@@ -796,6 +886,7 @@ export default class DataGrid extends Component<IOptions> {
   private initTpl() {
     this.$container.html(
       this.c(stripIndent`
+        <style type="text/css"></style>
         <div class="header-container">
           <table class="header">
             <colgroup></colgroup>

@@ -83,11 +83,11 @@
   "data-grid": {
     "react": true,
     "icon": true,
+    "dependencies": ["menu"],
     "version": "1.6.5",
     "style": true,
     "test": true,
-    "install": false,
-    "dependencies": []
+    "install": false
   },
   "dom-highlighter": {
     "install": true,

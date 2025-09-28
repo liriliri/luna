@@ -7,6 +7,7 @@ import each from 'licia/each'
 import toEl from 'licia/toEl'
 import LunaDataGrid from './react'
 import { number, button, text } from '@storybook/addon-knobs'
+import { useRef, useState } from 'react'
 
 const def = story(
   'data-grid',
@@ -20,6 +21,16 @@ const def = story(
       filter,
       headerContextMenu: true,
     })
+    dataGrid.on('changeColumn', () => {
+      localStorage.setItem(
+        'data-grid-columns',
+        JSON.stringify(dataGrid.getOption('columns'))
+      )
+    })
+    const savedColumns = localStorage.getItem('data-grid-columns')
+    if (savedColumns) {
+      dataGrid.setOption('columns', JSON.parse(savedColumns))
+    }
 
     each(getData(), (item) => dataGrid.append(item, { selectable: true }))
 
@@ -78,6 +89,8 @@ const def = story(
     source: __STORY__,
     ReactComponent({ theme }) {
       const { minHeight, maxHeight, filter } = createKnobs()
+      const [columns, setColumns] = useState(getColumns())
+      const dataGridRef = useRef(null)
 
       return (
         <LunaDataGrid
@@ -96,7 +109,21 @@ const def = story(
           onContextMenu={(e, node) => {
             console.log('contextmenu', node)
           }}
-          columns={getColumns()}
+          onColumnChange={() => {
+            localStorage.setItem(
+              'data-grid-columns',
+              JSON.stringify(dataGridRef.current.getOption('columns'))
+            )
+          }}
+          onCreate={(dataGrid) => {
+            dataGridRef.current = dataGrid
+            const savedColumns = localStorage.getItem('data-grid-columns')
+            if (savedColumns) {
+              setColumns(JSON.parse(savedColumns))
+            }
+          }}
+          headerContextMenu={true}
+          columns={columns}
           minHeight={minHeight}
           maxHeight={maxHeight}
           filter={filter}

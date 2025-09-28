@@ -15,67 +15,75 @@ interface IDataGridProps extends IOptions {
   onDoubleClick?: (e: MouseEvent, node: DataGridNode) => void
   onContextMenu?: (e: PointerEvent, node: DataGridNode) => void
   onCreate?: (dataGrid: DataGrid) => void
+  onColumnChange?: () => void
   className?: string
   uniqueId?: string
   data: any[]
 }
 
 const LunaDataGrid: FC<IDataGridProps> = (props) => {
-  const dataGridRef = useRef<HTMLDivElement>(null)
-  const dataGrid = useRef<DataGrid>()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const dataGridRef = useRef<DataGrid>()
   const prevProps = usePrevious(props)
 
   useEffect(() => {
-    dataGrid.current = new DataGrid(dataGridRef.current!, {
+    dataGridRef.current = new DataGrid(containerRef.current!, {
       columns: props.columns,
       height: props.height,
       maxHeight: props.maxHeight,
       minHeight: props.minHeight,
       filter: props.filter,
       selectable: props.selectable,
+      headerContextMenu: props.headerContextMenu,
       theme: props.theme,
     })
-    props.onCreate && props.onCreate(dataGrid.current)
-    dataGrid.current.setData(props.data, props.uniqueId)
+    props.onCreate && props.onCreate(dataGridRef.current)
+    dataGridRef.current.setData(props.data, props.uniqueId)
 
-    return () => dataGrid.current?.destroy()
+    return () => dataGridRef.current?.destroy()
   }, [])
 
   useNonInitialEffect(() => {
-    if (dataGrid.current) {
-      dataGrid.current.setData(props.data, props.uniqueId)
+    if (dataGridRef.current) {
+      dataGridRef.current.setData(props.data, props.uniqueId)
     }
   }, [props.data])
 
-  useEvent<DataGrid>(dataGrid, 'select', prevProps?.onSelect, props.onSelect)
+  useEvent<DataGrid>(dataGridRef, 'select', prevProps?.onSelect, props.onSelect)
   useEvent<DataGrid>(
-    dataGrid,
+    dataGridRef,
     'deselect',
     prevProps?.onDeselect,
     props.onDeselect
   )
-  useEvent<DataGrid>(dataGrid, 'click', prevProps?.onClick, props.onClick)
+  useEvent<DataGrid>(dataGridRef, 'click', prevProps?.onClick, props.onClick)
   useEvent<DataGrid>(
-    dataGrid,
+    dataGridRef,
     'dblclick',
     prevProps?.onDoubleClick,
     props.onDoubleClick
   )
   useEvent<DataGrid>(
-    dataGrid,
+    dataGridRef,
     'contextmenu',
     prevProps?.onContextMenu,
     props.onContextMenu
   )
+  useEvent<DataGrid>(
+    dataGridRef,
+    'changeColumn',
+    prevProps?.onColumnChange,
+    props.onColumnChange
+  )
 
   each(
-    ['theme', 'height', 'maxHeight', 'minHeight', 'filter'],
+    ['theme', 'height', 'maxHeight', 'minHeight', 'filter', 'columns'],
     (key: keyof IDataGridProps) => {
-      useOption<DataGrid, IDataGridProps>(dataGrid, key, props[key])
+      useOption<DataGrid, IDataGridProps>(dataGridRef, key, props[key])
     }
   )
 
-  return <div className={props.className || ''} ref={dataGridRef}></div>
+  return <div className={props.className || ''} ref={containerRef}></div>
 }
 
 export default LunaDataGrid

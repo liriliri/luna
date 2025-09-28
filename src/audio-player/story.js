@@ -18,7 +18,7 @@ const def = story(
     readme,
     source: __STORY__,
     ReactComponent({ theme }) {
-      return <LunaAudioPlayer theme={theme} url="/Get_along.mp3" />
+      return <LunaAudioPlayer theme={theme} url="/Get_along.mp3" name="Get along"/>
     },
   }
 )

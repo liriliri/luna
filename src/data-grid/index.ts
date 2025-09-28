@@ -459,6 +459,7 @@ export default class DataGrid extends Component<IOptions> {
     const rightWeight = totalWeight - leftWeight
     leftCol.weight = leftWeight
     rightCol.weight = rightWeight
+    this.emit('changeColumn')
     this.updateWeights()
 
     $(document.body).rmClass(c('resizing'))
@@ -557,6 +558,7 @@ export default class DataGrid extends Component<IOptions> {
             enabled: !visible || visibleCount > 1,
             click() {
               column.visible = !visible
+              self.emit('changeColumn')
               self.renderHeader()
               self.updateWeights()
             },
@@ -573,7 +575,7 @@ export default class DataGrid extends Component<IOptions> {
       self.onResizeColStart(e)
     })
 
-    this.on('changeOption', (name) => {
+    this.on('changeOption', (name, val, oldVal) => {
       switch (name) {
         case 'minHeight':
         case 'maxHeight':
@@ -592,6 +594,25 @@ export default class DataGrid extends Component<IOptions> {
           this.renderData()
           this.updateHeight()
           break
+        case 'columns': {
+          const columnsMap: types.PlainObj<IColumn> = {}
+          each(val, (column: IColumn) => {
+            columnsMap[column.id] = column
+          })
+          each(oldVal, (oldColumn: IColumn) => {
+            const column = columnsMap[oldColumn.id]
+            if (!isUndef(column.visible)) {
+              oldColumn.visible = column.visible
+            }
+            if (!isUndef(column.weight)) {
+              oldColumn.weight = column.weight
+            }
+          })
+          this.options.columns = oldVal
+          this.renderHeader()
+          this.updateWeights()
+          break
+        }
       }
     })
   }

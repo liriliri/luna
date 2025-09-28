@@ -1,3 +1,8 @@
+## 2.0.0 (28 Sep 2025)
+
+* feat: column visibility
+* feat: header contextmenu
+
 ## 1.6.5 (20 Jun 2025)
 
 * fix: container resize

@@ -14,12 +14,12 @@ interface IFileListProps extends IOptions {
 }
 
 const LunaFileList: FC<IFileListProps> = (props) => {
-  const fileListRef = useRef<HTMLDivElement>(null)
-  const fileList = useRef<FileList>()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const fileListRef = useRef<FileList>()
   const prevProps = usePrevious(props)
 
   useEffect(() => {
-    fileList.current = new FileList(fileListRef.current!, {
+    fileListRef.current = new FileList(containerRef.current!, {
       files: props.files,
       listView: props.listView,
       filter: props.filter,
@@ -27,39 +27,39 @@ const LunaFileList: FC<IFileListProps> = (props) => {
       theme: props.theme,
     })
 
-    return () => fileList.current?.destroy()
+    return () => fileListRef.current?.destroy()
   }, [])
 
-  useEvent<FileList>(fileList, 'select', prevProps?.onSelect, props.onSelect)
+  useEvent<FileList>(fileListRef, 'select', prevProps?.onSelect, props.onSelect)
   useEvent<FileList>(
-    fileList,
+    fileListRef,
     'deselect',
     prevProps?.onDeselect,
     props.onDeselect
   )
-  useEvent<FileList>(fileList, 'click', prevProps?.onClick, props.onClick)
+  useEvent<FileList>(fileListRef, 'click', prevProps?.onClick, props.onClick)
   useEvent<FileList>(
-    fileList,
+    fileListRef,
     'dblclick',
     prevProps?.onDoubleClick,
     props.onDoubleClick
   )
   useEvent<FileList>(
-    fileList,
+    fileListRef,
     'contextmenu',
     prevProps?.onContextMenu,
     props.onContextMenu
   )
 
   each(['theme', 'filter', 'files', 'listView'], (key: keyof IOptions) => {
-    useOption<FileList, IOptions>(fileList, key, props[key])
+    useOption<FileList, IOptions>(fileListRef, key, props[key])
   })
 
   return (
     <div
       className={props.className || ''}
       style={props.style}
-      ref={fileListRef}
+      ref={containerRef}
     />
   )
 }

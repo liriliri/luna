@@ -129,7 +129,7 @@
     "react": true,
     "install": true,
     "dependencies": ["data-grid", "icon-list"],
-    "version": "0.5.5",
+    "version": "0.5.6",
     "style": true,
     "icon": false,
     "test": true
@@ -327,7 +327,7 @@
   "path-bar": {
     "icon": true,
     "react": true,
-    "version": "0.2.2",
+    "version": "0.3.0",
     "style": true,
     "test": true,
     "install": false,

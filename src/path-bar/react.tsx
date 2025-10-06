@@ -18,12 +18,13 @@ const LunaPathBar: FC<IPathBarProps> = (props) => {
     pathBarRef.current = new PathBar(containerRef.current!, {
       theme: props.theme,
       path: props.path,
+      rootLabel: props.rootLabel,
     })
 
     return () => pathBarRef.current?.destroy()
   }, [])
 
-  each(['theme', 'path'], (key: keyof IPathBarProps) => {
+  each(['theme', 'path', 'rootLabel'], (key: keyof IPathBarProps) => {
     useOption<PathBar, IPathBarProps>(pathBarRef, key, props[key])
   })
 

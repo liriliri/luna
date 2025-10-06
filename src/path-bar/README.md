@@ -39,3 +39,4 @@ pathBar.on('change', (path) => {
 ## Configuration
 
 * path(string): File path.
+* rootLabel(string): Root label.

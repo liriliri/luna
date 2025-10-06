@@ -13,6 +13,8 @@ import isStrBlank from 'licia/isStrBlank'
 export interface IOptions extends IComponentOptions {
   /** File path. */
   path: string
+  /** Root label. */
+  rootLabel: string
 }
 
 /**
@@ -51,6 +53,14 @@ export default class PathBar extends Component {
 
     const paths: string[] = []
     this.$address.html('')
+
+    const rootEl = toEl(
+      `<div class="${c('item')}" data-path="">${escape(
+        this.options.rootLabel
+      )}<span class="${c('icon-right')}"></span></div>`
+    )
+    this.$address.append(rootEl)
+
     const parts = filter(path.split('/'), (part) => !isStrBlank(part))
     each(parts, (part) => {
       paths.push(part)
@@ -104,6 +114,7 @@ export default class PathBar extends Component {
 
     this.on('changeOption', (name) => {
       switch (name) {
+        case 'rootLabel':
         case 'path':
           this.render()
           break

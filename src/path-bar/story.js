@@ -8,9 +8,10 @@ import { text } from '@storybook/addon-knobs'
 const def = story(
   'path-bar',
   (container) => {
-    const { path } = createKnobs()
+    const { path, rootLabel } = createKnobs()
 
     const pathBar = new PathBar(container, {
+      rootLabel,
       path,
     })
 
@@ -38,9 +39,11 @@ const def = story(
 )
 
 function createKnobs() {
+  const rootLabel = text('Root Label', 'disk')
   const path = text('Initial Path', '/home/user')
 
   return {
+    rootLabel,
     path,
   }
 }

@@ -602,6 +602,9 @@ export default class DataGrid extends Component<IOptions> {
           })
           each(oldVal, (oldColumn: IColumn) => {
             const column = columnsMap[oldColumn.id]
+            if (!column) {
+              return
+            }
             if (!isUndef(column.visible)) {
               oldColumn.visible = column.visible
             }

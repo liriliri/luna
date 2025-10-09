@@ -1,3 +1,7 @@
+## 2.0.2 (9 Oct 2025)
+
+* fix: update columns
+
 ## 2.0.1 (9 Oct 2025)
 
 * fix: header context menu

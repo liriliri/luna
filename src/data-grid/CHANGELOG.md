@@ -1,3 +1,7 @@
+## 2.0.1 (9 Oct 2025)
+
+* fix: header context menu
+
 ## 2.0.0 (28 Sep 2025)
 
 * feat: column visibility

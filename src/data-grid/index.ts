@@ -554,6 +554,7 @@ export default class DataGrid extends Component<IOptions> {
           const visible = toBool(column.visible)
           return {
             label: column.title,
+            type: 'checkbox',
             checked: visible,
             enabled: !visible || visibleCount > 1,
             click() {

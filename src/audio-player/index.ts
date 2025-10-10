@@ -17,6 +17,8 @@ export interface IOptions extends IComponentOptions {
   name?: string
   /** Wave color. */
   waveColor?: string
+  /** Wave height. */
+  waveHeight?: number
   /** Progress color. */
   progressColor?: string
 }
@@ -44,6 +46,7 @@ export default class AudioPlayer extends Component<IOptions> {
     this.initOptions(options, {
       waveColor: '#ccc',
       progressColor: '#1a73e8',
+      waveHeight: 60,
       name: '',
     })
 
@@ -61,7 +64,7 @@ export default class AudioPlayer extends Component<IOptions> {
     const $wavesurfer = this.find('.wavesurfer')
 
     this.wavesurfer = WaveSurfer.create({
-      height: 60,
+      height: this.options.waveHeight,
       container: $wavesurfer.get(0) as HTMLElement,
       waveColor: this.options.waveColor,
       progressColor: this.options.progressColor,

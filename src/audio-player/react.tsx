@@ -18,6 +18,7 @@ const LunaAudioPlayer: FC<IAudioPlayerProps> = (props) => {
       url: props.url,
       name: props.name,
       waveColor: props.waveColor,
+      waveHeight: props.waveHeight,
       progressColor: props.progressColor,
     })
     props.onCreate && props.onCreate(audioPlayerRef.current)

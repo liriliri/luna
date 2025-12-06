@@ -342,15 +342,6 @@
     "install": false,
     "dependencies": []
   },
-  "qrcode-generator": {
-    "install": true,
-    "test": false,
-    "version": "0.1.0",
-    "style": true,
-    "icon": false,
-    "react": false,
-    "dependencies": []
-  },
   "retro-emulator": {
     "icon": true,
     "version": "0.1.1",

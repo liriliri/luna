@@ -673,6 +673,7 @@ function isUrlAttribute(el: HTMLElement, name: string) {
   if (
     tagName === 'SCRIPT' ||
     tagName === 'IMAGE' ||
+    tagName === 'IMG' ||
     tagName === 'VIDEO' ||
     tagName === 'AUDIO'
   ) {

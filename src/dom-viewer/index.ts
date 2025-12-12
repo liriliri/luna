@@ -389,7 +389,11 @@ export default class DomViewer extends Component<IOptions> {
     }
   }
   private isExpandable() {
-    const { node } = this.options
+    const { node, isEndTag } = this.options
+
+    if (isEndTag) {
+      return false
+    }
 
     if (node.nodeType !== Node.ELEMENT_NODE && !this.isShadowRoot) {
       return false

@@ -29,5 +29,3 @@ jobs:
         run: |
           cd ${{ github.event.inputs.component }}
           npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

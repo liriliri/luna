@@ -1,5 +1,8 @@
 {
   "name": "scrollbar",
-  "version": "0.1.0",
-  "description": "Custom scrollbar"
+  "version": "0.2.0",
+  "description": "Custom scrollbar",
+  "luna": {
+    "react": true
+  }
 }

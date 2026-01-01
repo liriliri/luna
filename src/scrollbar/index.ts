@@ -1,4 +1,4 @@
-import Component from '../share/Component'
+import Component, { IComponentOptions } from '../share/Component'
 import stripIndent from 'licia/stripIndent'
 import $ from 'licia/$'
 import each from 'licia/each'
@@ -13,6 +13,8 @@ interface IScrollbar {
   isOverflow: boolean
 }
 
+export interface IOptions extends IComponentOptions {}
+
 /**
  * Custom scrollbar.
  *
@@ -20,7 +22,7 @@ interface IScrollbar {
  * const scrollbar = new LunaScrollbar(container)
  * scrollbar.getContent().innerHTML = 'test'
  */
-export default class Scrollbar extends Component {
+export default class Scrollbar extends Component<IOptions> {
   private $offset: $.$
   private $contentWrapper: $.$
   private $xTrack: $.$
@@ -37,8 +39,8 @@ export default class Scrollbar extends Component {
   private dragAxis: 'x' | 'y' = 'x'
   private dragOffset = 0
   private containerStyle: CSSStyleDeclaration
-  constructor(container: HTMLElement) {
-    super(container, { compName: 'scrollbar' })
+  constructor(container: HTMLElement, options: IOptions = {}) {
+    super(container, { compName: 'scrollbar' }, options)
     this.containerStyle = window.getComputedStyle(container)
 
     const childNodes = clone(container.childNodes)

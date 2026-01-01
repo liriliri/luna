@@ -1,4 +1,5 @@
 @use '../share/mixin' as *;
+@use '../share/theme' as *;
 
 .luna-scrollbar {
   position: relative;
@@ -49,7 +50,6 @@
 .thumb {
   position: absolute;
   touch-action: none;
-  background: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 }
 
@@ -72,5 +72,13 @@
   .thumb {
     left: 0;
     right: 0;
+  }
+}
+
+@each $theme in ('light', 'dark') {
+  .theme-#{$theme} {
+    .thumb {
+      @include theme-var(background-color, color-fill, $theme);
+    }
   }
 }

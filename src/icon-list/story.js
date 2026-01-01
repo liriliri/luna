@@ -104,7 +104,7 @@ function getIcons() {
     },
     {
       src: '/pic4.png',
-      name: 'Pic4',
+      name: 'A_very_longlonglonglonglong name',
     },
     {
       src: 'https://eruda.liriliri.io/logo.png',

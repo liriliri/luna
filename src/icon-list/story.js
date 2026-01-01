@@ -108,7 +108,7 @@ function getIcons() {
     },
     {
       src: 'https://eruda.liriliri.io/logo.png',
-      name: 'Eruda',
+      name: 'Eruda - "Console for mobile browsers"',
     },
     {
       src: 'https://chii.liriliri.io/logo.png',

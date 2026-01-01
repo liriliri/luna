@@ -54,13 +54,16 @@
 
 .name {
   max-width: 100%;
-  white-space: nowrap;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: #{$border-radius-s-m}px;
   padding: 2px;
   font-size: #{$font-size-s-m}px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
 }
 
 @each $theme in ('light', 'dark') {

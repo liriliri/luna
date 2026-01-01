@@ -1,3 +1,8 @@
+## 1.8.4 (1 Jan 2026)
+
+* fix: end tag expandability [#28](https://github.com/liriliri/luna/pull/28)
+* fix: treat img tag src as link [#29](https://github.com/liriliri/luna/pull/29)
+
 ## 1.8.3 (8 May 2025)
 
 * fix: horizontal scroll

@@ -101,7 +101,7 @@
   "dom-viewer": {
     "icon": true,
     "react": true,
-    "version": "1.8.3",
+    "version": "1.8.4",
     "style": true,
     "test": true,
     "install": false,

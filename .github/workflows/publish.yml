@@ -28,4 +28,5 @@ jobs:
       - working-directory: dist
         run: |
           cd ${{ github.event.inputs.component }}
+          npm i -g npm@11
           npm publish

@@ -13,7 +13,7 @@ interface IScrollbar {
   isOverflow: boolean
 }
 
-export interface IOptions extends IComponentOptions {}
+export type IOptions = IComponentOptions
 
 /**
  * Custom scrollbar.

@@ -55,11 +55,17 @@
 .name {
   max-width: 120%;
   text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border-radius: #{$border-radius-s-m}px;
-  padding: 2px;
+  overflow: visible;
   font-size: #{$font-size-s-m}px;
+  height: 1.2em;
+}
+
+.name-wrapper {
+  padding: 2px;
+  border-radius: #{$border-radius-s-m}px;
+  overflow: hidden;
+  line-height: 1.2em;
+  text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -76,8 +82,15 @@
           @include theme-var(background-color, color-border, $theme);
         }
         .name {
-          @include theme-var(background-color, color-primary, $theme);
-          @include theme-var(color, color-white, $theme);
+          .name-wrapper {
+            @include theme-vars(
+              (
+                background-color: color-primary,
+                color: color-white,
+              ),
+              $theme
+            );
+          }
         }
       }
     }

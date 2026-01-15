@@ -57,18 +57,17 @@
   text-align: center;
   overflow: visible;
   font-size: #{$font-size-s-m}px;
-  height: 1.5em;
+  height: 1.4em;
 }
 
 .name-wrapper {
   overflow: hidden;
-  line-height: 1.5em;
+  line-height: 1.4em;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   line-clamp: 2;
-  padding: 2px;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }

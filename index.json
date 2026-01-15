@@ -146,7 +146,7 @@
   "icon-list": {
     "react": true,
     "dependencies": ["drag-selector"],
-    "version": "0.2.11",
+    "version": "0.2.12",
     "style": true,
     "icon": false,
     "test": true,

@@ -258,6 +258,7 @@ export default class IconList extends Component<IOptions> {
         gap: `${GAP}px ${gap}px`,
         paddingLeft: `${gap / 2}px`,
         paddingRight: `${gap / 2}px`,
+        paddingBottom: `${GAP}px`,
       })
     } else {
       $iconContainer.rmClass(c('grid'))

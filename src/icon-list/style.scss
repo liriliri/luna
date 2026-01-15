@@ -53,25 +53,30 @@
 }
 
 .name {
-  max-width: 120%;
+  width: 120%;
   text-align: center;
   overflow: visible;
   font-size: #{$font-size-s-m}px;
-  height: 1.2em;
+  height: 1.4em;
 }
 
 .name-wrapper {
-  padding: 2px;
-  border-radius: #{$border-radius-s-m}px;
   overflow: hidden;
-  line-height: 1.2em;
+  line-height: 1.4em;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   line-clamp: 2;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+  & > span {
+    display: inline;
+    padding: 2px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    border-radius: #{$border-radius-s-m}px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
 }
 
 @each $theme in ('light', 'dark') {
@@ -82,7 +87,7 @@
           @include theme-var(background-color, color-border, $theme);
         }
         .name {
-          .name-wrapper {
+          .name-wrapper > span {
             @include theme-vars(
               (
                 background-color: color-primary,

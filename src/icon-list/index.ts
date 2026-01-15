@@ -329,7 +329,9 @@ export class Icon {
         <img src="${src}" draggable="false"></img>
       </div>
       <div class="name" title="${escape(name)}">
-        <span class="name-wrapper">${name}</span>
+        <div class="name-wrapper">
+          <span>${name}</span>
+        </div>
       </div>
     `)
     )

@@ -55,12 +55,24 @@ win.show()
 
 ### maximize(): void
 
+`win.maximize()`
+
 Maximize the window.
 
 ### minimize(): void
+
+`win.minimize()`
 
 Minimize the window.
 
 ### show(): void
 
+`win.show()`
+
 Show the window.
+
+### destroy(): void
+
+`win.destroy()`
+
+Remove the window.

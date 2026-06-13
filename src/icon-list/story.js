@@ -106,6 +106,7 @@ function getIcons() {
     {
       src: '/pic4.png',
       name: 'A_very_longlonglonglonglong name',
+      className: 'custom-img-class',
     },
     {
       src: 'https://eruda.liriliri.io/logo.png',

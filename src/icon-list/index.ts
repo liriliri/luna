@@ -304,10 +304,11 @@ export class Icon {
 
     this.render()
     this.$icon = this.$container.find(iconList.c('.icon'))
+    const $img = this.$icon.find('img')
     if (data.className) {
-      this.$icon.addClass(data.className)
+      $img.addClass(data.className)
     }
-    this.$icon.find('img').css(data.style || {})
+    $img.css(data.style || {})
   }
   setSize(size: number) {
     const width = `${size + 16}px`

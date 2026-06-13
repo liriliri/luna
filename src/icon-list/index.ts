@@ -299,15 +299,14 @@ export class Icon {
     ;(this.container as any).icon = this
     this.$container = $(this.container)
     this.$container.addClass(iconList.c('item'))
-    if (data.className) {
-      this.$container.addClass(data.className)
-    }
-
     this.iconList = iconList
     this.data = data
 
     this.render()
     this.$icon = this.$container.find(iconList.c('.icon'))
+    if (data.className) {
+      this.$icon.addClass(data.className)
+    }
     this.$icon.find('img').css(data.style || {})
   }
   setSize(size: number) {

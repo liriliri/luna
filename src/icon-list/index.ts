@@ -35,6 +35,7 @@ export interface IIcon {
   /** Title shown on hover. */
   title?: string
   style?: types.PlainObj<any>
+  className?: string
 }
 
 const GAP = 20
@@ -298,6 +299,9 @@ export class Icon {
     ;(this.container as any).icon = this
     this.$container = $(this.container)
     this.$container.addClass(iconList.c('item'))
+    if (data.className) {
+      this.$container.addClass(data.className)
+    }
 
     this.iconList = iconList
     this.data = data

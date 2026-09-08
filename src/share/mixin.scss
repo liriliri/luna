@@ -14,7 +14,9 @@
 
 $theme-variables: meta.module-variables(theme);
 @mixin theme-var($name, $value, $theme: 'light') {
-  $suffix: if(sass($theme == "dark"): "-dark"; else: "");
+  $suffix: if(
+    sass($theme == 'dark'): '-dark' ; else: '',
+  );
   #{$name}: map.get($theme-variables, #{$value}#{$suffix});
   #{$name}: var(
     --luna-#{$value},

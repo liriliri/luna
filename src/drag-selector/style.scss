@@ -18,9 +18,11 @@
     .select-area {
       @include theme-var(border-color, color-primary, $theme);
       background-color: if(
-        $theme == 'light',
-        color.change($color-primary, $alpha: 0.2),
-        color.change($color-primary-dark, $alpha: 0.2)
+        sass($theme == 'light'):
+          color.change($color-primary, $alpha: 0.2)
+          ;
+          else:
+          color.change($color-primary-dark, $alpha: 0.2)
       );
     }
   }

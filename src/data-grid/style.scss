@@ -124,10 +124,10 @@
     .data-container {
       .node.selected,
       .node.selectable:hover {
-        background-color: if($theme == 'light', #ddd, #393939);
+        background-color: if(sass($theme == 'light'): #ddd; else: #393939);
       }
       tr:nth-child(even) {
-        background-color: if($theme == 'light', #f2f7fd, #0b2544);
+        background-color: if(sass($theme == 'light'): #f2f7fd; else: #0b2544);
       }
     }
     &:focus {

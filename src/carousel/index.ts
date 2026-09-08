@@ -125,7 +125,7 @@ export default class Carousel extends Component<IOptions> {
     super.destroy()
   }
   getSlides() {
-    return toArr(this.body.children)
+    return toArr(this.body.children) as HTMLElement[]
   }
   private slide(order: string, nextIdx?: number) {
     if (this.isSliding) {

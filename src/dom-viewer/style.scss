@@ -89,31 +89,31 @@
     }
     .html-tag,
     .tag-name {
-      color: if($dark, #5db0d7, #881280);
+      color: if(sass($dark): #5db0d7; else: #881280);
     }
     .attribute-name {
-      color: if($dark, #9bbbdc, #994500);
+      color: if(sass($dark): #9bbbdc; else: #994500);
     }
     .attribute-value {
-      color: if($dark, #f29766, #1a1aa6);
+      color: if(sass($dark): #f29766; else: #1a1aa6);
     }
     .html-comment {
-      color: if($dark, #898989, #236e25);
+      color: if(sass($dark): #898989; else: #236e25);
     }
     .tree-item {
       &:hover {
         .selection {
-          background: if($dark, #083c69, #e8eaed);
+          background: if(sass($dark): #083c69; else: #e8eaed);
         }
       }
       &.selected {
         .selection {
-          background: if($dark, #454545, #e0e0e0);
+          background: if(sass($dark): #454545; else: #e0e0e0);
         }
       }
       &.selected:focus {
         .selection {
-          background: if($dark, #073d69, #cfe8fc);
+          background: if(sass($dark): #073d69; else: #cfe8fc);
         }
       }
     }

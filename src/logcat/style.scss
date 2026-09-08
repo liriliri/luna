@@ -109,9 +109,7 @@
       @for $i from 6 through 10 {
         .color-#{$color}-#{$i} {
           $variable-name: if(
-            $theme == 'dark',
-            #{$color}-#{$i}-dark,
-            #{$color}-#{$i}
+            sass($theme == 'dark'): #{$color}-#{$i}-dark; else: #{$color}-#{$i},
           );
           color: map.get($theme-variables, $variable-name);
         }

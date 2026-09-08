@@ -31,7 +31,7 @@ const emptyHighlightStyle = {
 /** IOptions */
 export interface IOptions extends IComponentOptions {
   /** Html element to navigate. */
-  node?: ChildNode
+  node?: Node
   /** Predicate function which removes the matching child nodes. */
   ignore?: types.AnyFn
   /** Predicate function which removes the matching node attributes. */
@@ -58,7 +58,7 @@ export interface IOptions extends IComponentOptions {
  */
 export default class DomViewer extends Component<IOptions> {
   isExpanded = false
-  childNodes: ChildNode[] = []
+  childNodes: Node[] = []
   childNodeDomViewers: DomViewer[] = []
   endTagDomViewer?: DomViewer
   private $tag: $.$
@@ -90,7 +90,7 @@ export default class DomViewer extends Component<IOptions> {
     }
   }
   /** Select given node. */
-  select(node?: ChildNode) {
+  select(node?: Node) {
     const { c, options } = this
 
     if (!node || (node && options.node === node)) {
@@ -404,14 +404,14 @@ export default class DomViewer extends Component<IOptions> {
   private getChildNodes() {
     const { rootContainer, ignore } = this.options
     const node = this.options.node as HTMLElement
-    let childNodes = toArr(node.childNodes)
+    let childNodes: Node[] = toArr(node.childNodes)
     childNodes = filter(childNodes, (child) => {
       if (
         child.nodeType === Node.TEXT_NODE ||
         child.nodeType === Node.COMMENT_NODE
       ) {
         const value = child.nodeValue
-        if (trim(value) === '') {
+        if (trim(value || '') === '') {
           return false
         }
       }
@@ -583,7 +583,7 @@ export default class DomViewer extends Component<IOptions> {
       <span class="html-tag">&lt;<span class="tag-name">${tagName}</span>${attributes}&gt;</span>${tail}
       <span class="selection"></span>`)
   }
-  private renderTextNode(node: ChildNode) {
+  private renderTextNode(node: Node) {
     const { c } = this
     const value = node.nodeValue as string
 

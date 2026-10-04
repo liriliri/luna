@@ -242,7 +242,7 @@ export default class IconList extends Component<IOptions> {
       case keyCode(hotkey.open):
         if (this.selectedIcon) {
           e.preventDefault()
-          this.emit('dblclick', event, this.selectedIcon)
+          this.emit('click', event, this.selectedIcon)
         }
         return
       default:

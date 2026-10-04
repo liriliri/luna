@@ -44,6 +44,7 @@ iconList.setIcons([
 ## Configuration
 
 * filter(string | RegExp | AnyFn): Icon filter.
+* hotkey(boolean | IHotkey): Enable hotkey or custom hotkey bindings.
 * multiSelections(boolean): Allow multiple selections.
 * selectable(boolean): Whether icon is selectable.
 * size(number): Icon size.
@@ -58,11 +59,24 @@ Append icon.
 
 Clear all icons.
 
+### focus(): void
+
+Focus icon list.
+
 ### setIcons(icons: IIcon[]): void
 
 Set icons.
 
 ## Types
 
+### IHotkey
+
+* down(string): Move selection down.
+* left(string): Move selection left.
+* open(string): Open selected icon.
+* right(string): Move selection right.
+* up(string): Move selection up.
+
 ### IIcon
 
+* title(string): Title shown on hover.

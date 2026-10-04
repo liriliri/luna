@@ -10,7 +10,7 @@ import { red5 } from '../share/theme'
 const def = story(
   'icon-list',
   (container) => {
-    const { size, filter, selectable, multiSelections } = createKnobs()
+    const { size, filter, selectable, multiSelections, hotkey } = createKnobs()
 
     $(container).css('height', 400)
 
@@ -19,6 +19,7 @@ const def = story(
       filter,
       selectable,
       multiSelections,
+      hotkey,
     })
     iconList.setIcons(getIcons())
 
@@ -44,7 +45,7 @@ const def = story(
     readme,
     source: __STORY__,
     ReactComponent({ theme }) {
-      const { size, filter, selectable } = createKnobs()
+      const { size, filter, selectable, hotkey } = createKnobs()
 
       return (
         <LunaIconList
@@ -67,6 +68,7 @@ const def = story(
           filter={filter}
           theme={theme}
           selectable={selectable}
+          hotkey={hotkey}
           size={size}
           icons={getIcons()}
         />
@@ -145,11 +147,14 @@ function createKnobs() {
 
   const multiSelections = boolean('Multi Selections', false)
 
+  const hotkey = boolean('Hotkey', true)
+
   return {
     size,
     filter,
     selectable,
     multiSelections,
+    hotkey,
   }
 }
 

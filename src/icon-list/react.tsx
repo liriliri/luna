@@ -11,6 +11,7 @@ interface IIconListProps extends IOptions {
   onClick?: (e: MouseEvent, icon: Icon) => void
   onDoubleClick?: (e: MouseEvent, icon: Icon) => void
   onContextMenu?: (e: PointerEvent, icon: Icon) => void
+  onCreate?: (iconList: IconList) => void
   icons: Array<IIcon>
 }
 
@@ -24,7 +25,9 @@ const LunaIconList: FC<IIconListProps> = (props) => {
       size: props.size,
       selectable: props.selectable,
       filter: props.filter,
+      hotkey: props.hotkey,
     })
+    props.onCreate && props.onCreate(iconList.current)
 
     return () => iconList.current?.destroy()
   }, [])
@@ -56,9 +59,12 @@ const LunaIconList: FC<IIconListProps> = (props) => {
     props.onContextMenu
   )
 
-  each(['theme', 'size', 'selectable', 'filter'], (key: keyof IOptions) => {
-    useOption<IconList, IOptions>(iconList, key, props[key])
-  })
+  each(
+    ['theme', 'size', 'selectable', 'filter', 'hotkey'],
+    (key: keyof IOptions) => {
+      useOption<IconList, IOptions>(iconList, key, props[key])
+    }
+  )
 
   return (
     <div

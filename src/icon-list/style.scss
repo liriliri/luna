@@ -6,6 +6,7 @@
   padding-top: #{$padding-x-s}px;
   padding-bottom: #{$padding-x-s}px;
   overflow-x: hidden;
+  outline: none;
   @include overflow-auto(y);
   @include component(true);
 }

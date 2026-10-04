@@ -15,6 +15,23 @@ import lowerCase from 'licia/lowerCase'
 import ResizeSensor from 'licia/ResizeSensor'
 import escape from 'licia/escape'
 import LunaDragSelector from 'luna-drag-selector'
+import keyCode from 'licia/keyCode'
+import isObj from 'licia/isObj'
+import defaults from 'licia/defaults'
+
+/** IHotkey */
+export interface IHotkey {
+  /** Move selection left. */
+  left?: string
+  /** Move selection right. */
+  right?: string
+  /** Move selection up. */
+  up?: string
+  /** Move selection down. */
+  down?: string
+  /** Open selected icon. */
+  open?: string
+}
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -26,6 +43,16 @@ export interface IOptions extends IComponentOptions {
   selectable?: boolean
   /** Allow multiple selections. */
   multiSelections?: boolean
+  /** Enable hotkey or custom hotkey bindings. */
+  hotkey?: boolean | IHotkey
+}
+
+const DEFAULT_HOTKEY: Required<IHotkey> = {
+  left: 'left',
+  right: 'right',
+  up: 'up',
+  down: 'down',
+  open: 'enter',
 }
 
 /** IIcon */
@@ -64,6 +91,7 @@ export default class IconList extends Component<IOptions> {
   private iconContainer: HTMLElement
   private selectedIcon: Icon | null = null
   private dragSelector: LunaDragSelector | null = null
+  private columnCount = 1
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'icon-list' }, options)
 
@@ -76,6 +104,7 @@ export default class IconList extends Component<IOptions> {
       size: 48,
       selectable: true,
       multiSelections: false,
+      hotkey: true,
     })
 
     this.initTpl()
@@ -87,11 +116,17 @@ export default class IconList extends Component<IOptions> {
       this.addSubComponent(this.dragSelector)
     }
 
+    this.updateTabIndex()
     this.bindEvent()
   }
   destroy() {
+    this.$container.rmAttr('tabindex')
     super.destroy()
     this.resizeSensor.destroy()
+  }
+  /** Focus icon list. */
+  focus() {
+    this.container.focus()
   }
   /** Set icons. */
   setIcons(icons: Array<IIcon>) {
@@ -162,6 +197,70 @@ export default class IconList extends Component<IOptions> {
       this.emit('select', icon)
     }
   }
+  private getHotkey(): Required<IHotkey> | false {
+    const { hotkey } = this.options
+    if (!hotkey) {
+      return false
+    }
+    return defaults(
+      isObj(hotkey) ? { ...(hotkey as IHotkey) } : {},
+      DEFAULT_HOTKEY
+    )
+  }
+  private updateTabIndex = () => {
+    if (this.options.hotkey) {
+      this.$container.attr('tabindex', '0')
+    } else {
+      this.$container.rmAttr('tabindex')
+    }
+  }
+  private onKeydown = (e: any) => {
+    const hotkey = this.getHotkey()
+    if (!hotkey || !this.options.selectable || !this.displayIcons.length) {
+      return
+    }
+
+    const event: KeyboardEvent = e.origEvent
+    let idx = this.selectedIcon
+      ? this.displayIcons.indexOf(this.selectedIcon)
+      : -1
+    let delta = 0
+
+    switch (event.keyCode) {
+      case keyCode(hotkey.left):
+        delta = -1
+        break
+      case keyCode(hotkey.right):
+        delta = 1
+        break
+      case keyCode(hotkey.up):
+        delta = -this.columnCount
+        break
+      case keyCode(hotkey.down):
+        delta = this.columnCount
+        break
+      case keyCode(hotkey.open):
+        if (this.selectedIcon) {
+          e.preventDefault()
+          this.emit('dblclick', event, this.selectedIcon)
+        }
+        return
+      default:
+        return
+    }
+
+    e.preventDefault()
+    if (idx < 0) {
+      idx = 0
+    } else {
+      idx += delta
+    }
+    if (idx < 0 || idx >= this.displayIcons.length) {
+      return
+    }
+    this.selectIcon(this.displayIcons[idx])
+    this.displayIcons[idx].container.scrollIntoView({ block: 'nearest' })
+  }
   private filterIcon(icon: Icon) {
     let { filter } = this.options
     if (filter) {
@@ -193,6 +292,7 @@ export default class IconList extends Component<IOptions> {
         e.stopPropagation()
         const item = this.parentNode
         const icon = item.icon
+        self.focus()
         self.selectIcon(icon)
         setTimeout(() => {
           if (item.hasDoubleClick) {
@@ -215,11 +315,14 @@ export default class IconList extends Component<IOptions> {
         e.preventDefault()
         e.stopPropagation()
         const icon = this.parentNode.icon
+        self.focus()
         self.selectIcon(icon)
         self.emit('contextmenu', e.origEvent, icon)
       })
 
-    this.$container.on('click', () => this.selectIcon(null))
+    this.$container
+      .on('click', () => this.selectIcon(null))
+      .on('keydown', this.onKeydown)
 
     this.on('changeOption', (name) => {
       switch (name) {
@@ -241,6 +344,9 @@ export default class IconList extends Component<IOptions> {
           }
           this.render()
           break
+        case 'hotkey':
+          this.updateTabIndex()
+          break
       }
     })
   }
@@ -249,9 +355,10 @@ export default class IconList extends Component<IOptions> {
     const containerWidth = $iconContainer.offset().width
 
     const size = this.options.size + 16
-    const columnCount = Math.floor(containerWidth / (size + GAP))
+    const columnCount = Math.max(1, Math.floor(containerWidth / (size + GAP)))
 
     if (this.icons.length > columnCount) {
+      this.columnCount = columnCount
       const gap = Math.floor(
         (containerWidth - columnCount * size) / columnCount
       )
@@ -264,6 +371,7 @@ export default class IconList extends Component<IOptions> {
         paddingBottom: `${GAP}px`,
       })
     } else {
+      this.columnCount = this.displayIcons.length || 1
       $iconContainer.rmClass(c('grid'))
       $iconContainer.css({
         gap: '0',

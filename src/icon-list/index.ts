@@ -128,6 +128,19 @@ export default class IconList extends Component<IOptions> {
   focus() {
     this.container.focus()
   }
+  /** Select icon by index. */
+  select(index = 0): boolean {
+    if (
+      !this.options.selectable ||
+      index < 0 ||
+      index >= this.displayIcons.length
+    ) {
+      return false
+    }
+    this.selectIcon(this.displayIcons[index])
+    this.displayIcons[index].container.scrollIntoView({ block: 'nearest' })
+    return true
+  }
   /** Set icons. */
   setIcons(icons: Array<IIcon>) {
     this.selectIcon(null)
@@ -255,11 +268,7 @@ export default class IconList extends Component<IOptions> {
     } else {
       idx += delta
     }
-    if (idx < 0 || idx >= this.displayIcons.length) {
-      return
-    }
-    this.selectIcon(this.displayIcons[idx])
-    this.displayIcons[idx].container.scrollIntoView({ block: 'nearest' })
+    this.select(idx)
   }
   private filterIcon(icon: Icon) {
     let { filter } = this.options

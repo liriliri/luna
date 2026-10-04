@@ -63,6 +63,10 @@ Clear all icons.
 
 Focus icon list.
 
+### select(index?: number): boolean
+
+Select icon by index.
+
 ### setIcons(icons: IIcon[]): void
 
 Set icons.

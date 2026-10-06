@@ -13,11 +13,12 @@ const def = story(
       height: '200px',
     })
 
-    const { listView, filter, columns } = createKnobs()
+    const { listView, filter, columns, multiSelections } = createKnobs()
 
     const fileList = new FileList(container, {
       listView,
       filter,
+      multiSelections,
       files: getFiles(),
       columns,
     })
@@ -45,13 +46,14 @@ const def = story(
     i18n: FileList.i18n,
     story: __STORY__,
     ReactComponent({ theme }) {
-      const { listView, filter, columns } = createKnobs()
+      const { listView, filter, columns, multiSelections } = createKnobs()
 
       return (
         <LunaFileList
           theme={theme}
           filter={filter}
           columns={columns}
+          multiSelections={multiSelections}
           style={{
             height: 200,
           }}
@@ -139,11 +141,13 @@ function randomDate() {
 function createKnobs() {
   const filter = text('Filter', '')
   const listView = boolean('List View', false)
+  const multiSelections = boolean('Multi Selections', false)
   const columns = object('Columns', ['name', 'mode', 'mtime', 'type', 'size'])
 
   return {
     filter,
     listView,
+    multiSelections,
     columns,
   }
 }

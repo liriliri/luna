@@ -24,6 +24,7 @@ import statMode from 'stat-mode'
 import isStr from 'licia/isStr'
 import isUndef from 'licia/isUndef'
 import isEqual from 'licia/isEqual'
+import isArr from 'licia/isArr'
 
 const folderIcon = asset['folder.svg']
 const fileIcon = asset['file.svg']
@@ -40,6 +41,8 @@ export interface IOptions extends IComponentOptions {
   columns?: Column[]
   /** File filter. */
   filter?: string | RegExp | types.AnyFn
+  /** Allow multiple selections. */
+  multiSelections?: boolean
 }
 
 /** IFile */
@@ -66,9 +69,13 @@ export interface IFile {
  * @example
  * const fileList = new LunaFileList(container, {
  *  listView: true,
+ *  multiSelections: true,
  *  files: [
  *   { name: 'file1.txt', mtime: new Date(), size: 1024 },
  *  ],
+ * })
+ * fileList.on('select', (files) => {
+ *   console.log(files)
  * })
  */
 export default class FileList extends Component<IOptions> {
@@ -104,6 +111,7 @@ export default class FileList extends Component<IOptions> {
       files: [],
       columns: defaultColumns,
       listView: false,
+      multiSelections: false,
     })
     if (isEmpty(this.options.columns)) {
       this.options.columns = defaultColumns
@@ -152,12 +160,14 @@ export default class FileList extends Component<IOptions> {
         (column: keyof typeof COLUMNS) => COLUMNS[column]
       ),
       selectable: true,
+      multiSelections: this.options.multiSelections,
     })
     this.addSubComponent(this.dataGrid)
 
     const iconListContainer = this.find('.icon-view').get(0) as HTMLElement
     this.iconList = new LunaIconList(iconListContainer, {
       size: 48,
+      multiSelections: this.options.multiSelections,
     })
     this.addSubComponent(this.iconList)
 
@@ -177,6 +187,19 @@ export default class FileList extends Component<IOptions> {
   destroy() {
     super.destroy()
     this.resizeSensor.destroy()
+  }
+  /** Get selected files. */
+  getSelected(): IFile[] {
+    const items: any[] = this.options.listView
+      ? this.dataGrid.getSelected()
+      : this.iconList.getSelected()
+    return map(items, (item) => this.getFile(item))
+  }
+  private getFile(item: any): IFile {
+    return item.data.file
+  }
+  private toFiles(item: any): IFile | IFile[] {
+    return isArr(item) ? map(item, (i) => this.getFile(i)) : this.getFile(item)
   }
   private setFilter(filter: string | RegExp | types.AnyFn) {
     if (isFn(filter)) {
@@ -295,14 +318,14 @@ export default class FileList extends Component<IOptions> {
     each(['select', 'deselect'], (event) => {
       this.iconList.on(event, (icon) => {
         if (event === 'select') {
-          this.emit(event, icon.data.file)
+          this.emit(event, this.toFiles(icon))
         } else {
           this.emit(event)
         }
       })
       this.dataGrid.on(event, (node) => {
         if (event === 'select') {
-          this.emit(event, node.data.file)
+          this.emit(event, this.toFiles(node))
         } else {
           this.emit(event)
         }
@@ -310,10 +333,10 @@ export default class FileList extends Component<IOptions> {
     })
     each(['click', 'dblclick', 'contextmenu'], (event) => {
       this.iconList.on(event, (e, icon) => {
-        this.emit(event, e, icon.data.file)
+        this.emit(event, e, this.toFiles(icon))
       })
       this.dataGrid.on(event, (e, node) => {
-        this.emit(event, e, node.data.file)
+        this.emit(event, e, this.toFiles(node))
       })
     })
 
@@ -337,6 +360,10 @@ export default class FileList extends Component<IOptions> {
           break
         case 'filter':
           this.setFilter(val)
+          break
+        case 'multiSelections':
+          this.iconList.setOption('multiSelections', val)
+          this.dataGrid.setOption('multiSelections', val)
           break
       }
     })

@@ -25,4 +25,21 @@ test('file-list', (container) => {
       ],
     })
   })
+
+  it('multi selections', function () {
+    const fileList = new FileList(container, {
+      multiSelections: true,
+      files: [
+        { name: 'a.txt', mtime: new Date(), size: 1 },
+        { name: 'b.txt', mtime: new Date(), size: 2 },
+        { name: 'c.txt', mtime: new Date(), size: 3 },
+      ],
+    })
+
+    expect(fileList.getOption('multiSelections')).to.be.true
+    expect(fileList.getSelected()).to.have.lengthOf(0)
+
+    fileList.setOption('listView', true)
+    expect(fileList.getSelected()).to.have.lengthOf(0)
+  })
 })

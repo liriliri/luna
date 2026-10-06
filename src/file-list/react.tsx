@@ -6,11 +6,11 @@ import { useEvent, useOption, usePrevious } from '../share/hooks'
 interface IFileListProps extends IOptions {
   className?: string
   style?: React.CSSProperties
-  onSelect?: (file: IFile) => void
+  onSelect?: (file: IFile | IFile[]) => void
   onDeselect?: () => void
-  onClick?: (e: MouseEvent, file: IFile) => void
-  onDoubleClick?: (e: MouseEvent, file: IFile) => void
-  onContextMenu?: (e: PointerEvent, file?: IFile) => void
+  onClick?: (e: MouseEvent, file: IFile | IFile[]) => void
+  onDoubleClick?: (e: MouseEvent, file: IFile | IFile[]) => void
+  onContextMenu?: (e: PointerEvent, file?: IFile | IFile[]) => void
 }
 
 const LunaFileList: FC<IFileListProps> = (props) => {
@@ -24,6 +24,7 @@ const LunaFileList: FC<IFileListProps> = (props) => {
       listView: props.listView,
       filter: props.filter,
       columns: props.columns,
+      multiSelections: props.multiSelections,
       theme: props.theme,
     })
 
@@ -51,9 +52,12 @@ const LunaFileList: FC<IFileListProps> = (props) => {
     props.onContextMenu
   )
 
-  each(['theme', 'filter', 'files', 'listView'], (key: keyof IOptions) => {
-    useOption<FileList, IOptions>(fileListRef, key, props[key])
-  })
+  each(
+    ['theme', 'filter', 'files', 'listView', 'multiSelections'],
+    (key: keyof IOptions) => {
+      useOption<FileList, IOptions>(fileListRef, key, props[key])
+    }
+  )
 
   return (
     <div

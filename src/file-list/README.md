@@ -43,9 +43,13 @@ import LunaFileList from 'luna-file-list'
 ```javascript
 const fileList = new LunaFileList(container, {
  listView: true,
+ multiSelections: true,
  files: [
   { name: 'file1.txt', mtime: new Date(), size: 1024 },
  ],
+})
+fileList.on('select', (files) => {
+  console.log(files)
 })
 ```
 
@@ -55,6 +59,13 @@ const fileList = new LunaFileList(container, {
 * files(IFile[]): File list.
 * filter(string | RegExp | AnyFn): File filter.
 * listView(boolean): Show files in list view.
+* multiSelections(boolean): Allow multiple selections.
+
+## Api
+
+### getSelected(): IFile[]
+
+Get selected files.
 
 ## Types
 

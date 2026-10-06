@@ -13,7 +13,6 @@ import ResizeSensor from 'licia/ResizeSensor'
 import throttle from 'licia/throttle'
 import defaults from 'licia/defaults'
 import naturalSort from 'licia/naturalSort'
-import isNull from 'licia/isNull'
 import isFn from 'licia/isFn'
 import isRegExp from 'licia/isRegExp'
 import isArr from 'licia/isArr'
@@ -69,6 +68,8 @@ export interface IOptions extends IComponentOptions {
   filter?: string | RegExp | types.AnyFn
   /** Default selectable for all nodes. */
   selectable?: boolean
+  /** Allow multiple selections. */
+  multiSelections?: boolean
   /** Whether to show context menu on header. */
   headerContextMenu?: boolean
 }
@@ -99,11 +100,16 @@ const ROW_HEIGHT = 20
  *        title: 'Site',
  *      },
  *   ],
+ *   selectable: true,
+ *   multiSelections: true,
  * })
  *
  * dataGrid.append({
  *   name: 'Runoob',
  *   site: 'www.runoob.com',
+ * })
+ * dataGrid.on('select', (nodes) => {
+ *   console.log(nodes)
  * })
  */
 export default class DataGrid extends Component<IOptions> {
@@ -130,7 +136,8 @@ export default class DataGrid extends Component<IOptions> {
   private colWidthsInitialized = false
   private colMap: types.PlainObj<IColumn> = {}
   private sortId?: string
-  private selectedNode: DataGridNode | null = null
+  private selectedNodes: DataGridNode[] = []
+  private selectionAnchor: DataGridNode | null = null
   private isAscending = true
   private sorted = false
   private colWidths: number[] = []
@@ -169,6 +176,7 @@ export default class DataGrid extends Component<IOptions> {
       maxHeight: Infinity,
       filter: '',
       selectable: false,
+      multiSelections: false,
       headerContextMenu: false,
     })
     const { columns, minHeight, maxHeight } = this.options
@@ -209,13 +217,18 @@ export default class DataGrid extends Component<IOptions> {
     this.resizeSensor.destroy()
     this.$container.rmAttr('tabindex')
   }
+  /** Get selected nodes. */
+  getSelected(): DataGridNode[] {
+    return this.selectedNodes.slice()
+  }
   /** Remove row data. */
   remove(node: DataGridNode) {
     const { nodes, displayNodes } = this
     remove(nodes, (n) => n === node)
     remove(displayNodes, (n) => n === node)
-    if (node === this.selectedNode) {
-      this.selectNode(null)
+    if (contain(this.selectedNodes, node)) {
+      this.setSelectedNodes(filter(this.selectedNodes, (n) => n !== node))
+      this.ensureSelectionAnchor()
     }
     this.renderData()
     this.updateHeight()
@@ -299,9 +312,10 @@ export default class DataGrid extends Component<IOptions> {
         }
       })
 
-      if (this.selectedNode && !contain(nodes, this.selectedNode)) {
-        this.selectNode(null)
-      }
+      this.setSelectedNodes(
+        filter(this.selectedNodes, (n) => contain(nodes, n))
+      )
+      this.ensureSelectionAnchor()
 
       this.nodes = nodes
       this.displayNodes = displayNodes
@@ -339,7 +353,88 @@ export default class DataGrid extends Component<IOptions> {
   private clearData() {
     this.nodes = []
     this.displayNodes = []
-    this.selectNode(null)
+    this.setSelectedNodes([])
+    this.selectionAnchor = null
+  }
+  private getActiveNode(): DataGridNode | null {
+    const { selectedNodes } = this
+    return selectedNodes.length ? selectedNodes[selectedNodes.length - 1] : null
+  }
+  private getEventNodes(node: DataGridNode): DataGridNode | DataGridNode[] {
+    return this.options.multiSelections ? this.getSelected() : node
+  }
+  private ensureSelectionAnchor() {
+    if (
+      this.selectionAnchor &&
+      !contain(this.selectedNodes, this.selectionAnchor)
+    ) {
+      this.selectionAnchor = this.getActiveNode()
+    }
+  }
+  private isSameSelection(nodes: DataGridNode[]) {
+    const { selectedNodes } = this
+    if (selectedNodes.length !== nodes.length) {
+      return false
+    }
+    for (let i = 0, len = nodes.length; i < len; i++) {
+      if (selectedNodes[i] !== nodes[i]) {
+        return false
+      }
+    }
+    return true
+  }
+  private selectSingle(node: DataGridNode) {
+    this.setSelectedNodes([node])
+    this.selectionAnchor = node
+  }
+  private setSelectedNodes(nodes: DataGridNode[]) {
+    nodes = filter(nodes, (node) => node.selectable)
+
+    if (this.isSameSelection(nodes)) {
+      return
+    }
+
+    const prevEmpty = this.selectedNodes.length === 0
+    each(this.selectedNodes, (node) => node.deselect())
+    each(nodes, (node) => node.select())
+    this.selectedNodes = nodes.slice()
+    this.emitSelectionChange(prevEmpty)
+  }
+  private emitSelectionChange(prevEmpty: boolean) {
+    if (this.selectedNodes.length === 0) {
+      if (!prevEmpty) {
+        this.emit('deselect')
+      }
+      return
+    }
+    this.emit(
+      'select',
+      this.options.multiSelections ? this.getSelected() : this.getActiveNode()
+    )
+  }
+  private toggleNode(node: DataGridNode) {
+    let nodes = this.selectedNodes.slice()
+    if (contain(nodes, node)) {
+      nodes = filter(nodes, (item) => item !== node)
+    } else {
+      nodes.push(node)
+      this.selectionAnchor = node
+    }
+    this.setSelectedNodes(nodes)
+    this.ensureSelectionAnchor()
+  }
+  private selectRangeTo(node: DataGridNode) {
+    const { displayNodes } = this
+    const anchor = this.selectionAnchor || this.getActiveNode() || node
+    const start = displayNodes.indexOf(anchor)
+    const end = displayNodes.indexOf(node)
+    if (start < 0 || end < 0) {
+      this.selectSingle(node)
+      return
+    }
+    this.setSelectedNodes(
+      displayNodes.slice(Math.min(start, end), Math.max(start, end) + 1)
+    )
   }
   private updateHeight() {
     const { $fillerRow, $container } = this
@@ -375,28 +470,6 @@ export default class DataGrid extends Component<IOptions> {
     }
 
     this.$dataContainer.css({ height })
-  }
-  private selectNode(node: DataGridNode | null) {
-    if (!isNull(node) && !node?.selectable) {
-      return
-    }
-
-    if (this.selectedNode === node) {
-      return
-    }
-
-    if (this.selectedNode) {
-      this.selectedNode.deselect()
-      this.selectedNode = null
-      if (isNull(node)) {
-        this.emit('deselect')
-      }
-    }
-    if (!isNull(node)) {
-      this.selectedNode = node
-      node.select()
-      this.emit('select', node)
-    }
   }
   private getRightIdx(leftIdx: number) {
     const { columns } = this.options
@@ -476,19 +549,52 @@ export default class DataGrid extends Component<IOptions> {
     const self = this
 
     $tableBody
+      .on(pointerEvent('down'), c('.node'), function (this: any, e: any) {
+        const node = this.dataGridNode as DataGridNode
+        const event: MouseEvent = e.origEvent
+        if (
+          node.selectable &&
+          self.options.multiSelections &&
+          (event.shiftKey || event.metaKey || event.ctrlKey)
+        ) {
+          e.preventDefault()
+        }
+      })
       .on('click', c('.node'), function (this: any, e: any) {
-        self.selectNode(this.dataGridNode)
+        const node = this.dataGridNode as DataGridNode
+        const event: MouseEvent = e.origEvent
+        const multi = self.options.multiSelections
+        let deferCollapse = false
+        if (node.selectable) {
+          if (multi && (event.metaKey || event.ctrlKey)) {
+            self.toggleNode(node)
+          } else if (multi && event.shiftKey) {
+            self.selectRangeTo(node)
+          } else if (
+            multi &&
+            self.selectedNodes.length > 1 &&
+            contain(self.selectedNodes, node)
+          ) {
+            deferCollapse = true
+          } else {
+            self.selectSingle(node)
+          }
+        }
         setTimeout(() => {
           if (this.hasDoubleClick) {
             return
           }
-          self.emit('click', e.origEvent, this.dataGridNode)
+          if (deferCollapse) {
+            self.selectSingle(node)
+          }
+          self.emit('click', e.origEvent, self.getEventNodes(node))
         }, 200)
       })
       .on('dblclick', c('.node'), function (this: any, e: any) {
         e.stopPropagation()
         this.hasDoubleClick = true
-        self.emit('dblclick', e.origEvent, this.dataGridNode)
+        const node = this.dataGridNode as DataGridNode
+        self.emit('dblclick', e.origEvent, self.getEventNodes(node))
         setTimeout(() => {
           this.hasDoubleClick = false
         }, 300)
@@ -496,8 +602,11 @@ export default class DataGrid extends Component<IOptions> {
       .on('contextmenu', c('.node'), function (this: any, e: any) {
         e.preventDefault()
         e.stopPropagation()
-        self.selectNode(this.dataGridNode)
-        self.emit('contextmenu', e.origEvent, this.dataGridNode)
+        const node = this.dataGridNode as DataGridNode
+        if (node.selectable && !contain(self.selectedNodes, node)) {
+          self.selectSingle(node)
+        }
+        self.emit('contextmenu', e.origEvent, self.getEventNodes(node))
       })
 
     $headerRow.on(
@@ -589,11 +698,20 @@ export default class DataGrid extends Component<IOptions> {
               this.displayNodes.push(node)
             }
           })
-          if (this.selectedNode && !this.filterNode(this.selectedNode)) {
-            this.selectNode(null)
-          }
+          this.setSelectedNodes(
+            filter(this.selectedNodes, (node) => this.filterNode(node))
+          )
+          this.ensureSelectionAnchor()
           this.renderData()
           this.updateHeight()
+          break
+        case 'multiSelections':
+          if (!this.options.multiSelections && this.selectedNodes.length > 1) {
+            const active = this.getActiveNode()
+            if (active) {
+              this.selectSingle(active)
+            }
+          }
           break
         case 'columns': {
           const columnsMap: types.PlainObj<IColumn> = {}

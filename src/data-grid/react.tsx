@@ -9,11 +9,11 @@ import {
 } from '../share/hooks'
 
 interface IDataGridProps extends IOptions {
-  onSelect?: (node: DataGridNode) => void
+  onSelect?: (node: DataGridNode | DataGridNode[]) => void
   onDeselect?: () => void
-  onClick?: (e: MouseEvent, node: DataGridNode) => void
-  onDoubleClick?: (e: MouseEvent, node: DataGridNode) => void
-  onContextMenu?: (e: PointerEvent, node: DataGridNode) => void
+  onClick?: (e: MouseEvent, node: DataGridNode | DataGridNode[]) => void
+  onDoubleClick?: (e: MouseEvent, node: DataGridNode | DataGridNode[]) => void
+  onContextMenu?: (e: PointerEvent, node: DataGridNode | DataGridNode[]) => void
   onCreate?: (dataGrid: DataGrid) => void
   onColumnChange?: () => void
   className?: string
@@ -34,6 +34,7 @@ const LunaDataGrid: FC<IDataGridProps> = (props) => {
       minHeight: props.minHeight,
       filter: props.filter,
       selectable: props.selectable,
+      multiSelections: props.multiSelections,
       headerContextMenu: props.headerContextMenu,
       theme: props.theme,
     })
@@ -77,7 +78,15 @@ const LunaDataGrid: FC<IDataGridProps> = (props) => {
   )
 
   each(
-    ['theme', 'height', 'maxHeight', 'minHeight', 'filter', 'columns'],
+    [
+      'theme',
+      'height',
+      'maxHeight',
+      'minHeight',
+      'filter',
+      'columns',
+      'multiSelections',
+    ],
     (key: keyof IDataGridProps) => {
       useOption<DataGrid, IDataGridProps>(dataGridRef, key, props[key])
     }

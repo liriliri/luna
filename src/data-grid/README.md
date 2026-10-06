@@ -44,11 +44,16 @@ const dataGrid = new DataGrid(container, {
        title: 'Site',
      },
   ],
+  selectable: true,
+  multiSelections: true,
 })
 
 dataGrid.append({
   name: 'Runoob',
   site: 'www.runoob.com',
+})
+dataGrid.on('select', (nodes) => {
+  console.log(nodes)
 })
 ```
 
@@ -60,6 +65,7 @@ dataGrid.append({
 * height(number): Table height.
 * maxHeight(number): Max table height.
 * minHeight(number): Min table height.
+* multiSelections(boolean): Allow multiple selections.
 * selectable(boolean): Default selectable for all nodes.
 
 ## Api
@@ -75,6 +81,10 @@ Clear all data.
 ### fit(): void
 
 Fit height to the containing element.
+
+### getSelected(): DataGridNode[]
+
+Get selected nodes.
 
 ### remove(node: DataGridNode): void
 

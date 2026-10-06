@@ -1,3 +1,7 @@
+## 2.1.0 (6 Oct 2026)
+
+* feat: multiple selections
+
 ## 2.0.2 (9 Oct 2025)
 
 * fix: update columns

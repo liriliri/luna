@@ -6,19 +6,21 @@ import changelog from './CHANGELOG.md'
 import each from 'licia/each'
 import toEl from 'licia/toEl'
 import LunaDataGrid from './react'
-import { number, button, text } from '@storybook/addon-knobs'
+import { number, button, text, boolean } from '@storybook/addon-knobs'
 import { useRef, useState } from 'react'
 
 const def = story(
   'data-grid',
   (container) => {
-    const { maxHeight, minHeight, filter } = createKnobs()
+    const { maxHeight, minHeight, filter, multiSelections } = createKnobs()
 
     const dataGrid = new DataGrid(container, {
       columns: getColumns(),
       maxHeight,
       minHeight,
       filter,
+      selectable: true,
+      multiSelections,
       headerContextMenu: true,
     })
     dataGrid.on('changeColumn', () => {
@@ -34,13 +36,10 @@ const def = story(
 
     each(getData(), (item) => dataGrid.append(item, { selectable: true }))
 
-    let selectedNode
     dataGrid.on('select', (node) => {
-      selectedNode = node
       console.log('select', node)
     })
     dataGrid.on('deselect', () => {
-      selectedNode = null
       console.log('deselect')
     })
     dataGrid.on('click', (e, node) => console.log('click', node))
@@ -65,9 +64,7 @@ const def = story(
     })
 
     button('Remove Selected', () => {
-      if (selectedNode) {
-        dataGrid.remove(selectedNode)
-      }
+      each(dataGrid.getSelected(), (node) => dataGrid.remove(node))
       return false
     })
 
@@ -88,7 +85,7 @@ const def = story(
     changelog,
     source: __STORY__,
     ReactComponent({ theme }) {
-      const { minHeight, maxHeight, filter } = createKnobs()
+      const { minHeight, maxHeight, filter, multiSelections } = createKnobs()
       const [columns, setColumns] = useState(getColumns())
       const dataGridRef = useRef(null)
 
@@ -129,6 +126,7 @@ const def = story(
           filter={filter}
           theme={theme}
           selectable={true}
+          multiSelections={multiSelections}
           data={getData()}
         />
       )
@@ -215,11 +213,13 @@ function createKnobs() {
     max: 1000,
   })
   const filter = text('Filter', '')
+  const multiSelections = boolean('Multi Selections', false)
 
   return {
     minHeight,
     maxHeight,
     filter,
+    multiSelections,
   }
 }
 

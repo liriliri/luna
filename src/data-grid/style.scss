@@ -107,6 +107,14 @@
 }
 
 @each $theme in ('light', 'dark') {
+  $selected-row-divider: if(
+    sass($theme == 'light'):
+      rgba(0, 0, 0, 0.14)
+      ;
+      else:
+      rgba(255, 255, 255, 0.14),
+  );
+
   .theme-#{$theme} {
     @include theme-var(border-color, color-border, $theme);
     th,
@@ -126,6 +134,9 @@
       .node.selectable:hover {
         background-color: if(sass($theme == 'light'): #ddd; else: #393939);
       }
+      .node.selected + .node.selected td {
+        border-top: 1px solid $selected-row-divider;
+      }
       tr:nth-child(even) {
         background-color: if(sass($theme == 'light'): #f2f7fd; else: #0b2544);
       }
@@ -133,6 +144,9 @@
     &:focus {
       .node.selectable.selected {
         @include theme-var(background-color, color-primary, $theme);
+      }
+      .node.selectable.selected + .node.selectable.selected td {
+        border-top-color: rgba(255, 255, 255, 0.35);
       }
     }
   }

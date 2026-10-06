@@ -202,10 +202,11 @@ export default class IconList extends Component<IOptions> {
     this.updateColumnCount()
   }
   private getActiveIcon(): Icon | null {
-    if (this.selectedIcons.length === 0) {
-      return null
-    }
-    return this.selectedIcons[this.selectedIcons.length - 1]
+    const { selectedIcons } = this
+    return selectedIcons.length ? selectedIcons[selectedIcons.length - 1] : null
+  }
+  private getEventIcons(icon: Icon): Icon | Icon[] {
+    return this.options.multiSelections ? this.getSelected() : icon
   }
   private isSameSelection(icons: Icon[]) {
     const { selectedIcons } = this
@@ -248,11 +249,10 @@ export default class IconList extends Component<IOptions> {
       }
       return
     }
-    if (this.options.multiSelections) {
-      this.emit('select', this.getSelected())
-    } else {
-      this.emit('select', this.getActiveIcon())
-    }
+    this.emit(
+      'select',
+      this.options.multiSelections ? this.getSelected() : this.getActiveIcon()
+    )
   }
   private toggleIcon(icon: Icon) {
     let icons = this.selectedIcons.slice()
@@ -366,7 +366,7 @@ export default class IconList extends Component<IOptions> {
       case keyCode(hotkey.open):
         if (activeIcon) {
           e.preventDefault()
-          this.emit('click', event, activeIcon)
+          this.emit('click', event, this.getEventIcons(activeIcon))
         }
         return
       default:
@@ -450,7 +450,7 @@ export default class IconList extends Component<IOptions> {
           if (item.hasDoubleClick) {
             return
           }
-          self.emit('click', e.origEvent, icon)
+          self.emit('click', e.origEvent, self.getEventIcons(icon))
         }, 200)
       })
       .on('dblclick', itemClass, function (this: any, e: any) {
@@ -458,7 +458,7 @@ export default class IconList extends Component<IOptions> {
         const item = this.parentNode
         const icon = item.icon
         item.hasDoubleClick = true
-        self.emit('dblclick', e.origEvent, icon)
+        self.emit('dblclick', e.origEvent, self.getEventIcons(icon))
         setTimeout(() => {
           item.hasDoubleClick = false
         }, 300)
@@ -471,7 +471,7 @@ export default class IconList extends Component<IOptions> {
         if (self.options.selectable && !contain(self.selectedIcons, icon)) {
           self.selectSingle(icon)
         }
-        self.emit('contextmenu', e.origEvent, icon)
+        self.emit('contextmenu', e.origEvent, self.getEventIcons(icon))
       })
 
     this.$container

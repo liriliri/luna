@@ -8,9 +8,9 @@ interface IIconListProps extends IOptions {
   style?: React.CSSProperties
   onSelect?: (icon: Icon | Icon[]) => void
   onDeselect?: () => void
-  onClick?: (e: MouseEvent, icon: Icon) => void
-  onDoubleClick?: (e: MouseEvent, icon: Icon) => void
-  onContextMenu?: (e: PointerEvent, icon: Icon) => void
+  onClick?: (e: MouseEvent, icon: Icon | Icon[]) => void
+  onDoubleClick?: (e: MouseEvent, icon: Icon | Icon[]) => void
+  onContextMenu?: (e: PointerEvent, icon: Icon | Icon[]) => void
   onCreate?: (iconList: IconList) => void
   icons: Array<IIcon>
 }

@@ -6,7 +6,7 @@ import each from 'licia/each'
 interface IIconListProps extends IOptions {
   className?: string
   style?: React.CSSProperties
-  onSelect?: (icon: Icon) => void
+  onSelect?: (icon: Icon | Icon[]) => void
   onDeselect?: () => void
   onClick?: (e: MouseEvent, icon: Icon) => void
   onDoubleClick?: (e: MouseEvent, icon: Icon) => void
@@ -24,6 +24,7 @@ const LunaIconList: FC<IIconListProps> = (props) => {
     iconList.current = new IconList(iconListRef.current!, {
       size: props.size,
       selectable: props.selectable,
+      multiSelections: props.multiSelections,
       filter: props.filter,
       hotkey: props.hotkey,
     })
@@ -60,7 +61,7 @@ const LunaIconList: FC<IIconListProps> = (props) => {
   )
 
   each(
-    ['theme', 'size', 'selectable', 'filter', 'hotkey'],
+    ['theme', 'size', 'selectable', 'multiSelections', 'filter', 'hotkey'],
     (key: keyof IOptions) => {
       useOption<IconList, IOptions>(iconList, key, props[key])
     }

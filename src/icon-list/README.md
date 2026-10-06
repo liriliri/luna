@@ -32,13 +32,18 @@ import LunaIconList from 'luna-icon-list'
 ## Usage
 
 ```javascript
-const iconList = new LunaIconList(container)
+const iconList = new LunaIconList(container, {
+  multiSelections: true,
+})
 iconList.setIcons([
   {
     src: '/logo.png',
     name: 'Luna',
   },
 ])
+iconList.on('select', (icons) => {
+  console.log(icons)
+})
 ```
 
 ## Configuration
@@ -62,6 +67,10 @@ Clear all icons.
 ### focus(): void
 
 Focus icon list.
+
+### getSelected(): Icon[]
+
+Get selected icons.
 
 ### select(index?: number): boolean
 

@@ -9,7 +9,6 @@ import isRegExp from 'licia/isRegExp'
 import trim from 'licia/trim'
 import isStr from 'licia/isStr'
 import contain from 'licia/contain'
-import isNull from 'licia/isNull'
 import each from 'licia/each'
 import lowerCase from 'licia/lowerCase'
 import ResizeSensor from 'licia/ResizeSensor'
@@ -18,6 +17,8 @@ import LunaDragSelector from 'luna-drag-selector'
 import keyCode from 'licia/keyCode'
 import isObj from 'licia/isObj'
 import defaults from 'licia/defaults'
+import filter from 'licia/filter'
+import pointerEvent from 'licia/pointerEvent'
 
 /** IHotkey */
 export interface IHotkey {
@@ -72,13 +73,18 @@ const MIN_APPEND_INTERVAL = 100
  * Show list of icons and their names.
  *
  * @example
- * const iconList = new LunaIconList(container)
+ * const iconList = new LunaIconList(container, {
+ *   multiSelections: true,
+ * })
  * iconList.setIcons([
  *   {
  *     src: '/logo.png',
  *     name: 'Luna',
  *   },
  * ])
+ * iconList.on('select', (icons) => {
+ *   console.log(icons)
+ * })
  */
 export default class IconList extends Component<IOptions> {
   private resizeSensor: ResizeSensor
@@ -89,8 +95,12 @@ export default class IconList extends Component<IOptions> {
   private onResize: () => void
   private $iconContainer: $.$
   private iconContainer: HTMLElement
-  private selectedIcon: Icon | null = null
+  private selectedIcons: Icon[] = []
+  private selectionAnchor: Icon | null = null
   private dragSelector: LunaDragSelector | null = null
+  private dragSelecting = false
+  private selectionBeforeDrag: Icon[] = []
+  private ignoreClick = false
   private columnCount = 1
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'icon-list' }, options)
@@ -111,11 +121,7 @@ export default class IconList extends Component<IOptions> {
     this.$iconContainer = this.find('.icon-container')
     this.iconContainer = this.$iconContainer.get(0) as HTMLElement
 
-    if (this.options.selectable && this.options.multiSelections) {
-      this.dragSelector = new LunaDragSelector(this.container)
-      this.addSubComponent(this.dragSelector)
-    }
-
+    this.updateDragSelector()
     this.updateTabIndex()
     this.bindEvent()
   }
@@ -128,6 +134,10 @@ export default class IconList extends Component<IOptions> {
   focus() {
     this.container.focus()
   }
+  /** Get selected icons. */
+  getSelected(): Icon[] {
+    return this.selectedIcons.slice()
+  }
   /** Select icon by index. */
   select(index = 0): boolean {
     if (
@@ -137,13 +147,15 @@ export default class IconList extends Component<IOptions> {
     ) {
       return false
     }
-    this.selectIcon(this.displayIcons[index])
-    this.displayIcons[index].container.scrollIntoView({ block: 'nearest' })
+    const icon = this.displayIcons[index]
+    this.selectSingle(icon)
+    icon.container.scrollIntoView({ block: 'nearest' })
     return true
   }
   /** Set icons. */
   setIcons(icons: Array<IIcon>) {
-    this.selectIcon(null)
+    this.setSelectedIcons([])
+    this.selectionAnchor = null
     this.icons = []
     this.displayIcons = []
 
@@ -163,7 +175,8 @@ export default class IconList extends Component<IOptions> {
     this.$iconContainer.html('')
     this.icons = []
     this.displayIcons = []
-    this.selectIcon(null)
+    this.setSelectedIcons([])
+    this.selectionAnchor = null
 
     this.updateColumnCount()
   }
@@ -188,27 +201,126 @@ export default class IconList extends Component<IOptions> {
     this.appendTimer = null
     this.updateColumnCount()
   }
-  private selectIcon(icon: Icon | null) {
-    if (!this.options.selectable) {
-      return
+  private getActiveIcon(): Icon | null {
+    if (this.selectedIcons.length === 0) {
+      return null
     }
-
-    if (this.selectedIcon === icon) {
-      return
+    return this.selectedIcons[this.selectedIcons.length - 1]
+  }
+  private isSameSelection(icons: Icon[]) {
+    const { selectedIcons } = this
+    if (selectedIcons.length !== icons.length) {
+      return false
     }
-
-    if (this.selectedIcon) {
-      this.selectedIcon.deselect()
-      this.selectedIcon = null
-      if (isNull(icon)) {
-        this.emit('deselect')
+    for (let i = 0, len = icons.length; i < len; i++) {
+      if (selectedIcons[i] !== icons[i]) {
+        return false
       }
     }
-    if (!isNull(icon)) {
-      this.selectedIcon = icon
-      icon.select()
-      this.emit('select', icon)
+    return true
+  }
+  private selectSingle(icon: Icon) {
+    this.setSelectedIcons([icon])
+    this.selectionAnchor = icon
+  }
+  private setSelectedIcons(icons: Icon[], emitEvent = true) {
+    if (!this.options.selectable && icons.length > 0) {
+      return
     }
+
+    if (this.isSameSelection(icons)) {
+      return
+    }
+
+    const prevEmpty = this.selectedIcons.length === 0
+    each(this.selectedIcons, (icon) => icon.deselect())
+    each(icons, (icon) => icon.select())
+    this.selectedIcons = icons.slice()
+
+    if (emitEvent) {
+      this.emitSelectionChange(prevEmpty)
+    }
+  }
+  private emitSelectionChange(prevEmpty: boolean) {
+    if (this.selectedIcons.length === 0) {
+      if (!prevEmpty) {
+        this.emit('deselect')
+      }
+      return
+    }
+    if (this.options.multiSelections) {
+      this.emit('select', this.getSelected())
+    } else {
+      this.emit('select', this.getActiveIcon())
+    }
+  }
+  private toggleIcon(icon: Icon) {
+    let icons = this.selectedIcons.slice()
+    if (contain(icons, icon)) {
+      icons = filter(icons, (item) => item !== icon)
+      if (this.selectionAnchor === icon) {
+        this.selectionAnchor = icons[icons.length - 1] || null
+      }
+    } else {
+      icons.push(icon)
+      this.selectionAnchor = icon
+    }
+    this.setSelectedIcons(icons)
+  }
+  private selectRangeTo(icon: Icon) {
+    const { displayIcons } = this
+    const anchor = this.selectionAnchor || this.getActiveIcon() || icon
+    const start = displayIcons.indexOf(anchor)
+    const end = displayIcons.indexOf(icon)
+    if (start < 0 || end < 0) {
+      this.selectSingle(icon)
+      return
+    }
+    const from = Math.min(start, end)
+    const to = Math.max(start, end)
+    this.setSelectedIcons(displayIcons.slice(from, to + 1))
+  }
+  private updateDragSelector = () => {
+    const enabled = this.options.selectable && this.options.multiSelections
+    if (enabled && !this.dragSelector) {
+      this.dragSelector = new LunaDragSelector(this.container)
+      this.addSubComponent(this.dragSelector)
+      this.dragSelector.on('select', this.onDragSelect)
+      this.dragSelector.on('change', this.onDragChange)
+    } else if (!enabled && this.dragSelector) {
+      this.removeSubComponent(this.dragSelector)
+      this.dragSelector.destroy()
+      this.dragSelector = null
+      this.dragSelecting = false
+      this.selectionBeforeDrag = []
+    }
+  }
+  private onDragSelect = () => {
+    if (!this.dragSelector || !this.dragSelector.hasArea()) {
+      return
+    }
+    if (!this.dragSelecting) {
+      this.selectionBeforeDrag = this.selectedIcons.slice()
+    }
+    this.dragSelecting = true
+    const selected = filter(this.displayIcons, (icon) =>
+      this.dragSelector!.isSelected(icon.container)
+    )
+    this.setSelectedIcons(selected, false)
+  }
+  private onDragChange = () => {
+    if (!this.dragSelecting) {
+      return
+    }
+    this.dragSelecting = false
+    this.ignoreClick = true
+    const before = this.selectionBeforeDrag
+    this.selectionBeforeDrag = []
+    if (this.isSameSelection(before)) {
+      return
+    }
+    this.selectionAnchor = this.getActiveIcon()
+    this.emitSelectionChange(before.length === 0)
   }
   private getHotkey(): Required<IHotkey> | false {
     const { hotkey } = this.options
@@ -234,9 +346,8 @@ export default class IconList extends Component<IOptions> {
     }
 
     const event: KeyboardEvent = e.origEvent
-    let idx = this.selectedIcon
-      ? this.displayIcons.indexOf(this.selectedIcon)
-      : -1
+    const activeIcon = this.getActiveIcon()
+    let idx = activeIcon ? this.displayIcons.indexOf(activeIcon) : -1
     let delta = 0
 
     switch (event.keyCode) {
@@ -253,9 +364,9 @@ export default class IconList extends Component<IOptions> {
         delta = this.columnCount
         break
       case keyCode(hotkey.open):
-        if (this.selectedIcon) {
+        if (activeIcon) {
           e.preventDefault()
-          this.emit('click', event, this.selectedIcon)
+          this.emit('click', event, activeIcon)
         }
         return
       default:
@@ -268,7 +379,20 @@ export default class IconList extends Component<IOptions> {
     } else {
       idx += delta
     }
-    this.select(idx)
+    if (idx < 0 || idx >= this.displayIcons.length) {
+      return
+    }
+
+    if (
+      this.options.multiSelections &&
+      event.shiftKey &&
+      this.selectionAnchor
+    ) {
+      this.selectRangeTo(this.displayIcons[idx])
+      this.displayIcons[idx].container.scrollIntoView({ block: 'nearest' })
+    } else {
+      this.select(idx)
+    }
   }
   private filterIcon(icon: Icon) {
     let { filter } = this.options
@@ -297,12 +421,31 @@ export default class IconList extends Component<IOptions> {
     const itemClass = this.c('.icon, .name')
 
     this.$iconContainer
+      .on(pointerEvent('down'), this.c('.item'), (e: any) => {
+        e.stopPropagation()
+      })
       .on('click', itemClass, function (this: any, e: any) {
         e.stopPropagation()
         const item = this.parentNode
         const icon = item.icon
+        const event: MouseEvent = e.origEvent
         self.focus()
-        self.selectIcon(icon)
+
+        if (self.options.selectable) {
+          const multi = self.options.multiSelections
+          if (multi && (event.metaKey || event.ctrlKey)) {
+            self.toggleIcon(icon)
+          } else if (multi && event.shiftKey) {
+            self.selectRangeTo(icon)
+          } else if (
+            !multi ||
+            self.selectedIcons.length <= 1 ||
+            !contain(self.selectedIcons, icon)
+          ) {
+            self.selectSingle(icon)
+          }
+        }
+
         setTimeout(() => {
           if (item.hasDoubleClick) {
             return
@@ -325,12 +468,21 @@ export default class IconList extends Component<IOptions> {
         e.stopPropagation()
         const icon = this.parentNode.icon
         self.focus()
-        self.selectIcon(icon)
+        if (self.options.selectable && !contain(self.selectedIcons, icon)) {
+          self.selectSingle(icon)
+        }
         self.emit('contextmenu', e.origEvent, icon)
       })
 
     this.$container
-      .on('click', () => this.selectIcon(null))
+      .on('click', () => {
+        if (this.ignoreClick) {
+          this.ignoreClick = false
+          return
+        }
+        this.setSelectedIcons([])
+        this.selectionAnchor = null
+      })
       .on('keydown', this.onKeydown)
 
     this.on('changeOption', (name) => {
@@ -348,13 +500,32 @@ export default class IconList extends Component<IOptions> {
               this.displayIcons.push(icon)
             }
           })
-          if (this.selectedIcon && !this.filterIcon(this.selectedIcon)) {
-            this.selectIcon(null)
+          this.setSelectedIcons(
+            filter(this.selectedIcons, (icon) => this.filterIcon(icon))
+          )
+          if (this.selectionAnchor && !this.filterIcon(this.selectionAnchor)) {
+            this.selectionAnchor = this.getActiveIcon()
           }
           this.render()
           break
         case 'hotkey':
           this.updateTabIndex()
+          break
+        case 'selectable':
+        case 'multiSelections':
+          this.updateDragSelector()
+          if (!this.options.selectable) {
+            this.setSelectedIcons([])
+            this.selectionAnchor = null
+          } else if (
+            !this.options.multiSelections &&
+            this.selectedIcons.length > 1
+          ) {
+            const active = this.getActiveIcon()
+            if (active) {
+              this.selectSingle(active)
+            }
+          }
           break
       }
     })

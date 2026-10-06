@@ -7,6 +7,7 @@
   padding-bottom: #{$padding-x-s}px;
   overflow-x: hidden;
   outline: none;
+  user-select: none;
   @include overflow-auto(y);
   @include component(true);
 }

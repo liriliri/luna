@@ -45,7 +45,8 @@ const def = story(
     readme,
     source: __STORY__,
     ReactComponent({ theme }) {
-      const { size, filter, selectable, hotkey } = createKnobs()
+      const { size, filter, selectable, multiSelections, hotkey } =
+        createKnobs()
 
       return (
         <LunaIconList
@@ -53,8 +54,8 @@ const def = story(
           onSelect={(icon) => {
             console.log('select', icon)
           }}
-          onDeselect={(icon) => {
-            console.log('deselect', icon)
+          onDeselect={() => {
+            console.log('deselect')
           }}
           onClick={(e, icon) => {
             console.log('click', icon)
@@ -68,6 +69,7 @@ const def = story(
           filter={filter}
           theme={theme}
           selectable={selectable}
+          multiSelections={multiSelections}
           hotkey={hotkey}
           size={size}
           icons={getIcons()}

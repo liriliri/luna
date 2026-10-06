@@ -44,6 +44,10 @@ dragSelector.on('change', () => {
 
 ## Api
 
+### hasArea(minSize?: number): boolean
+
+Check whether selection area exceeds minimum size.
+
 ### isSelected(el: HTMLElement): boolean
 
 Check whether an element is selected.

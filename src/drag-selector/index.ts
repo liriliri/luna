@@ -39,6 +39,20 @@ export default class DragSelector extends Component<IComponentOptions> {
 
     this.bindEvent()
   }
+  destroy() {
+    this.$container.off(pointerEvent('down'), this.onDragStart)
+    $document.off(pointerEvent('move'), this.onDragMove)
+    $document.off(pointerEvent('up'), this.onDragEnd)
+    this.$selectArea.remove()
+
+    const { container } = this
+    const frag = document.createDocumentFragment()
+    while (container.firstChild) {
+      frag.appendChild(container.firstChild)
+    }
+    super.destroy()
+    container.appendChild(frag)
+  }
   /** Check whether an element is selected. */
   isSelected(el: HTMLElement): boolean {
     const { left, top, right, bottom } = this
@@ -53,9 +67,18 @@ export default class DragSelector extends Component<IComponentOptions> {
       offset.bottom > top
     )
   }
+  /** Check whether selection area exceeds minimum size. */
+  hasArea(minSize = 5): boolean {
+    return (
+      this.right - this.left >= minSize || this.bottom - this.top >= minSize
+    )
+  }
   private onDragStart = (e: any) => {
     const { $container } = this
     e = e.origEvent
+    if (e.button) {
+      return
+    }
     this.startX = eventPage('x', e)
     this.startY = eventPage('y', e)
 

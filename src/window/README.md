@@ -42,7 +42,7 @@ win.show()
 
 ## Configuration
 
-* content(string|HTMLElement): Content to display, url is supported.
+* content(string | HTMLElement): Content to display, url is supported.
 * height(number): Height of the window.
 * minHeight(number): Minimum height of the window.
 * minWidth(number): Minimum width of the window.
@@ -52,6 +52,10 @@ win.show()
 * y(number): Offset to the top of the viewport.
 
 ## Api
+
+### destroy(): void
+
+Remove the window.
 
 ### maximize(): void
 

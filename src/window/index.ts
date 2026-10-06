@@ -143,6 +143,7 @@ export default class Window extends Component<IOptions> {
     this.$maximizeBtn.addClass(c('icon-maximized'))
     this.renderWindow()
   }
+  /** Remove the window. */
   destroy = () => {
     this.$taskBarItem.remove()
     this.$container.remove()

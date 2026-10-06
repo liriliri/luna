@@ -19,7 +19,7 @@
   },
   "carousel": {
     "icon": true,
-    "version": "0.3.1",
+    "version": "0.4.0",
     "style": true,
     "test": true,
     "install": false,

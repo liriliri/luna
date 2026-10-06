@@ -7,9 +7,13 @@ import toArr from 'licia/toArr'
 import h from 'licia/h'
 import idxOf from 'licia/idxOf'
 import toNum from 'licia/toNum'
-import { executeAfterTransition, exportCjs } from '../share/util'
+import pointerEvent from 'licia/pointerEvent'
+import { eventClient, executeAfterTransition, exportCjs } from '../share/util'
 import isUndef from 'licia/isUndef'
 import toBool from 'licia/toBool'
+
+const $document = $(document as any)
+const swipeThreshold = 50
 
 /** IOptions */
 export interface IOptions extends IComponentOptions {
@@ -34,6 +38,8 @@ export default class Carousel extends Component<IOptions> {
   private activeIdx = -1
   private interval: ReturnType<typeof setInterval> | null = null
   private isSliding = false
+  private startX = 0
+  private startY = 0
   constructor(container: HTMLElement, options: IOptions = {}) {
     super(container, { compName: 'carousel' }, options)
 
@@ -122,6 +128,7 @@ export default class Carousel extends Component<IOptions> {
   }
   destroy() {
     this.pause()
+    $document.off(pointerEvent('up'), this.onSwipeEnd)
     super.destroy()
   }
   getSlides() {
@@ -232,6 +239,7 @@ export default class Carousel extends Component<IOptions> {
   private bindEvent() {
     this.$arrowLeft.on('click', this.prev)
     this.$arrowRight.on('click', this.next)
+    this.$body.on(pointerEvent('down'), this.onSwipeStart)
 
     const self = this
     this.$indicators.on('click', 'li', function (this: any) {
@@ -239,6 +247,31 @@ export default class Carousel extends Component<IOptions> {
       const idx = toNum($this.data('idx'))
       self.slideTo(idx)
     })
+  }
+  private onSwipeStart = (e: any) => {
+    if (this.isSliding) {
+      return
+    }
+
+    e = e.origEvent
+    this.startX = eventClient('x', e)
+    this.startY = eventClient('y', e)
+    $document.on(pointerEvent('up'), this.onSwipeEnd)
+  }
+  private onSwipeEnd = (e: any) => {
+    $document.off(pointerEvent('up'), this.onSwipeEnd)
+
+    e = e.origEvent
+    const deltaX = eventClient('x', e) - this.startX
+    const deltaY = eventClient('y', e) - this.startY
+    if (
+      Math.abs(deltaX) < swipeThreshold ||
+      Math.abs(deltaX) < Math.abs(deltaY)
+    ) {
+      return
+    }
+
+    this.slide(deltaX > 0 ? 'prev' : 'next')
   }
 }
 

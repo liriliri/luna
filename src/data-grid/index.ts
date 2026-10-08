@@ -561,6 +561,7 @@ export default class DataGrid extends Component<IOptions> {
         }
       })
       .on('click', c('.node'), function (this: any, e: any) {
+        e.stopPropagation()
         const node = this.dataGridNode as DataGridNode
         const event: MouseEvent = e.origEvent
         const multi = self.options.multiSelections
@@ -608,6 +609,11 @@ export default class DataGrid extends Component<IOptions> {
         }
         self.emit('contextmenu', e.origEvent, self.getEventNodes(node))
       })
+
+    this.$container.on('click', () => {
+      this.setSelectedNodes([])
+      this.selectionAnchor = null
+    })
 
     $headerRow.on(
       'click',

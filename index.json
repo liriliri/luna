@@ -84,7 +84,7 @@
     "react": true,
     "icon": true,
     "dependencies": ["menu"],
-    "version": "2.1.0",
+    "version": "2.1.1",
     "style": true,
     "test": true,
     "install": false

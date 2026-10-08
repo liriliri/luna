@@ -1,3 +1,7 @@
+## 2.1.1 (8 Oct 2026)
+
+* fix: deselect on blank area click
+
 ## 2.1.0 (6 Oct 2026)
 
 * feat: multiple selections

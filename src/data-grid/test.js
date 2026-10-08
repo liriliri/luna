@@ -80,6 +80,11 @@ test('data-grid', (container) => {
         expect(clickNodes).to.be.an('array')
         expect(clickNodes).to.have.lengthOf(1)
         expect(clickNodes[0]).to.equal(b)
+
+        dataGrid.container.dispatchEvent(
+          new MouseEvent('click', { bubbles: true })
+        )
+        expect(dataGrid.getSelected()).to.have.lengthOf(0)
         done()
       }, 250)
     }, 50)

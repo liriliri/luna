@@ -1,9 +1,10 @@
 {
   "name": "icon-list",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Show list of icons and their names",
   "luna": {
     "react": true,
+    "vue": true,
     "dependencies": [
       "drag-selector"
     ]

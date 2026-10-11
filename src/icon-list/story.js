@@ -3,6 +3,8 @@ import story from '../share/story'
 import IconList from 'luna-icon-list.js'
 import readme from './README.md'
 import LunaIconList from './react'
+import LunaIconListVue from './vue'
+import { h } from 'vue'
 import $ from 'licia/$'
 import { number, text, boolean } from '@storybook/addon-knobs'
 import { red5 } from '../share/theme'
@@ -22,22 +24,7 @@ const def = story(
       hotkey,
     })
     iconList.setIcons(getIcons())
-
-    iconList.on('select', (icon) => {
-      console.log('select', icon)
-    })
-    iconList.on('deselect', () => {
-      console.log('deselect')
-    })
-    iconList.on('click', (e, icon) => {
-      console.log('click', icon)
-    })
-    iconList.on('dblclick', (e, icon) => {
-      console.log('dblclick', icon)
-    })
-    iconList.on('contextmenu', (e, icon) => {
-      console.log('contextmenu', icon)
-    })
+    bindEvents(iconList)
 
     return iconList
   },
@@ -76,8 +63,42 @@ const def = story(
         />
       )
     },
+    VueComponent({ theme }) {
+      const { size, filter, selectable, multiSelections, hotkey } =
+        createKnobs()
+
+      return h(LunaIconListVue, {
+        style: { maxHeight: '400px' },
+        theme,
+        size,
+        filter,
+        selectable,
+        multiSelections,
+        hotkey,
+        icons: getIcons(),
+        onCreate: bindEvents,
+      })
+    },
   }
 )
+
+function bindEvents(iconList) {
+  iconList.on('select', (icon) => {
+    console.log('select', icon)
+  })
+  iconList.on('deselect', () => {
+    console.log('deselect')
+  })
+  iconList.on('click', (e, icon) => {
+    console.log('click', icon)
+  })
+  iconList.on('dblclick', (e, icon) => {
+    console.log('dblclick', icon)
+  })
+  iconList.on('contextmenu', (e, icon) => {
+    console.log('contextmenu', icon)
+  })
+}
 
 function getIcons() {
   return [
@@ -162,4 +183,4 @@ function createKnobs() {
 
 export default def
 
-export const { iconList: html, react } = def
+export const { iconList: html, react, vue } = def

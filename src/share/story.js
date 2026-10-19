@@ -9,9 +9,9 @@ import isDarkMode from 'licia/isDarkMode'
 import contain from 'licia/contain'
 import upperFirst from 'licia/upperFirst'
 import extend from 'licia/extend'
-import { addReadme } from 'storybook-readme/html'
+import { readmePage } from '../../.storybook/readmePage'
 import each from 'licia/each'
-import addons from '@storybook/addons'
+import { addons } from '@storybook/preview-api'
 import now from 'licia/now'
 import ReactDOM from 'react-dom'
 import * as registerKnobs from '@storybook/addon-knobs/dist/registerKnobs'
@@ -38,13 +38,14 @@ export default function story(
 
   const ret = {
     title: map(spaceCase(name).split(' '), upperFirst).join(' '),
-    decorators: [withKnobs, addReadme],
+    tags: ['autodocs'],
+    decorators: [withKnobs],
     parameters: {
       knobs: {
         escapeHTML: false,
       },
-      readme: {
-        sidebar: readme,
+      docs: {
+        page: readmePage(readme),
       },
       storySource: {
         source,

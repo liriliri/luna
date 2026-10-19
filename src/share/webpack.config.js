@@ -1,13 +1,25 @@
 const path = require('path')
 const prefixer = require('postcss-prefixer')
 const autoprefixer = require('autoprefixer')
-const clean = require('postcss-clean')
+const CleanCSS = require('clean-css')
+const postcss = require('postcss')
 const camelCase = require('licia/camelCase')
 const upperFirst = require('licia/upperFirst')
 const each = require('licia/each')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const BundleAnalyzerPlugin =
   require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
+function cleanCss() {
+  return {
+    postcssPlugin: 'postcss-clean',
+    Once(css, { result }) {
+      const minified = new CleanCSS().minify(css.toString())
+      result.root = postcss.parse(minified.styles)
+    },
+  }
+}
+cleanCss.postcss = true
 
 module.exports = function (
   name,
@@ -16,14 +28,16 @@ module.exports = function (
   const postcssLoader = {
     loader: 'postcss-loader',
     options: {
-      plugins: [
-        prefixer({
-          prefix: `luna-${name}-`,
-          ignore: [`luna-`],
-        }),
-        autoprefixer,
-        clean(),
-      ],
+      postcssOptions: {
+        plugins: [
+          prefixer({
+            prefix: `luna-${name}-`,
+            ignore: [/luna-/],
+          }),
+          autoprefixer(),
+          cleanCss(),
+        ],
+      },
     },
   }
 
@@ -59,14 +73,18 @@ module.exports = function (
 
     return {
       mode: options.mode,
+      target: ['web', 'es5'],
       entry,
       devtool: 'source-map',
       output: {
         filename: `luna-${name}.js`,
         path: path.resolve(__dirname, `../../dist/${name}`),
         publicPath: '/assets/',
-        library: `Luna${upperFirst(camelCase(name))}`,
-        libraryTarget: 'umd',
+        library: {
+          name: `Luna${upperFirst(camelCase(name))}`,
+          type: 'umd',
+        },
+        globalObject: 'this',
       },
       resolve: {
         extensions: ['.ts', '.js'],
@@ -79,8 +97,8 @@ module.exports = function (
             loader: 'ts-loader',
           },
           {
-            test: /\.scss/,
-            loaders: [
+            test: /\.scss$/,
+            use: [
               MiniCssExtractPlugin.loader,
               'css-loader',
               postcssLoader,
@@ -88,8 +106,8 @@ module.exports = function (
             ],
           },
           {
-            test: /\.css/,
-            loaders: [MiniCssExtractPlugin.loader, 'css-loader', postcssLoader],
+            test: /\.css$/,
+            use: [MiniCssExtractPlugin.loader, 'css-loader', postcssLoader],
           },
         ],
       },

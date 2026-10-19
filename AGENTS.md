@@ -13,8 +13,8 @@ Demo: https://luna.liriliri.io/
 | Utilities | [licia](https://licia.liriliri.io/) |
 | Styles | SCSS + PostCSS (autoprefixer, `postcss-prefixer` → `luna-*` classes) |
 | Themes | `light` / `dark` / `auto` via `src/share/theme` |
-| Bundler | Webpack 4 (per-component config generated at build time) |
-| Docs / demos | Storybook 6 (`@storybook/html` + knobs + readme) |
+| Bundler | Webpack 5 (per-component config generated at build time) |
+| Docs / demos | Storybook 7 (`@storybook/html-webpack5` + knobs + docs) |
 | Tests | Karma + Mocha + Chai (+ Istanbul coverage) |
 | Framework wrappers | Optional React (`react.tsx`); some also have Vue |
 | Tooling | Custom CLI `bin/luna.js`, ESLint, Prettier |

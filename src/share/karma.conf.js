@@ -10,6 +10,10 @@ module.exports = function (name) {
     {},
     { mode: 'development' }
   )
+  delete webpackCfg.output.library
+  delete webpackCfg.output.path
+  webpackCfg.output.filename = '[name].js'
+  webpackCfg.output.globalObject = 'self'
   webpackCfg.module.rules.push({
     test: /\.ts$/,
     exclude: /node_modules|share/,

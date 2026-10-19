@@ -1,17 +1,53 @@
+const fs = require('fs')
 const path = require('path')
 const map = require('licia/map')
 const each = require('licia/each')
 const keys = require('licia/keys')
+const spaceCase = require('licia/spaceCase')
+const upperFirst = require('licia/upperFirst')
 const webpack = require('webpack')
 
 const components = keys(require('../index.json'))
 
 const stories = map(components, (component) => `../src/${component}/story.js`)
 
+function storyTitle(name) {
+  return map(spaceCase(name).split(' '), upperFirst).join(' ')
+}
+
+const storyIndexer = {
+  test: /story\.js$/,
+  createIndex(fileName) {
+    const code = fs.readFileSync(fileName, 'utf8')
+    const nameMatch = code.match(/story\(\s*['"]([^'"]+)['"]/)
+    const exportMatch = code.match(/export const \{([^}]+)\} = def/)
+    if (!nameMatch || !exportMatch) {
+      throw new Error(`Cannot index ${fileName}`)
+    }
+
+    const title = storyTitle(nameMatch[1])
+    const exportNames = exportMatch[1]
+      .split(',')
+      .map((part) => {
+        const bits = part.trim().split(':')
+        return (bits[1] || bits[0]).trim()
+      })
+      .filter(Boolean)
+
+    return exportNames.map((exportName) => ({
+      type: 'story',
+      importPath: fileName,
+      exportName,
+      title,
+      tags: ['autodocs'],
+    }))
+  },
+}
+
 module.exports = {
   stories,
   addons: [
-    'storybook-readme/register',
+    '@storybook/addon-docs',
     '@storybook/addon-knobs',
     {
       name: '@storybook/addon-storysource',
@@ -28,25 +64,27 @@ module.exports = {
       },
     },
   ],
-  babel: async (options) => {
-    options.presets.push([
-      '@babel/preset-react',
-      {
-        runtime: 'automatic',
+  framework: {
+    name: '@storybook/html-webpack5',
+    options: {
+      builder: {
+        useSWC: true,
       },
-    ])
-
-    return options
+    },
   },
+  docs: {
+    autodocs: 'tag',
+  },
+  swc: async () => ({
+    jsc: {
+      transform: {
+        react: {
+          runtime: 'automatic',
+        },
+      },
+    },
+  }),
   webpackFinal: (config) => {
-    const rules = config.module.rules
-
-    each(rules, (rule) => {
-      if (rule.test.toString() === '/\\.(mjs|jsx?)$/') {
-        rule.use[0].options.sourceType = 'unambiguous'
-      }
-    })
-
     each(components, (component) => {
       config.resolve.alias[`luna-${component}`] = path.resolve(
         __dirname,
@@ -71,4 +109,10 @@ module.exports = {
     return config
   },
   staticDirs: ['../public'],
+  experimental_indexers: async (existingIndexers) => {
+    const rest = (existingIndexers || []).filter(
+      (indexer) => !indexer.test.test('src/notification/story.js')
+    )
+    return [storyIndexer, ...rest]
+  },
 }

@@ -9,7 +9,7 @@ import isDarkMode from 'licia/isDarkMode'
 import contain from 'licia/contain'
 import upperFirst from 'licia/upperFirst'
 import extend from 'licia/extend'
-import { readmePage } from '../../.storybook/readmePage'
+import { Markdown } from '@storybook/blocks'
 import each from 'licia/each'
 import { addons } from '@storybook/preview-api'
 import now from 'licia/now'
@@ -174,6 +174,14 @@ export default function story(
   }
 
   return ret
+}
+
+function readmePage(markdown) {
+  function ReadmePage() {
+    return <Markdown>{markdown || ''}</Markdown>
+  }
+
+  return ReadmePage
 }
 
 function fixKnobs(name) {
